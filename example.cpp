@@ -221,6 +221,10 @@ void Display(Rcpp::XPtr<ad_vec> x) {
 }
 
 // [[Rcpp::export]]
-int getnamed(SEXP x) {
-  return NAMED(x);
+int MaybeShared(SEXP x) {
+#ifdef MAYBE_SHARED
+  return MAYBE_SHARED(x);
+#else
+  return NAMED(x) > 1;
+#endif
 }

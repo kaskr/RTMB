@@ -74,8 +74,10 @@ print.advector <- function(x) {
 }
 DeepCopy <- function(x)c(advector(numeric(0)),x)
 "[<-.advector" <- function(x, i, value) {
+    ## Deep copy only if necessary
+    if (.Call("sourceCpp_1_MaybeShared", x))
+        x$ptr <- DeepCopy(x)$ptr
     ## Note: i can be 'missing', 'integer', '2 col matrix' or 'logical' !!!
-    x$ptr <- DeepCopy(x)$ptr
     j <- seq_len(length(x))
     if (!is.null(dim(x)))
         j <- array(j, dim=dim(x))
