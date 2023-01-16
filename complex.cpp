@@ -1,0 +1,245 @@
+// [[Rcpp::depends(TMB)]]
+#include <Rcpp.h>
+using Rcpp::Rcout;
+using Rcpp::Rcerr;
+#define TMBAD_ASSERT2(x,msg)                                            \
+if (!(x)) {                                                             \
+  Rcerr << "TMBad assertion failed.\n";                                 \
+  Rcerr << "The following condition was not met: " << #x << "\n";       \
+  Rcerr << "Possible reason: " msg << "\n";                             \
+  Rcerr << "For more info run your program through a debugger.\n";      \
+  abort();                                                              \
+}
+#define TMBAD_ASSERT(x) TMBAD_ASSERT2(x,"Unknown")
+#include <TMBad/TMBad.hpp>
+#include <TMBad/TMBad.cpp>
+
+/* ========================================================================== */
+/* ADFun object */
+/* ========================================================================== */
+
+// Control the tape (Start / Stop / Print)
+void ad_start(TMBad::ADFun<>* adf) {
+  adf->glob.ad_start();
+}
+void ad_stop(TMBad::ADFun<>* adf) {
+  adf->glob.ad_stop();
+}
+void ad_print(TMBad::ADFun<>* adf) {
+  adf->print();
+}
+// Some ADFun object evaluators
+std::vector<double> Eval(TMBad::ADFun<>* tp, const std::vector<double> &x) {
+  std::vector<double> y = (*tp)(x);
+  return y;
+}
+Rcpp::NumericMatrix Jacobian(TMBad::ADFun<>* tp, const std::vector<double> &x) {
+  std::vector<double> y = tp->Jacobian(x);
+  Rcpp::NumericMatrix Jt(x.size(), y.size() / x.size(), y.begin());
+  return Rcpp::transpose(Jt);
+}
+// Some ADFun object transformations
+void JacFun(TMBad::ADFun<>* adf) {
+  (*adf) = (*adf).JacFun();
+}
+void parallelize(TMBad::ADFun<>* adf, int nthreads) {
+  (*adf) =  (*adf).parallelize(nthreads);
+}
+void fuse(TMBad::ADFun<>* adf) {
+  (*adf).glob.set_fuse(true);
+  (*adf).replay();
+  (*adf).glob.set_fuse(false);
+}
+void optimize(TMBad::ADFun<>* adf) {
+  (*adf).optimize();
+}
+// Collect free functions in a module
+RCPP_MODULE(mod_adfun) {
+  using namespace Rcpp;
+  class_<TMBad::ADFun<> >( "adfun" )
+  .constructor()
+  .method("start", &ad_start)
+  .method("stop",  &ad_stop)
+  .method("print", &ad_print)
+  .method("eval",  &Eval)
+  .method("jacobian", &Jacobian)
+  .method("jacfun", &JacFun)
+  .method("parallelize", &parallelize)
+  .method("fuse", &fuse)
+  .method("optimize", &optimize)
+  ;
+}
+
+/* ========================================================================== */
+/* AD vector object */
+/* ========================================================================== */
+
+typedef TMBad::ad_aug ad;
+typedef std::vector<ad> ad_vec;
+
+Rcomplex ad2cplx(const ad &x) {
+  Rcomplex* px = (Rcomplex*)(&x);
+  return *px;
+}
+ad cplx2ad(const Rcomplex &x) {
+  ad* px = (ad*)(&x);
+  return *px;
+}
+bool is_advector (const Rcpp::ComplexVector &x) {
+  return
+    x.hasAttribute("class") &&
+    std::strcmp(x.attr("class"), "advector") == 0;
+}
+Rcpp::ComplexVector& as_advector(Rcpp::ComplexVector &x) {
+  x.attr("class") = "advector";
+  return x;
+}
+
+// [[Rcpp::export]]
+Rcpp::ComplexVector advec(const Rcpp::NumericVector &x) {
+  Rcpp::ComplexVector ans(x.size());
+  for (int i=0; i<x.size(); i++) ans[i] = ad2cplx(ad(x[i]));
+  //ans.attr("class") = "advector";
+  return as_advector(ans);
+}
+
+// [[Rcpp::export]]
+Rcpp::ComplexVector Dependent(const Rcpp::ComplexVector &x) {
+  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
+  Rcpp::ComplexVector ans(x.size());
+  for (int i=0; i<x.size(); i++) {
+    ad xad = cplx2ad(x[i]);
+    xad.Dependent();
+    ans[i] = ad2cplx(xad);
+  }
+  return as_advector(ans);
+}
+// [[Rcpp::export]]
+Rcpp::ComplexVector Independent(const Rcpp::ComplexVector &x) {
+  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
+  Rcpp::ComplexVector ans(x.size());
+  for (int i=0; i<x.size(); i++) {
+    ad xad = cplx2ad(x[i]);
+    xad.Independent();
+    ans[i] = ad2cplx(xad);
+  }
+  return as_advector(ans);
+}
+
+/* Arith:
+
+   • ‘"+"’, ‘"-"’, ‘"*"’, ‘"/"’, ‘"^"’, ‘"%%"’, ‘"%/%"’
+
+   • ‘"&"’, ‘"|"’, ‘"!"’
+
+   • ‘"=="’, ‘"!="’, ‘"<"’, ‘"<="’, ‘">="’, ‘">"’
+*/
+
+// [[Rcpp::export]]
+Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
+                           const Rcpp::ComplexVector &y,
+                           std::string op) {
+  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
+  if (!is_advector(y)) Rcpp::stop("'y' must be advector");
+  size_t nx = x.size(), ny = y.size();
+  size_t n = std::max(nx, ny);
+  Rcpp::ComplexVector z(n);
+#define CALL(OP) for (size_t i=0; i<n; i++) z[i] = ad2cplx( cplx2ad(x[i % nx]) OP cplx2ad(y[i % ny]) )
+  if (!op.compare("+")) CALL(+);
+  else if (!op.compare("-")) CALL(-);
+  else if (!op.compare("*")) CALL(*);
+  else if (!op.compare("/")) CALL(/);
+  else if (!op.compare("^")) {
+    for (size_t i=0; i<n; i++) z[i] = ad2cplx(pow( cplx2ad(x[i % nx]) , cplx2ad(y[i % ny])));
+  }
+  else Rf_error("Not implemented");
+#undef CALL
+  //  z.attr("class") = "advector";
+  return as_advector(z);
+}
+
+/* Math:
+
+   • ‘abs’, ‘sign’, ‘sqrt’,
+   ‘floor’, ‘ceiling’, ‘trunc’,
+   ‘round’, ‘signif’
+   
+   • ‘exp’, ‘log’, ‘expm1’, ‘log1p’,
+   ‘cos’, ‘sin’, ‘tan’,
+   ‘cospi’, ‘sinpi’, ‘tanpi’,
+   ‘acos’, ‘asin’, ‘atan’
+
+   ‘cosh’, ‘sinh’, ‘tanh’,
+   ‘acosh’, ‘asinh’, ‘atanh’
+
+   • ‘lgamma’, ‘gamma’, ‘digamma’, ‘trigamma’
+   
+   • ‘cumsum’, ‘cumprod’, ‘cummax’, ‘cummin’
+*/
+
+// [[Rcpp::export]]
+Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
+  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
+  size_t n = x.size();
+  Rcpp::ComplexVector y(n);
+#define CALL(OP) for (size_t i=0; i<n; i++) y[i] = ad2cplx( OP( cplx2ad(x[i]) ) )
+#define CUMC(OP) for (size_t i=1; i<n; i++) y[i] = ad2cplx(cplx2ad(y[i-1]) OP cplx2ad(x[i]));
+  if (!op.compare("abs")) CALL(fabs);
+  else if (!op.compare("sqrt")) CALL(sqrt);
+  else if (!op.compare("exp")) CALL(exp);
+  else if (!op.compare("log")) CALL(log);
+  else if (!op.compare("cos")) CALL(cos);
+  else if (!op.compare("sin")) CALL(sin);
+  else if (!op.compare("tan")) CALL(tan);
+  else if (!op.compare("acos")) CALL(acos);
+  else if (!op.compare("asin")) CALL(asin);
+  else if (!op.compare("atan")) CALL(atan);
+  else if (!op.compare("cumsum")) {
+    if (n > 0) { y[0] = x[0]; CUMC(+); }
+  }
+  else if (!op.compare("cumprod")) {
+    if (n > 0) { y[0] = x[0]; CUMC(*); }
+  }
+  else Rf_error("Not implemented");
+#undef CALL
+#undef CUMC
+  return as_advector(y);
+}
+
+// [[Rcpp::export]]
+Rcpp::ComplexVector Reduce1(const Rcpp::ComplexVector &x, std::string op) {
+  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
+  size_t n = x.size();
+  Rcpp::ComplexVector y(1);
+  ad ans = 0;
+#define REDUCE(OP) for (size_t i=0; i<n; i++) ans = ans OP cplx2ad(x[i]);
+  if (!op.compare("+")) {
+    ans = 0.; REDUCE(+);
+  } else if (!op.compare("*")) {
+    ans = 1.; REDUCE(*);
+  } else
+    Rf_error("Not implemented");
+#undef REDUCE
+  y[0] = ad2cplx(ans);
+  return as_advector(y);
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector getValues(const Rcpp::ComplexVector &x) {
+  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
+  Rcpp::NumericVector ans(x.size());
+  for (int i=0; i<x.size(); i++) {
+    ans[i] = cplx2ad((x)[i]).Value() ;
+  }
+  return ans;
+}
+
+// [[Rcpp::export]]
+Rcpp::LogicalVector getVariables(const Rcpp::ComplexVector &x) {
+  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
+  Rcpp::LogicalVector ans(x.size());
+  for (int i=0; i<x.size(); i++) {
+    ans[i] = !cplx2ad((x)[i]).constant() ;
+  }
+  return ans;
+}
