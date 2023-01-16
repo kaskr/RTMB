@@ -6,7 +6,11 @@ mod <- sourceCpp("example.cpp", verbose=TRUE)
 advector <- function(x) {
     if (inherits(x, "advector"))
         return (x)
-    structure(advec(x), class="advector")
+    if (inherits(x, "externalptr"))
+        ptr <- x
+    else
+        ptr <- advec(x)
+    structure(list(ptr=ptr), class="advector")
 }
 "Ops.advector" <- function(e1, e2) {
     if (missing(e2)) {
@@ -14,23 +18,34 @@ advector <- function(x) {
             e2 <- e1; e1 <- 0
         }
     }
-    structure(Arith2(advector(e1), advector(e2), .Generic), class="advector")
+    advector(Arith2(advector(e1)$ptr,
+                    advector(e2)$ptr,
+                    .Generic))
 }
 "Math.advector" <- function(x) {
-    structure(Math1(x, .Generic), class="advector")
+    advector(Math1(x$ptr, .Generic))
 }
 
-## 'as.vector', 'dim', 'dim<-' are necessary for array(x,...)
+## 'as.vector', 'length', 'dim', 'dim<-' are necessary for array(x,...)
 as.vector.advector <- function (x, mode = "any") {
     if (mode=="list")
         return (structure(lapply(seq_along(x), function(i)x[i]), class="adlist"))
     x
 }
+length.advector <- function(x) Length(x$ptr)
 dim.advector <- function(x) attr(x, "Dim")
 "dim<-.advector" <- function(x, value) {
     attr(x, "Dim") <- value
     x
 }
+## Make lapply work
+##is.list.advector <- function(x)FALSE
+as.list.advector <- function(x)structure(lapply(seq_along(x), function(i)x[i]), class="adlist")
+
+## Make as.matrix work
+is.matrix.advector <- function(x) length(dim(x))==2L
+
+
 ## FIXME: externalptr is unique (OK) and so are the attributes (NOT OK):
 ##   x <- array(advector(1:25),c(5,5))
 ##   y <- x
@@ -39,15 +54,15 @@ dim.advector <- function(x) attr(x, "Dim")
 c.advector <- function(...) {
     dotargs <- list(...)
     ans <- advector(numeric(0))
-    for (x in dotargs) AppendInplace(ans, advector(x))
-    ans
+    for (x in dotargs) AppendInplace(ans$ptr, advector(x)$ptr)
+    advector(ans)
 }   
 print.advector <- function(x) {
-    invisible(Display(x))
+    invisible(Display(x$ptr))
     if (!is.null(dim(x)))
         cat("Dim = ","(",paste(dim(x),collapse=", "),")\n")
 }
-length.advector <- function(x) Length(x)
+
 "[.advector" <- function(x, ...) {
     ##ArrayApply("[", x, ...)
     j <- seq_len(length(x))
@@ -55,8 +70,20 @@ length.advector <- function(x) Length(x)
         j <- array(j, dim=dim(x))
     j <- j[...]
     newdim <- dim(j)
-    structure(Subset(x, j - 1L), Dim=newdim, class="advector")
+    structure(advector(Subset(x$ptr, j - 1L)), Dim=newdim)
 }
+DeepCopy <- function(x)c(advector(numeric(0)),x)
+"[<-.advector" <- function(x, i, value) {
+    ## Note: i can be 'missing', 'integer', '2 col matrix' or 'logical' !!!
+    x$ptr <- DeepCopy(x)$ptr
+    j <- seq_len(length(x))
+    if (!is.null(dim(x)))
+        j <- array(j, dim=dim(x))
+    j <- j[i]
+    SubsetAssign(x$ptr, j - 1L, advector(value)$ptr)
+    x
+}
+
 "[[.advector" <- function(x,...) x[...]
 ## Generalizing previous: Apply index reordering function
 ArrayApply <- function(F, x, ...) {
@@ -67,22 +94,22 @@ ArrayApply <- function(F, x, ...) {
         j <- array(j, dim=dim(x))
     j <- F(j, ...)
     newdim <- dim(j)
-    structure(Subset(x, j - 1L), Dim=newdim, class="advector")
+    structure(advector(Subset(x$ptr, j - 1L)), Dim=newdim)
 }
 t.advector <- function(x) ArrayApply("t", x)
 aperm.advector <- function (a, perm, ...) { ArrayApply("aperm", a, perm, ...) }
 diff.advector <- function(x) tail(x,-1)-head(x,-1)
-sum.advector <- function(x, na.rm)structure(Reduce1(x, "sum"), class="advector")
-prod.advector <- function(x, na.rm)structure(Reduce1(x, "prod"), class="advector")
+sum.advector <- function(x, na.rm)advector(Reduce1(x$ptr, "sum"))
+prod.advector <- function(x, na.rm)advector(Reduce1(x$ptr, "prod"))
 MakeTape <- function(f, x, optimize=TRUE) {
     F <- new(adfun)
     F$start()
     ## Make sure to stop even in case of failure
     on.exit(F$stop())
     x <- advector(x)
-    Independent(x)
+    Independent(x$ptr)
     y <- f(x)
-    Dependent(y)
+    Dependent(y$ptr)
     F
 }
 

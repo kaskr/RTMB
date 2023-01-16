@@ -190,6 +190,14 @@ Rcpp::XPtr<ad_vec> Subset(Rcpp::XPtr<ad_vec> x, Rcpp::IntegerVector i) {
   return ans;  
 }
 
+// DANGER!!!!!
+// Obviously not safe if other copy of x exists
+// [[Rcpp::export]]
+void SubsetAssign(Rcpp::XPtr<ad_vec> x, Rcpp::IntegerVector i, Rcpp::XPtr<ad_vec> y) {
+  if ((size_t)i.size() != (*y).size()) Rf_error("length(i) != length(y)");
+  for (int j=0; j<i.size(); j++) (*x)[i[j]] = (*y)[j];
+}
+
 // [[Rcpp::export]]
 void AppendInplace(Rcpp::XPtr<ad_vec> x, Rcpp::XPtr<ad_vec> y) {
   (*x).insert((*x).end(), (*y).begin(), (*y).end());
@@ -210,4 +218,9 @@ void Display(Rcpp::XPtr<ad_vec> x) {
     Rcout << (*x)[i].Value() ;
   }
   std::cout << "}\n";
+}
+
+// [[Rcpp::export]]
+int getnamed(SEXP x) {
+  return NAMED(x);
 }
