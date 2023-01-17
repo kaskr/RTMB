@@ -1,18 +1,13 @@
 // [[Rcpp::depends(TMB)]]
 #include <Rcpp.h>
-using Rcpp::Rcout;
-using Rcpp::Rcerr;
-#define TMBAD_ASSERT2(x,msg)                                            \
-if (!(x)) {                                                             \
-  Rcerr << "TMBad assertion failed.\n";                                 \
-  Rcerr << "The following condition was not met: " << #x << "\n";       \
-  Rcerr << "Possible reason: " msg << "\n";                             \
-  Rcerr << "For more info run your program through a debugger.\n";      \
-  abort();                                                              \
+#define TMBAD_FRAMEWORK
+#include <TMB.hpp>
+
+// Dummy
+template<class Type>
+Type objective_function<Type>::operator() () {
+  return 0;
 }
-#define TMBAD_ASSERT(x) TMBAD_ASSERT2(x,"Unknown")
-#include <TMBad/TMBad.hpp>
-#include <TMBad/TMBad.cpp>
 
 /* ========================================================================== */
 /* ADFun object */
@@ -124,7 +119,7 @@ Rcpp::ComplexVector advec(const Rcpp::NumericVector &x) {
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector Dependent(const Rcpp::ComplexVector &x) {
+Rcpp::ComplexVector dependent(const Rcpp::ComplexVector &x) {
   CHECK_INPUT(x);
   if (TMBad::get_glob() == NULL)
     Rcpp::stop("No active AD context");
@@ -137,7 +132,7 @@ Rcpp::ComplexVector Dependent(const Rcpp::ComplexVector &x) {
   return as_advector(ans);
 }
 // [[Rcpp::export]]
-Rcpp::ComplexVector Independent(const Rcpp::ComplexVector &x) {
+Rcpp::ComplexVector independent(const Rcpp::ComplexVector &x) {
   CHECK_INPUT(x);
   if (TMBad::get_glob() == NULL)
     Rcpp::stop("No active AD context");

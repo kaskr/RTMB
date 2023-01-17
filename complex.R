@@ -88,9 +88,9 @@ MakeTape <- function(f, x, optimize=TRUE) {
     ## Make sure to stop even in case of failure
     on.exit(F$stop())
     x <- advector(x)
-    x <- Independent(x)
+    x <- independent(x)
     y <- f(x)
-    Dependent(y)
+    dependent(y)
     F
 }
 
