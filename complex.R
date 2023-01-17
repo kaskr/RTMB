@@ -5,6 +5,8 @@ mod <- sourceCpp("complex.cpp", verbose=TRUE)
 advector <- function(x) {
     if (inherits(x, "advector"))
         return (x)
+    if (is.complex(x))
+        stop("Invalid argument to 'advector' (lost class attribute?)")
     advec(x)
 }
 "Ops.advector" <- function(e1, e2) {
@@ -36,6 +38,10 @@ c.advector <- function(...) {
     structure(NextMethod(), class="advector")
 }
 "[.advector" <- function(x, ...) {
+    structure(NextMethod(), class="advector")
+}
+"[<-.advector" <- function(x, ..., value) {
+    value <- advector(value)
     structure(NextMethod(), class="advector")
 }
 "[[.advector" <- function(x, ...) {

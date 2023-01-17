@@ -90,6 +90,23 @@ bool is_advector (const Rcpp::ComplexVector &x) {
     x.hasAttribute("class") &&
     std::strcmp(x.attr("class"), "advector") == 0;
 }
+bool valid(const ad &x) {
+  return
+    !x.ontape() || x.in_context_stack(x.data.glob);
+}
+// [[Rcpp::export]]
+bool valid(const Rcpp::ComplexVector &x) {
+  for (int i=0; i<x.size(); i++)
+    if (!valid(cplx2ad(x[i]))) return false;
+  return true;
+}
+
+#define CHECK_INPUT(x)                                                  \
+if (!is_advector(x))                                                    \
+  Rcpp::stop("'" #x "' must be 'advector' (lost class attribute?)" );   \
+if (!valid(x))                                                          \
+  Rcpp::stop("'" #x "' is not a valid 'advector' (constructed using illegal operation?)" );
+
 Rcpp::ComplexVector& as_advector(Rcpp::ComplexVector &x) {
   x.attr("class") = "advector";
   return x;
@@ -99,13 +116,14 @@ Rcpp::ComplexVector& as_advector(Rcpp::ComplexVector &x) {
 Rcpp::ComplexVector advec(const Rcpp::NumericVector &x) {
   Rcpp::ComplexVector ans(x.size());
   for (int i=0; i<x.size(); i++) ans[i] = ad2cplx(ad(x[i]));
-  //ans.attr("class") = "advector";
   return as_advector(ans);
 }
 
 // [[Rcpp::export]]
 Rcpp::ComplexVector Dependent(const Rcpp::ComplexVector &x) {
-  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
+  CHECK_INPUT(x);
+  if (TMBad::get_glob() == NULL)
+    Rcpp::stop("No active AD context");
   Rcpp::ComplexVector ans(x.size());
   for (int i=0; i<x.size(); i++) {
     ad xad = cplx2ad(x[i]);
@@ -116,7 +134,9 @@ Rcpp::ComplexVector Dependent(const Rcpp::ComplexVector &x) {
 }
 // [[Rcpp::export]]
 Rcpp::ComplexVector Independent(const Rcpp::ComplexVector &x) {
-  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
+  CHECK_INPUT(x);
+  if (TMBad::get_glob() == NULL)
+    Rcpp::stop("No active AD context");
   Rcpp::ComplexVector ans(x.size());
   for (int i=0; i<x.size(); i++) {
     ad xad = cplx2ad(x[i]);
@@ -139,8 +159,8 @@ Rcpp::ComplexVector Independent(const Rcpp::ComplexVector &x) {
 Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
                            const Rcpp::ComplexVector &y,
                            std::string op) {
-  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
-  if (!is_advector(y)) Rcpp::stop("'y' must be advector");
+  CHECK_INPUT(x);
+  CHECK_INPUT(y);
   size_t nx = x.size(), ny = y.size();
   size_t n = std::max(nx, ny);
   Rcpp::ComplexVector z(n);
@@ -154,7 +174,6 @@ Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
   }
   else Rf_error("Not implemented");
 #undef CALL
-  //  z.attr("class") = "advector";
   return as_advector(z);
 }
 
@@ -179,7 +198,7 @@ Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
 
 // [[Rcpp::export]]
 Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
-  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
+  CHECK_INPUT(x);
   size_t n = x.size();
   Rcpp::ComplexVector y(n);
 #define CALL(OP) for (size_t i=0; i<n; i++) y[i] = ad2cplx( OP( cplx2ad(x[i]) ) )
@@ -208,7 +227,7 @@ Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
 
 // [[Rcpp::export]]
 Rcpp::ComplexVector Reduce1(const Rcpp::ComplexVector &x, std::string op) {
-  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
+  CHECK_INPUT(x);
   size_t n = x.size();
   Rcpp::ComplexVector y(1);
   ad ans = 0;
@@ -226,7 +245,7 @@ Rcpp::ComplexVector Reduce1(const Rcpp::ComplexVector &x, std::string op) {
 
 // [[Rcpp::export]]
 Rcpp::NumericVector getValues(const Rcpp::ComplexVector &x) {
-  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
+  CHECK_INPUT(x);
   Rcpp::NumericVector ans(x.size());
   for (int i=0; i<x.size(); i++) {
     ans[i] = cplx2ad((x)[i]).Value() ;
@@ -236,10 +255,23 @@ Rcpp::NumericVector getValues(const Rcpp::ComplexVector &x) {
 
 // [[Rcpp::export]]
 Rcpp::LogicalVector getVariables(const Rcpp::ComplexVector &x) {
-  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
+  CHECK_INPUT(x);
   Rcpp::LogicalVector ans(x.size());
   for (int i=0; i<x.size(); i++) {
     ans[i] = !cplx2ad((x)[i]).constant() ;
   }
   return ans;
+}
+
+// [[Rcpp::export]]
+void dbgprint(const Rcpp::ComplexVector &x) {
+  if (!is_advector(x)) Rcpp::stop("'x' must be advector");
+  for (int i=0; i<x.size(); i++) {
+    ad xi = cplx2ad((x)[i]) ;
+    Rcout << "index="
+          << xi.index()
+          << " union={glob=" << xi.data.glob
+          << ", value=" << xi.data.value << "}"
+          << " valid=" << valid(xi) << "\n";
+  }
 }
