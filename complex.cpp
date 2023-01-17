@@ -78,10 +78,14 @@ typedef TMBad::ad_aug ad;
 typedef std::vector<ad> ad_vec;
 
 Rcomplex ad2cplx(const ad &x) {
+  static_assert(sizeof(ad) == sizeof(Rcomplex),
+                "ad size must match Rcomplex");
   Rcomplex* px = (Rcomplex*)(&x);
   return *px;
 }
 ad cplx2ad(const Rcomplex &x) {
+  static_assert(sizeof(ad) == sizeof(Rcomplex),
+                "ad size must match Rcomplex");
   ad* px = (ad*)(&x);
   return *px;
 }
