@@ -48,6 +48,16 @@ void fuse(TMBad::ADFun<>* adf) {
 void optimize(TMBad::ADFun<>* adf) {
   (*adf).optimize();
 }
+SEXP ptrTMB(TMBad::ADFun<>* pf) {
+  SEXP res;
+  PROTECT(res=R_MakeExternalPtr((void*) pf,Rf_install("ADFun"),R_NilValue));
+  //Rf_setAttrib(res,Rf_install("range.names"),info);
+  SEXP ans;
+  //Rf_setAttrib(res,Rf_install("par"),par);
+  PROTECT(ans=ptrList(res));
+  UNPROTECT(2);
+  return ans;
+}
 // Collect free functions in a module
 RCPP_MODULE(mod_adfun) {
   using namespace Rcpp;
@@ -62,6 +72,7 @@ RCPP_MODULE(mod_adfun) {
   .method("parallelize", &parallelize)
   .method("fuse", &fuse)
   .method("optimize", &optimize)
+  .method("ptrTMB", &ptrTMB)
   ;
 }
 

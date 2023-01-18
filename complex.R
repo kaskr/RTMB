@@ -1,6 +1,6 @@
 library(Rcpp)
 
-mod <- sourceCpp("complex.cpp", verbose=TRUE)
+mod <- sourceCpp("complex.cpp", cacheDir=getwd(), verbose=TRUE)
 
 advector <- function(x) {
     if (inherits(x, "advector"))
@@ -87,8 +87,13 @@ MakeTape <- function(f, x, optimize=TRUE) {
     F$start()
     ## Make sure to stop even in case of failure
     on.exit(F$stop())
-    x <- advector(x)
-    x <- independent(x)
+    activate <- function(x)independent(advector(x))
+    if (is.list(x)) {
+        for (i in seq_along(x))
+            x[[i]] <- activate(x[[i]])
+    } else {
+        x <- activate(x)
+    }
     y <- f(x)
     dependent(y)
     F
@@ -116,3 +121,52 @@ f <- function(theta) {
 start <- c(2,3,1)+1
 F <- MakeTape(f, start)
 nlminb(start, F$eval, F$jacobian)
+
+library(TMB)
+## FIXME: Add data argument?
+MakeADFun <- function(func, parameters, random=NULL, ...) {
+    ## Make empty object
+    obj <- TMB::MakeADFun(data=list(),
+                          parameters=list(),
+                          DLL="sourceCpp_2",
+                          checkParameterOrder=FALSE)
+    ## Overload and retape
+    obj$env$MakeADFunObject <- function(data,parameters,...) {
+        rcpp <- MakeTape(func, parameters)
+        ans <- rcpp$ptrTMB()
+        lgt <- lengths(parameters)
+        par <- unlist(parameters, use.names=FALSE)
+        names(par) <- rep(names(lgt), lgt)
+        ans$DLL <- obj$env$DLL
+        attr(ans$ptr, "par") <- par
+        attr(ans, "rcpp") <- rcpp ## rcpp manages this ptr (no need for finalizer)
+        ans
+    }
+    ## FIXME: Skip for now
+    obj$env$MakeDoubleFunObject <- function(...)NULL
+    obj$env$EvalDoubleFunObject <- function(...)NULL
+    ## Change storage mode to double
+    obj$env$parameters <- lapply(parameters, "+", 0.)
+    obj$env$.random <- random
+    if (!is.null(random))
+        obj$env$type <- c(obj$env$type, "ADGrad")
+    obj$retape()
+    obj$par <- local(par[lfixed()],obj$env)
+    obj
+}
+
+x <- 1:10
+y <- 2*x+3+rnorm(length(x))
+f <- function(pl) {
+    a <- pl$a
+    b <- pl$b
+    sd <- exp(pl$logsd)
+    mu <- a*x+b
+    -sum(dnorm(y, mu, sd, log=TRUE))
+}
+
+p <- list(a=2,b=3,logsd=1)
+obj <- MakeADFun(f, p, random="a")
+obj$fn()
+obj$gr()
+obj$he()
