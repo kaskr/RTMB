@@ -297,3 +297,28 @@ void dbgprint(const Rcpp::ComplexVector &x) {
           << " valid=" << valid(xi) << "\n";
   }
 }
+
+// [[Rcpp::export]]
+const Rcpp::ComplexVector matmul (const Rcpp::ComplexMatrix &x,
+                                  const Rcpp::ComplexMatrix &y,
+                                  std::string method) {
+  typedef Eigen::Map<Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > MapMatrix;
+  typedef Eigen::Map<const Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > ConstMapMatrix;
+  if (x.ncol() != y.nrow())
+    Rcpp::stop("non-conformable arguments");
+  CHECK_INPUT(x);
+  CHECK_INPUT(y);
+  Rcpp::ComplexMatrix z(x.nrow(), y.ncol());
+  ConstMapMatrix X((ad*) x.begin(), x.nrow(), x.ncol());
+  ConstMapMatrix Y((ad*) y.begin(), y.nrow(), y.ncol());
+  MapMatrix Z((ad*) z.begin(), z.nrow(), z.ncol());
+  if (!method.compare("plain"))
+    Z = X * Y;
+  else if (!method.compare("atomic"))
+    Z = atomic::matmul(matrix<ad>(X), matrix<ad>(Y));
+  else if (!method.compare("TMBad"))
+    Z = TMBad::matmul(matrix<ad>(X), matrix<ad>(Y));
+  else
+    Rf_error("Method '%s' not implemented", method.c_str());
+  return as_advector(z);
+}

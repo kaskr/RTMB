@@ -24,6 +24,14 @@ advector <- function(x) {
     x
 }
 
+## Matrix multiply is not a simple generic - overload entirely
+"%*%" <- function(x, y) {
+    if (inherits(x, "advector") || inherits(y, "advector"))
+        matmul(x, y, method="atomic")
+    else
+        .Primitive("%*%")(x, y)
+}
+
 ## Make array(x) work. Also affects as.list(x)
 as.vector.advector <- function(x, mode = "any") {
     structure(NextMethod(), class="advector")
