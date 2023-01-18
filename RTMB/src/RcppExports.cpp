@@ -2,6 +2,7 @@
 // Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #include <Rcpp.h>
+#include "TMB.h"
 
 using namespace Rcpp;
 
@@ -140,6 +141,7 @@ END_RCPP
 RcppExport SEXP _rcpp_module_boot_mod_adfun();
 
 static const R_CallMethodDef CallEntries[] = {
+  TMB_CALLDEFS,
     {"_RTMB_valid", (DL_FUNC) &_RTMB_valid, 1},
     {"_RTMB_advec", (DL_FUNC) &_RTMB_advec, 1},
     {"_RTMB_dependent", (DL_FUNC) &_RTMB_dependent, 1},

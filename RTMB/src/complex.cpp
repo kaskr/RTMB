@@ -1,7 +1,6 @@
 // [[Rcpp::depends(TMB)]]
 #include <Rcpp.h>
-#define TMBAD_FRAMEWORK
-#include <TMB.hpp>
+#include "TMB.h"
 
 // Dummy
 template<class Type>
