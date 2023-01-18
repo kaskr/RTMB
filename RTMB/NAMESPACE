@@ -1,3 +1,4 @@
 useDynLib(RTMB, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
+importFrom(Rcpp, loadModule)
 exportPattern("^[[:alpha:]]+")
