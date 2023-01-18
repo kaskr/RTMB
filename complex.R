@@ -1,6 +1,6 @@
 library(Rcpp)
 
-mod <- sourceCpp("complex.cpp", cacheDir=getwd(), verbose=TRUE)
+mod <- sourceCpp("complex.cpp", cacheDir=getwd(), cleanupCacheDir=TRUE, verbose=TRUE)
 
 advector <- function(x) {
     if (inherits(x, "advector"))

@@ -95,6 +95,12 @@ ad cplx2ad(const Rcomplex &x) {
   ad* px = (ad*)(&x);
   return *px;
 }
+ad* adptr(const Rcpp::ComplexVector &x) {
+  static_assert(sizeof(ad) == sizeof(Rcomplex),
+                "ad size must match Rcomplex");
+  ad* px = (x.size() > 0 ? (ad*)(&(x[0])) : NULL);
+  return px;
+}
 bool is_advector (const Rcpp::ComplexVector &x) {
   return
     x.hasAttribute("class") &&
@@ -172,15 +178,18 @@ Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
   CHECK_INPUT(x);
   CHECK_INPUT(y);
   size_t nx = x.size(), ny = y.size();
-  size_t n = std::max(nx, ny);
+  size_t n = (std::min(nx, ny) > 0 ? std::max(nx, ny) : 0);
   Rcpp::ComplexVector z(n);
-#define CALL(OP) for (size_t i=0; i<n; i++) z[i] = ad2cplx( cplx2ad(x[i % nx]) OP cplx2ad(y[i % ny]) )
+  const ad* X = adptr(x);
+  const ad* Y = adptr(y);
+  ad* Z = adptr(z);
+#define CALL(OP) for (size_t i=0; i<n; i++) Z[i] = X[i % nx] OP Y[i % ny]
   if (!op.compare("+")) CALL(+);
   else if (!op.compare("-")) CALL(-);
   else if (!op.compare("*")) CALL(*);
   else if (!op.compare("/")) CALL(/);
   else if (!op.compare("^")) {
-    for (size_t i=0; i<n; i++) z[i] = ad2cplx(pow( cplx2ad(x[i % nx]) , cplx2ad(y[i % ny])));
+    for (size_t i=0; i<n; i++) Z[i] = pow(X[i % nx] , Y[i % ny]);
   }
   else Rf_error("Not implemented");
 #undef CALL
@@ -211,8 +220,10 @@ Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
   CHECK_INPUT(x);
   size_t n = x.size();
   Rcpp::ComplexVector y(n);
-#define CALL(OP) for (size_t i=0; i<n; i++) y[i] = ad2cplx( OP( cplx2ad(x[i]) ) )
-#define CUMC(OP) for (size_t i=1; i<n; i++) y[i] = ad2cplx(cplx2ad(y[i-1]) OP cplx2ad(x[i]));
+  const ad* X = adptr(x);
+  ad* Y = adptr(y);
+#define CALL(OP) for (size_t i=0; i<n; i++) Y[i] = OP ( X[i] )
+#define CUMC(OP) for (size_t i=1; i<n; i++) Y[i] = Y[i-1] OP X[i];
   if (!op.compare("abs")) CALL(fabs);
   else if (!op.compare("sqrt")) CALL(sqrt);
   else if (!op.compare("exp")) CALL(exp);
@@ -224,10 +235,10 @@ Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
   else if (!op.compare("asin")) CALL(asin);
   else if (!op.compare("atan")) CALL(atan);
   else if (!op.compare("cumsum")) {
-    if (n > 0) { y[0] = x[0]; CUMC(+); }
+    if (n > 0) { Y[0] = X[0]; CUMC(+); }
   }
   else if (!op.compare("cumprod")) {
-    if (n > 0) { y[0] = x[0]; CUMC(*); }
+    if (n > 0) { Y[0] = X[0]; CUMC(*); }
   }
   else Rf_error("Not implemented");
 #undef CALL
