@@ -191,7 +191,7 @@ Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
   else if (!op.compare("^")) {
     for (size_t i=0; i<n; i++) Z[i] = pow(X[i % nx] , Y[i % ny]);
   }
-  else Rf_error("Not implemented");
+  else Rf_error("'%s' not implemented", op.c_str());
 #undef CALL
   return as_advector(z);
 }
@@ -234,13 +234,14 @@ Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
   else if (!op.compare("acos")) CALL(acos);
   else if (!op.compare("asin")) CALL(asin);
   else if (!op.compare("atan")) CALL(atan);
+  else if (!op.compare("lgamma")) CALL(lgamma);
   else if (!op.compare("cumsum")) {
     if (n > 0) { Y[0] = X[0]; CUMC(+); }
   }
   else if (!op.compare("cumprod")) {
     if (n > 0) { Y[0] = X[0]; CUMC(*); }
   }
-  else Rf_error("Not implemented");
+  else Rf_error("'%s' not implemented", op.c_str());
 #undef CALL
 #undef CUMC
   return as_advector(y);
@@ -257,8 +258,8 @@ Rcpp::ComplexVector Reduce1(const Rcpp::ComplexVector &x, std::string op) {
     ans = 0.; REDUCE(+);
   } else if (!op.compare("*")) {
     ans = 1.; REDUCE(*);
-  } else
-    Rf_error("Not implemented");
+  }
+  else Rf_error("'%s' not implemented", op.c_str());
 #undef REDUCE
   y[0] = ad2cplx(ans);
   return as_advector(y);
