@@ -141,7 +141,7 @@ END_RCPP
 RcppExport SEXP _rcpp_module_boot_mod_adfun();
 
 static const R_CallMethodDef CallEntries[] = {
-  TMB_CALLDEFS,
+    TMB_CALLDEFS,
     {"_RTMB_valid", (DL_FUNC) &_RTMB_valid, 1},
     {"_RTMB_advec", (DL_FUNC) &_RTMB_advec, 1},
     {"_RTMB_dependent", (DL_FUNC) &_RTMB_dependent, 1},
