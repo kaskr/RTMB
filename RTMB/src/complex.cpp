@@ -298,9 +298,9 @@ void dbgprint(const Rcpp::ComplexVector &x) {
 }
 
 // [[Rcpp::export]]
-const Rcpp::ComplexVector matmul (const Rcpp::ComplexMatrix &x,
-                                  const Rcpp::ComplexMatrix &y,
-                                  std::string method) {
+Rcpp::ComplexVector matmul (const Rcpp::ComplexMatrix &x,
+                            const Rcpp::ComplexMatrix &y,
+                            std::string method) {
   typedef Eigen::Map<Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > MapMatrix;
   typedef Eigen::Map<const Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > ConstMapMatrix;
   if (x.ncol() != y.nrow())
@@ -319,5 +319,26 @@ const Rcpp::ComplexVector matmul (const Rcpp::ComplexMatrix &x,
     Z = TMBad::matmul(matrix<ad>(X), matrix<ad>(Y));
   else
     Rf_error("Method '%s' not implemented", method.c_str());
+  return as_advector(z);
+}
+
+// [[Rcpp::export]]
+Rcpp::ComplexVector dmvnorm0 (const Rcpp::ComplexVector &x,
+                              const Rcpp::ComplexMatrix &s,
+                              bool give_log) {
+  typedef Eigen::Map<const Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > ConstMapMatrix;
+  typedef Eigen::Map<const Eigen::Array<ad, Eigen::Dynamic, 1> > ConstMapVector;
+  if (s.ncol() != s.nrow())
+    Rcpp::stop("cov matrix must be square");
+  if (x.size() != s.nrow())
+    Rcpp::stop("non-conformable arguments");
+  CHECK_INPUT(x);
+  CHECK_INPUT(s);
+  Rcpp::ComplexVector z(1);
+  ConstMapVector X((ad*) x.begin(), x.size());
+  ConstMapMatrix S((ad*) s.begin(), s.nrow(), s.ncol());
+  ad ans = -density::MVNORM(matrix<ad>(S))(vector<ad>(X));
+  if (!give_log) ans = exp(ans);
+  z[0] = ad2cplx(ans);
   return as_advector(z);
 }

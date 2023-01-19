@@ -86,6 +86,10 @@ dnorm <- function(x, mean = 0, sd = 1, log = FALSE) {
     if (log) ans else exp(ans)
 }
 
+dmvnorm <- function(x, mu, Sigma, log=FALSE) {
+    dmvnorm0(x - mu, Sigma, log)
+}
+
 MakeTape <- function(f, x, optimize=TRUE) {
     F <- new(adfun)
     F$start()
