@@ -18,9 +18,20 @@ advector <- function(x) {
             e2 <- e1; e1 <- 0
         }
     }
-    Arith2(advector(e1),
-           advector(e2),
-           .Generic)
+    ans <- Arith2(advector(e1),
+                  advector(e2),
+                  .Generic)
+    ## Object determining attrib of result
+    e <- if (length(e2) > length(e1) || length(e2) == 0)
+             e2
+         else
+             e1
+    a <- attributes(e)
+    if (!is.null(a)) {
+        a$class <- "advector"
+        attributes(ans) <- a
+    }
+    ans
 }
 "Math.advector" <- function(x) {
     x[] <- Math1(x, .Generic)
