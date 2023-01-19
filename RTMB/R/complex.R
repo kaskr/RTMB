@@ -29,8 +29,11 @@ advector <- function(x) {
 
 ## Matrix multiply is not a simple generic - overload entirely
 "%*%" <- function(x, y) {
-    if (inherits(x, "advector") || inherits(y, "advector"))
-        matmul(x, y, method="atomic")
+    if (inherits(x, "advector") || inherits(y, "advector")) {
+        x <- as.matrix(x)
+        y <- as.matrix(y)
+        matmul(advector(x), advector(y), method="atomic")
+    }
     else
         .Primitive("%*%")(x, y)
 }
