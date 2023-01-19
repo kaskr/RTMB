@@ -3,7 +3,14 @@ advector <- function(x) {
         return (x)
     if (is.complex(x))
         stop("Invalid argument to 'advector' (lost class attribute?)")
-    advec(x)
+    ans <- advec(x)
+    ## FIXME: Handling of attributes has to be carefully considered
+    a <- attributes(x)
+    if (!is.null(a)) {
+        a$class <- c("advector", a$class)
+        attributes(ans) <- a
+    }
+    ans
 }
 "Ops.advector" <- function(e1, e2) {
     if (missing(e2)) {
@@ -86,8 +93,27 @@ dnorm <- function(x, mean = 0, sd = 1, log = FALSE) {
     if (log) ans else exp(ans)
 }
 
+## Helpers to autogenerate a numeric version of a function that is only available for AD types.
+.adv2adv <- function(x) x
+.adv2num <- function(x) {
+    a <- attributes(x)
+    a$class <- NULL
+    ans <- getValues(x)
+    attributes(ans) <- a
+    ans
+}
+.anstype <- function(...) {
+    if (any(unlist(lapply(list(...), inherits, "advector"))))
+        .adv2adv
+    else
+        .adv2num
+}
+
 dmvnorm <- function(x, mu, Sigma, log=FALSE) {
-    dmvnorm0(x - mu, Sigma, log)
+    x <- as.matrix(x)
+    x[] <- x - mu
+    anstype <- .anstype(x, Sigma)
+    anstype( dmvnorm0(advector(x), advector(Sigma), log) )
 }
 
 MakeTape <- function(f, x, optimize=TRUE) {
