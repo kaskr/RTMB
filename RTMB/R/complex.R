@@ -82,8 +82,7 @@ sapply <- function (X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE) {
 
 print.advector <- function (x, ...)  {
     cat("class='advector'\n")
-    y <- getValues(x)
-    dim(y) <- dim(x)
+    y <- .adv2num(x)
     print(y, ...)
 }
 
