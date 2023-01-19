@@ -323,22 +323,24 @@ Rcpp::ComplexVector matmul (const Rcpp::ComplexMatrix &x,
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector dmvnorm0 (const Rcpp::ComplexVector &x,
+Rcpp::ComplexVector dmvnorm0 (const Rcpp::ComplexMatrix &x,
                               const Rcpp::ComplexMatrix &s,
                               bool give_log) {
   typedef Eigen::Map<const Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > ConstMapMatrix;
-  typedef Eigen::Map<const Eigen::Array<ad, Eigen::Dynamic, 1> > ConstMapVector;
   if (s.ncol() != s.nrow())
     Rcpp::stop("cov matrix must be square");
-  if (x.size() != s.nrow())
+  if (x.nrow() != s.nrow())
     Rcpp::stop("non-conformable arguments");
   CHECK_INPUT(x);
   CHECK_INPUT(s);
-  Rcpp::ComplexVector z(1);
-  ConstMapVector X((ad*) x.begin(), x.size());
+  Rcpp::ComplexVector z(x.ncol());
+  ConstMapMatrix X((ad*) x.begin(), x.nrow(), x.ncol());
   ConstMapMatrix S((ad*) s.begin(), s.nrow(), s.ncol());
-  ad ans = -density::MVNORM(matrix<ad>(S))(vector<ad>(X));
-  if (!give_log) ans = exp(ans);
-  z[0] = ad2cplx(ans);
+  auto nldens = density::MVNORM(matrix<ad>(S));
+  for (int j=0; j < X.cols(); j++) {
+    ad ans = -nldens(vector<ad>(X.col(j)));
+    if (!give_log) ans = exp(ans);
+    z[j] = ad2cplx(ans);
+  }
   return as_advector(z);
 }

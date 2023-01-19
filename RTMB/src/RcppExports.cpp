@@ -138,12 +138,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // dmvnorm0
-Rcpp::ComplexVector dmvnorm0(const Rcpp::ComplexVector& x, const Rcpp::ComplexMatrix& s, bool give_log);
+Rcpp::ComplexVector dmvnorm0(const Rcpp::ComplexMatrix& x, const Rcpp::ComplexMatrix& s, bool give_log);
 RcppExport SEXP _RTMB_dmvnorm0(SEXP xSEXP, SEXP sSEXP, SEXP give_logSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type s(sSEXP);
     Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
     rcpp_result_gen = Rcpp::wrap(dmvnorm0(x, s, give_log));
