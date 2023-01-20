@@ -147,12 +147,14 @@ MakeTape <- function(f, x, optimize=TRUE) {
 }
 
 ## FIXME: Add data argument?
-MakeADFun <- function(func, parameters, random=NULL, ...) {
+MakeADFun <- function(func, parameters, random=NULL, map=list(), ...) {
     ## Make empty object
     obj <- TMB::MakeADFun(data=list(),
-                          parameters=list(),
-                          DLL="RTMB",
-                          checkParameterOrder=FALSE)
+                          parameters=parameters,
+                          random=random,
+                          map=map,
+                          checkParameterOrder=FALSE,
+                          DLL="RTMB")
     ## Overload and retape
     obj$env$MakeADFunObject <- function(data,parameters,...) {
         rcpp <- MakeTape(func, parameters)
@@ -168,12 +170,6 @@ MakeADFun <- function(func, parameters, random=NULL, ...) {
     ## FIXME: Skip for now
     obj$env$MakeDoubleFunObject <- function(...)NULL
     obj$env$EvalDoubleFunObject <- function(...)NULL
-    ## Change storage mode to double
-    obj$env$parameters <- lapply(parameters, "+", 0.)
-    obj$env$.random <- random
-    if (!is.null(random))
-        obj$env$type <- c(obj$env$type, "ADGrad")
     obj$retape()
-    obj$par <- local(par[lfixed()],obj$env)
     obj
 }

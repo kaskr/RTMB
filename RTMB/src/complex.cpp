@@ -5,6 +5,8 @@
 // Dummy
 template<class Type>
 Type objective_function<Type>::operator() () {
+  // pretend all parameters have been read
+  this->index = this->theta.size();
   return 0;
 }
 
