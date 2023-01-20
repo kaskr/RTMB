@@ -8,4 +8,6 @@ rcpp:
 	sed -i '/R_useDynamicSymbols/ s/$$/\n    TMB_CCALLABLES("RTMB");/' RTMB/src/RcppExports.cpp
 
 test:
+	cd tmb_examples; R --slave < linreg.R
 	cd tmb_examples; R --slave < spatial.R
+	cd tmb_examples; R --slave < mvrw.R
