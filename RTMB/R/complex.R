@@ -170,15 +170,42 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ...) {
                           map=map,
                           checkParameterOrder=FALSE,
                           DLL="RTMB")
+    ## Handling maps (copied and modified parList)
+    parList <- function (parameters, par) {
+        ans <- parameters
+        ans[] <- lapply(ans, advector) ## (!)
+        nonemp <- lengths(ans) > 0
+        nonempindex <- which(nonemp)
+        skeleton <- as.relistable(ans[nonemp])
+        li <- relist(par, skeleton)
+        reshape <- function(x) {
+            if (is.null(attr(x, "map")))
+                return(x)
+            y <- attr(x, "shape")
+            y <- advector(y) ## (!)
+            f <- attr(x, "map")
+            i <- which(f >= 0)
+            y[i] <- x[f[i] + 1]
+            y
+        }
+        for (i in seq(skeleton)) {
+            ans[[nonempindex[i]]][] <- as.vector(li[[i]])
+        }
+        for (i in seq(ans)) {
+            ans[[i]] <- reshape(ans[[i]])
+        }
+        ans
+    }
     ## Overload and retape
     obj$env$MakeADFunObject <- function(data,parameters,...) {
-        rcpp <- MakeTape(func, parameters)
+        mapfunc <- function(par) {
+            pl <- parList(parameters, par)
+            func(pl)
+        }
+        rcpp <- MakeTape(mapfunc, obj$env$par)
         ans <- rcpp$ptrTMB()
-        lgt <- lengths(parameters)
-        par <- unlist(parameters, use.names=FALSE)
-        names(par) <- rep(names(lgt), lgt)
         ans$DLL <- obj$env$DLL
-        attr(ans$ptr, "par") <- par
+        attr(ans$ptr, "par") <- obj$env$par
         attr(ans, "rcpp") <- rcpp ## rcpp manages this ptr (no need for finalizer)
         ans
     }
