@@ -79,6 +79,12 @@ rep.advector <- function (x, ...) {
 sum.advector <- function(x, na.rm)Reduce1(x, "+")
 prod.advector <- function(x, na.rm)Reduce1(x, "*")
 
+## If an overload has issues we can patch it:
+diff_patch <- base::diff.default
+environment(diff_patch) <- local({unclass <- function(x)x; environment()})
+diff.advector <- function (x, lag = 1L, differences = 1L, ...) {
+    diff_patch(x, lag = 1L, differences = 1L, ...)
+}
 
 ## Danger?
 apply <- function (X, MARGIN, FUN, ...)  {
