@@ -129,10 +129,15 @@ dnorm <- function(x, mean = 0, sd = 1, log = FALSE) {
 }
 
 dmvnorm <- function(x, mu, Sigma, log=FALSE) {
-    x <- as.matrix(x)
-    x[] <- x - mu
-    anstype <- .anstype(x, Sigma)
-    anstype( dmvnorm0(advector(x), advector(Sigma), log) )
+    ## R convention is to have samples by row
+    x <- t(as.matrix(x))
+    mu <- t(as.matrix(mu))
+    Sigma <- as.matrix(Sigma)
+    d <- nrow(Sigma)
+    x0 <- as.vector(x) - as.vector(mu)
+    dim(x0) <- c(d, length(x0) / d)
+    anstype <- .anstype(x0, Sigma)
+    anstype( dmvnorm0(advector(x0), advector(Sigma), log) )
 }
 
 MakeTape <- function(f, x, optimize=TRUE) {
