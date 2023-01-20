@@ -145,7 +145,11 @@ MakeTape <- function(f, x, optimize=TRUE) {
     F$start()
     ## Make sure to stop even in case of failure
     on.exit(F$stop())
-    activate <- function(x)independent(advector(x))
+    activate <- function(x) {
+        x <- advector(x)
+        x[] <- independent(x)
+        x
+    }
     if (is.list(x)) {
         for (i in seq_along(x))
             x[[i]] <- activate(x[[i]])
