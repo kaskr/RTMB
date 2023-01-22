@@ -162,12 +162,15 @@ MakeTape <- function(f, x, optimize=TRUE) {
 }
 
 ## FIXME: Add data argument?
-MakeADFun <- function(func, parameters, random=NULL, map=list(), ...) {
+MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE, ...) {
+    if (is.list(func))
+        func <- attr(func, "func")
     ## Make empty object
     obj <- TMB::MakeADFun(data=list(),
                           parameters=parameters,
                           random=random,
                           map=map,
+                          ADreport=FALSE,
                           checkParameterOrder=FALSE,
                           DLL="RTMB")
     ## Handling maps (copied and modified parList)
@@ -197,21 +200,73 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ...) {
         ans
     }
     ## Overload and retape
-    obj$env$MakeADFunObject <- function(data,parameters,...) {
+    obj$env$MakeADFunObject <- function(data,parameters, reportenv, ADreport = FALSE,...) {
         mapfunc <- function(par) {
+            ADREPORT_ENV$clear()
             pl <- parList(parameters, par)
-            func(pl)
+            ans <- func(pl)
+            if (ADreport) {
+                ans <- do.call("c", lapply(ADREPORT_ENV$result(), advector) )
+                if (length(ans) == 0) ans <- advector(numeric(0))
+            }
+            ans
         }
+        ## In TMB the 'par' is created on the C++ side
+        obj$env$par <- unlist(parameters, use.names=FALSE)
+        lgt <- lengths(parameters)
+        names(obj$env$par) <- rep(names(lgt), lgt)
         rcpp <- MakeTape(mapfunc, obj$env$par)
         ans <- rcpp$ptrTMB()
         ans$DLL <- obj$env$DLL
         attr(ans$ptr, "par") <- obj$env$par
+        if (ADreport) {
+            attr(ans$ptr, "range.names") <- ADREPORT_ENV$namevec()
+            obj$env$ADreportDims <- ADREPORT_ENV$dims()
+            ADREPORT_ENV$clear()
+        }
         attr(ans, "rcpp") <- rcpp ## rcpp manages this ptr (no need for finalizer)
         ans
     }
     ## FIXME: Skip for now
     obj$env$MakeDoubleFunObject <- function(...)NULL
     obj$env$EvalDoubleFunObject <- function(...)NULL
+    attr(obj$env$data, "func") <- func
+    obj$env$ADreport <- ADreport
     obj$retape()
+    obj$par <- local(par[lfixed()], obj$env)
     obj
 }
+
+sdreport <- function(obj, ...) {
+    sdreport_patch <- TMB::sdreport
+    tmb_envir <- environment(sdreport_patch)
+    env <- local({ MakeADFun <- RTMB::MakeADFun; environment() })
+    parent.env(env) <- tmb_envir
+    environment(sdreport_patch) <- env
+    sdreport_patch(obj, ...)
+}
+
+reporter <- function() {
+    ans <- list()
+    report <- function(x) {
+        nm <- deparse(substitute(x))
+        ans[[nm]] <<- x
+        NULL
+    }
+    result <- function() ans
+    namevec <- function() {
+        lgts <- lengths(ans)
+        rep(names(lgts), lgts)
+    }
+    dims <- function() {
+        getd <- function(x) { d <- dim(x); if(is.null(d)) length(x) else d}
+        lapply(ans, getd)
+    }
+    clear <- function() ans <<- list()
+    environment()
+}
+ADREPORT_ENV <- reporter()
+REPORT_ENV <- reporter()
+## User exported
+ADREPORT <- ADREPORT_ENV$report
+REPORT <- REPORT_ENV$report

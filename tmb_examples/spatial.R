@@ -30,5 +30,5 @@ system.time(
                   upper=c( 100.0,  100.0, 3.00,  3.0) )
 )
 
-rep <- TMB::sdreport(obj)
+rep <- sdreport(obj)
 rep

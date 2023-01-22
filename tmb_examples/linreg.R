@@ -9,8 +9,7 @@ f <- function(parms) {
     a <- parms$a
     b <- parms$b
     logSigma <- parms$logSigma
-    ## FIXME:
-    ## ADREPORT(exp(2*logSigma));
+    ADREPORT(exp(2*logSigma));
     nll = -sum(dnorm(Y, a+b*x, exp(logSigma), TRUE))
     nll
 }
@@ -21,4 +20,5 @@ opt <- do.call("optim", obj)
 opt
 opt$hessian ## <-- FD hessian from optim
 obj$he()    ## <-- Analytical hessian
-TMB::sdreport(obj)
+rep <- sdreport(obj)
+summary(rep)

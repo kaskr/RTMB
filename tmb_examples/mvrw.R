@@ -56,6 +56,7 @@ f <- function(
     cov <- outer(1:stateDim,
                  1:stateDim,
                  function(i,j) rho^(abs(i-j)) * sds[i] * sds[j])
+    ADREPORT(cov)
     du <- diff(t(u))
     ans <- 0
     ans <- ans - sum(dmvnorm(du, 0, cov, log=TRUE))
@@ -74,4 +75,4 @@ obj$gr()
 system.time(opt <- do.call("optim",obj))
 pl <- obj$env$parList() ## <-- List of predicted random effects
 matpoints(t(pl$u),type="l",col="blue",lwd=2)
-TMB::sdreport(obj)
+sdreport(obj)
