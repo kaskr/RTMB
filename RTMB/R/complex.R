@@ -204,10 +204,19 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
         mapfunc <- function(par) {
             ADREPORT_ENV$clear()
             pl <- parList(parameters, par)
+            bias.correct <- ("TMB_epsilon_" %in% names(pl))
+            if (bias.correct) {
+                eps <- pl$TMB_epsilon_
+                pl$TMB_epsilon_ <- NULL
+            }
             ans <- func(pl)
-            if (ADreport) {
-                ans <- do.call("c", lapply(ADREPORT_ENV$result(), advector) )
-                if (length(ans) == 0) ans <- advector(numeric(0))
+            if (ADreport || bias.correct) {
+                adrep <- do.call("c", lapply(ADREPORT_ENV$result(), advector) )
+                if (length(adrep) == 0) adrep <- advector(numeric(0))
+                if (bias.correct)
+                    ans <- ans + sum(adrep * eps)
+                else
+                    ans <- adrep
             }
             ans
         }
