@@ -346,3 +346,58 @@ Rcpp::ComplexVector dmvnorm0 (const Rcpp::ComplexMatrix &x,
   }
   return as_advector(z);
 }
+
+
+// ============================== Sparse matrices
+Eigen::SparseMatrix<ad> SparseInput(const Rcpp::ComplexVector &x) {
+  CHECK_INPUT(x);
+  Rcpp::IntegerVector i = x.attr("i");
+  Rcpp::IntegerVector p = x.attr("p");
+  Rcpp::IntegerVector Dim = x.attr("Dim");
+  return
+    Eigen::Map<const Eigen::SparseMatrix<ad> > (Dim[0], // rows()
+                                                Dim[1], // cols()
+                                                i.size(), // nonZeros()
+                                                p.begin(), // outerIndexPtr()
+                                                i.begin(), // innerIndexPtr()
+                                                (ad*) x.begin(), // data()
+                                                NULL); // innerNonZeroPtr();
+}
+
+Rcpp::ComplexVector SparseOutput (const Eigen::SparseMatrix<ad> &x) {
+  size_t nnz  = x.nonZeros();
+  Rcpp::IntegerVector Dim(2);
+  Dim[0] = x.rows();
+  Dim[1] = x.cols();
+  Rcpp::IntegerVector i(x.innerIndexPtr(), x.innerIndexPtr() + nnz);
+  Rcpp::IntegerVector p(x.outerIndexPtr(), x.outerIndexPtr() + Dim[1] + 1);
+  Rcpp::ComplexVector ans( (Rcomplex*) x.valuePtr(), (Rcomplex*) (x.valuePtr() + nnz));
+  ans.attr("i") = i;
+  ans.attr("p") = p;
+  ans.attr("Dim") = Dim;
+  return as_advector(ans);
+}
+
+// [[Rcpp::export]]
+Rcpp::ComplexVector testSparse(const Rcpp::ComplexVector &x) {
+  using TMBad::operator<<;
+  Eigen::SparseMatrix<ad> X = SparseInput(x);
+  Rcout << X << "\n";
+  Eigen::SparseMatrix<ad> Y = X+X;
+  Rcout << Y << "\n";
+  return SparseOutput(Y);
+}
+
+// [[Rcpp::export]]
+Rcpp::ComplexVector SparseArith2(const Rcpp::ComplexVector &x, const Rcpp::ComplexVector &y, std::string op) {
+  CHECK_INPUT(x);
+  CHECK_INPUT(y);
+  Eigen::SparseMatrix<ad> X = SparseInput(x);
+  Eigen::SparseMatrix<ad> Y = SparseInput(y);
+  Rcpp::ComplexVector z;
+  if (!op.compare("+"))      z = SparseOutput(X + Y);
+  else if (!op.compare("-")) z = SparseOutput(X - Y);
+  else if (!op.compare("*")) z = SparseOutput(X * Y);
+  else Rf_error("'%s' not implemented", op.c_str());
+  return z;
+}

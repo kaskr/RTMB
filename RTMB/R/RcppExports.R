@@ -49,3 +49,11 @@ dmvnorm0 <- function(x, s, give_log) {
     .Call(`_RTMB_dmvnorm0`, x, s, give_log)
 }
 
+testSparse <- function(x) {
+    .Call(`_RTMB_testSparse`, x)
+}
+
+SparseArith2 <- function(x, y, op) {
+    .Call(`_RTMB_SparseArith2`, x, y, op)
+}
+
