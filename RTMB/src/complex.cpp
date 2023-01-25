@@ -377,9 +377,14 @@ Eigen::SparseMatrix<ad> SparseInput(const Rcpp::ComplexVector &x);
 Rcpp::ComplexVector dgmrf0 (const Rcpp::ComplexMatrix &x,
                             const Rcpp::ComplexVector &q,
                             bool give_log) {
+  // TMB FIXME:
+  //   newton::log_determinant<TMBad::global::ad_aug> (H=...) at /TMB/include/tmbutils/newton.hpp:1191
+  // adds to tape!
+  if (!ad_context())
+    Rcpp::stop("'dgmrf0' currently requires an active tape");
   if (!is_sparse(q))
     Rcpp::stop("Precision matrix must be sparse");
-  Rcpp::IntegerVector Dim = x.attr("Dim");
+  Rcpp::IntegerVector Dim = q.attr("Dim");
   if (Dim[0] != Dim[1])
     Rcpp::stop("Precision matrix must be square");
   if (x.nrow() != Dim[0])
