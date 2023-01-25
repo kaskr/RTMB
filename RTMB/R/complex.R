@@ -163,6 +163,21 @@ dmvnorm <- function(x, mu, Sigma, log=FALSE) {
     anstype( dmvnorm0(advector(x0), advector(Sigma), log) )
 }
 
+dgmrf <- function(x, mu, Q, log=FALSE) {
+    if (!ad_context()) { ## Workaround: see C++ code 'gmrf0'
+        F <- MakeTape(function(...)advector(dgmrf(x,mu,Q,log)),numeric(0))
+        return (F$eval(numeric(0)))
+    }
+    ## R convention is to have samples by row
+    x <- t(as.matrix(x))
+    mu <- t(as.matrix(mu))
+    d <- attr(Q, "Dim")[1]
+    x0 <- as.vector(x) - as.vector(mu)
+    dim(x0) <- c(d, length(x0) / d)
+    anstype <- .anstype(x0, Q)
+    anstype( dgmrf0(advector(x0), magic(Q, TRUE), log) )
+}
+
 MakeTape <- function(f, x, optimize=TRUE) {
     F <- new(adfun)
     F$start()
