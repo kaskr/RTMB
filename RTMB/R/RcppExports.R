@@ -53,6 +53,10 @@ dmvnorm0 <- function(x, s, give_log) {
     .Call(`_RTMB_dmvnorm0`, x, s, give_log)
 }
 
+dgmrf0 <- function(x, q, give_log) {
+    .Call(`_RTMB_dgmrf0`, x, q, give_log)
+}
+
 testSparse <- function(x) {
     .Call(`_RTMB_testSparse`, x)
 }

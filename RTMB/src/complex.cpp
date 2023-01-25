@@ -372,6 +372,24 @@ Rcpp::ComplexVector dmvnorm0 (const Rcpp::ComplexMatrix &x,
   return colApply(x, nldens, give_log);
 }
 
+Eigen::SparseMatrix<ad> SparseInput(const Rcpp::ComplexVector &x);
+// [[Rcpp::export]]
+Rcpp::ComplexVector dgmrf0 (const Rcpp::ComplexMatrix &x,
+                            const Rcpp::ComplexVector &q,
+                            bool give_log) {
+  if (!is_sparse(q))
+    Rcpp::stop("Precision matrix must be sparse");
+  Rcpp::IntegerVector Dim = x.attr("Dim");
+  if (Dim[0] != Dim[1])
+    Rcpp::stop("Precision matrix must be square");
+  if (x.nrow() != Dim[0])
+    Rcpp::stop("non-conformable arguments");
+  CHECK_INPUT(x);
+  CHECK_INPUT(q);
+  Eigen::SparseMatrix<ad> Q = SparseInput(q);
+  auto nldens = density::GMRF(Q);
+  return colApply(x, nldens, give_log);
+}
 
 // ============================== Sparse matrices
 Eigen::SparseMatrix<ad> SparseInput(const Rcpp::ComplexVector &x) {
