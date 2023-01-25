@@ -107,6 +107,12 @@ bool is_advector (const Rcpp::ComplexVector &x) {
     x.hasAttribute("class") &&
     std::strcmp(x.attr("class"), "advector") == 0;
 }
+bool is_sparse (const Rcpp::ComplexVector &x) {
+  return x.hasAttribute("Dim");
+}
+bool is_scalar (const Rcpp::ComplexVector &x) {
+  return !is_sparse(x) && x.size() == 1;
+}
 bool valid(const ad &x) {
   return
     !x.ontape() || x.in_context_stack(x.data.glob);
@@ -172,10 +178,16 @@ Rcpp::ComplexVector independent(const Rcpp::ComplexVector &x) {
    • ‘"=="’, ‘"!="’, ‘"<"’, ‘"<="’, ‘">="’, ‘">"’
 */
 
+// Sparse case redirect
+Rcpp::ComplexVector SparseArith2(const Rcpp::ComplexVector &x,
+                                 const Rcpp::ComplexVector &y,
+                                 std::string op);
 // [[Rcpp::export]]
 Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
                            const Rcpp::ComplexVector &y,
                            std::string op) {
+  if (is_sparse(x) || is_sparse(y))
+    return SparseArith2(x, y, op);
   CHECK_INPUT(x);
   CHECK_INPUT(y);
   size_t nx = x.size(), ny = y.size();
@@ -218,6 +230,7 @@ Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
 
 // [[Rcpp::export]]
 Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
+  if (is_sparse(x)) Rcpp::stop("'Math1' is not for sparse input");
   CHECK_INPUT(x);
   size_t n = x.size();
   Rcpp::ComplexVector y(n);
@@ -389,15 +402,33 @@ Rcpp::ComplexVector testSparse(const Rcpp::ComplexVector &x) {
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector SparseArith2(const Rcpp::ComplexVector &x, const Rcpp::ComplexVector &y, std::string op) {
+Rcpp::ComplexVector SparseArith2(const Rcpp::ComplexVector &x,
+                                 const Rcpp::ComplexVector &y,
+                                 std::string op) {
   CHECK_INPUT(x);
   CHECK_INPUT(y);
-  Eigen::SparseMatrix<ad> X = SparseInput(x);
-  Eigen::SparseMatrix<ad> Y = SparseInput(y);
   Rcpp::ComplexVector z;
-  if (!op.compare("+"))      z = SparseOutput(X + Y);
-  else if (!op.compare("-")) z = SparseOutput(X - Y);
-  else if (!op.compare("*")) z = SparseOutput(X * Y);
-  else Rf_error("'%s' not implemented", op.c_str());
+  if (is_sparse(x) && is_sparse(y)) {
+    // Both sparse
+    Eigen::SparseMatrix<ad> X = SparseInput(x);
+    Eigen::SparseMatrix<ad> Y = SparseInput(y);
+    if (!op.compare("+"))      z = SparseOutput(X + Y);
+    else if (!op.compare("-")) z = SparseOutput(X - Y);
+    else Rf_error("'%s' not implemented", op.c_str());
+  }
+  else if (is_scalar(x) && is_sparse(y)) {
+    ad X = cplx2ad(x[0]);
+    Eigen::SparseMatrix<ad> Y = SparseInput(y);
+    if (!op.compare("*"))      z = SparseOutput(X * Y);
+    else Rf_error("'%s' not implemented", op.c_str());
+  }
+  else if (is_sparse(x) && is_scalar(y)) {
+    Eigen::SparseMatrix<ad> X = SparseInput(x);
+    ad Y = cplx2ad(y[0]);
+    if (!op.compare("*"))      z = SparseOutput(X * Y);
+    else if (!op.compare("/"))      z = SparseOutput(X / Y);
+    else Rf_error("'%s' not implemented", op.c_str());
+  }
+  else Rf_error("Wrong use of 'SparseArith2'");
   return z;
 }
