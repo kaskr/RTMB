@@ -341,6 +341,21 @@ Rcpp::ComplexVector matmul (const Rcpp::ComplexMatrix &x,
   return as_advector(z);
 }
 
+template<class nlDensity>
+Rcpp::ComplexVector colApply (const Rcpp::ComplexMatrix &x,
+                              nlDensity &F,
+                              bool give_log) {
+  typedef Eigen::Map<const Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > ConstMapMatrix;
+  ConstMapMatrix X((ad*) x.begin(), x.nrow(), x.ncol());
+  Rcpp::ComplexVector z(x.ncol());
+  for (int j=0; j < X.cols(); j++) {
+    ad ans = -F(vector<ad>(X.col(j)));
+    if (!give_log) ans = exp(ans);
+    z[j] = ad2cplx(ans);
+  }
+  return as_advector(z);
+}
+
 // [[Rcpp::export]]
 Rcpp::ComplexVector dmvnorm0 (const Rcpp::ComplexMatrix &x,
                               const Rcpp::ComplexMatrix &s,
@@ -352,16 +367,9 @@ Rcpp::ComplexVector dmvnorm0 (const Rcpp::ComplexMatrix &x,
     Rcpp::stop("non-conformable arguments");
   CHECK_INPUT(x);
   CHECK_INPUT(s);
-  Rcpp::ComplexVector z(x.ncol());
-  ConstMapMatrix X((ad*) x.begin(), x.nrow(), x.ncol());
   ConstMapMatrix S((ad*) s.begin(), s.nrow(), s.ncol());
   auto nldens = density::MVNORM(matrix<ad>(S));
-  for (int j=0; j < X.cols(); j++) {
-    ad ans = -nldens(vector<ad>(X.col(j)));
-    if (!give_log) ans = exp(ans);
-    z[j] = ad2cplx(ans);
-  }
-  return as_advector(z);
+  return colApply(x, nldens, give_log);
 }
 
 
