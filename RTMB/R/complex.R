@@ -25,6 +25,7 @@ magic <- function(x, condition = ad_context()) {
     if (is(x, "advector")) return (x)
     if (is(x, "sparseMatrix")) {
         x <- as(x, "generalMatrix")
+        x <- as(x, "CsparseMatrix")
         ipdim <- attributes(x)[c("i", "p", "Dim")]
         x <- advector(x@x)
         attributes(x) <- c(attributes(x), ipdim)
