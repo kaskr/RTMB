@@ -5,6 +5,10 @@ valid <- function(x) {
     .Call(`_RTMB_valid`, x)
 }
 
+ad_context <- function() {
+    .Call(`_RTMB_ad_context`)
+}
+
 advec <- function(x) {
     .Call(`_RTMB_advec`, x)
 }

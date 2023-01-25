@@ -12,6 +12,29 @@ advector <- function(x) {
     }
     ans
 }
+## Make this object AD interpretable if an AD context is active
+## NOTE: Should be needed rarely!
+## - Intended for objects that prevent simple S3 method dispatch
+## - By defatult does *nothing* if *not* in an active AD context
+## - To see what the 'magic' object would look like pass condition=TRUE
+## Example 1: Starting out with a sparse matrix requires a little magic
+## D <- Matrix::.symDiagonal(10)
+## magic(D, TRUE) ## advector with attributes
+magic <- function(x, condition = ad_context()) {
+    if (!condition) return (x)
+    if (is(x, "advector")) return (x)
+    if (is(x, "sparseMatrix")) {
+        x <- as(x, "generalMatrix")
+        ipdim <- attributes(x)[c("i", "p", "Dim")]
+        x <- advector(x@x)
+        attributes(x) <- c(attributes(x), ipdim)
+        return (x)
+    } else if (is.numeric(x)) {
+        x <- advector(x)
+        return (x)
+    } else
+        stop("'magic' does not know this object")
+}
 "Ops.advector" <- function(e1, e2) {
     if (missing(e2)) {
         if (.Generic=="-" || .Generic=="+") {

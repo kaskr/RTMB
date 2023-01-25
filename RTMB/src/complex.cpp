@@ -123,6 +123,10 @@ bool valid(const Rcpp::ComplexVector &x) {
     if (!valid(cplx2ad(x[i]))) return false;
   return true;
 }
+// [[Rcpp::export]]
+bool ad_context() {
+  return TMBad::get_glob() != NULL;
+}
 
 #define CHECK_INPUT(x)                                                  \
 if (!is_advector(x))                                                    \

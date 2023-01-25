@@ -22,6 +22,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ad_context
+bool ad_context();
+RcppExport SEXP _RTMB_ad_context() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(ad_context());
+    return rcpp_result_gen;
+END_RCPP
+}
 // advec
 Rcpp::ComplexVector advec(const Rcpp::NumericVector& x);
 RcppExport SEXP _RTMB_advec(SEXP xSEXP) {
@@ -180,6 +190,7 @@ RcppExport SEXP _rcpp_module_boot_mod_adfun();
 static const R_CallMethodDef CallEntries[] = {
     TMB_CALLDEFS,
     {"_RTMB_valid", (DL_FUNC) &_RTMB_valid, 1},
+    {"_RTMB_ad_context", (DL_FUNC) &_RTMB_ad_context, 0},
     {"_RTMB_advec", (DL_FUNC) &_RTMB_advec, 1},
     {"_RTMB_dependent", (DL_FUNC) &_RTMB_dependent, 1},
     {"_RTMB_independent", (DL_FUNC) &_RTMB_independent, 1},
