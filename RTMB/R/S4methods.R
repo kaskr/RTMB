@@ -1,13 +1,9 @@
 setClass("advector") ## Virtual class
 
-setMethod("*",
+setMethod("Ops",
           signature("sparseMatrix", "advector"),
-          function(e1, e2) magic(e1, TRUE) * e2)
+          function(e1, e2) callGeneric( magic(e1, TRUE) , e2) )
 
-setMethod("*",
+setMethod("Ops",
           signature("advector", "sparseMatrix"),
-          function(e1, e2) e2 * e1 )
-
-setMethod("/",
-          signature("sparseMatrix", "advector"),
-          function(e1, e2) magic(e1, TRUE) / e2)
+          function(e1, e2) callGeneric( e1, magic(e2, TRUE) ) )
