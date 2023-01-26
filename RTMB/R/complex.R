@@ -1,3 +1,4 @@
+setClass("advector") ## Virtual class
 advector <- function(x) {
     if (inherits(x, "advector"))
         return (x)
