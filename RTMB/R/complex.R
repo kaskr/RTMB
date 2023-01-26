@@ -92,7 +92,7 @@ c.advector <- function(...) {
 }
 "[<-.advector" <- function(x, ..., value) {
     value <- advector(value)
-    structure(NextMethod(), class="advector")
+    NextMethod()
 }
 "[[.advector" <- function(x, ...) {
     structure(NextMethod(), class="advector")
