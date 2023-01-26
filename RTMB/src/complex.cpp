@@ -136,6 +136,7 @@ if (!valid(x))                                                          \
 
 Rcpp::ComplexVector& as_advector(Rcpp::ComplexVector &x) {
   x.attr("class") = "advector";
+  SET_S4_OBJECT(x);
   return x;
 }
 
