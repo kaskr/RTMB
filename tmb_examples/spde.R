@@ -41,7 +41,6 @@ f <- function(parms) {
     meshidxloc <- data$meshidxloc
     X <- data$X
     spde <- data$spde
-    spde <- lapply(spde, magic) ## See ?RTMB::magic
     beta <- parms$beta
     log_tau <- parms$log_tau
     log_kappa <- parms$log_kappa
