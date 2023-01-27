@@ -51,3 +51,8 @@ setMethod("%*%",
               y <- as.matrix(y)
               matmul(advector(x), advector(y), method="atomic")
           })
+
+setMethod("tcrossprod", signature("advector"),
+          function(x, y=NULL) {if (is.null(y)) y <- x; x %*% t(y)} )
+setMethod( "crossprod", signature("advector"),
+          function(x, y=NULL) {if (is.null(y)) y <- x; t(x) %*% y} )
