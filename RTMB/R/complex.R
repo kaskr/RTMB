@@ -62,20 +62,10 @@ magic <- function(x, condition = ad_context()) {
     x
 }
 
-## Matrix multiply is not a simple generic - overload entirely
-"%*%" <- function(x, y) {
-    if (inherits(x, "advector") || inherits(y, "advector")) {
-        x <- as.matrix(x)
-        y <- as.matrix(y)
-        matmul(advector(x), advector(y), method="atomic")
-    }
-    else
-        .Primitive("%*%")(x, y)
-}
-
 ## Make array(x) work. Also affects as.list(x)
 as.vector.advector <- function(x, mode = "any") {
-    structure(NextMethod(), class="advector")
+    ## FIXME: Rcpp export 'as_advector' and use it
+    asS4(structure(NextMethod(), class="advector"))
 }
 unlist.advector <- function (x, recursive = TRUE, use.names = TRUE)  {
     structure(NextMethod(), class="advector")
@@ -176,7 +166,7 @@ dgmrf <- function(x, mu, Q, log=FALSE) {
     x0 <- as.vector(x) - as.vector(mu)
     dim(x0) <- c(d, length(x0) / d)
     anstype <- .anstype(x0, Q)
-    anstype( dgmrf0(advector(x0), magic(Q, TRUE), log) )
+    anstype( dgmrf0(advector(x0), as(Q, "adsparse"), log) )
 }
 
 MakeTape <- function(f, x, optimize=TRUE) {

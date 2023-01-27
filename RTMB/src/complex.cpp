@@ -102,23 +102,21 @@ ad* adptr(const Rcpp::ComplexVector &x) {
   ad* px = (x.size() > 0 ? (ad*)(&(x[0])) : NULL);
   return px;
 }
-bool is_advector (const Rcpp::ComplexVector &x) {
-  return
-    x.hasAttribute("class") &&
-    std::strcmp(x.attr("class"), "advector") == 0;
+bool is_advector (SEXP x) {
+  return Rf_inherits(x, "advector");
 }
-bool is_sparse (const Rcpp::ComplexVector &x) {
-  return x.hasAttribute("Dim");
+bool is_sparse (SEXP x) {
+  return Rf_inherits(x, "adsparse");
 }
-bool is_scalar (const Rcpp::ComplexVector &x) {
-  return !is_sparse(x) && x.size() == 1;
+bool is_scalar (SEXP x) {
+  return is_advector(x) && (Rcpp::ComplexVector(x).size() == 1);
 }
 bool valid(const ad &x) {
   return
     !x.ontape() || x.in_context_stack(x.data.glob);
 }
 // [[Rcpp::export]]
-bool valid(const Rcpp::ComplexVector &x) {
+bool valid(Rcpp::ComplexVector x) {
   for (int i=0; i<x.size(); i++)
     if (!valid(cplx2ad(x[i]))) return false;
   return true;
@@ -131,7 +129,7 @@ bool ad_context() {
 #define CHECK_INPUT(x)                                                  \
 if (!is_advector(x))                                                    \
   Rcpp::stop("'" #x "' must be 'advector' (lost class attribute?)" );   \
-if (!valid(x))                                                          \
+ if (!valid(Rcpp::ComplexVector(x)))                                    \
   Rcpp::stop("'" #x "' is not a valid 'advector' (constructed using illegal operation?)" );
 
 Rcpp::ComplexVector& as_advector(Rcpp::ComplexVector &x) {
@@ -191,8 +189,6 @@ Rcpp::ComplexVector SparseArith2(const Rcpp::ComplexVector &x,
 Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
                            const Rcpp::ComplexVector &y,
                            std::string op) {
-  if (is_sparse(x) || is_sparse(y))
-    return SparseArith2(x, y, op);
   CHECK_INPUT(x);
   CHECK_INPUT(y);
   size_t nx = x.size(), ny = y.size();
@@ -235,7 +231,6 @@ Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
 
 // [[Rcpp::export]]
 Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
-  if (is_sparse(x)) Rcpp::stop("'Math1' is not for sparse input");
   CHECK_INPUT(x);
   size_t n = x.size();
   Rcpp::ComplexVector y(n);
@@ -373,10 +368,10 @@ Rcpp::ComplexVector dmvnorm0 (const Rcpp::ComplexMatrix &x,
   return colApply(x, nldens, give_log);
 }
 
-Eigen::SparseMatrix<ad> SparseInput(const Rcpp::ComplexVector &x);
+Eigen::SparseMatrix<ad> SparseInput(Rcpp::S4 x);
 // [[Rcpp::export]]
 Rcpp::ComplexVector dgmrf0 (const Rcpp::ComplexMatrix &x,
-                            const Rcpp::ComplexVector &q,
+                            Rcpp::S4 q,
                             bool give_log) {
   // TMB FIXME:
   //   newton::log_determinant<TMBad::global::ad_aug> (H=...) at /TMB/include/tmbutils/newton.hpp:1191
@@ -385,24 +380,25 @@ Rcpp::ComplexVector dgmrf0 (const Rcpp::ComplexMatrix &x,
     Rcpp::stop("'dgmrf0' currently requires an active tape");
   if (!is_sparse(q))
     Rcpp::stop("Precision matrix must be sparse");
-  Rcpp::IntegerVector Dim = q.attr("Dim");
+  Rcpp::IntegerVector Dim = q.slot("Dim");
   if (Dim[0] != Dim[1])
     Rcpp::stop("Precision matrix must be square");
   if (x.nrow() != Dim[0])
     Rcpp::stop("non-conformable arguments");
   CHECK_INPUT(x);
-  CHECK_INPUT(q);
+  CHECK_INPUT(q.slot("x"));
   Eigen::SparseMatrix<ad> Q = SparseInput(q);
   auto nldens = density::GMRF(Q);
   return colApply(x, nldens, give_log);
 }
 
 // ============================== Sparse matrices
-Eigen::SparseMatrix<ad> SparseInput(const Rcpp::ComplexVector &x) {
+Eigen::SparseMatrix<ad> SparseInput(Rcpp::S4 S) {
+  Rcpp::ComplexVector x(S.slot("x"));
   CHECK_INPUT(x);
-  Rcpp::IntegerVector i = x.attr("i");
-  Rcpp::IntegerVector p = x.attr("p");
-  Rcpp::IntegerVector Dim = x.attr("Dim");
+  Rcpp::IntegerVector i = S.slot("i");
+  Rcpp::IntegerVector p = S.slot("p");
+  Rcpp::IntegerVector Dim = S.slot("Dim");
   return
     Eigen::Map<const Eigen::SparseMatrix<ad> > (Dim[0], // rows()
                                                 Dim[1], // cols()
@@ -413,54 +409,53 @@ Eigen::SparseMatrix<ad> SparseInput(const Rcpp::ComplexVector &x) {
                                                 NULL); // innerNonZeroPtr();
 }
 
-Rcpp::ComplexVector SparseOutput (const Eigen::SparseMatrix<ad> &x) {
-  size_t nnz  = x.nonZeros();
+Rcpp::S4 SparseOutput (const Eigen::SparseMatrix<ad> &S) {
+  size_t nnz  = S.nonZeros();
   Rcpp::IntegerVector Dim(2);
-  Dim[0] = x.rows();
-  Dim[1] = x.cols();
-  Rcpp::IntegerVector i(x.innerIndexPtr(), x.innerIndexPtr() + nnz);
-  Rcpp::IntegerVector p(x.outerIndexPtr(), x.outerIndexPtr() + Dim[1] + 1);
-  Rcpp::ComplexVector ans( (Rcomplex*) x.valuePtr(), (Rcomplex*) (x.valuePtr() + nnz));
-  ans.attr("i") = i;
+  Dim[0] = S.rows();
+  Dim[1] = S.cols();
+  Rcpp::IntegerVector i(S.innerIndexPtr(), S.innerIndexPtr() + nnz);
+  Rcpp::IntegerVector p(S.outerIndexPtr(), S.outerIndexPtr() + Dim[1] + 1);
+  Rcpp::ComplexVector x( (Rcomplex*) (S.valuePtr()),
+                         (Rcomplex*) (S.valuePtr() + nnz));
+  Rcpp::S4 ans("adsparse");
+  ans.slot("x") = as_advector(x);
+  ans.slot("i") = i;
   ans.attr("p") = p;
   ans.attr("Dim") = Dim;
-  return as_advector(ans);
+  return ans;
 }
 
-// [[Rcpp::export]]
-Rcpp::ComplexVector testSparse(const Rcpp::ComplexVector &x) {
-  using TMBad::operator<<;
-  Eigen::SparseMatrix<ad> X = SparseInput(x);
-  Rcout << X << "\n";
-  Eigen::SparseMatrix<ad> Y = X+X;
-  Rcout << Y << "\n";
-  return SparseOutput(Y);
-}
-
-// [[Rcpp::export]]
-Rcpp::ComplexVector SparseArith2(const Rcpp::ComplexVector &x,
-                                 const Rcpp::ComplexVector &y,
-                                 std::string op) {
+ad ScalarInput(SEXP x_) {
+  Rcpp::ComplexVector x(x_);
   CHECK_INPUT(x);
-  CHECK_INPUT(y);
-  Rcpp::ComplexVector z;
+  return cplx2ad(x[0]);
+}
+
+// [[Rcpp::export]]
+Rcpp::S4 SparseArith2(SEXP x,
+                      SEXP y,
+                      std::string op) {
+  Rcpp::S4 z;
+  // Sparse OP Sparse
   if (is_sparse(x) && is_sparse(y)) {
-    // Both sparse
     Eigen::SparseMatrix<ad> X = SparseInput(x);
     Eigen::SparseMatrix<ad> Y = SparseInput(y);
     if (!op.compare("+"))      z = SparseOutput(X + Y);
     else if (!op.compare("-")) z = SparseOutput(X - Y);
     else Rf_error("'%s' not implemented", op.c_str());
   }
+  // scalar OP Sparse
   else if (is_scalar(x) && is_sparse(y)) {
-    ad X = cplx2ad(x[0]);
+    ad X = ScalarInput(x);
     Eigen::SparseMatrix<ad> Y = SparseInput(y);
     if (!op.compare("*"))      z = SparseOutput(X * Y);
     else Rf_error("'%s' not implemented", op.c_str());
   }
+  // Sparse OP scalar
   else if (is_sparse(x) && is_scalar(y)) {
     Eigen::SparseMatrix<ad> X = SparseInput(x);
-    ad Y = cplx2ad(y[0]);
+    ad Y = ScalarInput(y);
     if (!op.compare("*"))      z = SparseOutput(X * Y);
     else if (!op.compare("/"))      z = SparseOutput(X / Y);
     else Rf_error("'%s' not implemented", op.c_str());

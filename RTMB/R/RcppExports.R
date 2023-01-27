@@ -57,10 +57,6 @@ dgmrf0 <- function(x, q, give_log) {
     .Call(`_RTMB_dgmrf0`, x, q, give_log)
 }
 
-testSparse <- function(x) {
-    .Call(`_RTMB_testSparse`, x)
-}
-
 SparseArith2 <- function(x, y, op) {
     .Call(`_RTMB_SparseArith2`, x, y, op)
 }
