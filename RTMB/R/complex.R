@@ -120,12 +120,6 @@ print.advector <- function (x, ...)  {
     print(y, ...)
 }
 
-dnorm <- function(x, mean = 0, sd = 1, log = FALSE) {
-    r <- (x - mean) / sd
-    ans <- - .5 * r * r - log(sqrt(2*pi)) - log(sd)
-    if (log) ans else exp(ans)
-}
-
 ## Helpers to autogenerate a numeric version of a function that is only available for AD types.
 .adv2adv <- function(x) x
 .adv2num <- function(x) {

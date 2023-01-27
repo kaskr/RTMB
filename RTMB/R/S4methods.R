@@ -12,7 +12,7 @@ setAs("sparseMatrix", "adsparse",
       })
 
 ##setClassUnion("advector_convertable", c("advector", "numeric"))
-setClassUnion("advector_convertable", c("advector", "array"))
+setClassUnion("advector_convertable", c("advector", "array", "numeric", "logical"))
 
 ## Methods sparseMatrix -> adsparse
 
@@ -56,3 +56,11 @@ setMethod("tcrossprod", signature("advector"),
           function(x, y=NULL) {if (is.null(y)) y <- x; x %*% t(y)} )
 setMethod( "crossprod", signature("advector"),
           function(x, y=NULL) {if (is.null(y)) y <- x; t(x) %*% y} )
+
+Sig3 <- signature("advector_convertable", "advector_convertable", "advector_convertable", "logical")
+setMethod("dnorm", Sig3,
+          function(x, mean = 0, sd = 1, log = FALSE) {
+              r <- (x - mean) / sd
+              ans <- - .5 * r * r - log(sqrt(2*pi)) - log(sd)
+              if (log) ans else exp(ans)
+          })
