@@ -61,3 +61,107 @@ SparseArith2 <- function(x, y, op) {
     .Call(`_RTMB_SparseArith2`, x, y, op)
 }
 
+distr_dexp <- function(x, rate, give_log) {
+    .Call(`_RTMB_distr_dexp`, x, rate, give_log)
+}
+
+distr_dweibull <- function(x, shape, scale, give_log) {
+    .Call(`_RTMB_distr_dweibull`, x, shape, scale, give_log)
+}
+
+distr_dbinom <- function(k, size, prob, give_log) {
+    .Call(`_RTMB_distr_dbinom`, k, size, prob, give_log)
+}
+
+distr_dbinom_robust <- function(k, size, logit_p, give_log) {
+    .Call(`_RTMB_distr_dbinom_robust`, k, size, logit_p, give_log)
+}
+
+distr_dbeta <- function(x, shape1, shape2, give_log) {
+    .Call(`_RTMB_distr_dbeta`, x, shape1, shape2, give_log)
+}
+
+distr_df <- function(x, df1, df2, give_log) {
+    .Call(`_RTMB_distr_df`, x, df1, df2, give_log)
+}
+
+distr_dlogis <- function(x, location, scale, give_log) {
+    .Call(`_RTMB_distr_dlogis`, x, location, scale, give_log)
+}
+
+distr_dsn <- function(x, alpha, give_log) {
+    .Call(`_RTMB_distr_dsn`, x, alpha, give_log)
+}
+
+distr_dt <- function(x, df, give_log) {
+    .Call(`_RTMB_distr_dt`, x, df, give_log)
+}
+
+distr_dSHASHo <- function(x, mu, sigma, nu, tau, give_log) {
+    .Call(`_RTMB_distr_dSHASHo`, x, mu, sigma, nu, tau, give_log)
+}
+
+distr_dtweedie <- function(y, mu, phi, p, give_log) {
+    .Call(`_RTMB_distr_dtweedie`, y, mu, phi, p, give_log)
+}
+
+distr_dnorm <- function(x, mean, sd, give_log) {
+    .Call(`_RTMB_distr_dnorm`, x, mean, sd, give_log)
+}
+
+distr_dnbinom <- function(x, size, prob, give_log) {
+    .Call(`_RTMB_distr_dnbinom`, x, size, prob, give_log)
+}
+
+distr_dnbinom2 <- function(x, mu, var, give_log) {
+    .Call(`_RTMB_distr_dnbinom2`, x, mu, var, give_log)
+}
+
+distr_dnbinom_robust <- function(x, log_mu, log_var_minus_mu, give_log) {
+    .Call(`_RTMB_distr_dnbinom_robust`, x, log_mu, log_var_minus_mu, give_log)
+}
+
+distr_dpois <- function(x, lambda, give_log) {
+    .Call(`_RTMB_distr_dpois`, x, lambda, give_log)
+}
+
+distr_dgamma <- function(y, shape, scale, give_log) {
+    .Call(`_RTMB_distr_dgamma`, y, shape, scale, give_log)
+}
+
+distr_dlgamma <- function(y, shape, scale, give_log) {
+    .Call(`_RTMB_distr_dlgamma`, y, shape, scale, give_log)
+}
+
+distr_dzipois <- function(x, lambda, zip, give_log) {
+    .Call(`_RTMB_distr_dzipois`, x, lambda, zip, give_log)
+}
+
+distr_pnorm_approx <- function(x) {
+    .Call(`_RTMB_distr_pnorm_approx`, x)
+}
+
+distr_pnorm <- function(q, mean, sd) {
+    .Call(`_RTMB_distr_pnorm`, q, mean, sd)
+}
+
+distr_pgamma <- function(q, shape, scale) {
+    .Call(`_RTMB_distr_pgamma`, q, shape, scale)
+}
+
+distr_ppois <- function(q, lambda) {
+    .Call(`_RTMB_distr_ppois`, q, lambda)
+}
+
+distr_pexp <- function(x, rate) {
+    .Call(`_RTMB_distr_pexp`, x, rate)
+}
+
+distr_pweibull <- function(x, shape, scale) {
+    .Call(`_RTMB_distr_pweibull`, x, shape, scale)
+}
+
+distr_pbeta <- function(q, shape1, shape2) {
+    .Call(`_RTMB_distr_pbeta`, q, shape1, shape2)
+}
+
