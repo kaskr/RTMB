@@ -11,8 +11,8 @@ setAs("sparseMatrix", "adsparse",
           new("adsparse", x=advector(x@x), i=x@i, p=x@p, Dim=x@Dim)
       })
 
-##setClassUnion("advector_convertable", c("advector", "numeric"))
-setClassUnion("advector_convertable", c("advector", "array", "numeric", "logical"))
+##setClassUnion("advector_castable", c("advector", "numeric"))
+setClassUnion("advector_castable", c("advector", "array", "numeric", "logical"))
 
 ## Methods sparseMatrix -> adsparse
 
@@ -35,17 +35,17 @@ setMethod("Ops",
 ## Methods adsparse
 
 setMethod("Ops",
-          signature("advector_convertable", "adsparse"),
+          signature("advector_castable", "adsparse"),
           function(e1, e2) SparseArith2(advector(e1), e2, .Generic) )
 setMethod("Ops",
-          signature("adsparse", "advector_convertable"),
+          signature("adsparse", "advector_castable"),
           function(e1, e2) SparseArith2(e1, advector(e2), .Generic) )
 setMethod("Ops",
           signature("adsparse", "adsparse"),
           function(e1, e2) SparseArith2(e1, e2, .Generic) )
 
 setMethod("%*%",
-          signature("advector_convertable", "advector_convertable"),
+          signature("advector_castable", "advector_castable"),
           function(x, y) {
               x <- as.matrix(x)
               y <- as.matrix(y)
@@ -57,7 +57,7 @@ setMethod("tcrossprod", signature("advector"),
 setMethod( "crossprod", signature("advector"),
           function(x, y=NULL) {if (is.null(y)) y <- x; t(x) %*% y} )
 
-Sig3 <- signature("advector_convertable", "advector_convertable", "advector_convertable", "logical")
+Sig3 <- signature("advector_castable", "advector_castable", "advector_castable", "logical")
 setMethod("dnorm", Sig3,
           function(x, mean = 0, sd = 1, log = FALSE) {
               r <- (x - mean) / sd
