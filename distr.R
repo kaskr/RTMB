@@ -27,7 +27,7 @@ sigtidy <- function(x) {
     x <- gsub("=.*?\\.","",x)
     x <- sub("^k","x",x)
     x <- sub("^y","x",x)
-    x <- sub("give_log","log",x)
+    ##x <- sub("give_log","log",x)
     x <- sub("[ ]*,",",",x)
     x
 }
@@ -81,6 +81,7 @@ writeLines(txt, "RTMB/src/distributions.cpp")
 
 ## ============================================================
 ## S4 R interface
+df$signature <- sub("give_log","log",df$signature)
 string <- function(x)paste0('"',x,'"')
 getRmethod <- function(i) {
     name <- df$name[i]
