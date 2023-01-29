@@ -1,6 +1,9 @@
 install:
 	R CMD INSTALL RTMB
 
+distributions:
+	R --slave < distr.R
+
 rcpp:
 	echo 'Rcpp::compileAttributes("RTMB", verbose=TRUE)' | R --slave
 	sed -i '/RcppEigen/d' RTMB/src/RcppExports.cpp
