@@ -68,13 +68,13 @@ setMethod( "crossprod", signature("advector"),
 ## Show general idea which is automated in 'distributions.R'
 ## First we generate the version we want for AD types (dot signifies 'default argument')
 setMethod("dnorm", signature("ad", "ad.", "ad.", "logical."),
-          function(x, mean = 0, sd = 1, log = FALSE) {
+          function(x, mean, sd, log) {
               r <- (x - mean) / sd
               ans <- - .5 * r * r - log(sqrt(2*pi)) - log(sd)
               if (log) ans else exp(ans)
           })
 ## This matches 'too much', so we fix by adding a specialization:
 setMethod("dnorm", signature("num", "num.", "num.", "logical."),
-          function(x, mean = 0, sd = 1, log = FALSE) {
+          function(x, mean, sd, log) {
               stats::dnorm(x, mean, sd, log)
           })
