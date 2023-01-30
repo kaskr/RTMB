@@ -92,7 +92,7 @@ getRmethod <- function(i) {
     if(any(is.na(match(a1,a2)))) {
         print(name)
     }
-    a2.type <- ifelse(a2 %in% c("log","log.p","lower.tail") , "logical", "ad")
+    a2.type <- ifelse(a2 %in% c("log","log.p","lower.tail") , "logical.", "ad")
     a2.type[a2.type=="ad" & has.default] <- "ad."
     ans <- ifelse(is.na(match(a2,a1)),"missing",a2.type)
     sig <- paste0("signature(",(paste(a2,"=",string(ans),collapse=", ")),")")
