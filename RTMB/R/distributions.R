@@ -110,22 +110,6 @@ function( x, df, log ) {
 stats:: dt ( x, df, log )
 }
 )
-setMethod("dnorm",
-signature(x = "ad", mean = "ad.", sd = "ad.", log = "logical"),
-function( x, mean, sd, log ) {
-x <-  advector ( x )
-mean <-  advector ( mean )
-sd <-  advector ( sd )
-log <-  as.logical ( log )
-distr_dnorm ( x, mean, sd, log )
-}
-)
-setMethod("dnorm",
-signature(x = "num", mean = "num.", sd = "num.", log = "logical"),
-function( x, mean, sd, log ) {
-stats:: dnorm ( x, mean, sd, log )
-}
-)
 setMethod("dnbinom",
 signature(x = "ad", size = "ad", prob = "ad", mu = "missing", log = "logical"),
 function( x, size, prob, log ) {

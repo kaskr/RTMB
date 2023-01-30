@@ -9,7 +9,7 @@ df <- as.data.frame(t(do.call(cbind, sapply(dp, strsplit, " "))), stringsAsFacto
 names(df) <- c("name","npar","code")
 df <- subset(df,name!="pow") ## bogus
 df <- subset(df, !(name=="pnorm" & npar==1) ) ## bogus
-skip <- c("pSHASHo")
+skip <- c("pSHASHo", "dnorm") ## RTMB uses a dnorm implementation in R
 df <- subset(df, !(name %in% skip))
 
 getsig <- function(name) {
