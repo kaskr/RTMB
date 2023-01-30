@@ -1,4 +1,5 @@
 setClass("advector") ## Virtual class
+setMethod("show", "advector", function(object) print.advector(object) )
 
 setClass("adsparse",
          slots=c(x="advector", i="integer", p="integer", Dim="integer"))
