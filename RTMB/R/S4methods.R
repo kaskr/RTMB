@@ -19,6 +19,7 @@ setClassUnion("num", c("array", "numeric", "logical"))
 setClassUnion("num.", c("num", "missing"))
 setClassUnion("ad",  c("advector", "num"))
 setClassUnion("ad.", c("advector", "num."))
+setClassUnion("logical.", c("logical", "missing"))
 
 
 ## Methods sparseMatrix -> adsparse
@@ -64,10 +65,16 @@ setMethod("tcrossprod", signature("advector"),
 setMethod( "crossprod", signature("advector"),
           function(x, y=NULL) {if (is.null(y)) y <- x; t(x) %*% y} )
 
-Sig3 <- signature("ad", "ad", "ad", "logical")
-setMethod("dnorm", Sig3,
+## Show general idea which is automated in 'distributions.R'
+## First we generate the version we want for AD types (dot signifies 'default argument')
+setMethod("dnorm", signature("ad", "ad.", "ad.", "logical."),
           function(x, mean = 0, sd = 1, log = FALSE) {
               r <- (x - mean) / sd
               ans <- - .5 * r * r - log(sqrt(2*pi)) - log(sd)
               if (log) ans else exp(ans)
+          })
+## This matches 'too much', so we fix by adding a specialization:
+setMethod("dnorm", signature("num", "num.", "num.", "logical."),
+          function(x, mean = 0, sd = 1, log = FALSE) {
+              stats::dnorm(x, mean, sd, log)
           })
