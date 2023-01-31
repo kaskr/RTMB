@@ -148,3 +148,6 @@ code.stats <- unlist(lapply(which(df$stats), getRmethod))
 code.other <- unlist(lapply(which(!df$stats), getRmethod))
 txt <- c(header, code.stats, code.other)
 writeLines(txt, "RTMB/R/distributions.R")
+
+## Argument documentation (partial)
+cat(paste("@param",unique(unlist(lapply(df$signature,strsplit,split="[ ]*,[ ]*"))), "parameter\n"))

@@ -8,6 +8,35 @@
 ##' package).
 ##' Argument recycling follows the R standard (although wihout any warnings).
 ##'
+##' @param x observation vector
+##' @param q vector of quantiles
+##' @param rate parameter
+##' @param shape parameter
+##' @param scale parameter
+##' @param size parameter
+##' @param prob parameter
+##' @param logit_p parameter
+##' @param shape1 parameter
+##' @param shape2 parameter
+##' @param df1 parameter
+##' @param df2 parameter
+##' @param location parameter
+##' @param alpha parameter
+##' @param df parameter
+##' @param mu parameter
+##' @param sigma parameter
+##' @param nu parameter
+##' @param tau parameter
+##' @param phi parameter
+##' @param p parameter
+##' @param var parameter
+##' @param log_mu parameter
+##' @param log_var_minus_mu parameter
+##' @param lambda parameter
+##' @param mean parameter
+##' @param sd parameter
+##' @param scale parameter
+##' @param log Logical; Return log density/probability?
 ##' @rdname Distributions
 ##' @name Distributions
 ##' @examples
