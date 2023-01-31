@@ -11,7 +11,7 @@ rcpp:
 	sed -i '/include.*Rcpp/ s/$$/\n#include "TMB.h"/' RTMB/src/RcppExports.cpp
 	sed -i '/R_useDynamicSymbols/ s/$$/\n    TMB_CCALLABLES("RTMB");/' RTMB/src/RcppExports.cpp
 
-test-all: linreg spatial mvrw spde
+test-all: linreg spatial mvrw spde sdv_multi
 
 linreg:
 	cd tmb_examples; R --slave < linreg.R
@@ -24,3 +24,6 @@ mvrw:
 
 spde:
 	cd tmb_examples; R --slave < spde.R
+
+sdv_multi:
+	cd tmb_examples; R --slave < sdv_multi.R
