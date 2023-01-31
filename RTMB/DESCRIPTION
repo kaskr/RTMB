@@ -7,5 +7,5 @@ Author: Kasper Kristensen
 Maintainer: Kasper Kristensen <kaskr@dtu.dk>
 Description: This package provides a native R interface to a subset of 'TMB'.
 License: GPL (>= 2)
-Imports: Rcpp (>= 1.0.9)
+Imports: Rcpp (>= 1.0.9), Matrix, methods, TMB
 LinkingTo: Rcpp, TMB, RcppEigen

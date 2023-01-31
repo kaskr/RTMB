@@ -53,7 +53,7 @@ magic <- function(x, condition = ad_context()) {
     }
     ans
 }
-"Math.advector" <- function(x) {
+"Math.advector" <- function(x, ...) {
     x[] <- Math1(x, .Generic)
     x
 }
@@ -86,9 +86,14 @@ c.advector <- function(...) {
 rep.advector <- function (x, ...) {
     structure(NextMethod(), class="advector")
 }
-sum.advector <- function(x, na.rm)Reduce1(x, "+")
-prod.advector <- function(x, na.rm)Reduce1(x, "*")
-
+sum.advector <- function(x, ..., na.rm) {
+  if (na.rm) stop("'na.rm=TRUE' not implemented for AD sum")
+  Reduce1(x, "+") + sum(...)
+}
+prod.advector <- function(x, ..., na.rm) {
+  if (na.rm) stop("'na.rm=TRUE' not implemented for AD prod")
+  Reduce1(x, "*") * prod(...)
+}
 ## If an overload has issues we can patch it:
 diff_patch <- base::diff.default
 environment(diff_patch) <- local({unclass <- function(x)x; environment()})

@@ -1,6 +1,10 @@
 install:
 	R CMD INSTALL RTMB
 
+doc-update:
+	echo "suppressWarnings(roxygen2::roxygenize(\"RTMB\",roclets = c(\"collate\", \"rd\")))" | R --slave
+	sed -i '/RoxygenNote/d' RTMB/DESCRIPTION
+
 distributions:
 	R --slave < distr.R
 

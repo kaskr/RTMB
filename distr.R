@@ -114,6 +114,13 @@ getRmethod <- function(i) {
         c(paste0("setMethod(", string(name), ","),
           paste0(sig2, ","),
           def2, ")" )
+    ## add roxygen
+    meth1 <- c(
+               "##' @describeIn Distributions AD implementation",
+               meth1)
+    meth2 <- c(
+               "##' @describeIn Distributions Default method",
+               meth2)
     c(meth1,meth2)
 }
 ## Start with stats methods only:
