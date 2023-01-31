@@ -79,3 +79,25 @@ setMethod("dnorm", signature("num", "num.", "num.", "logical."),
           function(x, mean, sd, log) {
               stats::dnorm(x, mean, sd, log)
           })
+
+## 'diag' needs patching.
+## - base::diag works fine for AD matrix input (diagonal extraction and replacement)
+## - However, matrix construction has issues
+
+setMethod("diag", signature(x="num.", nrow="num.", ncol="num."),
+          function(x, nrow, ncol) {
+              ans <- callNextMethod()
+              if (ad_context()) ans <- advector(ans)
+              ans
+          })
+
+setMethod("diag", signature(x="advector", nrow="ANY", ncol="ANY"),
+          function(x, nrow, ncol) {
+              ## Diagonal extraction: base::diag works fine
+              if (length(dim(x)) >= 2)
+                  return(callNextMethod())
+              ## Matrix creation
+              ans <- advector(base::diag(seq_along(x), nrow=nrow, ncol=ncol))
+              diag(ans) <- x
+              ans
+          })
