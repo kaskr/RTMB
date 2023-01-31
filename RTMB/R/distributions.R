@@ -277,3 +277,61 @@ function( q, shape1, shape2 ) {
 stats:: pbeta ( q, shape1, shape2 )
 }
 )
+##' @describeIn Distributions AD implementation
+dbinom_robust <- function( x, size, logit_p, log ) {
+x <-  advector ( x )
+size <-  advector ( size )
+logit_p <-  advector ( logit_p )
+log <-  as.logical ( log )
+distr_dbinom_robust ( x, size, logit_p, log )
+}
+##' @describeIn Distributions AD implementation
+dsn <- function( x, alpha, log ) {
+x <-  advector ( x )
+alpha <-  advector ( alpha )
+log <-  as.logical ( log )
+distr_dsn ( x, alpha, log )
+}
+##' @describeIn Distributions AD implementation
+dSHASHo <- function( x, mu, sigma, nu, tau, log ) {
+x <-  advector ( x )
+mu <-  advector ( mu )
+sigma <-  advector ( sigma )
+nu <-  advector ( nu )
+tau <-  advector ( tau )
+log <-  as.logical ( log )
+distr_dSHASHo ( x, mu, sigma, nu, tau, log )
+}
+##' @describeIn Distributions AD implementation
+dtweedie <- function( x, mu, phi, p, log ) {
+x <-  advector ( x )
+mu <-  advector ( mu )
+phi <-  advector ( phi )
+p <-  advector ( p )
+log <-  as.logical ( log )
+distr_dtweedie ( x, mu, phi, p, log )
+}
+##' @describeIn Distributions AD implementation
+dnbinom2 <- function( x, mu, var, log ) {
+x <-  advector ( x )
+mu <-  advector ( mu )
+var <-  advector ( var )
+log <-  as.logical ( log )
+distr_dnbinom2 ( x, mu, var, log )
+}
+##' @describeIn Distributions AD implementation
+dnbinom_robust <- function( x, log_mu, log_var_minus_mu, log ) {
+x <-  advector ( x )
+log_mu <-  advector ( log_mu )
+log_var_minus_mu <-  advector ( log_var_minus_mu )
+log <-  as.logical ( log )
+distr_dnbinom_robust ( x, log_mu, log_var_minus_mu, log )
+}
+##' @describeIn Distributions AD implementation
+dlgamma <- function( x, shape, scale, log ) {
+x <-  advector ( x )
+shape <-  advector ( shape )
+scale <-  advector ( scale )
+log <-  as.logical ( log )
+distr_dlgamma ( x, shape, scale, log )
+}
