@@ -101,3 +101,18 @@ setMethod("diag", signature(x="advector", nrow="ANY", ncol="ANY"),
               diag(ans) <- x
               ans
           })
+
+setMethod("apply", signature(X="advector"),
+          function (X, MARGIN, FUN, ...)  {
+              ans <- callNextMethod()
+              if (is.complex(ans))
+                  class(ans) <- "advector"
+              ans
+})
+setMethod("sapply", signature(X="advector"),
+          function (X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE) {
+              ans <- callNextMethod()
+              if (is.complex(ans))
+                  class(ans) <- "advector"
+              ans
+})

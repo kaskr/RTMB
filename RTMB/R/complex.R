@@ -96,20 +96,6 @@ diff.advector <- function (x, lag = 1L, differences = 1L, ...) {
     diff_patch(x, lag = 1L, differences = 1L, ...)
 }
 
-## Danger?
-apply <- function (X, MARGIN, FUN, ...)  {
-    ans <- base::apply(X, MARGIN, FUN, ...)
-    if (inherits(X, "advector"))
-        class(ans) <- "advector"
-    ans
-}
-sapply <- function (X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE) {
-    ans <- base::sapply(X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)
-    if (inherits(X, "advector"))
-        class(ans) <- "advector"
-    ans
-}
-
 print.advector <- function (x, ...)  {
     cat("class='advector'\n")
     y <- .adv2num(x)
