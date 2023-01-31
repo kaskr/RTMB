@@ -24,11 +24,7 @@ magic <- function(x, condition = ad_context()) {
     if (!condition) return (x)
     if (is(x, "advector")) return (x)
     if (is(x, "sparseMatrix")) {
-        x <- as(x, "generalMatrix")
-        x <- as(x, "CsparseMatrix")
-        ipdim <- attributes(x)[c("i", "p", "Dim")]
-        x <- advector(x@x)
-        attributes(x) <- c(attributes(x), ipdim)
+        x <- as(x, "adsparse")
         return (x)
     } else if (is.numeric(x)) {
         x <- advector(x)
