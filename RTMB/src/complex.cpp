@@ -63,11 +63,15 @@ SEXP ptrTMB(TMBad::ADFun<>* pf) {
   UNPROTECT(2);
   return ans;
 }
+void Copy(TMBad::ADFun<>* adf, Rcpp::XPtr<TMBad::ADFun<> > other) {
+  *adf = *other;
+}
 // Collect free functions in a module
 RCPP_MODULE(mod_adfun) {
   using namespace Rcpp;
   class_<TMBad::ADFun<> >( "adfun" )
   .constructor()
+  .method("copy", &Copy)
   .method("start", &ad_start)
   .method("stop",  &ad_stop)
   .method("print", &ad_print)

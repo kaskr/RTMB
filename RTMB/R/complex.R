@@ -201,6 +201,15 @@ print.Tape <- function(x,...){
     cat(txt)
     cat( c( "Methods:\n", paste0("$", names(attr(x,"methods")), "()\n")) )
 }
+.pointer <- function(mod) { ## FIXME: Is this safe Rcpp?
+    env <- as.environment(mod)
+    get(".pointer", envir = env)
+}
+.copy <- function(mod) {
+    ans <- new(adfun)
+    ans$copy(.pointer(mod))
+    ans
+}
 .laplace <- function(mod, random, ...) {
     random <- as.integer(random)
     cfg <- lapply(list(...), as.double)
