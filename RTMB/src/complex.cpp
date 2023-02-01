@@ -10,6 +10,9 @@ Type objective_function<Type>::operator() () {
   return 0;
 }
 
+typedef TMBad::ad_aug ad;
+typedef std::vector<ad> ad_vec;
+
 /* ========================================================================== */
 /* ADFun object */
 /* ========================================================================== */
@@ -29,6 +32,7 @@ std::vector<double> Eval(TMBad::ADFun<>* tp, const std::vector<double> &x) {
   std::vector<double> y = (*tp)(x);
   return y;
 }
+Rcpp::ComplexVector EvalAD(TMBad::ADFun<>* tp, const Rcpp::ComplexVector &x);
 Rcpp::NumericMatrix Jacobian(TMBad::ADFun<>* tp, const std::vector<double> &x) {
   std::vector<double> y = tp->Jacobian(x);
   Rcpp::NumericMatrix Jt(x.size(), y.size() / x.size(), y.begin());
@@ -68,6 +72,7 @@ RCPP_MODULE(mod_adfun) {
   .method("stop",  &ad_stop)
   .method("print", &ad_print)
   .method("eval",  &Eval)
+  .method("evalAD",  &EvalAD)
   .method("jacobian", &Jacobian)
   .method("jacfun", &JacFun)
   .method("parallelize", &parallelize)
@@ -80,9 +85,6 @@ RCPP_MODULE(mod_adfun) {
 /* ========================================================================== */
 /* AD vector object */
 /* ========================================================================== */
-
-typedef TMBad::ad_aug ad;
-typedef std::vector<ad> ad_vec;
 
 Rcomplex ad2cplx(const ad &x) {
   static_assert(sizeof(ad) == sizeof(Rcomplex),
@@ -136,6 +138,14 @@ Rcpp::ComplexVector& as_advector(Rcpp::ComplexVector &x) {
   x.attr("class") = "advector";
   SET_S4_OBJECT(x);
   return x;
+}
+
+Rcpp::ComplexVector EvalAD(TMBad::ADFun<>* tp, const Rcpp::ComplexVector &x) {
+  CHECK_INPUT(x);
+  std::vector<ad> x_( (ad*) x.begin(), (ad*) x.end());
+  std::vector<ad> y_ = (*tp)(x_);
+  Rcpp::ComplexVector y( (Rcomplex*) (y_.data()), (Rcomplex*) (y_.data() + y_.size()) );
+  return as_advector(y);
 }
 
 // [[Rcpp::export]]

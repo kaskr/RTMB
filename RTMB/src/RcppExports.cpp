@@ -214,30 +214,30 @@ BEGIN_RCPP
 END_RCPP
 }
 // distr_dbinom
-Rcpp::ComplexVector distr_dbinom(Rcpp::ComplexVector k, Rcpp::ComplexVector size, Rcpp::ComplexVector prob, bool give_log);
-RcppExport SEXP _RTMB_distr_dbinom(SEXP kSEXP, SEXP sizeSEXP, SEXP probSEXP, SEXP give_logSEXP) {
+Rcpp::ComplexVector distr_dbinom(Rcpp::ComplexVector x, Rcpp::ComplexVector size, Rcpp::ComplexVector prob, bool give_log);
+RcppExport SEXP _RTMB_distr_dbinom(SEXP xSEXP, SEXP sizeSEXP, SEXP probSEXP, SEXP give_logSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type size(sizeSEXP);
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type prob(probSEXP);
     Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_dbinom(k, size, prob, give_log));
+    rcpp_result_gen = Rcpp::wrap(distr_dbinom(x, size, prob, give_log));
     return rcpp_result_gen;
 END_RCPP
 }
 // distr_dbinom_robust
-Rcpp::ComplexVector distr_dbinom_robust(Rcpp::ComplexVector k, Rcpp::ComplexVector size, Rcpp::ComplexVector logit_p, bool give_log);
-RcppExport SEXP _RTMB_distr_dbinom_robust(SEXP kSEXP, SEXP sizeSEXP, SEXP logit_pSEXP, SEXP give_logSEXP) {
+Rcpp::ComplexVector distr_dbinom_robust(Rcpp::ComplexVector x, Rcpp::ComplexVector size, Rcpp::ComplexVector logit_p, bool give_log);
+RcppExport SEXP _RTMB_distr_dbinom_robust(SEXP xSEXP, SEXP sizeSEXP, SEXP logit_pSEXP, SEXP give_logSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type size(sizeSEXP);
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type logit_p(logit_pSEXP);
     Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_dbinom_robust(k, size, logit_p, give_log));
+    rcpp_result_gen = Rcpp::wrap(distr_dbinom_robust(x, size, logit_p, give_log));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -326,17 +326,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // distr_dtweedie
-Rcpp::ComplexVector distr_dtweedie(Rcpp::ComplexVector y, Rcpp::ComplexVector mu, Rcpp::ComplexVector phi, Rcpp::ComplexVector p, bool give_log);
-RcppExport SEXP _RTMB_distr_dtweedie(SEXP ySEXP, SEXP muSEXP, SEXP phiSEXP, SEXP pSEXP, SEXP give_logSEXP) {
+Rcpp::ComplexVector distr_dtweedie(Rcpp::ComplexVector x, Rcpp::ComplexVector mu, Rcpp::ComplexVector phi, Rcpp::ComplexVector p, bool give_log);
+RcppExport SEXP _RTMB_distr_dtweedie(SEXP xSEXP, SEXP muSEXP, SEXP phiSEXP, SEXP pSEXP, SEXP give_logSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type mu(muSEXP);
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type phi(phiSEXP);
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type p(pSEXP);
     Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_dtweedie(y, mu, phi, p, give_log));
+    rcpp_result_gen = Rcpp::wrap(distr_dtweedie(x, mu, phi, p, give_log));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -410,30 +410,30 @@ BEGIN_RCPP
 END_RCPP
 }
 // distr_dgamma
-Rcpp::ComplexVector distr_dgamma(Rcpp::ComplexVector y, Rcpp::ComplexVector shape, Rcpp::ComplexVector scale, bool give_log);
-RcppExport SEXP _RTMB_distr_dgamma(SEXP ySEXP, SEXP shapeSEXP, SEXP scaleSEXP, SEXP give_logSEXP) {
+Rcpp::ComplexVector distr_dgamma(Rcpp::ComplexVector x, Rcpp::ComplexVector shape, Rcpp::ComplexVector scale, bool give_log);
+RcppExport SEXP _RTMB_distr_dgamma(SEXP xSEXP, SEXP shapeSEXP, SEXP scaleSEXP, SEXP give_logSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type shape(shapeSEXP);
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type scale(scaleSEXP);
     Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_dgamma(y, shape, scale, give_log));
+    rcpp_result_gen = Rcpp::wrap(distr_dgamma(x, shape, scale, give_log));
     return rcpp_result_gen;
 END_RCPP
 }
 // distr_dlgamma
-Rcpp::ComplexVector distr_dlgamma(Rcpp::ComplexVector y, Rcpp::ComplexVector shape, Rcpp::ComplexVector scale, bool give_log);
-RcppExport SEXP _RTMB_distr_dlgamma(SEXP ySEXP, SEXP shapeSEXP, SEXP scaleSEXP, SEXP give_logSEXP) {
+Rcpp::ComplexVector distr_dlgamma(Rcpp::ComplexVector x, Rcpp::ComplexVector shape, Rcpp::ComplexVector scale, bool give_log);
+RcppExport SEXP _RTMB_distr_dlgamma(SEXP xSEXP, SEXP shapeSEXP, SEXP scaleSEXP, SEXP give_logSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type shape(shapeSEXP);
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type scale(scaleSEXP);
     Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_dlgamma(y, shape, scale, give_log));
+    rcpp_result_gen = Rcpp::wrap(distr_dlgamma(x, shape, scale, give_log));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -452,13 +452,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // distr_pnorm_approx
-Rcpp::ComplexVector distr_pnorm_approx(Rcpp::ComplexVector x);
-RcppExport SEXP _RTMB_distr_pnorm_approx(SEXP xSEXP) {
+Rcpp::ComplexVector distr_pnorm_approx(Rcpp::ComplexVector q);
+RcppExport SEXP _RTMB_distr_pnorm_approx(SEXP qSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_pnorm_approx(x));
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type q(qSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_pnorm_approx(q));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -501,27 +501,27 @@ BEGIN_RCPP
 END_RCPP
 }
 // distr_pexp
-Rcpp::ComplexVector distr_pexp(Rcpp::ComplexVector x, Rcpp::ComplexVector rate);
-RcppExport SEXP _RTMB_distr_pexp(SEXP xSEXP, SEXP rateSEXP) {
+Rcpp::ComplexVector distr_pexp(Rcpp::ComplexVector q, Rcpp::ComplexVector rate);
+RcppExport SEXP _RTMB_distr_pexp(SEXP qSEXP, SEXP rateSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type q(qSEXP);
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type rate(rateSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_pexp(x, rate));
+    rcpp_result_gen = Rcpp::wrap(distr_pexp(q, rate));
     return rcpp_result_gen;
 END_RCPP
 }
 // distr_pweibull
-Rcpp::ComplexVector distr_pweibull(Rcpp::ComplexVector x, Rcpp::ComplexVector shape, Rcpp::ComplexVector scale);
-RcppExport SEXP _RTMB_distr_pweibull(SEXP xSEXP, SEXP shapeSEXP, SEXP scaleSEXP) {
+Rcpp::ComplexVector distr_pweibull(Rcpp::ComplexVector q, Rcpp::ComplexVector shape, Rcpp::ComplexVector scale);
+RcppExport SEXP _RTMB_distr_pweibull(SEXP qSEXP, SEXP shapeSEXP, SEXP scaleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type q(qSEXP);
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type shape(shapeSEXP);
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type scale(scaleSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_pweibull(x, shape, scale));
+    rcpp_result_gen = Rcpp::wrap(distr_pweibull(q, shape, scale));
     return rcpp_result_gen;
 END_RCPP
 }

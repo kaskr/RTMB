@@ -69,12 +69,12 @@ distr_dweibull <- function(x, shape, scale, give_log) {
     .Call(`_RTMB_distr_dweibull`, x, shape, scale, give_log)
 }
 
-distr_dbinom <- function(k, size, prob, give_log) {
-    .Call(`_RTMB_distr_dbinom`, k, size, prob, give_log)
+distr_dbinom <- function(x, size, prob, give_log) {
+    .Call(`_RTMB_distr_dbinom`, x, size, prob, give_log)
 }
 
-distr_dbinom_robust <- function(k, size, logit_p, give_log) {
-    .Call(`_RTMB_distr_dbinom_robust`, k, size, logit_p, give_log)
+distr_dbinom_robust <- function(x, size, logit_p, give_log) {
+    .Call(`_RTMB_distr_dbinom_robust`, x, size, logit_p, give_log)
 }
 
 distr_dbeta <- function(x, shape1, shape2, give_log) {
@@ -101,8 +101,8 @@ distr_dSHASHo <- function(x, mu, sigma, nu, tau, give_log) {
     .Call(`_RTMB_distr_dSHASHo`, x, mu, sigma, nu, tau, give_log)
 }
 
-distr_dtweedie <- function(y, mu, phi, p, give_log) {
-    .Call(`_RTMB_distr_dtweedie`, y, mu, phi, p, give_log)
+distr_dtweedie <- function(x, mu, phi, p, give_log) {
+    .Call(`_RTMB_distr_dtweedie`, x, mu, phi, p, give_log)
 }
 
 distr_dnorm <- function(x, mean, sd, give_log) {
@@ -125,20 +125,20 @@ distr_dpois <- function(x, lambda, give_log) {
     .Call(`_RTMB_distr_dpois`, x, lambda, give_log)
 }
 
-distr_dgamma <- function(y, shape, scale, give_log) {
-    .Call(`_RTMB_distr_dgamma`, y, shape, scale, give_log)
+distr_dgamma <- function(x, shape, scale, give_log) {
+    .Call(`_RTMB_distr_dgamma`, x, shape, scale, give_log)
 }
 
-distr_dlgamma <- function(y, shape, scale, give_log) {
-    .Call(`_RTMB_distr_dlgamma`, y, shape, scale, give_log)
+distr_dlgamma <- function(x, shape, scale, give_log) {
+    .Call(`_RTMB_distr_dlgamma`, x, shape, scale, give_log)
 }
 
 distr_dzipois <- function(x, lambda, zip, give_log) {
     .Call(`_RTMB_distr_dzipois`, x, lambda, zip, give_log)
 }
 
-distr_pnorm_approx <- function(x) {
-    .Call(`_RTMB_distr_pnorm_approx`, x)
+distr_pnorm_approx <- function(q) {
+    .Call(`_RTMB_distr_pnorm_approx`, q)
 }
 
 distr_pnorm <- function(q, mean, sd) {
@@ -153,12 +153,12 @@ distr_ppois <- function(q, lambda) {
     .Call(`_RTMB_distr_ppois`, q, lambda)
 }
 
-distr_pexp <- function(x, rate) {
-    .Call(`_RTMB_distr_pexp`, x, rate)
+distr_pexp <- function(q, rate) {
+    .Call(`_RTMB_distr_pexp`, q, rate)
 }
 
-distr_pweibull <- function(x, shape, scale) {
-    .Call(`_RTMB_distr_pweibull`, x, shape, scale)
+distr_pweibull <- function(q, shape, scale) {
+    .Call(`_RTMB_distr_pweibull`, q, shape, scale)
 }
 
 distr_pbeta <- function(q, shape1, shape2) {
