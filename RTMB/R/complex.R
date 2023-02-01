@@ -174,6 +174,9 @@ dgmrf <- function(x, mu, Q, log=FALSE) {
 ## High level version: Not everything available
 MakeTape <- function(f, x) {
     mod <- .MakeTape(f, x)
+    .expose(mod)
+}
+.expose <- function(mod) {
     structure(
         function(x) {
             if (inherits(x, "advector") && ad_context())
@@ -185,7 +188,9 @@ MakeTape <- function(f, x) {
             jacobian = mod$jacobian,
             optimize = mod$optimize,
             print = mod$print,
-            jacfun = mod$jacfun,
+            jacfun = function() {
+                .jacfun(mod)
+            },
             laplace = function(random, sparse=TRUE, SPA=FALSE, ...) {
                 .laplace(mod, random, sparse=sparse, SPA=SPA, ...)
             }
@@ -210,13 +215,20 @@ print.Tape <- function(x,...){
     ans$copy(.pointer(mod))
     ans
 }
+.jacfun <- function(mod) {
+    mod <- .copy(mod)
+    mod$jacfun()
+    .expose(mod)
+}
 .laplace <- function(mod, random, ...) {
+    mod <- .copy(mod)
     random <- as.integer(random)
     cfg <- lapply(list(...), as.double)
     .transform(mod, "laplace", config=cfg,
                random_order=random, mustWork=1L)
     .transform(mod, "remove_random_parameters",
                random_order=random, mustWork=1L)
+    .expose(mod)
 }
 .transform <- function(mod, method, ...) {
     ptr <- mod$ptrTMB()$ptr
