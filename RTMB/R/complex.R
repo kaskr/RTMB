@@ -137,7 +137,7 @@ dmvnorm <- function(x, mu, Sigma, log=FALSE) {
 
 dgmrf <- function(x, mu, Q, log=FALSE) {
     if (!ad_context()) { ## Workaround: see C++ code 'gmrf0'
-        F <- MakeTape(function(...)advector(dgmrf(x,mu,Q,log)),numeric(0))
+        F <- .MakeTape(function(...)advector(dgmrf(x,mu,Q,log)),numeric(0))
         return (F$eval(numeric(0)))
     }
     ## R convention is to have samples by row
@@ -150,7 +150,8 @@ dgmrf <- function(x, mu, Q, log=FALSE) {
     anstype( dgmrf0(advector(x0), as(Q, "adsparse"), log) )
 }
 
-MakeTape <- function(f, x, optimize=TRUE) {
+## Low level version: Everything available
+.MakeTape <- function(f, x) {
     F <- new(adfun)
     F$start()
     ## Make sure to stop even in case of failure
@@ -169,6 +170,32 @@ MakeTape <- function(f, x, optimize=TRUE) {
     y <- f(x)
     dependent(y)
     F
+}
+## High level version: Not everything available
+MakeTape <- function(f, x) {
+    mod <- .MakeTape(f, x)
+    structure(
+        function(x) {
+            if (inherits(x, "advector") && ad_context())
+                mod$evalAD(x)
+            else
+                mod$eval(x)
+        },
+        methods = list(
+            jacobian = mod$jacobian,
+            optimize = mod$optimize,
+            print = mod$print,
+            jacfun = mod$jacfun
+        ),
+        class="Tape")
+}
+"$.Tape" <- function(x, name) attr(x, "methods")[[name]]
+print.Tape <- function(x,...){
+    cat("Object of class='Tape'\n")
+    info <- .Call(InfoADFunObject, environment(x)$mod$ptrTMB()$ptr)
+    txt <- paste0(" : ","R^",info$Domain, " -> " , "R^", info$Range, "\n")
+    cat(txt)
+    cat( c( "Methods:\n", paste0("$", names(attr(x,"methods")), "()\n")) )
 }
 
 ## FIXME: Add data argument?
@@ -234,7 +261,7 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
         obj$env$par <- unlist(parameters, use.names=FALSE)
         lgt <- lengths(parameters)
         names(obj$env$par) <- rep(names(lgt), lgt)
-        rcpp <- MakeTape(mapfunc, obj$env$par)
+        rcpp <- .MakeTape(mapfunc, obj$env$par)
         ans <- rcpp$ptrTMB()
         ans$DLL <- obj$env$DLL
         attr(ans$ptr, "par") <- obj$env$par
