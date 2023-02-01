@@ -185,17 +185,35 @@ MakeTape <- function(f, x) {
             jacobian = mod$jacobian,
             optimize = mod$optimize,
             print = mod$print,
-            jacfun = mod$jacfun
+            jacfun = mod$jacfun,
+            laplace = function(random, sparse=TRUE, SPA=FALSE, ...) {
+                .laplace(mod, random, sparse=sparse, SPA=SPA, ...)
+            }
         ),
         class="Tape")
 }
 "$.Tape" <- function(x, name) attr(x, "methods")[[name]]
 print.Tape <- function(x,...){
     cat("Object of class='Tape'\n")
-    info <- .Call(InfoADFunObject, environment(x)$mod$ptrTMB()$ptr)
+    ptr <- environment(x)$mod$ptrTMB()$ptr
+    info <- .Call(InfoADFunObject, ptr)
     txt <- paste0(" : ","R^",info$Domain, " -> " , "R^", info$Range, "\n")
     cat(txt)
     cat( c( "Methods:\n", paste0("$", names(attr(x,"methods")), "()\n")) )
+}
+.laplace <- function(mod, random, ...) {
+    random <- as.integer(random)
+    cfg <- lapply(list(...), as.double)
+    .transform(mod, "laplace", config=cfg,
+               random_order=random, mustWork=1L)
+    .transform(mod, "remove_random_parameters",
+               random_order=random, mustWork=1L)
+}
+.transform <- function(mod, method, ...) {
+    ptr <- mod$ptrTMB()$ptr
+    .Call(TransformADFunObject,
+          f = ptr,
+          control = list(method = as.character(method), ...))
 }
 
 ## FIXME: Add data argument?
