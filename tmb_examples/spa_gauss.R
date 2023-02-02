@@ -13,14 +13,24 @@ f <- function(parameters) {
     s <- parameters$s
     mu <- parameters$mu
     sigma <- parameters$sigma
-    K <- sum(mu * s + .5 * s * s * sigma^2) - sum(s * y)
-    K
+    ## MGF
+    K <- sum(mu * s + .5 * s * s * sigma^2)
+    ## SPA adjustment
+    K - sum(s * y)
 }
 library(RTMB)
 F <- MakeTape(f, parameters)
+show(F) ## f
 F <- F$laplace(random=1:n, SPA=TRUE)
+show(F) ## Laplace is on the tape (verify using F$print())
 
-## Tape can be used in other objective functions:
-obj <- MakeADFun(function(pl)F(pl[[1]]), list(c(mu=0,sigma=1)) )
+## Tape can be used directly:
+nlminb(c(0, 1), F, F$jacobian)
+
+## Or re-used to build new objective functions
+G <- function(x) F(x)
+
+## Feed G into normal TMB interface
+obj <- MakeADFun(G, list(mu=0, sigma=1) )
 opt <- nlminb(obj$par, obj$fn, obj$gr)
 sdreport(obj)

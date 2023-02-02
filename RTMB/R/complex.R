@@ -179,6 +179,8 @@ MakeTape <- function(f, x) {
 .expose <- function(mod) {
     structure(
         function(x) {
+            if (is.list(x))
+                x <- do.call("c", x)
             if (inherits(x, "advector") && ad_context())
                 mod$evalAD(x)
             else
