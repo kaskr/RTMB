@@ -28,9 +28,14 @@ NULL
 ##' re-used for AD vectors.
 ##'
 ##' @param x numeric or advector
+##' @param a advector with dimension attribute
 ##' @param e1 advector
 ##' @param e2 advector
-##' @param perm As in \code{aperm}
+##' @param perm Permutation as in \code{aperm}
+##' @param mode FIXME might not be handled correctly by \code{as.vector}
+##' @param na.rm Must be FALSE (default)
+##' @param value Replacement value implicitly converted to AD
+##' @param ... Additional arguments
 ##' @rdname ADvector
 ##' @name ADvector
 ##' @examples

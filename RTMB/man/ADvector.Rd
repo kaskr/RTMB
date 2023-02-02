@@ -50,7 +50,17 @@ advector(x)
 
 \item{e2}{advector}
 
-\item{perm}{As in \code{aperm}}
+\item{...}{Additional arguments}
+
+\item{mode}{FIXME might not be handled correctly by \code{as.vector}}
+
+\item{a}{advector with dimension attribute}
+
+\item{perm}{Permutation as in \code{aperm}}
+
+\item{value}{Replacement value implicitly converted to AD}
+
+\item{na.rm}{Must be FALSE (default)}
 }
 \description{
 An \code{advector} is a class used behind the scenes to replace
