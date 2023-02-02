@@ -73,6 +73,17 @@ header <- c(
     "ad* adptr(const Rcpp::ComplexVector &x);",
     "Rcpp::ComplexVector& as_advector(Rcpp::ComplexVector &x);")
 
+## WriteLines **only if changed**
+writeLines <- function(text, con) {
+  if (file.exists(con)) {
+    if(identical(readLines(con), text)) {
+      cat("No change:", con, "\n")
+      return (invisible(NULL))
+    }
+  }
+  cat("Updating: ", con, "\n")
+  base::writeLines(text, con)
+}
 
 ## Make all TMB functions available via prefix 'distr_'
 code <- unlist(lapply(1:nrow(df), codegen))
@@ -150,4 +161,4 @@ txt <- c(header, code.stats, code.other)
 writeLines(txt, "RTMB/R/distributions.R")
 
 ## Argument documentation (partial)
-cat(paste("@param",unique(unlist(lapply(df$signature,strsplit,split="[ ]*,[ ]*"))), "parameter\n"))
+## cat(paste("@param",unique(unlist(lapply(df$signature,strsplit,split="[ ]*,[ ]*"))), "parameter\n"))
