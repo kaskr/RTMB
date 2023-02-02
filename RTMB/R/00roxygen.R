@@ -15,6 +15,26 @@
 ##' Maintainer: <kaskr@@dtu.dk>
 NULL
 
+##' The AD vector and its methods
+##'
+##' An \code{advector} is a class used behind the scenes to replace
+##' normal R numeric objects during automatic differentiation. An
+##' \code{advector} has a 'temporary lifetime' and therefore you do not
+##' see it as a normal user.
+##'
+##' An AD vector (class='advector') is an atomic R vector of 'codes'
+##' that are internally interpretable as 'AD scalars'. A substatntial
+##' part of R's existing S3 matrix and array functionality can be
+##' re-used for AD vectors.
+##'
+##' @param x numeric or advector
+##' @param e1 advector
+##' @param e2 advector
+##' @param perm As is \code{aperm}
+##' @rdname advector
+##' @name advector
+NULL
+
 ##' The AD tape
 ##'
 ##' The AD tape as an R function
