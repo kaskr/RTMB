@@ -324,7 +324,7 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
     attr(obj$env$data, "func") <- func
     obj$env$ADreport <- ADreport
     obj$retape()
-    obj$par <- local(par[lfixed()], obj$env)
+    obj$par <- obj$env$par[obj$env$lfixed()]
     obj
 }
 
