@@ -94,6 +94,8 @@ prod.advector <- function(x, ..., na.rm) {
   if (na.rm) stop("'na.rm=TRUE' not implemented for AD prod")
   Reduce1(x, "*") * prod(...)
 }
+## Make cov2cor() work. FIXME: Any unwanted side-effects with this?
+is.numeric.advector <- function(x) TRUE
 ## If an overload has issues we can patch it:
 diff_patch <- base::diff.default
 environment(diff_patch) <- local({unclass <- function(x)x; environment()})
