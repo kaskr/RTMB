@@ -202,6 +202,7 @@ MakeTape <- function(f, x) {
         ),
         class="Tape")
 }
+##' @describeIn Tape Get a tape method.
 "$.Tape" <- function(x, name) attr(x, "methods")[[name]]
 print.Tape <- function(x,...){
     cat("Object of class='Tape'\n")

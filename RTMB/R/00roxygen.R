@@ -19,14 +19,27 @@ NULL
 ##'
 ##' The AD tape as an R function
 ##'
-##' A 'tape' is a representation of a function that accepts \emph{fixed size} numeric input and returns \emph{fixed size} numeric output.
-##' The tape can be constructed using \code{MakeTape(f, x)} where \code{f} is a standard \emph{differentiable} R function (or more precisely: One using only functions that are documented to work for AD types).
+##' A 'Tape' is a representation of a function that accepts \emph{fixed size} numeric input and returns \emph{fixed size} numeric output.
+##' The tape can be constructed using \code{F <- MakeTape(f, x)} where \code{f} is a standard \emph{differentiable} R function (or more precisely: One using only functions that are documented to work for AD types).
+##' Having constructed a tape F, a number of methods are available:
+##'
+##' Evaluation:
+##' - Normal function evaluation 'F(x)' for numeric input.
+##' - AD evaluation 'F(x)' as part of other tapes.
+##' - Jacobian calculations using 'F$jacobian(x)'.
+##'
+##' Transformation:
+##' - Jacobian function transformation 'F$jacfun()'
+##' - Laplace approximation transformation 'F$laplace()'. Also allows Saddle Point Approximation (SPA).
+##'
 ##' @rdname Tape
 ##' @name Tape
 ##' @examples
 ##' F <- MakeTape(prod, numeric(3))
 ##' show(F)
 ##' F$print()
+##' H <- F$jacfun()$jacfun() ## Hessian tape
+##' show(H)
 NULL
 
 ##' Distributions and special functions for which AD is implemented

@@ -34,6 +34,13 @@
 \alias{pweibull,num,num,num.,missing,missing-method}
 \alias{pbeta,ad,ad,ad,missing,missing,missing-method}
 \alias{pbeta,num,num,num,missing,missing,missing-method}
+\alias{dbinom_robust}
+\alias{dsn}
+\alias{dSHASHo}
+\alias{dtweedie}
+\alias{dnbinom2}
+\alias{dnbinom_robust}
+\alias{dlgamma}
 \title{Distributions and special functions for which AD is implemented}
 \usage{
 \S4method{dexp}{ad,ad.,logical.}(x, rate = 1, log = FALSE)
@@ -99,15 +106,94 @@
 \S4method{pbeta}{ad,ad,ad,missing,missing,missing}(q, shape1, shape2)
 
 \S4method{pbeta}{num,num,num,missing,missing,missing}(q, shape1, shape2)
+
+dbinom_robust(x, size, logit_p, log)
+
+dsn(x, alpha, log)
+
+dSHASHo(x, mu, sigma, nu, tau, log)
+
+dtweedie(x, mu, phi, p, log)
+
+dnbinom2(x, mu, var, log)
+
+dnbinom_robust(x, log_mu, log_var_minus_mu, log)
+
+dlgamma(x, shape, scale, log)
+}
+\arguments{
+\item{x}{observation vector}
+
+\item{rate}{parameter}
+
+\item{log}{Logical; Return log density/probability?}
+
+\item{shape}{parameter}
+
+\item{scale}{parameter}
+
+\item{size}{parameter}
+
+\item{prob}{parameter}
+
+\item{shape1}{parameter}
+
+\item{shape2}{parameter}
+
+\item{df1}{parameter}
+
+\item{df2}{parameter}
+
+\item{location}{parameter}
+
+\item{df}{parameter}
+
+\item{lambda}{parameter}
+
+\item{q}{vector of quantiles}
+
+\item{mean}{parameter}
+
+\item{sd}{parameter}
+
+\item{logit_p}{parameter}
+
+\item{alpha}{parameter}
+
+\item{mu}{parameter}
+
+\item{sigma}{parameter}
+
+\item{nu}{parameter}
+
+\item{tau}{parameter}
+
+\item{phi}{parameter}
+
+\item{p}{parameter}
+
+\item{var}{parameter}
+
+\item{log_mu}{parameter}
+
+\item{log_var_minus_mu}{parameter}
 }
 \description{
 The functions listed in this help page are all applicable for AD types.
 Method dispatching follows a simple rule:
-\emph{If at least one argument an AD type then a special AD
+\emph{If at least one argument is an AD type then a special AD
 implementation is selected. In all other cases a default
 implementation is used} (typically that of the \bold{stats}
 package).
 Argument recycling follows the R standard (although wihout any warnings).
+}
+\details{
+Specific documentation of the functions and arguments should be looked up elsewhere:
+- All S4 methods behave as the corresponding functions in the
+  \bold{stats} package. However, some arguements may not be
+  implemented in the AD case (e.g. \code{lower-tail}).
+- Other funtions behave as the corresponding TMB versions for
+  which documentation should be looked up online.
 }
 \section{Functions}{
 \itemize{
@@ -214,6 +300,20 @@ Argument recycling follows the R standard (although wihout any warnings).
   lower.tail = missing,
   log.p = missing
 )}: Default method
+
+\item \code{dbinom_robust()}: AD implementation
+
+\item \code{dsn()}: AD implementation
+
+\item \code{dSHASHo()}: AD implementation
+
+\item \code{dtweedie()}: AD implementation
+
+\item \code{dnbinom2()}: AD implementation
+
+\item \code{dnbinom_robust()}: AD implementation
+
+\item \code{dlgamma()}: AD implementation
 
 }}
 \examples{
