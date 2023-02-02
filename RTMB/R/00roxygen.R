@@ -32,6 +32,9 @@ NULL
 ##' - Jacobian function transformation 'F$jacfun()'
 ##' - Laplace approximation transformation 'F$laplace()'. Also allows Saddle Point Approximation (SPA).
 ##'
+##' @param f R function
+##' @param x numeric vector
+##' @param name Name of a tape method
 ##' @rdname Tape
 ##' @name Tape
 ##' @examples

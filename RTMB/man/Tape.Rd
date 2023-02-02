@@ -10,6 +10,13 @@ MakeTape(f, x)
 
 \method{$}{Tape}(x, name)
 }
+\arguments{
+\item{f}{R function}
+
+\item{x}{numeric vector}
+
+\item{name}{Name of a tape method}
+}
 \description{
 The AD tape as an R function
 }
