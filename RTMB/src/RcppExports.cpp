@@ -499,6 +499,105 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// distr_qnorm
+Rcpp::ComplexVector distr_qnorm(Rcpp::ComplexVector p, Rcpp::ComplexVector mean, Rcpp::ComplexVector sd);
+RcppExport SEXP _RTMB_distr_qnorm(SEXP pSEXP, SEXP meanSEXP, SEXP sdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type sd(sdSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_qnorm(p, mean, sd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_qexp
+Rcpp::ComplexVector distr_qexp(Rcpp::ComplexVector p, Rcpp::ComplexVector rate);
+RcppExport SEXP _RTMB_distr_qexp(SEXP pSEXP, SEXP rateSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type rate(rateSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_qexp(p, rate));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_qweibull
+Rcpp::ComplexVector distr_qweibull(Rcpp::ComplexVector p, Rcpp::ComplexVector shape, Rcpp::ComplexVector scale);
+RcppExport SEXP _RTMB_distr_qweibull(SEXP pSEXP, SEXP shapeSEXP, SEXP scaleSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type shape(shapeSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type scale(scaleSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_qweibull(p, shape, scale));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_qbeta
+Rcpp::ComplexVector distr_qbeta(Rcpp::ComplexVector p, Rcpp::ComplexVector shape1, Rcpp::ComplexVector shape2);
+RcppExport SEXP _RTMB_distr_qbeta(SEXP pSEXP, SEXP shape1SEXP, SEXP shape2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type shape1(shape1SEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type shape2(shape2SEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_qbeta(p, shape1, shape2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_besselK
+Rcpp::ComplexVector distr_besselK(Rcpp::ComplexVector x, Rcpp::ComplexVector nu);
+RcppExport SEXP _RTMB_distr_besselK(SEXP xSEXP, SEXP nuSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type nu(nuSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_besselK(x, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_besselI
+Rcpp::ComplexVector distr_besselI(Rcpp::ComplexVector x, Rcpp::ComplexVector nu);
+RcppExport SEXP _RTMB_distr_besselI(SEXP xSEXP, SEXP nuSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type nu(nuSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_besselI(x, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_besselJ
+Rcpp::ComplexVector distr_besselJ(Rcpp::ComplexVector x, Rcpp::ComplexVector nu);
+RcppExport SEXP _RTMB_distr_besselJ(SEXP xSEXP, SEXP nuSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type nu(nuSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_besselJ(x, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_besselY
+Rcpp::ComplexVector distr_besselY(Rcpp::ComplexVector x, Rcpp::ComplexVector nu);
+RcppExport SEXP _RTMB_distr_besselY(SEXP xSEXP, SEXP nuSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type nu(nuSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_besselY(x, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP _rcpp_module_boot_mod_adfun();
 
@@ -542,6 +641,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_pexp", (DL_FUNC) &_RTMB_distr_pexp, 2},
     {"_RTMB_distr_pweibull", (DL_FUNC) &_RTMB_distr_pweibull, 3},
     {"_RTMB_distr_pbeta", (DL_FUNC) &_RTMB_distr_pbeta, 3},
+    {"_RTMB_distr_qnorm", (DL_FUNC) &_RTMB_distr_qnorm, 3},
+    {"_RTMB_distr_qexp", (DL_FUNC) &_RTMB_distr_qexp, 2},
+    {"_RTMB_distr_qweibull", (DL_FUNC) &_RTMB_distr_qweibull, 3},
+    {"_RTMB_distr_qbeta", (DL_FUNC) &_RTMB_distr_qbeta, 3},
+    {"_RTMB_distr_besselK", (DL_FUNC) &_RTMB_distr_besselK, 2},
+    {"_RTMB_distr_besselI", (DL_FUNC) &_RTMB_distr_besselI, 2},
+    {"_RTMB_distr_besselJ", (DL_FUNC) &_RTMB_distr_besselJ, 2},
+    {"_RTMB_distr_besselY", (DL_FUNC) &_RTMB_distr_besselY, 2},
     {"_rcpp_module_boot_mod_adfun", (DL_FUNC) &_rcpp_module_boot_mod_adfun, 0},
     {NULL, NULL, 0}
 };

@@ -153,3 +153,35 @@ distr_pbeta <- function(q, shape1, shape2) {
     .Call(`_RTMB_distr_pbeta`, q, shape1, shape2)
 }
 
+distr_qnorm <- function(p, mean, sd) {
+    .Call(`_RTMB_distr_qnorm`, p, mean, sd)
+}
+
+distr_qexp <- function(p, rate) {
+    .Call(`_RTMB_distr_qexp`, p, rate)
+}
+
+distr_qweibull <- function(p, shape, scale) {
+    .Call(`_RTMB_distr_qweibull`, p, shape, scale)
+}
+
+distr_qbeta <- function(p, shape1, shape2) {
+    .Call(`_RTMB_distr_qbeta`, p, shape1, shape2)
+}
+
+distr_besselK <- function(x, nu) {
+    .Call(`_RTMB_distr_besselK`, x, nu)
+}
+
+distr_besselI <- function(x, nu) {
+    .Call(`_RTMB_distr_besselI`, x, nu)
+}
+
+distr_besselJ <- function(x, nu) {
+    .Call(`_RTMB_distr_besselJ`, x, nu)
+}
+
+distr_besselY <- function(x, nu) {
+    .Call(`_RTMB_distr_besselY`, x, nu)
+}
+

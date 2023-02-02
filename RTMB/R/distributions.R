@@ -14,7 +14,7 @@ distr_dexp ( x, rate, log )
 setMethod("dexp",
 signature(x = "num", rate = "num.", log = "logical."),
 function( x, rate, log ) {
-stats:: dexp ( x, rate, log )
+CallNextMethod( x, rate, log )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -32,7 +32,7 @@ distr_dweibull ( x, shape, scale, log )
 setMethod("dweibull",
 signature(x = "num", shape = "num", scale = "num.", log = "logical."),
 function( x, shape, scale, log ) {
-stats:: dweibull ( x, shape, scale, log )
+CallNextMethod( x, shape, scale, log )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -50,7 +50,7 @@ distr_dbinom ( x, size, prob, log )
 setMethod("dbinom",
 signature(x = "num", size = "num", prob = "num", log = "logical."),
 function( x, size, prob, log ) {
-stats:: dbinom ( x, size, prob, log )
+CallNextMethod( x, size, prob, log )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -68,7 +68,7 @@ distr_dbeta ( x, shape1, shape2, log )
 setMethod("dbeta",
 signature(x = "num", shape1 = "num", shape2 = "num", ncp = "missing", log = "logical."),
 function( x, shape1, shape2, log ) {
-stats:: dbeta ( x, shape1, shape2, log )
+CallNextMethod( x, shape1, shape2, log )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -86,7 +86,7 @@ distr_df ( x, df1, df2, log )
 setMethod("df",
 signature(x = "num", df1 = "num", df2 = "num", ncp = "missing", log = "logical."),
 function( x, df1, df2, log ) {
-stats:: df ( x, df1, df2, log )
+CallNextMethod( x, df1, df2, log )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -104,7 +104,7 @@ distr_dlogis ( x, location, scale, log )
 setMethod("dlogis",
 signature(x = "num", location = "num.", scale = "num.", log = "logical."),
 function( x, location, scale, log ) {
-stats:: dlogis ( x, location, scale, log )
+CallNextMethod( x, location, scale, log )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -121,7 +121,7 @@ distr_dt ( x, df, log )
 setMethod("dt",
 signature(x = "num", df = "num", ncp = "missing", log = "logical."),
 function( x, df, log ) {
-stats:: dt ( x, df, log )
+CallNextMethod( x, df, log )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -139,7 +139,7 @@ distr_dnbinom ( x, size, prob, log )
 setMethod("dnbinom",
 signature(x = "num", size = "num", prob = "num", mu = "missing", log = "logical."),
 function( x, size, prob, log ) {
-stats:: dnbinom ( x, size, prob, log )
+CallNextMethod( x, size, prob, log )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -156,7 +156,7 @@ distr_dpois ( x, lambda, log )
 setMethod("dpois",
 signature(x = "num", lambda = "num", log = "logical."),
 function( x, lambda, log ) {
-stats:: dpois ( x, lambda, log )
+CallNextMethod( x, lambda, log )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -174,7 +174,7 @@ distr_dgamma ( x, shape, scale, log )
 setMethod("dgamma",
 signature(x = "num", shape = "num", rate = "missing", scale = "num.", log = "logical."),
 function( x, shape, scale, log ) {
-stats:: dgamma ( x, shape, scale, log )
+CallNextMethod( x, shape, scale, log )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -191,7 +191,7 @@ distr_pnorm ( q, mean , sd  )
 setMethod("pnorm",
 signature(q = "num", mean = "num.", sd = "num.", lower.tail = "missing", log.p = "missing"),
 function( q, mean , sd  ) {
-stats:: pnorm ( q, mean , sd  )
+CallNextMethod( q, mean , sd  )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -208,7 +208,7 @@ distr_pgamma ( q, shape, scale  )
 setMethod("pgamma",
 signature(q = "num", shape = "num", rate = "missing", scale = "num.", lower.tail = "missing", log.p = "missing"),
 function( q, shape, scale  ) {
-stats:: pgamma ( q, shape, scale  )
+CallNextMethod( q, shape, scale  )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -224,7 +224,7 @@ distr_ppois ( q, lambda )
 setMethod("ppois",
 signature(q = "num", lambda = "num", lower.tail = "missing", log.p = "missing"),
 function( q, lambda ) {
-stats:: ppois ( q, lambda )
+CallNextMethod( q, lambda )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -240,7 +240,7 @@ distr_pexp ( q, rate )
 setMethod("pexp",
 signature(q = "num", rate = "num.", lower.tail = "missing", log.p = "missing"),
 function( q, rate ) {
-stats:: pexp ( q, rate )
+CallNextMethod( q, rate )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -257,7 +257,7 @@ distr_pweibull ( q, shape, scale )
 setMethod("pweibull",
 signature(q = "num", shape = "num", scale = "num.", lower.tail = "missing", log.p = "missing"),
 function( q, shape, scale ) {
-stats:: pweibull ( q, shape, scale )
+CallNextMethod( q, shape, scale )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -274,7 +274,138 @@ distr_pbeta ( q, shape1, shape2 )
 setMethod("pbeta",
 signature(q = "num", shape1 = "num", shape2 = "num", ncp = "missing", lower.tail = "missing", log.p = "missing"),
 function( q, shape1, shape2 ) {
-stats:: pbeta ( q, shape1, shape2 )
+CallNextMethod( q, shape1, shape2 )
+}
+)
+##' @describeIn Distributions AD implementation
+setMethod("qnorm",
+signature(p = "ad", mean = "ad.", sd = "ad.", lower.tail = "missing", log.p = "missing"),
+function( p, mean , sd  ) {
+p <-  advector ( p )
+mean <-  advector ( mean )
+sd <-  advector ( sd )
+distr_qnorm ( p, mean , sd  )
+}
+)
+##' @describeIn Distributions Default method
+setMethod("qnorm",
+signature(p = "num", mean = "num.", sd = "num.", lower.tail = "missing", log.p = "missing"),
+function( p, mean , sd  ) {
+CallNextMethod( p, mean , sd  )
+}
+)
+##' @describeIn Distributions AD implementation
+setMethod("qexp",
+signature(p = "ad", rate = "ad.", lower.tail = "missing", log.p = "missing"),
+function( p, rate ) {
+p <-  advector ( p )
+rate <-  advector ( rate )
+distr_qexp ( p, rate )
+}
+)
+##' @describeIn Distributions Default method
+setMethod("qexp",
+signature(p = "num", rate = "num.", lower.tail = "missing", log.p = "missing"),
+function( p, rate ) {
+CallNextMethod( p, rate )
+}
+)
+##' @describeIn Distributions AD implementation
+setMethod("qweibull",
+signature(p = "ad", shape = "ad", scale = "ad.", lower.tail = "missing", log.p = "missing"),
+function( p, shape, scale ) {
+p <-  advector ( p )
+shape <-  advector ( shape )
+scale <-  advector ( scale )
+distr_qweibull ( p, shape, scale )
+}
+)
+##' @describeIn Distributions Default method
+setMethod("qweibull",
+signature(p = "num", shape = "num", scale = "num.", lower.tail = "missing", log.p = "missing"),
+function( p, shape, scale ) {
+CallNextMethod( p, shape, scale )
+}
+)
+##' @describeIn Distributions AD implementation
+setMethod("qbeta",
+signature(p = "ad", shape1 = "ad", shape2 = "ad", ncp = "missing", lower.tail = "missing", log.p = "missing"),
+function( p, shape1, shape2 ) {
+p <-  advector ( p )
+shape1 <-  advector ( shape1 )
+shape2 <-  advector ( shape2 )
+distr_qbeta ( p, shape1, shape2 )
+}
+)
+##' @describeIn Distributions Default method
+setMethod("qbeta",
+signature(p = "num", shape1 = "num", shape2 = "num", ncp = "missing", lower.tail = "missing", log.p = "missing"),
+function( p, shape1, shape2 ) {
+CallNextMethod( p, shape1, shape2 )
+}
+)
+##' @describeIn Distributions AD implementation
+setMethod("besselK",
+signature(x = "ad", nu = "ad", expon.scaled = "missing"),
+function( x, nu ) {
+x <-  advector ( x )
+nu <-  advector ( nu )
+distr_besselK ( x, nu )
+}
+)
+##' @describeIn Distributions Default method
+setMethod("besselK",
+signature(x = "num", nu = "num", expon.scaled = "missing"),
+function( x, nu ) {
+CallNextMethod( x, nu )
+}
+)
+##' @describeIn Distributions AD implementation
+setMethod("besselI",
+signature(x = "ad", nu = "ad", expon.scaled = "missing"),
+function( x, nu ) {
+x <-  advector ( x )
+nu <-  advector ( nu )
+distr_besselI ( x, nu )
+}
+)
+##' @describeIn Distributions Default method
+setMethod("besselI",
+signature(x = "num", nu = "num", expon.scaled = "missing"),
+function( x, nu ) {
+CallNextMethod( x, nu )
+}
+)
+##' @describeIn Distributions AD implementation
+setMethod("besselJ",
+signature(x = "ad", nu = "ad"),
+function( x, nu ) {
+x <-  advector ( x )
+nu <-  advector ( nu )
+distr_besselJ ( x, nu )
+}
+)
+##' @describeIn Distributions Default method
+setMethod("besselJ",
+signature(x = "num", nu = "num"),
+function( x, nu ) {
+CallNextMethod( x, nu )
+}
+)
+##' @describeIn Distributions AD implementation
+setMethod("besselY",
+signature(x = "ad", nu = "ad"),
+function( x, nu ) {
+x <-  advector ( x )
+nu <-  advector ( nu )
+distr_besselY ( x, nu )
+}
+)
+##' @describeIn Distributions Default method
+setMethod("besselY",
+signature(x = "num", nu = "num"),
+function( x, nu ) {
+CallNextMethod( x, nu )
 }
 )
 ##' @describeIn Distributions AD implementation

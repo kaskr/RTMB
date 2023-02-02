@@ -346,3 +346,118 @@ ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = pbeta(X1[i % n1], X2[i % n2], X3[i % n3]);
 return as_advector(ans);
 }
+// [[Rcpp::export]]
+Rcpp::ComplexVector distr_qnorm ( Rcpp::ComplexVector p, Rcpp::ComplexVector mean , Rcpp::ComplexVector sd  )
+{
+int n1=p.size();
+int n2=mean .size();
+int n3=sd .size();
+int nmax = std::max({n1, n2, n3});
+int nmin = std::min({n1, n2, n3});
+int n = (nmin == 0 ? 0 : nmax);
+Rcpp::ComplexVector ans(n);
+const ad* X1 = adptr(p); const ad* X2 = adptr(mean ); const ad* X3 = adptr(sd );
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = qnorm(X1[i % n1], X2[i % n2], X3[i % n3]);
+return as_advector(ans);
+}
+// [[Rcpp::export]]
+Rcpp::ComplexVector distr_qexp ( Rcpp::ComplexVector p, Rcpp::ComplexVector rate )
+{
+int n1=p.size();
+int n2=rate.size();
+int nmax = std::max({n1, n2});
+int nmin = std::min({n1, n2});
+int n = (nmin == 0 ? 0 : nmax);
+Rcpp::ComplexVector ans(n);
+const ad* X1 = adptr(p); const ad* X2 = adptr(rate);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = qexp(X1[i % n1], X2[i % n2]);
+return as_advector(ans);
+}
+// [[Rcpp::export]]
+Rcpp::ComplexVector distr_qweibull ( Rcpp::ComplexVector p, Rcpp::ComplexVector shape, Rcpp::ComplexVector scale )
+{
+int n1=p.size();
+int n2=shape.size();
+int n3=scale.size();
+int nmax = std::max({n1, n2, n3});
+int nmin = std::min({n1, n2, n3});
+int n = (nmin == 0 ? 0 : nmax);
+Rcpp::ComplexVector ans(n);
+const ad* X1 = adptr(p); const ad* X2 = adptr(shape); const ad* X3 = adptr(scale);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = qweibull(X1[i % n1], X2[i % n2], X3[i % n3]);
+return as_advector(ans);
+}
+// [[Rcpp::export]]
+Rcpp::ComplexVector distr_qbeta ( Rcpp::ComplexVector p, Rcpp::ComplexVector shape1, Rcpp::ComplexVector shape2 )
+{
+int n1=p.size();
+int n2=shape1.size();
+int n3=shape2.size();
+int nmax = std::max({n1, n2, n3});
+int nmin = std::min({n1, n2, n3});
+int n = (nmin == 0 ? 0 : nmax);
+Rcpp::ComplexVector ans(n);
+const ad* X1 = adptr(p); const ad* X2 = adptr(shape1); const ad* X3 = adptr(shape2);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = qbeta(X1[i % n1], X2[i % n2], X3[i % n3]);
+return as_advector(ans);
+}
+// [[Rcpp::export]]
+Rcpp::ComplexVector distr_besselK ( Rcpp::ComplexVector x, Rcpp::ComplexVector nu )
+{
+int n1=x.size();
+int n2=nu.size();
+int nmax = std::max({n1, n2});
+int nmin = std::min({n1, n2});
+int n = (nmin == 0 ? 0 : nmax);
+Rcpp::ComplexVector ans(n);
+const ad* X1 = adptr(x); const ad* X2 = adptr(nu);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = besselK(X1[i % n1], X2[i % n2]);
+return as_advector(ans);
+}
+// [[Rcpp::export]]
+Rcpp::ComplexVector distr_besselI ( Rcpp::ComplexVector x, Rcpp::ComplexVector nu )
+{
+int n1=x.size();
+int n2=nu.size();
+int nmax = std::max({n1, n2});
+int nmin = std::min({n1, n2});
+int n = (nmin == 0 ? 0 : nmax);
+Rcpp::ComplexVector ans(n);
+const ad* X1 = adptr(x); const ad* X2 = adptr(nu);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = besselI(X1[i % n1], X2[i % n2]);
+return as_advector(ans);
+}
+// [[Rcpp::export]]
+Rcpp::ComplexVector distr_besselJ ( Rcpp::ComplexVector x, Rcpp::ComplexVector nu )
+{
+int n1=x.size();
+int n2=nu.size();
+int nmax = std::max({n1, n2});
+int nmin = std::min({n1, n2});
+int n = (nmin == 0 ? 0 : nmax);
+Rcpp::ComplexVector ans(n);
+const ad* X1 = adptr(x); const ad* X2 = adptr(nu);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = besselJ(X1[i % n1], X2[i % n2]);
+return as_advector(ans);
+}
+// [[Rcpp::export]]
+Rcpp::ComplexVector distr_besselY ( Rcpp::ComplexVector x, Rcpp::ComplexVector nu )
+{
+int n1=x.size();
+int n2=nu.size();
+int nmax = std::max({n1, n2});
+int nmin = std::min({n1, n2});
+int n = (nmin == 0 ? 0 : nmax);
+Rcpp::ComplexVector ans(n);
+const ad* X1 = adptr(x); const ad* X2 = adptr(nu);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = besselY(X1[i % n1], X2[i % n2]);
+return as_advector(ans);
+}

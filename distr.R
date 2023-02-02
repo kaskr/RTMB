@@ -3,13 +3,16 @@ tmb <- unlist(lapply(dir(f,pattern=".hpp",full=TRUE),readLines))
 tmb1 <- paste(tmb,collapse="") ## Everything on one line - warning: do not print!
 d <- grep("^VECTORIZE.*\\(d", tmb, value=TRUE)
 p <- grep("^VECTORIZE.*\\(p", tmb, value=TRUE)
-dp <- c(d,p)
+q <- grep("^VECTORIZE.*\\(q", tmb, value=TRUE)
+b <- grep("^VECTORIZE.*\\(bessel", tmb, value=TRUE)
+dp <- c(d,p,q,b)
 dp <- sub("VECTORIZE(.)_(.*)\\((.*)\\)", "\\3 \\1 \\2", dp)
 df <- as.data.frame(t(do.call(cbind, sapply(dp, strsplit, " "))), stringsAsFactors=FALSE)
 names(df) <- c("name","npar","code")
 df <- subset(df,name!="pow") ## bogus
 df <- subset(df, !(name=="pnorm" & npar==1) ) ## bogus
-skip <- c("pSHASHo", "dnorm", "pnorm_approx", "dzipois") ## RTMB uses a dnorm implementation in R
+df <- subset(df, !(name=="qnorm" & npar==1) ) ## bogus
+skip <- c("pSHASHo", "qSHASHo", "dnorm", "pnorm_approx", "qnorm_approx", "dzipois", "qgamma") ## RTMB uses a dnorm implementation in R
 df <- subset(df, !(name %in% skip))
 
 getsig <- function(name) {
@@ -139,7 +142,8 @@ getRmethod <- function(i) {
     sig2 <- gsub("ad", "num", sig)
     def2 <- c(
         paste("function(", df$signature[i],") {"),
-        paste("stats::", name,"(",df$signature[i],")"), "}")
+        ##paste("stats::", name,"(",df$signature[i],")"), "}")
+        paste("CallNextMethod(",df$signature[i],")"), "}")
     meth2 <-
         c(paste0("setMethod(", string(name), ","),
           paste0(sig2, ","),

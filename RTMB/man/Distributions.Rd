@@ -34,6 +34,22 @@
 \alias{pweibull,num,num,num.,missing,missing-method}
 \alias{pbeta,ad,ad,ad,missing,missing,missing-method}
 \alias{pbeta,num,num,num,missing,missing,missing-method}
+\alias{qnorm,ad,ad.,ad.,missing,missing-method}
+\alias{qnorm,num,num.,num.,missing,missing-method}
+\alias{qexp,ad,ad.,missing,missing-method}
+\alias{qexp,num,num.,missing,missing-method}
+\alias{qweibull,ad,ad,ad.,missing,missing-method}
+\alias{qweibull,num,num,num.,missing,missing-method}
+\alias{qbeta,ad,ad,ad,missing,missing,missing-method}
+\alias{qbeta,num,num,num,missing,missing,missing-method}
+\alias{besselK,ad,ad,missing-method}
+\alias{besselK,num,num,missing-method}
+\alias{besselI,ad,ad,missing-method}
+\alias{besselI,num,num,missing-method}
+\alias{besselJ,ad,ad-method}
+\alias{besselJ,num,num-method}
+\alias{besselY,ad,ad-method}
+\alias{besselY,num,num-method}
 \alias{dbinom_robust}
 \alias{dsn}
 \alias{dSHASHo}
@@ -107,6 +123,38 @@
 
 \S4method{pbeta}{num,num,num,missing,missing,missing}(q, shape1, shape2)
 
+\S4method{qnorm}{ad,ad.,ad.,missing,missing}(p, mean, sd)
+
+\S4method{qnorm}{num,num.,num.,missing,missing}(p, mean, sd)
+
+\S4method{qexp}{ad,ad.,missing,missing}(p, rate)
+
+\S4method{qexp}{num,num.,missing,missing}(p, rate)
+
+\S4method{qweibull}{ad,ad,ad.,missing,missing}(p, shape, scale)
+
+\S4method{qweibull}{num,num,num.,missing,missing}(p, shape, scale)
+
+\S4method{qbeta}{ad,ad,ad,missing,missing,missing}(p, shape1, shape2)
+
+\S4method{qbeta}{num,num,num,missing,missing,missing}(p, shape1, shape2)
+
+\S4method{besselK}{ad,ad,missing}(x, nu)
+
+\S4method{besselK}{num,num,missing}(x, nu)
+
+\S4method{besselI}{ad,ad,missing}(x, nu)
+
+\S4method{besselI}{num,num,missing}(x, nu)
+
+\S4method{besselJ}{ad,ad}(x, nu)
+
+\S4method{besselJ}{num,num}(x, nu)
+
+\S4method{besselY}{ad,ad}(x, nu)
+
+\S4method{besselY}{num,num}(x, nu)
+
 dbinom_robust(x, size, logit_p, log)
 
 dsn(x, alpha, log)
@@ -156,6 +204,10 @@ dlgamma(x, shape, scale, log)
 
 \item{sd}{parameter}
 
+\item{p}{parameter}
+
+\item{nu}{parameter}
+
 \item{logit_p}{parameter}
 
 \item{alpha}{parameter}
@@ -164,13 +216,9 @@ dlgamma(x, shape, scale, log)
 
 \item{sigma}{parameter}
 
-\item{nu}{parameter}
-
 \item{tau}{parameter}
 
 \item{phi}{parameter}
-
-\item{p}{parameter}
 
 \item{var}{parameter}
 
@@ -300,6 +348,64 @@ Specific documentation of the functions and arguments should be looked up elsewh
   lower.tail = missing,
   log.p = missing
 )}: Default method
+
+\item \code{qnorm(p = ad, mean = ad., sd = ad., lower.tail = missing, log.p = missing)}: AD implementation
+
+\item \code{qnorm(p = num, mean = num., sd = num., lower.tail = missing, log.p = missing)}: Default method
+
+\item \code{qexp(p = ad, rate = ad., lower.tail = missing, log.p = missing)}: AD implementation
+
+\item \code{qexp(p = num, rate = num., lower.tail = missing, log.p = missing)}: Default method
+
+\item \code{qweibull(
+  p = ad,
+  shape = ad,
+  scale = ad.,
+  lower.tail = missing,
+  log.p = missing
+)}: AD implementation
+
+\item \code{qweibull(
+  p = num,
+  shape = num,
+  scale = num.,
+  lower.tail = missing,
+  log.p = missing
+)}: Default method
+
+\item \code{qbeta(
+  p = ad,
+  shape1 = ad,
+  shape2 = ad,
+  ncp = missing,
+  lower.tail = missing,
+  log.p = missing
+)}: AD implementation
+
+\item \code{qbeta(
+  p = num,
+  shape1 = num,
+  shape2 = num,
+  ncp = missing,
+  lower.tail = missing,
+  log.p = missing
+)}: Default method
+
+\item \code{besselK(x = ad, nu = ad, expon.scaled = missing)}: AD implementation
+
+\item \code{besselK(x = num, nu = num, expon.scaled = missing)}: Default method
+
+\item \code{besselI(x = ad, nu = ad, expon.scaled = missing)}: AD implementation
+
+\item \code{besselI(x = num, nu = num, expon.scaled = missing)}: Default method
+
+\item \code{besselJ(x = ad, nu = ad)}: AD implementation
+
+\item \code{besselJ(x = num, nu = num)}: Default method
+
+\item \code{besselY(x = ad, nu = ad)}: AD implementation
+
+\item \code{besselY(x = num, nu = num)}: Default method
 
 \item \code{dbinom_robust()}: AD implementation
 
