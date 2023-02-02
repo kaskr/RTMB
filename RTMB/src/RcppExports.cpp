@@ -340,20 +340,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// distr_dnorm
-Rcpp::ComplexVector distr_dnorm(Rcpp::ComplexVector x, Rcpp::ComplexVector mean, Rcpp::ComplexVector sd, bool give_log);
-RcppExport SEXP _RTMB_distr_dnorm(SEXP xSEXP, SEXP meanSEXP, SEXP sdSEXP, SEXP give_logSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type sd(sdSEXP);
-    Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_dnorm(x, mean, sd, give_log));
-    return rcpp_result_gen;
-END_RCPP
-}
 // distr_dnbinom
 Rcpp::ComplexVector distr_dnbinom(Rcpp::ComplexVector x, Rcpp::ComplexVector size, Rcpp::ComplexVector prob, bool give_log);
 RcppExport SEXP _RTMB_distr_dnbinom(SEXP xSEXP, SEXP sizeSEXP, SEXP probSEXP, SEXP give_logSEXP) {
@@ -434,31 +420,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type scale(scaleSEXP);
     Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
     rcpp_result_gen = Rcpp::wrap(distr_dlgamma(x, shape, scale, give_log));
-    return rcpp_result_gen;
-END_RCPP
-}
-// distr_dzipois
-Rcpp::ComplexVector distr_dzipois(Rcpp::ComplexVector x, Rcpp::ComplexVector lambda, Rcpp::ComplexVector zip, bool give_log);
-RcppExport SEXP _RTMB_distr_dzipois(SEXP xSEXP, SEXP lambdaSEXP, SEXP zipSEXP, SEXP give_logSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type lambda(lambdaSEXP);
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type zip(zipSEXP);
-    Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_dzipois(x, lambda, zip, give_log));
-    return rcpp_result_gen;
-END_RCPP
-}
-// distr_pnorm_approx
-Rcpp::ComplexVector distr_pnorm_approx(Rcpp::ComplexVector q);
-RcppExport SEXP _RTMB_distr_pnorm_approx(SEXP qSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type q(qSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_pnorm_approx(q));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -569,15 +530,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_dt", (DL_FUNC) &_RTMB_distr_dt, 3},
     {"_RTMB_distr_dSHASHo", (DL_FUNC) &_RTMB_distr_dSHASHo, 6},
     {"_RTMB_distr_dtweedie", (DL_FUNC) &_RTMB_distr_dtweedie, 5},
-    {"_RTMB_distr_dnorm", (DL_FUNC) &_RTMB_distr_dnorm, 4},
     {"_RTMB_distr_dnbinom", (DL_FUNC) &_RTMB_distr_dnbinom, 4},
     {"_RTMB_distr_dnbinom2", (DL_FUNC) &_RTMB_distr_dnbinom2, 4},
     {"_RTMB_distr_dnbinom_robust", (DL_FUNC) &_RTMB_distr_dnbinom_robust, 4},
     {"_RTMB_distr_dpois", (DL_FUNC) &_RTMB_distr_dpois, 3},
     {"_RTMB_distr_dgamma", (DL_FUNC) &_RTMB_distr_dgamma, 4},
     {"_RTMB_distr_dlgamma", (DL_FUNC) &_RTMB_distr_dlgamma, 4},
-    {"_RTMB_distr_dzipois", (DL_FUNC) &_RTMB_distr_dzipois, 4},
-    {"_RTMB_distr_pnorm_approx", (DL_FUNC) &_RTMB_distr_pnorm_approx, 1},
     {"_RTMB_distr_pnorm", (DL_FUNC) &_RTMB_distr_pnorm, 3},
     {"_RTMB_distr_pgamma", (DL_FUNC) &_RTMB_distr_pgamma, 3},
     {"_RTMB_distr_ppois", (DL_FUNC) &_RTMB_distr_ppois, 2},

@@ -170,21 +170,6 @@ for (int i=0; i<n; i++) Y[i] = dtweedie(X1[i % n1], X2[i % n2], X3[i % n3], X4[i
 return as_advector(ans);
 }
 // [[Rcpp::export]]
-Rcpp::ComplexVector distr_dnorm ( Rcpp::ComplexVector x, Rcpp::ComplexVector mean, Rcpp::ComplexVector sd, bool give_log )
-{
-int n1=x.size();
-int n2=mean.size();
-int n3=sd.size();
-int nmax = std::max({n1, n2, n3});
-int nmin = std::min({n1, n2, n3});
-int n = (nmin == 0 ? 0 : nmax);
-Rcpp::ComplexVector ans(n);
-const ad* X1 = adptr(x); const ad* X2 = adptr(mean); const ad* X3 = adptr(sd);
-ad* Y = adptr(ans);
-for (int i=0; i<n; i++) Y[i] = dnorm(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
-return as_advector(ans);
-}
-// [[Rcpp::export]]
 Rcpp::ComplexVector distr_dnbinom ( Rcpp::ComplexVector x, Rcpp::ComplexVector size, Rcpp::ComplexVector prob, bool give_log )
 {
 int n1=x.size();
@@ -271,34 +256,6 @@ Rcpp::ComplexVector ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(shape); const ad* X3 = adptr(scale);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dlgamma(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
-return as_advector(ans);
-}
-// [[Rcpp::export]]
-Rcpp::ComplexVector distr_dzipois ( Rcpp::ComplexVector x, Rcpp::ComplexVector lambda, Rcpp::ComplexVector zip, bool give_log )
-{
-int n1=x.size();
-int n2=lambda.size();
-int n3=zip.size();
-int nmax = std::max({n1, n2, n3});
-int nmin = std::min({n1, n2, n3});
-int n = (nmin == 0 ? 0 : nmax);
-Rcpp::ComplexVector ans(n);
-const ad* X1 = adptr(x); const ad* X2 = adptr(lambda); const ad* X3 = adptr(zip);
-ad* Y = adptr(ans);
-for (int i=0; i<n; i++) Y[i] = dzipois(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
-return as_advector(ans);
-}
-// [[Rcpp::export]]
-Rcpp::ComplexVector distr_pnorm_approx ( Rcpp::ComplexVector q )
-{
-int n1=q.size();
-int nmax = std::max({n1});
-int nmin = std::min({n1});
-int n = (nmin == 0 ? 0 : nmax);
-Rcpp::ComplexVector ans(n);
-const ad* X1 = adptr(q);
-ad* Y = adptr(ans);
-for (int i=0; i<n; i++) Y[i] = pnorm_approx(X1[i % n1]);
 return as_advector(ans);
 }
 // [[Rcpp::export]]

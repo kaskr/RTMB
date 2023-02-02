@@ -105,10 +105,6 @@ distr_dtweedie <- function(x, mu, phi, p, give_log) {
     .Call(`_RTMB_distr_dtweedie`, x, mu, phi, p, give_log)
 }
 
-distr_dnorm <- function(x, mean, sd, give_log) {
-    .Call(`_RTMB_distr_dnorm`, x, mean, sd, give_log)
-}
-
 distr_dnbinom <- function(x, size, prob, give_log) {
     .Call(`_RTMB_distr_dnbinom`, x, size, prob, give_log)
 }
@@ -131,14 +127,6 @@ distr_dgamma <- function(x, shape, scale, give_log) {
 
 distr_dlgamma <- function(x, shape, scale, give_log) {
     .Call(`_RTMB_distr_dlgamma`, x, shape, scale, give_log)
-}
-
-distr_dzipois <- function(x, lambda, zip, give_log) {
-    .Call(`_RTMB_distr_dzipois`, x, lambda, zip, give_log)
-}
-
-distr_pnorm_approx <- function(q) {
-    .Call(`_RTMB_distr_pnorm_approx`, q)
 }
 
 distr_pnorm <- function(q, mean, sd) {
