@@ -1,4 +1,4 @@
-##' @describeIn advector Construct a new advector
+##' @describeIn ADvector Construct a new advector
 advector <- function(x) {
     if (inherits(x, "advector"))
         return (x)
@@ -33,7 +33,7 @@ magic <- function(x, condition = ad_context()) {
     } else
         stop("'magic' does not know this object")
 }
-##' @describeIn advector Binary operations
+##' @describeIn ADvector Binary operations
 "Ops.advector" <- function(e1, e2) {
     if (missing(e2)) {
         if (.Generic=="-" || .Generic=="+") {
@@ -55,13 +55,13 @@ magic <- function(x, condition = ad_context()) {
     }
     ans
 }
-##' @describeIn advector Unary operations
+##' @describeIn ADvector Unary operations
 "Math.advector" <- function(x, ...) {
     x[] <- Math1(x, .Generic)
     x
 }
 
-##' @describeIn advector Makes \code{array(x)} work.
+##' @describeIn ADvector Makes \code{array(x)} work.
 as.vector.advector <- function(x, mode = "any") {
     ## FIXME: Rcpp export 'as_advector' and use it
     asS4(structure(NextMethod(), class="advector"))
@@ -70,43 +70,43 @@ as.vector.advector <- function(x, mode = "any") {
 ##     structure(NextMethod(), class="advector")
 ## }
 
-##' @describeIn advector As \bold{base} version
+##' @describeIn ADvector As \bold{base} version
 aperm.advector <- function(a, perm, ...) {
     structure(NextMethod(), class="advector")
 }
-##' @describeIn advector As \bold{base} version
+##' @describeIn ADvector As \bold{base} version
 c.advector <- function(...) {
     structure(NextMethod(), class="advector")
 }
-##' @describeIn advector As \bold{base} version
+##' @describeIn ADvector As \bold{base} version
 "[.advector" <- function(x, ...) {
     structure(NextMethod(), class="advector")
 }
-##' @describeIn advector As \bold{base} version
+##' @describeIn ADvector As \bold{base} version
 "[<-.advector" <- function(x, ..., value) {
     value <- advector(value)
     NextMethod()
 }
-##' @describeIn advector As \bold{base} version
+##' @describeIn ADvector As \bold{base} version
 "[[.advector" <- function(x, ...) {
     structure(NextMethod(), class="advector")
 }
-##' @describeIn advector As \bold{base} version. Makes \code{outer(x,x,...)} work.
+##' @describeIn ADvector As \bold{base} version. Makes \code{outer(x,x,...)} work.
 rep.advector <- function (x, ...) {
     structure(NextMethod(), class="advector")
 }
-##' @describeIn advector As \bold{base} version except \code{na.rm} not allowed.
+##' @describeIn ADvector As \bold{base} version except \code{na.rm} not allowed.
 sum.advector <- function(x, ..., na.rm) {
   if (na.rm) stop("'na.rm=TRUE' not implemented for AD sum")
   Reduce1(x, "+") + sum(...)
 }
-##' @describeIn advector As \bold{base} version except \code{na.rm} not allowed.
+##' @describeIn ADvector As \bold{base} version except \code{na.rm} not allowed.
 prod.advector <- function(x, ..., na.rm) {
   if (na.rm) stop("'na.rm=TRUE' not implemented for AD prod")
   Reduce1(x, "*") * prod(...)
 }
 ## Make cov2cor() work. FIXME: Any unwanted side-effects with this?
-##' @describeIn advector Makes \code{cov2cor()} work. FIXME: Any unwanted side-effects with this?
+##' @describeIn ADvector Makes \code{cov2cor()} work. FIXME: Any unwanted side-effects with this?
 is.numeric.advector <- function(x) TRUE
 ## If an overload has issues we can patch it:
 diff_patch <- base::diff.default
