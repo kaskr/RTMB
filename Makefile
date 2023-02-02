@@ -5,6 +5,11 @@ doc-update:
 	echo "suppressWarnings(roxygen2::roxygenize(\"RTMB\",roclets = c(\"collate\", \"rd\")))" | R --slave
 	sed -i '/RoxygenNote/d' RTMB/DESCRIPTION
 
+unexport TEXINPUTS
+pdf:
+	rm -f RTMB.pdf
+	R CMD Rd2pdf --no-preview RTMB
+
 distributions:
 	R --slave < distr.R
 

@@ -102,6 +102,7 @@ getRmethod <- function(i) {
     stats <- exists(name,"package:stats")
     if(stats) {
         Rsig <- head(as.list(args(get(name,"package:stats"))),-1)  ## R signature
+        namespace <- paste0(environmentName(environment(get(name,"package:stats"))),"::") ## stats:: or base::
     } else {
         nm <- getargs(df$signature[i])
         Rsig <- structure(vector("list", length(nm)), names=nm )
@@ -142,8 +143,8 @@ getRmethod <- function(i) {
     sig2 <- gsub("ad", "num", sig)
     def2 <- c(
         paste("function(", df$signature[i],") {"),
-        ##paste("stats::", name,"(",df$signature[i],")"), "}")
-        paste("CallNextMethod(",df$signature[i],")"), "}")
+        paste(namespace, name,"(",df$signature[i],")"), "}")
+        ##paste("callNextMethod(",df$signature[i],")"), "}")
     meth2 <-
         c(paste0("setMethod(", string(name), ","),
           paste0(sig2, ","),
