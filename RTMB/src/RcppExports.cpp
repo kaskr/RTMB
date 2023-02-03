@@ -148,15 +148,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // matmul
-Rcpp::ComplexVector matmul(const Rcpp::ComplexMatrix& x, const Rcpp::ComplexMatrix& y, std::string method);
-RcppExport SEXP _RTMB_matmul(SEXP xSEXP, SEXP ySEXP, SEXP methodSEXP) {
+Rcpp::ComplexVector matmul(const Rcpp::ComplexMatrix& x, const Rcpp::ComplexMatrix& y);
+RcppExport SEXP _RTMB_matmul(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(matmul(x, y, method));
+    rcpp_result_gen = Rcpp::wrap(matmul(x, y));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -628,7 +627,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_getValues", (DL_FUNC) &_RTMB_getValues, 1},
     {"_RTMB_getVariables", (DL_FUNC) &_RTMB_getVariables, 1},
     {"_RTMB_dbgprint", (DL_FUNC) &_RTMB_dbgprint, 1},
-    {"_RTMB_matmul", (DL_FUNC) &_RTMB_matmul, 3},
+    {"_RTMB_matmul", (DL_FUNC) &_RTMB_matmul, 2},
     {"_RTMB_dmvnorm0", (DL_FUNC) &_RTMB_dmvnorm0, 3},
     {"_RTMB_dgmrf0", (DL_FUNC) &_RTMB_dgmrf0, 3},
     {"_RTMB_SparseArith2", (DL_FUNC) &_RTMB_SparseArith2, 3},

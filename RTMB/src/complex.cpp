@@ -390,8 +390,7 @@ void dbgprint(const Rcpp::ComplexVector &x) {
 
 // [[Rcpp::export]]
 Rcpp::ComplexVector matmul (const Rcpp::ComplexMatrix &x,
-                            const Rcpp::ComplexMatrix &y,
-                            std::string method) {
+                            const Rcpp::ComplexMatrix &y) {
   typedef Eigen::Map<Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > MapMatrix;
   typedef Eigen::Map<const Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > ConstMapMatrix;
   if (x.ncol() != y.nrow())
@@ -409,7 +408,7 @@ Rcpp::ComplexVector matmul (const Rcpp::ComplexMatrix &x,
   else if ( tape_config.matmul_TMBad() )
     Z = TMBad::matmul(matrix<ad>(X), matrix<ad>(Y));
   else
-    Rf_error("Method '%s' not implemented", method.c_str());
+    Rcpp::stop("Nothing selected by tape_config.matmul_* !");
   return as_advector(z);
 }
 

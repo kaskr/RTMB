@@ -49,8 +49,8 @@ dbgprint <- function(x) {
     invisible(.Call(`_RTMB_dbgprint`, x))
 }
 
-matmul <- function(x, y, method) {
-    .Call(`_RTMB_matmul`, x, y, method)
+matmul <- function(x, y) {
+    .Call(`_RTMB_matmul`, x, y)
 }
 
 dmvnorm0 <- function(x, s, give_log) {
