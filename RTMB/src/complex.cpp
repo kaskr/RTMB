@@ -321,6 +321,13 @@ Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
   else if (!op.compare("acos")) VCALL(acos)
   else if (!op.compare("asin")) VCALL(asin)
   else if (!op.compare("atan")) VCALL(atan)
+  else if (!op.compare("cosh")) VCALL(cosh)
+  else if (!op.compare("sinh")) VCALL(sinh)
+  else if (!op.compare("tanh")) VCALL(tanh)
+  // FIXME:
+  // else if (!op.compare("acosh")) VCALL(acosh)
+  // else if (!op.compare("asinh")) VCALL(asinh)
+  // else if (!op.compare("atanh")) VCALL(atanh)
   else if (!op.compare("lgamma")) CALL(lgamma);
   else if (!op.compare("cumsum")) {
     if (n > 0) { Y[0] = X[0]; CUMC(+); }
