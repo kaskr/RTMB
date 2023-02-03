@@ -86,6 +86,38 @@ RCPP_MODULE(mod_adfun) {
   ;
 }
 
+// Global Tape Configuration
+static struct tape_config_t {
+  int comparison; // Safe=0 / Taped=1 / Unsafe=2
+  int atomic;     // No atomic=0 / Use atomic=1
+  int vectorize;  // No vectorize =0 / Use vectorize=1
+  tape_config_t() : comparison(0), atomic(1), vectorize(0) {}
+  bool matmul_plain    () { return (atomic == 0); }
+  bool matmul_atomic   () { return (atomic == 1) && vectorize==0; }
+  bool matmul_TMBad    () { return (atomic == 1) && vectorize==1; }
+  bool ops_vectorize   () { return vectorize == 1; }
+  bool math_vectorize  () { return vectorize == 1; }
+  bool compare_safe    () { return comparison == 0; }
+  bool compare_taped   () { return comparison == 1; }
+  bool compare_unsafe  () { return comparison == 2; }
+} tape_config;
+// [[Rcpp::export]]
+Rcpp::List set_tape_config(int comparison=0, int atomic=1, int vectorize=0) {
+  tape_config.comparison = comparison;
+  tape_config.atomic = atomic;
+  tape_config.vectorize = vectorize;
+#define GET(name) Rcpp::Named(#name) = tape_config.name()
+  return Rcpp::List::create(
+                            GET(matmul_plain),
+                            GET(matmul_atomic),
+                            GET(matmul_TMBad),
+                            GET(ops_vectorize),
+                            GET(math_vectorize),
+                            GET(compare_safe),
+                            GET(compare_taped),
+                            GET(compare_unsafe));
+}
+
 /* ========================================================================== */
 /* AD vector object */
 /* ========================================================================== */
@@ -207,15 +239,26 @@ Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
   CHECK_INPUT(y);
   size_t nx = x.size(), ny = y.size();
   size_t n = (std::min(nx, ny) > 0 ? std::max(nx, ny) : 0);
+  bool do_vectorize =
+    tape_config.ops_vectorize() && (nx==1 || nx==n) && (ny==1 || ny==n);
   Rcpp::ComplexVector z(n);
-  const ad* X = adptr(x);
-  const ad* Y = adptr(y);
+  ad* X = adptr(x);
+  ad* Y = adptr(y);
   ad* Z = adptr(z);
-#define CALL(OP) for (size_t i=0; i<n; i++) Z[i] = X[i % nx] OP Y[i % ny]
-  if (!op.compare("+")) CALL(+);
-  else if (!op.compare("-")) CALL(-);
-  else if (!op.compare("*")) CALL(*);
-  else if (!op.compare("/")) CALL(/);
+#define CALL(OP)                                                \
+  {                                                             \
+    if (!do_vectorize) {                                        \
+      for (size_t i=0; i<n; i++) Z[i] = X[i % nx] OP Y[i % ny]; \
+    } else {                                                    \
+      TMBad::ad_segment S =                                     \
+        TMBad::ad_segment(X, nx) OP TMBad::ad_segment(Y, ny);   \
+      for (size_t i=0; i<n; i++) Z[i] = S[i];                   \
+    }                                                           \
+  }
+  if (!op.compare("+")) CALL(+)
+  else if (!op.compare("-")) CALL(-)
+  else if (!op.compare("*")) CALL(*)
+  else if (!op.compare("/")) CALL(/)
   else if (!op.compare("^")) {
     for (size_t i=0; i<n; i++) Z[i] = pow(X[i % nx] , Y[i % ny]);
   }

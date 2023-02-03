@@ -11,6 +11,19 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// set_tape_config
+Rcpp::List set_tape_config(int comparison, int atomic, int vectorize);
+RcppExport SEXP _RTMB_set_tape_config(SEXP comparisonSEXP, SEXP atomicSEXP, SEXP vectorizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type comparison(comparisonSEXP);
+    Rcpp::traits::input_parameter< int >::type atomic(atomicSEXP);
+    Rcpp::traits::input_parameter< int >::type vectorize(vectorizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(set_tape_config(comparison, atomic, vectorize));
+    return rcpp_result_gen;
+END_RCPP
+}
 // valid
 bool valid(Rcpp::ComplexVector x);
 RcppExport SEXP _RTMB_valid(SEXP xSEXP) {
@@ -603,6 +616,7 @@ RcppExport SEXP _rcpp_module_boot_mod_adfun();
 
 static const R_CallMethodDef CallEntries[] = {
     TMB_CALLDEFS,
+    {"_RTMB_set_tape_config", (DL_FUNC) &_RTMB_set_tape_config, 3},
     {"_RTMB_valid", (DL_FUNC) &_RTMB_valid, 1},
     {"_RTMB_ad_context", (DL_FUNC) &_RTMB_ad_context, 0},
     {"_RTMB_advec", (DL_FUNC) &_RTMB_advec, 1},
