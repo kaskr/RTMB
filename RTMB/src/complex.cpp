@@ -97,6 +97,7 @@ static struct tape_config_t {
   bool matmul_TMBad    () { return (atomic == 1) && vectorize==1; }
   bool ops_vectorize   () { return vectorize == 1; }
   bool math_vectorize  () { return vectorize == 1; }
+  bool sum_vectorize   () { return vectorize == 1; }
   bool compare_safe    () { return comparison == 0; }
   bool compare_taped   () { return comparison == 1; }
   bool compare_unsafe  () { return comparison == 2; }
@@ -114,6 +115,7 @@ Rcpp::List set_tape_config(int comparison=0, int atomic=1, int vectorize=0) {
                             GET(matmul_TMBad),
                             GET(ops_vectorize),
                             GET(math_vectorize),
+                            GET(sum_vectorize),
                             GET(compare_safe),
                             GET(compare_taped),
                             GET(compare_unsafe),
@@ -338,7 +340,12 @@ Rcpp::ComplexVector Reduce1(const Rcpp::ComplexVector &x, std::string op) {
   ad ans = 0;
 #define REDUCE(OP) for (size_t i=0; i<n; i++) ans = ans OP cplx2ad(x[i]);
   if (!op.compare("+")) {
-    ans = 0.; REDUCE(+);
+    if ( !tape_config.sum_vectorize() ) {
+      ans = 0.; REDUCE(+);
+    } else {
+      ad* X = adptr(x);
+      ans = TMBad::sum(TMBad::ad_segment(X, n));
+    }
   } else if (!op.compare("*")) {
     ans = 1.; REDUCE(*);
   }
