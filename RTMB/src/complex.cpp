@@ -292,21 +292,31 @@ Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
 Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
   CHECK_INPUT(x);
   size_t n = x.size();
+  bool do_vectorize =
+    tape_config.math_vectorize() && n>1;
   Rcpp::ComplexVector y(n);
-  const ad* X = adptr(x);
+  ad* X = adptr(x); // FIXME: TMBad::ad_segment(const *)
   ad* Y = adptr(y);
 #define CALL(OP) for (size_t i=0; i<n; i++) Y[i] = OP ( X[i] )
+#define VCALL(OP)                                               \
+  {                                                             \
+    if (!do_vectorize) { CALL(OP); }                            \
+    else {                                                      \
+      TMBad::ad_segment S = OP( TMBad::ad_segment(X, n) );      \
+      for (size_t i=0; i<n; i++) Y[i] = S[i];                   \
+    }                                                           \
+  }
 #define CUMC(OP) for (size_t i=1; i<n; i++) Y[i] = Y[i-1] OP X[i];
   if (!op.compare("abs")) CALL(fabs);
-  else if (!op.compare("sqrt")) CALL(sqrt);
-  else if (!op.compare("exp")) CALL(exp);
-  else if (!op.compare("log")) CALL(log);
-  else if (!op.compare("cos")) CALL(cos);
-  else if (!op.compare("sin")) CALL(sin);
-  else if (!op.compare("tan")) CALL(tan);
-  else if (!op.compare("acos")) CALL(acos);
-  else if (!op.compare("asin")) CALL(asin);
-  else if (!op.compare("atan")) CALL(atan);
+  else if (!op.compare("sqrt")) VCALL(sqrt)
+  else if (!op.compare("exp")) VCALL(exp)
+  else if (!op.compare("log")) VCALL(log)
+  else if (!op.compare("cos")) VCALL(cos)
+  else if (!op.compare("sin")) VCALL(sin)
+  else if (!op.compare("tan")) VCALL(tan)
+  else if (!op.compare("acos")) VCALL(acos)
+  else if (!op.compare("asin")) VCALL(asin)
+  else if (!op.compare("atan")) VCALL(atan)
   else if (!op.compare("lgamma")) CALL(lgamma);
   else if (!op.compare("cumsum")) {
     if (n > 0) { Y[0] = X[0]; CUMC(+); }
