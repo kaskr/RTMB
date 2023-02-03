@@ -100,6 +100,7 @@ static struct tape_config_t {
   bool compare_safe    () { return comparison == 0; }
   bool compare_taped   () { return comparison == 1; }
   bool compare_unsafe  () { return comparison == 2; }
+  bool mvnorm_atomic   () { return (atomic == 1); }
 } tape_config;
 // [[Rcpp::export]]
 Rcpp::List set_tape_config(int comparison=0, int atomic=1, int vectorize=0) {
@@ -115,7 +116,8 @@ Rcpp::List set_tape_config(int comparison=0, int atomic=1, int vectorize=0) {
                             GET(math_vectorize),
                             GET(compare_safe),
                             GET(compare_taped),
-                            GET(compare_unsafe));
+                            GET(compare_unsafe),
+                            GET(mvnorm_atomic));
 }
 
 /* ========================================================================== */
@@ -383,11 +385,11 @@ Rcpp::ComplexVector matmul (const Rcpp::ComplexMatrix &x,
   ConstMapMatrix X((ad*) x.begin(), x.nrow(), x.ncol());
   ConstMapMatrix Y((ad*) y.begin(), y.nrow(), y.ncol());
   MapMatrix Z((ad*) z.begin(), z.nrow(), z.ncol());
-  if (!method.compare("plain"))
+  if ( tape_config.matmul_plain() )
     Z = X * Y;
-  else if (!method.compare("atomic"))
+  else if ( tape_config.matmul_atomic() )
     Z = atomic::matmul(matrix<ad>(X), matrix<ad>(Y));
-  else if (!method.compare("TMBad"))
+  else if ( tape_config.matmul_TMBad() )
     Z = TMBad::matmul(matrix<ad>(X), matrix<ad>(Y));
   else
     Rf_error("Method '%s' not implemented", method.c_str());
@@ -421,7 +423,7 @@ Rcpp::ComplexVector dmvnorm0 (const Rcpp::ComplexMatrix &x,
   CHECK_INPUT(x);
   CHECK_INPUT(s);
   ConstMapMatrix S((ad*) s.begin(), s.nrow(), s.ncol());
-  auto nldens = density::MVNORM(matrix<ad>(S));
+  auto nldens = density::MVNORM(matrix<ad>(S), tape_config.mvnorm_atomic() );
   return colApply(x, nldens, give_log);
 }
 
