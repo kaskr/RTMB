@@ -313,6 +313,8 @@ Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
   else if (!op.compare("sqrt")) VCALL(sqrt)
   else if (!op.compare("exp")) VCALL(exp)
   else if (!op.compare("log")) VCALL(log)
+  else if (!op.compare("expm1")) VCALL(expm1)
+  else if (!op.compare("log1p")) VCALL(log1p)
   else if (!op.compare("cos")) VCALL(cos)
   else if (!op.compare("sin")) VCALL(sin)
   else if (!op.compare("tan")) VCALL(tan)
