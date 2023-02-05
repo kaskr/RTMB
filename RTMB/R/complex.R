@@ -33,8 +33,12 @@ magic <- function(x, condition = ad_context()) {
     } else
         stop("'magic' does not know this object")
 }
+.Compare <- getGroupMembers("Compare")
 ##' @describeIn ADvector Binary operations
 "Ops.advector" <- function(e1, e2) {
+    if (compare_allow() && (.Generic %in% .Compare)) {
+        return (NextMethod(getValues(e1), getValues(e2)))
+    }
     if (missing(e2)) {
         if (.Generic=="-" || .Generic=="+") {
             e2 <- e1; e1 <- 0
