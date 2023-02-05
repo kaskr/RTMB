@@ -98,9 +98,9 @@ static struct tape_config_t {
   bool ops_vectorize   () { return vectorize == 1; }
   bool math_vectorize  () { return vectorize == 1; }
   bool sum_vectorize   () { return vectorize == 1; }
-  bool compare_safe    () { return comparison == 0; }
+  bool compare_forbid  () { return comparison == 0; }
   bool compare_taped   () { return comparison == 1; }
-  bool compare_unsafe  () { return comparison == 2; }
+  bool compare_allow   () { return comparison == 2; }
   bool mvnorm_atomic   () { return (atomic == 1); }
 } tape_config;
 // [[Rcpp::export]]
@@ -116,9 +116,9 @@ Rcpp::List set_tape_config(int comparison=0, int atomic=1, int vectorize=0) {
                             GET(ops_vectorize),
                             GET(math_vectorize),
                             GET(sum_vectorize),
-                            GET(compare_safe),
+                            GET(compare_forbid),
                             GET(compare_taped),
-                            GET(compare_unsafe),
+                            GET(compare_allow),
                             GET(mvnorm_atomic));
 }
 
@@ -259,6 +259,18 @@ Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
       for (size_t i=0; i<n; i++) Z[i] = S[i];                   \
     }                                                           \
   }
+#define COMPARISON(CONDEXP)                                             \
+  {                                                                     \
+    if (tape_config.compare_forbid()) {                                 \
+      Rcpp::stop("Comparison is generally unsafe for AD types");        \
+    } else if (tape_config.compare_taped()) {                           \
+      for (size_t i=0; i<n; i++)                                        \
+        Z[i] = CONDEXP(X[i % nx], Y[i % ny], ad(1.), ad(0.));           \
+    } else if (tape_config.compare_allow()) {                           \
+      Rcpp::stop("tape_config.compare_allow is not handled here");      \
+    } else                                                              \
+      Rcpp::stop("Nothing selected by tape_config.compare_* !");        \
+  }
   if (!op.compare("+")) CALL(+)
   else if (!op.compare("-")) CALL(-)
   else if (!op.compare("*")) CALL(*)
@@ -266,6 +278,12 @@ Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
   else if (!op.compare("^")) {
     for (size_t i=0; i<n; i++) Z[i] = pow(X[i % nx] , Y[i % ny]);
   }
+  else if (!op.compare("==")) COMPARISON(CondExpEq)
+  else if (!op.compare("!=")) COMPARISON(CondExpNe)
+  else if (!op.compare(">=")) COMPARISON(CondExpGe)
+  else if (!op.compare("<=")) COMPARISON(CondExpLe)
+  else if (!op.compare(">"))  COMPARISON(CondExpGt)
+  else if (!op.compare("<"))  COMPARISON(CondExpLt)
   else Rf_error("'%s' not implemented", op.c_str());
 #undef CALL
   return as_advector(z);
