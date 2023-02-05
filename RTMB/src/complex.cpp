@@ -121,6 +121,8 @@ Rcpp::List set_tape_config(int comparison=0, int atomic=1, int vectorize=0) {
                             GET(compare_allow),
                             GET(mvnorm_atomic));
 }
+// [[Rcpp::export]]
+bool compare_allow() { return tape_config.compare_allow(); }
 
 /* ========================================================================== */
 /* AD vector object */

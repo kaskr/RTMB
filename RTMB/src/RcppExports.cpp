@@ -24,6 +24,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// compare_allow
+bool compare_allow();
+RcppExport SEXP _RTMB_compare_allow() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(compare_allow());
+    return rcpp_result_gen;
+END_RCPP
+}
 // valid
 bool valid(Rcpp::ComplexVector x);
 RcppExport SEXP _RTMB_valid(SEXP xSEXP) {
@@ -616,6 +626,7 @@ RcppExport SEXP _rcpp_module_boot_mod_adfun();
 static const R_CallMethodDef CallEntries[] = {
     TMB_CALLDEFS,
     {"_RTMB_set_tape_config", (DL_FUNC) &_RTMB_set_tape_config, 3},
+    {"_RTMB_compare_allow", (DL_FUNC) &_RTMB_compare_allow, 0},
     {"_RTMB_valid", (DL_FUNC) &_RTMB_valid, 1},
     {"_RTMB_ad_context", (DL_FUNC) &_RTMB_ad_context, 0},
     {"_RTMB_advec", (DL_FUNC) &_RTMB_advec, 1},
