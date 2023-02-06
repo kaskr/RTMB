@@ -434,8 +434,11 @@ Rcpp::ComplexVector matmul (const Rcpp::ComplexMatrix &x,
     Z = X * Y;
   else if ( tape_config.matmul_atomic() )
     Z = atomic::matmul(matrix<ad>(X), matrix<ad>(Y));
-  else if ( tape_config.matmul_TMBad() )
+  else if ( tape_config.matmul_TMBad() ) {
+    if (!ad_context())
+      Rcpp::stop("tape_config.matmul_TMBad() requires an active AD context");
     Z = TMBad::matmul(matrix<ad>(X), matrix<ad>(Y));
+  }
   else
     Rcpp::stop("Nothing selected by tape_config.matmul_* !");
   return as_advector(z);
