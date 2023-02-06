@@ -259,6 +259,20 @@ print.Tape <- function(x,...){
             control = list(method = as.character(method), ...))
 }
 
+##' @describeIn Tape Global configuration parameters of the tape (experts only!)
+##' @param comparison Set behaviour of AD comparision ('>','==', etc).
+##' @param atomic Set behaviour of AD BLAS opererations ('%*%',...).
+##' @param vectorize Enable/disable AD vectorized 'Ops' and 'Math'.
+TapeConfig <- function(comparison = c("forbid", "tape", "allow"),
+                       atomic = c("enable", "disable"),
+                       vectorize = c("disable", "enable")) {
+    comparison <- c(forbid=0L, tape=1L, allow=2L)[match.arg(comparison)]
+    atomic <- c(enable=1L, disable=0L)[match.arg(atomic)]
+    vectorize <- c(enable=1L, disable=0L)[match.arg(vectorize)]
+    ans <- unlist(set_tape_config(comparison, atomic, vectorize))
+    invisible(ans)
+}
+
 ## FIXME: Add data argument?
 MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE, ...) {
     if (is.list(func))
