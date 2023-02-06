@@ -192,6 +192,7 @@ dgmrf <- function(x, mu, Q, log=FALSE) {
 ## High level version: Not everything available
 ##' @describeIn Tape Generate a 'Tape' of an R function.
 MakeTape <- function(f, x) {
+    f <- match.fun(f)
     mod <- .MakeTape(f, x)
     .expose(mod)
 }
