@@ -260,8 +260,14 @@ print.Tape <- function(x,...){
 }
 
 ##' @describeIn Tape Global configuration parameters of the tape (experts only!)
-##' \bold{comparision} By default, AD comparision gives an error (\code{comparison="forbid"}).
-##' This is the safe and recommended behaviour, because comparison is a non-differentiable operation. If you are building a tape that requires indicator functions e.g. \code{f(x)*(x<0)+g(x)*(x>=0)} then use \code{comparision="tape"} to add the indicators to the tape. A final option \code{comparision="allow"} exists for testing/illustration purposes. Do not use.
+##' \bold{comparision} By default, AD comparision gives an error
+##' (\code{comparison="forbid"}).
+##' This is the safe and recommended behaviour, because comparison is a
+##' non-differentiable operation. If you are building a tape that
+##' requires indicator functions e.g. \code{f(x)*(x<0)+g(x)*(x>=0)}
+##' then use \code{comparision="tape"} to add the indicators to the
+##' tape. A final option \code{comparision="allow"} exists for
+##' testing/illustration purposes. Do not use.
 ##' @param comparison Set behaviour of AD comparision (\code{">"},\code{"=="}, etc).
 ##' @param atomic Set behaviour of AD BLAS opererations (\code{"%*%"},...).
 ##' @param vectorize Enable/disable AD vectorized 'Ops' and 'Math'.
