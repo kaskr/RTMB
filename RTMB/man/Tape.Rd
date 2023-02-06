@@ -4,11 +4,18 @@
 \alias{Tape}
 \alias{MakeTape}
 \alias{$.Tape}
+\alias{TapeConfig}
 \title{The AD tape}
 \usage{
 MakeTape(f, x)
 
 \method{$}{Tape}(x, name)
+
+TapeConfig(
+  comparison = c("forbid", "tape", "allow"),
+  atomic = c("enable", "disable"),
+  vectorize = c("disable", "enable")
+)
 }
 \arguments{
 \item{f}{R function}
@@ -16,6 +23,10 @@ MakeTape(f, x)
 \item{x}{numeric vector}
 
 \item{name}{Name of a tape method}
+
+\item{comparison}{Set behaviour of AD comparision (\code{">"},\code{"=="}, etc).}
+
+\item{vectorize}{Enable/disable AD vectorized 'Ops' and 'Math'.}
 }
 \description{
 The AD tape as an R function
@@ -42,6 +53,16 @@ Transformation:
 \section{Functions}{
 \itemize{
 \item \code{MakeTape()}: Generate a 'Tape' of an R function.
+
+\item \code{TapeConfig()}: Global configuration parameters of the tape (experts only!)
+\bold{comparision} By default, AD comparision gives an error
+(\code{comparison="forbid"}).
+This is the safe and recommended behaviour, because comparison is a
+non-differentiable operation. If you are building a tape that
+requires indicator functions e.g. \code{f(x)*(x<0)+g(x)*(x>=0)}
+then use \code{comparision="tape"} to add the indicators to the
+tape. A final option \code{comparision="allow"} exists for
+testing/illustration purposes. Do not use.
 
 }}
 \examples{
