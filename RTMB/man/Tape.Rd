@@ -24,7 +24,7 @@ TapeConfig(
 
 \item{name}{Name of a tape method}
 
-\item{comparison}{Set behaviour of AD comparision (\code{">"},\code{"=="}, etc).}
+\item{comparison}{Set behaviour of AD comparison (\code{">"},\code{"=="}, etc).}
 
 \item{vectorize}{Enable/disable AD vectorized 'Ops' and 'Math'.}
 }
@@ -55,13 +55,13 @@ Transformation:
 \item \code{MakeTape()}: Generate a 'Tape' of an R function.
 
 \item \code{TapeConfig()}: Global configuration parameters of the tape (experts only!)
-\bold{comparision} By default, AD comparision gives an error
+\bold{comparison} By default, AD comparison gives an error
 (\code{comparison="forbid"}).
 This is the safe and recommended behaviour, because comparison is a
 non-differentiable operation. If you are building a tape that
 requires indicator functions e.g. \code{f(x)*(x<0)+g(x)*(x>=0)}
-then use \code{comparision="tape"} to add the indicators to the
-tape. A final option \code{comparision="allow"} exists for
+then use \code{comparison="tape"} to add the indicators to the
+tape. A final option \code{comparison="allow"} exists for
 testing/illustration purposes. Do not use.
 
 }}
