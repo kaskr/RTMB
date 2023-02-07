@@ -286,7 +286,7 @@ TapeConfig <- function(comparison = c("forbid", "tape", "allow"),
 observation.name <- NULL
 data.term.indicator <- NULL
 ## FIXME: Add data argument?
-MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE, ...) {
+MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE, silent=FALSE,...) {
     if (is.list(func))
         func <- attr(func, "func")
     ## Make empty object
@@ -296,6 +296,7 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
                           map=map,
                           ADreport=FALSE,
                           checkParameterOrder=FALSE,
+                          silent=silent,
                           DLL="RTMB")
     ## Handling maps (copied and modified parList)
     parList <- function (parameters, par) {
