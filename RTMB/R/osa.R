@@ -43,9 +43,27 @@ OSA <- function(x) {
 }
 
 setClass("osa", list(x="ad", keep="ad"))
-setMethod("dpois", "osa", function(x, lambda, log) {
+
+dGenericOSA <- function(.Generic, x, ..., log) {
+    if (!log) stop("'OSA' is for *log* density evaluation only")
     keep <- x@keep
     x <- x@x
-    ans <- dpois(x, lambda, log=TRUE) * keep
+    dfun <- match.fun(.Generic)
+    ans <- dfun(x, ..., log=TRUE) * keep[,1]
+    if (ncol(keep) == 3) { ## CDF method
+        substring(.Generic, 1, 1) <- "p"
+        pfun <- match.fun(.Generic)
+        F <- pfun(x, ...) ## log=FALSE lower.tail=TRUE (default)
+        ans <- ans + log(F) * keep[,2]   ## lower
+        ans <- ans + log(1-F) * keep[,3] ## upper
+    }
     if (log) ans else exp(ans)
+}
+
+## FIXME: Autogenerate using 'distr.R'
+setMethod("dpois", "osa", function(x, lambda, log) {
+    dGenericOSA(.Generic, x, lambda, log=log)
+})
+setMethod("dnorm", "osa", function(x, mean, sd, log) {
+    dGenericOSA(.Generic, x, mean, sd, log=log)
 })
