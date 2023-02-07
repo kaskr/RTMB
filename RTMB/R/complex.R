@@ -282,6 +282,9 @@ TapeConfig <- function(comparison = c("forbid", "tape", "allow"),
     invisible(ans)
 }
 
+## Visible bindings:
+observation.name <- NULL
+data.term.indicator <- NULL
 ## FIXME: Add data argument?
 MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE, ...) {
     if (is.list(func))
@@ -324,13 +327,28 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
     obj$env$MakeADFunObject <- function(data,parameters, reportenv, ADreport = FALSE,...) {
         mapfunc <- function(par) {
             ADREPORT_ENV$clear()
+            OSA_ENV     $clear()
             pl <- parList(parameters, par)
             bias.correct <- ("TMB_epsilon_" %in% names(pl))
+            do.osa <- ("_RTMB_keep_" %in% names(pl))
             if (bias.correct) {
                 eps <- pl$TMB_epsilon_
                 pl$TMB_epsilon_ <- NULL
             }
+            if (do.osa) {
+                obs <- new("osa",
+                           x=pl[[obj$env$observation.name]],
+                           keep=pl[[obj$env$data.term.indicator]])
+                OSA_ENV$set(obj$env$observation.name, obs)
+                pl[[obj$env$observation.name]] <- NULL
+                pl[[obj$env$data.term.indicator]] <- NULL
+            }
             ans <- func(pl)
+            if (!do.osa) {
+                ## Place OSA marked observations in obj
+                obj$env$osa <- OSA_ENV$result()
+            }
+            OSA_ENV$clear() ## Cleanup
             if (ADreport || bias.correct) {
                 adrep <- do.call("c", lapply(ADREPORT_ENV$result(), advector) )
                 if (length(adrep) == 0) adrep <- advector(numeric(0))
@@ -357,6 +375,9 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
         attr(ans, "rcpp") <- rcpp ## rcpp manages this ptr (no need for finalizer)
         ans
     }
+    ## OSA
+    obj$env$observation.name <- observation.name
+    obj$env$data.term.indicator <- data.term.indicator
     ## FIXME: Skip for now
     obj$env$MakeDoubleFunObject <- function(...)NULL
     obj$env$EvalDoubleFunObject <- function(...)NULL
@@ -378,10 +399,14 @@ sdreport <- function(obj, ...) {
 
 reporter <- function() {
     ans <- list()
-    report <- function(x) {
-        nm <- deparse(substitute(x))
+    set <- function(nm, x) {
         ans[[nm]] <<- x
         NULL
+    }
+    get <- function(nm) ans[[nm]]
+    report <- function(x) {
+        nm <- deparse(substitute(x))
+        set(nm, x)
     }
     result <- function() ans
     namevec <- function() {
