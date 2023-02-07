@@ -285,6 +285,7 @@ TapeConfig <- function(comparison = c("forbid", "tape", "allow"),
 ## Visible bindings:
 observation.name <- NULL
 data.term.indicator <- NULL
+data <- NULL
 ## FIXME: Add data argument?
 MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE, silent=FALSE,...) {
     if (is.list(func))
@@ -337,12 +338,18 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
                 pl$TMB_epsilon_ <- NULL
             }
             if (do.osa) {
+                obn <- obj$env$observation.name
+                dti <- obj$env$data.term.indicator
+                x <- if (!is.null(pl[[obn]]))
+                         pl[[obn]]
+                     else
+                         obj$env$data[[obn]]
                 obs <- new("osa",
-                           x=pl[[obj$env$observation.name]],
-                           keep=pl[[obj$env$data.term.indicator]])
-                OSA_ENV$set(obj$env$observation.name, obs)
-                pl[[obj$env$observation.name]] <- NULL
-                pl[[obj$env$data.term.indicator]] <- NULL
+                           x = x,
+                           keep = pl[[dti]])
+                OSA_ENV$set(obn, obs)
+                pl[[obn]] <- NULL
+                pl[[dti]] <- NULL
             }
             ans <- func(pl)
             if (!do.osa) {
@@ -379,6 +386,8 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
     ## OSA
     obj$env$observation.name <- observation.name
     obj$env$data.term.indicator <- data.term.indicator
+    if (!is.null(data[[observation.name]]))
+        obj$env$data[[observation.name]] <- data[[observation.name]]
     ## FIXME: Skip for now
     obj$env$MakeDoubleFunObject <- function(...)NULL
     obj$env$EvalDoubleFunObject <- function(...)NULL
