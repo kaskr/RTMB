@@ -40,6 +40,7 @@ i <- substring(df$name,1,1)=="p"
 substring(df$signature[i],1,1) <- "q"
 df$stats <- sapply(df$name, exists, "package:stats")
 getargs <- function(sig)gsub(" ","",strsplit(sig,",[ ]*")[[1]])
+dblargs <- function(sig) { a <- getargs(sig); paste(a,a,sep="=",collapse=", ") }
 
 newname <- function(x)paste0("distr_",x)
 codegen <- function(i) {
@@ -99,6 +100,7 @@ df$signature <- sub("give_log","log",df$signature)
 string <- function(x)paste0('"',x,'"')
 getRmethod <- function(i) {
     name <- df$name[i]
+    is_density <- (substring(name,1,1) == "d")
     stats <- exists(name,"package:stats")
     if(stats) {
         Rsig <- head(as.list(args(get(name,"package:stats"))),-1)  ## R signature
@@ -124,6 +126,7 @@ getRmethod <- function(i) {
     if (!stats) {
         def <- c(
             paste(name,"<- function(", df$signature[i],") {"),
+            paste('if (inherits(x,"osa")) return (dGenericOSA(',string(name),',',dblargs(df$signature[i]),'))')[is_density],
             paste(a1, "<- ",cast,"(",a1,")"),
             paste(newname(name),"(",df$signature[i],")"), "}")
         meth <- c(
