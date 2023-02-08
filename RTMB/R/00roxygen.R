@@ -153,3 +153,16 @@ NULL
 ##' nlminb(obj$par, obj$fn, obj$gr)
 ##' res <- oneStepPredict(obj, method="oneStepGeneric", discrete=TRUE, range=c(0,Inf))$residual
 NULL
+
+setClass("advector") ## Virtual class
+setClass("adsparse",
+         slots=c(x="advector", i="integer", p="integer", Dim="integer"))
+## Helpers to setMethod
+## Match numeric like objects that are 'AD castable' via advector()
+setClassUnion("num", c("array", "numeric", "logical"))
+setClassUnion("num.", c("num", "missing"))
+setClassUnion("ad",  c("advector", "num"))
+setClassUnion("ad.", c("advector", "num."))
+setClassUnion("logical.", c("logical", "missing"))
+## For OSA residuals
+setClass("osa", list(x="ad", keep="ad"))

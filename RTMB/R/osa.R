@@ -53,8 +53,6 @@ OSA <- function(x) {
     xosa
 }
 
-setClass("osa", list(x="ad", keep="ad"))
-
 ##' @describeIn OSA-residuals Subset observations marked for OSA calculation.
 ##' This function makes sure that when you subset an observation of class \code{"osa"} such as
 ##' \code{obs <- new("osa", x=advector(matrix(1:10,2)), keep = cbind(rep(TRUE,10),FALSE,FALSE))}

@@ -1,8 +1,4 @@
-setClass("advector") ## Virtual class
 setMethod("show", "advector", function(object) print.advector(object) )
-
-setClass("adsparse",
-         slots=c(x="advector", i="integer", p="integer", Dim="integer"))
 
 setAs("sparseMatrix", "adsparse",
       function(from) {
@@ -13,14 +9,6 @@ setAs("sparseMatrix", "adsparse",
       })
 
 ##setClassUnion("advector_castable", c("advector", "numeric"))
-
-## Helpers to setMethod
-## Match numeric like objects that are 'AD castable' via advector()
-setClassUnion("num", c("array", "numeric", "logical"))
-setClassUnion("num.", c("num", "missing"))
-setClassUnion("ad",  c("advector", "num"))
-setClassUnion("ad.", c("advector", "num."))
-setClassUnion("logical.", c("logical", "missing"))
 
 
 ## Methods sparseMatrix -> adsparse
