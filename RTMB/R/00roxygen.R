@@ -129,24 +129,27 @@ NULL
 
 ##' Recursive quantile residuals
 ##'
-##' An \code{advector} is a class used behind the scenes to replace
-##' normal R numeric objects during automatic differentiation. An
-##' \code{advector} has a 'temporary lifetime' and therefore you do not
-##' \emph{see} / \emph{need to know} it as a normal user.
+##' OSA residuals are computed using the function
+##' \code{oneStepPredict}. For this to work, you need to mark the
+##' observation inside the objective function using the \code{OSA}
+##' function. Thereafter, residual calculation is as simple as
+##' \code{oneStepPredict(obj)}. However, you probably want specify a
+##' \code{method} to use.
 ##'
-##' An AD vector (class='advector') is an atomic R vector of 'codes'
-##' that are internally interpretable as 'AD scalars'. A substantial
-##' part of R's existing S3 matrix and array functionality can be
-##' re-used for AD vectors.
-##'
-##' @param x numeric or advector
-##' @param a advector with dimension attribute
-##' @param e1 advector
-##' @param e2 advector
-##' @param perm Permutation as in \code{aperm}
-##' @param mode FIXME might not be handled correctly by \code{as.vector}
-##' @param na.rm Must be FALSE (default)
-##' @param value Replacement value implicitly converted to AD
-##' @param ... Additional arguments
 ##' @rdname OSA-residuals
 ##' @name OSA-residuals
+##' @examples
+##' set.seed(1)
+##' rw <- cumsum(.5*rnorm(100))
+##' obs <- rpois(100, lambda=exp(rw))
+##' obj <- MakeADFun(function(p) {
+##'   obs <- OSA(obs)
+##'   ans <- 0
+##'   jump <- c(p$rw[1], diff(p$rw))
+##'   ans <- ans - sum(dnorm(jump, sd=p$sd, log=TRUE))
+##'   ans <- ans - sum(dpois(obs, lambda=exp(p$rw), log=TRUE))
+##'   ans
+##' }, parameters=list(rw=rep(0,100), sd=1), random="rw")
+##' nlminb(obj$par, obj$fn, obj$gr)
+##' res <- oneStepPredict(obj, method="oneStepGeneric", discrete=TRUE, range=c(0,Inf))$residual
+NULL
