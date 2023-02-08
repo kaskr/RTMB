@@ -1,4 +1,8 @@
-## Patched
+##' @DescribeIn OSA-residuals Calculate the residuals. See documentation of \code{?TMB::oneStepPredict}.
+##' @param obj TMB model object (output from \code{MakeADFun})
+##' @param observation.name Auto detected - use the default
+##' @param data.term.indicator Auto detected - use the default
+##' @param ... Passed to \code{TMB::oneStepPredict} - \bold{please carefully read the documentation}, especially the \code{method} argument.
 oneStepPredict <- function(obj,
                            observation.name=names(obj$env$osa)[1],
                            data.term.indicator="_RTMB_keep_",
@@ -31,6 +35,9 @@ oneStepPredict <- function(obj,
 }
 
 OSA_ENV <- reporter()
+
+##' @DescribeIn OSA-residuals Mark observation to be used by \code{oneStepPredict}.
+##' @param x Observation object
 OSA <- function(x) {
     if (!ad_context()) return (x)
     nm <- deparse(substitute(x))
@@ -44,7 +51,7 @@ OSA <- function(x) {
 
 setClass("osa", list(x="ad", keep="ad"))
 
-##' @DescribeIn OSA-residuals Subset observations marked for OSA calculation
+##' @DescribeIn OSA-residuals Subset observations marked for OSA calculation.
 ##' @examples
 ##' x <- new("osa", x=advector(matrix(1:10,2)), keep = cbind(rep(TRUE,10),FALSE,FALSE))
 ##' x[,1:2]
