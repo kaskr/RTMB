@@ -142,15 +142,24 @@ print.advector <- function (x, ...)  {
 }
 
 dmvnorm <- function(x, mu, Sigma, log=FALSE) {
+    if (inherits(x, "osa")) {
+        keep <- x@keep
+        x <- x@x
+        dim(keep) <- dim(x)
+    } else {
+        keep <- NULL
+    }
     ## R convention is to have samples by row
     x <- t(as.matrix(x))
+    if (!is.null(keep))
+        keep <- t(as.matrix(keep))
     mu <- t(as.matrix(mu))
     Sigma <- as.matrix(Sigma)
     d <- nrow(Sigma)
     x0 <- as.vector(x) - as.vector(mu)
     dim(x0) <- c(d, length(x0) / d)
     anstype <- .anstype(x0, Sigma)
-    anstype( dmvnorm0(advector(x0), advector(Sigma), log) )
+    anstype( dmvnorm0(advector(x0), advector(Sigma), log, keep) )
 }
 
 dgmrf <- function(x, mu, Q, log=FALSE) {
