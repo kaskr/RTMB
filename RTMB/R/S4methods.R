@@ -79,6 +79,10 @@ setMethod("dnorm", signature("num", "num.", "num.", "logical."),
           function(x, mean, sd, log) {
               stats::dnorm(x, mean, sd, log)
           })
+## For S4 generics we add the OSA version like this:
+setMethod("dnorm", "osa", function(x, mean, sd, log) {
+    dGenericOSA(.Generic, x=x, mean=mean, sd=sd, log=log)
+})
 
 ## 'diag' needs patching.
 ## - base::diag works fine for AD matrix input (diagonal extraction and replacement)

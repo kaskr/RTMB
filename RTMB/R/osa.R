@@ -91,11 +91,3 @@ dGenericOSA <- function(.Generic, x, ..., log) {
     }
     if (log) ans else exp(ans)
 }
-
-## FIXME: Autogenerate using 'distr.R'
-setMethod("dpois", "osa", function(x, lambda, log) {
-    dGenericOSA(.Generic, x, lambda, log=log)
-})
-setMethod("dnorm", "osa", function(x, mean, sd, log) {
-    dGenericOSA(.Generic, x, mean, sd, log=log)
-})
