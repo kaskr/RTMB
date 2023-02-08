@@ -17,6 +17,12 @@ function( x, rate, log ) {
 stats:: dexp ( x, rate, log )
 }
 )
+##' @describeIn Distributions OSA implementation
+setMethod("dexp", "osa",
+function( x, rate, log ) {
+  dGenericOSA( "dexp" , x=x, rate=rate, log=log )
+}
+)
 ##' @describeIn Distributions AD implementation
 setMethod("dweibull",
 signature(x = "ad", shape = "ad", scale = "ad.", log = "logical."),
@@ -33,6 +39,12 @@ setMethod("dweibull",
 signature(x = "num", shape = "num", scale = "num.", log = "logical."),
 function( x, shape, scale, log ) {
 stats:: dweibull ( x, shape, scale, log )
+}
+)
+##' @describeIn Distributions OSA implementation
+setMethod("dweibull", "osa",
+function( x, shape, scale, log ) {
+  dGenericOSA( "dweibull" , x=x, shape=shape, scale=scale, log=log )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -53,6 +65,12 @@ function( x, size, prob, log ) {
 stats:: dbinom ( x, size, prob, log )
 }
 )
+##' @describeIn Distributions OSA implementation
+setMethod("dbinom", "osa",
+function( x, size, prob, log ) {
+  dGenericOSA( "dbinom" , x=x, size=size, prob=prob, log=log )
+}
+)
 ##' @describeIn Distributions AD implementation
 setMethod("dbeta",
 signature(x = "ad", shape1 = "ad", shape2 = "ad", ncp = "missing", log = "logical."),
@@ -69,6 +87,12 @@ setMethod("dbeta",
 signature(x = "num", shape1 = "num", shape2 = "num", ncp = "missing", log = "logical."),
 function( x, shape1, shape2, log ) {
 stats:: dbeta ( x, shape1, shape2, log )
+}
+)
+##' @describeIn Distributions OSA implementation
+setMethod("dbeta", "osa",
+function( x, shape1, shape2, log ) {
+  dGenericOSA( "dbeta" , x=x, shape1=shape1, shape2=shape2, log=log )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -89,6 +113,12 @@ function( x, df1, df2, log ) {
 stats:: df ( x, df1, df2, log )
 }
 )
+##' @describeIn Distributions OSA implementation
+setMethod("df", "osa",
+function( x, df1, df2, log ) {
+  dGenericOSA( "df" , x=x, df1=df1, df2=df2, log=log )
+}
+)
 ##' @describeIn Distributions AD implementation
 setMethod("dlogis",
 signature(x = "ad", location = "ad.", scale = "ad.", log = "logical."),
@@ -107,6 +137,12 @@ function( x, location, scale, log ) {
 stats:: dlogis ( x, location, scale, log )
 }
 )
+##' @describeIn Distributions OSA implementation
+setMethod("dlogis", "osa",
+function( x, location, scale, log ) {
+  dGenericOSA( "dlogis" , x=x, location=location, scale=scale, log=log )
+}
+)
 ##' @describeIn Distributions AD implementation
 setMethod("dt",
 signature(x = "ad", df = "ad", ncp = "missing", log = "logical."),
@@ -122,6 +158,12 @@ setMethod("dt",
 signature(x = "num", df = "num", ncp = "missing", log = "logical."),
 function( x, df, log ) {
 stats:: dt ( x, df, log )
+}
+)
+##' @describeIn Distributions OSA implementation
+setMethod("dt", "osa",
+function( x, df, log ) {
+  dGenericOSA( "dt" , x=x, df=df, log=log )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -142,6 +184,12 @@ function( x, size, prob, log ) {
 stats:: dnbinom ( x, size, prob, log )
 }
 )
+##' @describeIn Distributions OSA implementation
+setMethod("dnbinom", "osa",
+function( x, size, prob, log ) {
+  dGenericOSA( "dnbinom" , x=x, size=size, prob=prob, log=log )
+}
+)
 ##' @describeIn Distributions AD implementation
 setMethod("dpois",
 signature(x = "ad", lambda = "ad", log = "logical."),
@@ -157,6 +205,12 @@ setMethod("dpois",
 signature(x = "num", lambda = "num", log = "logical."),
 function( x, lambda, log ) {
 stats:: dpois ( x, lambda, log )
+}
+)
+##' @describeIn Distributions OSA implementation
+setMethod("dpois", "osa",
+function( x, lambda, log ) {
+  dGenericOSA( "dpois" , x=x, lambda=lambda, log=log )
 }
 )
 ##' @describeIn Distributions AD implementation
@@ -175,6 +229,12 @@ setMethod("dgamma",
 signature(x = "num", shape = "num", rate = "missing", scale = "num.", log = "logical."),
 function( x, shape, scale, log ) {
 stats:: dgamma ( x, shape, scale, log )
+}
+)
+##' @describeIn Distributions OSA implementation
+setMethod("dgamma", "osa",
+function( x, shape, scale, log ) {
+  dGenericOSA( "dgamma" , x=x, shape=shape, scale=scale, log=log )
 }
 )
 ##' @describeIn Distributions AD implementation
