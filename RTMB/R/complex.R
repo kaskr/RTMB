@@ -283,7 +283,7 @@ print.Tape <- function(x,...){
 ##' tape. A final option \code{comparison="allow"} exists for
 ##' testing/illustration purposes. Do not use.
 ##' @param comparison Set behaviour of AD comparison (\code{">"},\code{"=="}, etc).
-##' @param atomic Set behaviour of AD BLAS opererations (\code{"%*%"},...).
+##' @param atomic Set behaviour of AD BLAS operations (notably matrix multiply).
 ##' @param vectorize Enable/disable AD vectorized 'Ops' and 'Math'.
 TapeConfig <- function(comparison = c("forbid", "tape", "allow"),
                        atomic = c("enable", "disable"),

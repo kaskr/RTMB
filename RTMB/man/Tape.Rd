@@ -26,6 +26,8 @@ TapeConfig(
 
 \item{comparison}{Set behaviour of AD comparison (\code{">"},\code{"=="}, etc).}
 
+\item{atomic}{Set behaviour of AD BLAS operations (notably matrix multiply).}
+
 \item{vectorize}{Enable/disable AD vectorized 'Ops' and 'Math'.}
 }
 \description{
