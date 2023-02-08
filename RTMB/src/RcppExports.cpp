@@ -170,15 +170,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // dmvnorm0
-Rcpp::ComplexVector dmvnorm0(const Rcpp::ComplexMatrix& x, const Rcpp::ComplexMatrix& s, bool give_log);
-RcppExport SEXP _RTMB_dmvnorm0(SEXP xSEXP, SEXP sSEXP, SEXP give_logSEXP) {
+Rcpp::ComplexVector dmvnorm0(const Rcpp::ComplexMatrix& x, const Rcpp::ComplexMatrix& s, bool give_log, SEXP keep);
+RcppExport SEXP _RTMB_dmvnorm0(SEXP xSEXP, SEXP sSEXP, SEXP give_logSEXP, SEXP keepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type s(sSEXP);
     Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
-    rcpp_result_gen = Rcpp::wrap(dmvnorm0(x, s, give_log));
+    Rcpp::traits::input_parameter< SEXP >::type keep(keepSEXP);
+    rcpp_result_gen = Rcpp::wrap(dmvnorm0(x, s, give_log, keep));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -639,7 +640,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_getVariables", (DL_FUNC) &_RTMB_getVariables, 1},
     {"_RTMB_dbgprint", (DL_FUNC) &_RTMB_dbgprint, 1},
     {"_RTMB_matmul", (DL_FUNC) &_RTMB_matmul, 2},
-    {"_RTMB_dmvnorm0", (DL_FUNC) &_RTMB_dmvnorm0, 3},
+    {"_RTMB_dmvnorm0", (DL_FUNC) &_RTMB_dmvnorm0, 4},
     {"_RTMB_dgmrf0", (DL_FUNC) &_RTMB_dgmrf0, 3},
     {"_RTMB_SparseArith2", (DL_FUNC) &_RTMB_SparseArith2, 3},
     {"_RTMB_distr_dexp", (DL_FUNC) &_RTMB_distr_dexp, 3},

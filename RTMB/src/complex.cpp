@@ -458,11 +458,28 @@ Rcpp::ComplexVector colApply (const Rcpp::ComplexMatrix &x,
   }
   return as_advector(z);
 }
+template<class nlDensity>
+Rcpp::ComplexVector colApply2(const Rcpp::ComplexMatrix &x,
+                              const Rcpp::ComplexVector &keep,
+                              nlDensity &F,
+                              bool give_log) {
+  typedef Eigen::Map<const Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > ConstMapMatrix;
+  ConstMapMatrix X((ad*) x.begin(), x.nrow(), x.ncol());
+  ConstMapMatrix K((ad*) keep.begin(), x.nrow(), x.ncol());
+  Rcpp::ComplexVector z(x.ncol());
+  for (int j=0; j < X.cols(); j++) {
+    ad ans = -F(vector<ad>(X.col(j)), vector<ad>(K.col(j)));
+    if (!give_log) ans = exp(ans);
+    z[j] = ad2cplx(ans);
+  }
+  return as_advector(z);
+}
 
 // [[Rcpp::export]]
 Rcpp::ComplexVector dmvnorm0 (const Rcpp::ComplexMatrix &x,
                               const Rcpp::ComplexMatrix &s,
-                              bool give_log) {
+                              bool give_log,
+                              SEXP keep = R_NilValue) {
   typedef Eigen::Map<const Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > ConstMapMatrix;
   if (s.ncol() != s.nrow())
     Rcpp::stop("cov matrix must be square");
@@ -472,7 +489,15 @@ Rcpp::ComplexVector dmvnorm0 (const Rcpp::ComplexMatrix &x,
   CHECK_INPUT(s);
   ConstMapMatrix S((ad*) s.begin(), s.nrow(), s.ncol());
   auto nldens = density::MVNORM(matrix<ad>(S), tape_config.mvnorm_atomic() );
-  return colApply(x, nldens, give_log);
+  if (Rf_isNull(keep)) {
+    return colApply(x, nldens, give_log);
+  } else {
+    Rcpp::ComplexVector k (keep);
+    if (x.size() != k.size())
+      Rcpp::stop("x / keep non-conformable arguments");
+    CHECK_INPUT(k);
+    return colApply2(x, k, nldens, give_log);
+  }
 }
 
 Eigen::SparseMatrix<ad> SparseInput(Rcpp::S4 x);

@@ -57,8 +57,8 @@ matmul <- function(x, y) {
     .Call(`_RTMB_matmul`, x, y)
 }
 
-dmvnorm0 <- function(x, s, give_log) {
-    .Call(`_RTMB_dmvnorm0`, x, s, give_log)
+dmvnorm0 <- function(x, s, give_log, keep = NULL) {
+    .Call(`_RTMB_dmvnorm0`, x, s, give_log, keep)
 }
 
 dgmrf0 <- function(x, q, give_log) {
