@@ -37,6 +37,10 @@ oneStepPredict <- function(obj,
 OSA_ENV <- reporter()
 
 ##' @describeIn OSA-residuals Mark observation to be used by \code{oneStepPredict}.
+##' If your objective function is using an observation \code{obs} you simply need
+##' to run \code{obs <- OSA(obs)} \emph{inside the objective function}.
+##' This will allow \code{oneStepPredict} to change the class of \code{obs} to
+##' \code{"osa"} on request.
 ##' @param x Observation object
 OSA <- function(x) {
     if (!ad_context()) return (x)
@@ -52,9 +56,10 @@ OSA <- function(x) {
 setClass("osa", list(x="ad", keep="ad"))
 
 ##' @describeIn OSA-residuals Subset observations marked for OSA calculation.
-##' @examples
-##' x <- new("osa", x=advector(matrix(1:10,2)), keep = cbind(rep(TRUE,10),FALSE,FALSE))
-##' x[,1:2]
+##' This makes sure that when you subset an observation with a 'keep' attribute
+##' \code{obs <- new("osa", x=advector(matrix(1:10,2)), keep = cbind(rep(TRUE,10),FALSE,FALSE))}
+##' the 'keep' attribute will be adjusted accordingly
+##' \code{obs[,1:2]}
 "[.osa" <- function(x, ...) {
     keep <- x@keep
     ord <- attr(keep, "ord")
