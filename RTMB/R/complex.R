@@ -141,6 +141,8 @@ print.advector <- function (x, ...)  {
         .adv2num
 }
 
+##' @describeIn Distributions Multivariate normal distribution. OSA is implemented.
+##' @param Sigma Covariance matrix
 dmvnorm <- function(x, mu, Sigma, log=FALSE) {
     if (inherits(x, "osa")) {
         keep <- x@keep
@@ -162,6 +164,8 @@ dmvnorm <- function(x, mu, Sigma, log=FALSE) {
     anstype( dmvnorm0(advector(x0), advector(Sigma), log, keep) )
 }
 
+##' @describeIn Distributions Multivariate normal distribution. OSA is \emph{not} implemented.
+##' @param Q Sparse precision matrix
 dgmrf <- function(x, mu, Q, log=FALSE) {
     if (!ad_context()) { ## Workaround: see C++ code 'gmrf0'
         F <- .MakeTape(function(...)advector(dgmrf(x,mu,Q,log)),numeric(0))
