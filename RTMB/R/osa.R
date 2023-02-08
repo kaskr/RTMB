@@ -44,6 +44,26 @@ OSA <- function(x) {
 
 setClass("osa", list(x="ad", keep="ad"))
 
+##' @DescribeIn OSA-residuals Subset observations marked for OSA calculation
+##' @examples
+##' x <- new("osa", x=advector(matrix(1:10,2)), keep = cbind(rep(TRUE,10),FALSE,FALSE))
+##' x[,1:2]
+"[.osa" <- function(x, ...) {
+    keep <- x@keep
+    ord <- attr(keep, "ord")
+    x <- x@x
+    x. <- structure(NextMethod(), class=class(x))
+    ## Should be fast due to 'ALTREP' (?)
+    ind <- seq_along(x); dim(ind) <- dim(x)
+    x <- ind; ind <- NextMethod()
+    ## Remaining subsets uses index vector
+    keep <- keep[ind, , drop=FALSE]
+    if (!is.null(ord)) {
+        attr(keep, "ord") <- ord[ind]
+    }
+    new("osa", x=x., keep=keep)
+}
+
 dGenericOSA <- function(.Generic, x, ..., log) {
     if (!log) stop("'OSA' is for *log* density evaluation only")
     keep <- x@keep
