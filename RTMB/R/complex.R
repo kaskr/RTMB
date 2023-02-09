@@ -228,6 +228,11 @@ MakeTape <- function(f, x) {
             },
             laplace = function(random, sparse=TRUE, SPA=FALSE, ...) {
                 .laplace(mod, random, sparse=sparse, SPA=SPA, ...)
+            },
+            graph = function() {
+                G <- get_graph(.pointer(mod))
+                colnames(G) <- rownames(G) <- sub("Op","",colnames(G))
+                G
             }
         ),
         class="Tape")
