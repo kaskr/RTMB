@@ -63,6 +63,23 @@ SEXP ptrTMB(TMBad::ADFun<>* pf) {
   UNPROTECT(2);
   return ans;
 }
+// [[Rcpp::export]]
+Rcpp::S4 get_graph(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  // reverse row-major == forward col-major
+  TMBad::graph G = (*adf).glob.reverse_graph();
+  size_t n = (*adf).glob.opstack.size();
+  Rcpp::StringVector names(n);
+  for (size_t i=0; i<n; i++) {
+    names[i] = (*adf).glob.opstack[i]->op_name();
+    std::sort(G.j.begin() + G.p[i], G.j.begin() + G.p[i+1]);
+  }
+  Rcpp::S4 ans("ngCMatrix");
+  ans.slot("i") = Rcpp::IntegerVector(G.j.begin(), G.j.end());
+  ans.slot("p") = Rcpp::IntegerVector(G.p.begin(), G.p.end());
+  ans.slot("Dim") = Rcpp::IntegerVector::create(n, n);
+  ans.slot("Dimnames") = Rcpp::List::create(names, names);
+  return ans;
+}
 void Copy(TMBad::ADFun<>* adf, Rcpp::XPtr<TMBad::ADFun<> > other) {
   *adf = *other;
 }
