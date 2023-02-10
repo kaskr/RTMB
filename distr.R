@@ -167,7 +167,7 @@ getRmethod <- function(i) {
     }
     ## add roxygen
     meth1 <- c(
-               "##' @describeIn Distributions AD implementation",
+               paste0("##' @describeIn Distributions AD implementation of", " \\link[", gsub(":","",namespace), "]{", name, "}"),
                meth1)
     meth2 <- c(
                "##' @describeIn Distributions Default method",

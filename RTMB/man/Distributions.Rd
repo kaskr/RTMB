@@ -289,67 +289,67 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{dgmrf()}: Multivariate normal distribution. OSA is \emph{not} implemented.
 
-\item \code{dexp(x = ad, rate = ad., log = logical.)}: AD implementation
+\item \code{dexp(x = ad, rate = ad., log = logical.)}: AD implementation of \link[stats]{dexp}
 
 \item \code{dexp(x = num, rate = num., log = logical.)}: Default method
 
 \item \code{dexp(x = osa, rate = ANY, log = ANY)}: OSA implementation
 
-\item \code{dweibull(x = ad, shape = ad, scale = ad., log = logical.)}: AD implementation
+\item \code{dweibull(x = ad, shape = ad, scale = ad., log = logical.)}: AD implementation of \link[stats]{dweibull}
 
 \item \code{dweibull(x = num, shape = num, scale = num., log = logical.)}: Default method
 
 \item \code{dweibull(x = osa, shape = ANY, scale = ANY, log = ANY)}: OSA implementation
 
-\item \code{dbinom(x = ad, size = ad, prob = ad, log = logical.)}: AD implementation
+\item \code{dbinom(x = ad, size = ad, prob = ad, log = logical.)}: AD implementation of \link[stats]{dbinom}
 
 \item \code{dbinom(x = num, size = num, prob = num, log = logical.)}: Default method
 
 \item \code{dbinom(x = osa, size = ANY, prob = ANY, log = ANY)}: OSA implementation
 
-\item \code{dbeta(x = ad, shape1 = ad, shape2 = ad, ncp = missing, log = logical.)}: AD implementation
+\item \code{dbeta(x = ad, shape1 = ad, shape2 = ad, ncp = missing, log = logical.)}: AD implementation of \link[stats]{dbeta}
 
 \item \code{dbeta(x = num, shape1 = num, shape2 = num, ncp = missing, log = logical.)}: Default method
 
 \item \code{dbeta(x = osa, shape1 = ANY, shape2 = ANY, ncp = ANY, log = ANY)}: OSA implementation
 
-\item \code{df(x = ad, df1 = ad, df2 = ad, ncp = missing, log = logical.)}: AD implementation
+\item \code{df(x = ad, df1 = ad, df2 = ad, ncp = missing, log = logical.)}: AD implementation of \link[stats]{df}
 
 \item \code{df(x = num, df1 = num, df2 = num, ncp = missing, log = logical.)}: Default method
 
 \item \code{df(x = osa, df1 = ANY, df2 = ANY, ncp = ANY, log = ANY)}: OSA implementation
 
-\item \code{dlogis(x = ad, location = ad., scale = ad., log = logical.)}: AD implementation
+\item \code{dlogis(x = ad, location = ad., scale = ad., log = logical.)}: AD implementation of \link[stats]{dlogis}
 
 \item \code{dlogis(x = num, location = num., scale = num., log = logical.)}: Default method
 
 \item \code{dlogis(x = osa, location = ANY, scale = ANY, log = ANY)}: OSA implementation
 
-\item \code{dt(x = ad, df = ad, ncp = missing, log = logical.)}: AD implementation
+\item \code{dt(x = ad, df = ad, ncp = missing, log = logical.)}: AD implementation of \link[stats]{dt}
 
 \item \code{dt(x = num, df = num, ncp = missing, log = logical.)}: Default method
 
 \item \code{dt(x = osa, df = ANY, ncp = ANY, log = ANY)}: OSA implementation
 
-\item \code{dnbinom(x = ad, size = ad, prob = ad, mu = missing, log = logical.)}: AD implementation
+\item \code{dnbinom(x = ad, size = ad, prob = ad, mu = missing, log = logical.)}: AD implementation of \link[stats]{dnbinom}
 
 \item \code{dnbinom(x = num, size = num, prob = num, mu = missing, log = logical.)}: Default method
 
 \item \code{dnbinom(x = osa, size = ANY, prob = ANY, mu = ANY, log = ANY)}: OSA implementation
 
-\item \code{dpois(x = ad, lambda = ad, log = logical.)}: AD implementation
+\item \code{dpois(x = ad, lambda = ad, log = logical.)}: AD implementation of \link[stats]{dpois}
 
 \item \code{dpois(x = num, lambda = num, log = logical.)}: Default method
 
 \item \code{dpois(x = osa, lambda = ANY, log = ANY)}: OSA implementation
 
-\item \code{dgamma(x = ad, shape = ad, rate = missing, scale = ad., log = logical.)}: AD implementation
+\item \code{dgamma(x = ad, shape = ad, rate = missing, scale = ad., log = logical.)}: AD implementation of \link[stats]{dgamma}
 
 \item \code{dgamma(x = num, shape = num, rate = missing, scale = num., log = logical.)}: Default method
 
 \item \code{dgamma(x = osa, shape = ANY, rate = ANY, scale = ANY, log = ANY)}: OSA implementation
 
-\item \code{pnorm(q = ad, mean = ad., sd = ad., lower.tail = missing, log.p = missing)}: AD implementation
+\item \code{pnorm(q = ad, mean = ad., sd = ad., lower.tail = missing, log.p = missing)}: AD implementation of \link[stats]{pnorm}
 
 \item \code{pnorm(q = num, mean = num., sd = num., lower.tail = missing, log.p = missing)}: Default method
 
@@ -360,7 +360,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
   scale = ad.,
   lower.tail = missing,
   log.p = missing
-)}: AD implementation
+)}: AD implementation of \link[stats]{pgamma}
 
 \item \code{pgamma(
   q = num,
@@ -371,11 +371,11 @@ Specific documentation of the functions and arguments should be looked up elsewh
   log.p = missing
 )}: Default method
 
-\item \code{ppois(q = ad, lambda = ad, lower.tail = missing, log.p = missing)}: AD implementation
+\item \code{ppois(q = ad, lambda = ad, lower.tail = missing, log.p = missing)}: AD implementation of \link[stats]{ppois}
 
 \item \code{ppois(q = num, lambda = num, lower.tail = missing, log.p = missing)}: Default method
 
-\item \code{pexp(q = ad, rate = ad., lower.tail = missing, log.p = missing)}: AD implementation
+\item \code{pexp(q = ad, rate = ad., lower.tail = missing, log.p = missing)}: AD implementation of \link[stats]{pexp}
 
 \item \code{pexp(q = num, rate = num., lower.tail = missing, log.p = missing)}: Default method
 
@@ -385,7 +385,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
   scale = ad.,
   lower.tail = missing,
   log.p = missing
-)}: AD implementation
+)}: AD implementation of \link[stats]{pweibull}
 
 \item \code{pweibull(
   q = num,
@@ -402,7 +402,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
   ncp = missing,
   lower.tail = missing,
   log.p = missing
-)}: AD implementation
+)}: AD implementation of \link[stats]{pbeta}
 
 \item \code{pbeta(
   q = num,
@@ -413,11 +413,11 @@ Specific documentation of the functions and arguments should be looked up elsewh
   log.p = missing
 )}: Default method
 
-\item \code{qnorm(p = ad, mean = ad., sd = ad., lower.tail = missing, log.p = missing)}: AD implementation
+\item \code{qnorm(p = ad, mean = ad., sd = ad., lower.tail = missing, log.p = missing)}: AD implementation of \link[stats]{qnorm}
 
 \item \code{qnorm(p = num, mean = num., sd = num., lower.tail = missing, log.p = missing)}: Default method
 
-\item \code{qexp(p = ad, rate = ad., lower.tail = missing, log.p = missing)}: AD implementation
+\item \code{qexp(p = ad, rate = ad., lower.tail = missing, log.p = missing)}: AD implementation of \link[stats]{qexp}
 
 \item \code{qexp(p = num, rate = num., lower.tail = missing, log.p = missing)}: Default method
 
@@ -427,7 +427,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
   scale = ad.,
   lower.tail = missing,
   log.p = missing
-)}: AD implementation
+)}: AD implementation of \link[stats]{qweibull}
 
 \item \code{qweibull(
   p = num,
@@ -444,7 +444,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
   ncp = missing,
   lower.tail = missing,
   log.p = missing
-)}: AD implementation
+)}: AD implementation of \link[stats]{qbeta}
 
 \item \code{qbeta(
   p = num,
@@ -455,19 +455,19 @@ Specific documentation of the functions and arguments should be looked up elsewh
   log.p = missing
 )}: Default method
 
-\item \code{besselK(x = ad, nu = ad, expon.scaled = missing)}: AD implementation
+\item \code{besselK(x = ad, nu = ad, expon.scaled = missing)}: AD implementation of \link[base]{besselK}
 
 \item \code{besselK(x = num, nu = num, expon.scaled = missing)}: Default method
 
-\item \code{besselI(x = ad, nu = ad, expon.scaled = missing)}: AD implementation
+\item \code{besselI(x = ad, nu = ad, expon.scaled = missing)}: AD implementation of \link[base]{besselI}
 
 \item \code{besselI(x = num, nu = num, expon.scaled = missing)}: Default method
 
-\item \code{besselJ(x = ad, nu = ad)}: AD implementation
+\item \code{besselJ(x = ad, nu = ad)}: AD implementation of \link[base]{besselJ}
 
 \item \code{besselJ(x = num, nu = num)}: Default method
 
-\item \code{besselY(x = ad, nu = ad)}: AD implementation
+\item \code{besselY(x = ad, nu = ad)}: AD implementation of \link[base]{besselY}
 
 \item \code{besselY(x = num, nu = num)}: Default method
 
