@@ -47,11 +47,11 @@ advector(x)
 \method{is.numeric}{advector}(x)
 }
 \arguments{
-\item{test}{See \code{base::ifelse}}
+\item{test}{\code{logical} vector}
 
-\item{yes}{See \code{base::ifelse}}
+\item{yes}{\code{advector}}
 
-\item{no}{See \code{base::ifelse}}
+\item{no}{\code{advector}}
 
 \item{x}{numeric or advector}
 
@@ -85,7 +85,7 @@ re-used for AD vectors.
 }
 \section{Functions}{
 \itemize{
-\item \code{ifelse(test = logical, yes = advector, no = advector)}: As \code{base::ifelse}
+\item \code{ifelse(test = logical, yes = advector, no = advector)}: Equivalent of \link[base]{ifelse}
 
 \item \code{advector()}: Construct a new advector
 

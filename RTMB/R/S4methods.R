@@ -109,10 +109,10 @@ setMethod("sapply", signature(X="advector"),
               ans
 })
 
-##' @describeIn ADvector As \code{base::ifelse}
-##' @param test See \code{base::ifelse}
-##' @param yes See \code{base::ifelse}
-##' @param no See \code{base::ifelse}
+##' @describeIn ADvector Equivalent of \link[base]{ifelse}
+##' @param test \code{logical} vector
+##' @param yes \code{advector}
+##' @param no \code{advector}
 setMethod("ifelse", signature(test="logical", yes="advector", no="advector"),
           function(test, yes, no) {
               ans <- callNextMethod()
