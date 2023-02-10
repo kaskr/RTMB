@@ -25,7 +25,7 @@ OSA(x)
 
 \item{data.term.indicator}{Auto detected - use the default}
 
-\item{...}{Passed to \code{TMB::oneStepPredict} - \bold{please carefully read the documentation}, especially the \code{method} argument.}
+\item{...}{Passed to \code{TMB::}\link[TMB]{oneStepPredict} - \bold{please carefully read the documentation}, especially the \code{method} argument.}
 
 \item{x}{Observation object}
 }
@@ -39,7 +39,7 @@ function. Thereafter, residual calculation is as simple as
 }
 \section{Functions}{
 \itemize{
-\item \code{oneStepPredict()}: Calculate the residuals. See documentation of \code{?TMB::oneStepPredict}.
+\item \code{oneStepPredict()}: Calculate the residuals. See documentation of \code{TMB::}\link[TMB]{oneStepPredict}.
 
 \item \code{OSA()}: Mark observation to be used by \code{oneStepPredict}.
 If your objective function is using an observation \code{obs}, you simply need

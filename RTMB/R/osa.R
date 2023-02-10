@@ -1,8 +1,8 @@
-##' @describeIn OSA-residuals Calculate the residuals. See documentation of \code{?TMB::oneStepPredict}.
+##' @describeIn OSA-residuals Calculate the residuals. See documentation of \code{TMB::}\link[TMB]{oneStepPredict}.
 ##' @param obj TMB model object (output from \code{MakeADFun})
 ##' @param observation.name Auto detected - use the default
 ##' @param data.term.indicator Auto detected - use the default
-##' @param ... Passed to \code{TMB::oneStepPredict} - \bold{please carefully read the documentation}, especially the \code{method} argument.
+##' @param ... Passed to \code{TMB::}\link[TMB]{oneStepPredict} - \bold{please carefully read the documentation}, especially the \code{method} argument.
 oneStepPredict <- function(obj,
                            observation.name=names(obj$env$osa)[1],
                            data.term.indicator="_RTMB_keep_",
