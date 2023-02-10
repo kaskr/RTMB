@@ -58,14 +58,20 @@ the 'keep' attribute will be adjusted accordingly
 set.seed(1)
 rw <- cumsum(.5*rnorm(100))
 obs <- rpois(100, lambda=exp(rw))
-obj <- MakeADFun(function(p) {
-  obs <- OSA(obs)
+func <- function(p) {
+  obs <- OSA(obs) ## Mark 'obs' for OSA calculation on request
   ans <- 0
   jump <- c(p$rw[1], diff(p$rw))
   ans <- ans - sum(dnorm(jump, sd=p$sd, log=TRUE))
   ans <- ans - sum(dpois(obs, lambda=exp(p$rw), log=TRUE))
   ans
-}, parameters=list(rw=rep(0,100), sd=1), random="rw")
+}
+obj <- MakeADFun(func,
+                 parameters=list(rw=rep(0,100), sd=1),
+                 random="rw")
 nlminb(obj$par, obj$fn, obj$gr)
-res <- oneStepPredict(obj, method="oneStepGeneric", discrete=TRUE, range=c(0,Inf))$residual
+res <- oneStepPredict(obj,
+                      method="oneStepGeneric",
+                      discrete=TRUE,
+                      range=c(0,Inf))$residual
 }
