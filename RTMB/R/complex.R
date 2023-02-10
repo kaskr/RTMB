@@ -226,6 +226,9 @@ MakeTape <- function(f, x) {
             jacfun = function() {
                 .jacfun(mod)
             },
+            atomic = function() {
+                .atomic(mod)
+            },
             laplace = function(random, sparse=TRUE, SPA=FALSE, ...) {
                 .laplace(mod, random, sparse=sparse, SPA=SPA, ...)
             },
@@ -259,6 +262,11 @@ print.Tape <- function(x,...){
 .jacfun <- function(mod) {
     mod <- .copy(mod)
     mod$jacfun()
+    .expose(mod)
+}
+.atomic <- function(mod) {
+    mod <- .copy(mod)
+    mod$atomic()
     .expose(mod)
 }
 .laplace <- function(mod, random, ...) {

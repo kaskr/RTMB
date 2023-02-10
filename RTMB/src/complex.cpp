@@ -53,6 +53,9 @@ void fuse(TMBad::ADFun<>* adf) {
 void optimize(TMBad::ADFun<>* adf) {
   (*adf).optimize();
 }
+void atomic_transform(TMBad::ADFun<>* adf) {
+  *adf = (*adf).atomic();
+}
 SEXP ptrTMB(TMBad::ADFun<>* pf) {
   SEXP res;
   PROTECT(res=R_MakeExternalPtr((void*) pf,Rf_install("ADFun"),R_NilValue));
@@ -99,6 +102,7 @@ RCPP_MODULE(mod_adfun) {
   .method("parallelize", &parallelize)
   .method("fuse", &fuse)
   .method("optimize", &optimize)
+  .method("atomic", &atomic_transform)
   .method("ptrTMB", &ptrTMB)
   ;
 }
