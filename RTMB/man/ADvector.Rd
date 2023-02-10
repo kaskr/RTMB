@@ -95,21 +95,21 @@ re-used for AD vectors.
 
 \item \code{as.vector(advector)}: Makes \code{array(x)} work.
 
-\item \code{aperm(advector)}: As \bold{base} version
+\item \code{aperm(advector)}: Equivalent of \link[base]{aperm}
 
-\item \code{c(advector)}: As \bold{base} version
+\item \code{c(advector)}: Equivalent of \link[base]{c}
 
-\item \code{[}: As \bold{base} version
+\item \code{[}: Equivalent of \link[base]{"["}
 
-\item \code{`[`(advector) <- value}: As \bold{base} version
+\item \code{`[`(advector) <- value}: Equivalent of \link[base]{"[<-"}
 
-\item \code{[[}: As \bold{base} version
+\item \code{[[}: Equivalent of \link[base]{"[["}
 
-\item \code{rep(advector)}: As \bold{base} version. Makes \code{outer(x,x,...)} work.
+\item \code{rep(advector)}: Equivalent of \link[base]{rep}. Makes \code{outer(x,x,...)} work.
 
-\item \code{sum(advector)}: As \bold{base} version except \code{na.rm} not allowed.
+\item \code{sum(advector)}: Equivalent of \link[base]{sum} except \code{na.rm} not allowed.
 
-\item \code{prod(advector)}: As \bold{base} version except \code{na.rm} not allowed.
+\item \code{prod(advector)}: Equivalent of \link[base]{prod} except \code{na.rm} not allowed.
 
 \item \code{is.numeric(advector)}: Makes \code{cov2cor()} work. FIXME: Any unwanted side-effects with this?
 

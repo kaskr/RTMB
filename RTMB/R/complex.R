@@ -74,37 +74,37 @@ as.vector.advector <- function(x, mode = "any") {
 ##     structure(NextMethod(), class="advector")
 ## }
 
-##' @describeIn ADvector As \bold{base} version
+##' @describeIn ADvector Equivalent of \link[base]{aperm}
 aperm.advector <- function(a, perm, ...) {
     structure(NextMethod(), class="advector")
 }
-##' @describeIn ADvector As \bold{base} version
+##' @describeIn ADvector Equivalent of \link[base]{c}
 c.advector <- function(...) {
     structure(NextMethod(), class="advector")
 }
-##' @describeIn ADvector As \bold{base} version
+##' @describeIn ADvector Equivalent of \link[base]{"["}
 "[.advector" <- function(x, ...) {
     structure(NextMethod(), class="advector")
 }
-##' @describeIn ADvector As \bold{base} version
+##' @describeIn ADvector Equivalent of \link[base]{"[<-"}
 "[<-.advector" <- function(x, ..., value) {
     value <- advector(value)
     NextMethod()
 }
-##' @describeIn ADvector As \bold{base} version
+##' @describeIn ADvector Equivalent of \link[base]{"[["}
 "[[.advector" <- function(x, ...) {
     structure(NextMethod(), class="advector")
 }
-##' @describeIn ADvector As \bold{base} version. Makes \code{outer(x,x,...)} work.
+##' @describeIn ADvector Equivalent of \link[base]{rep}. Makes \code{outer(x,x,...)} work.
 rep.advector <- function (x, ...) {
     structure(NextMethod(), class="advector")
 }
-##' @describeIn ADvector As \bold{base} version except \code{na.rm} not allowed.
+##' @describeIn ADvector Equivalent of \link[base]{sum} except \code{na.rm} not allowed.
 sum.advector <- function(x, ..., na.rm) {
   if (na.rm) stop("'na.rm=TRUE' not implemented for AD sum")
   Reduce1(x, "+") + sum(...)
 }
-##' @describeIn ADvector As \bold{base} version except \code{na.rm} not allowed.
+##' @describeIn ADvector Equivalent of \link[base]{prod} except \code{na.rm} not allowed.
 prod.advector <- function(x, ..., na.rm) {
   if (na.rm) stop("'na.rm=TRUE' not implemented for AD prod")
   Reduce1(x, "*") * prod(...)
@@ -141,7 +141,7 @@ print.advector <- function (x, ...)  {
         .adv2num
 }
 
-##' @describeIn Distributions Multivariate normal distribution. OSA is implemented.
+##' @describeIn Distributions Multivariate normal distribution. \link{OSA} can be used for argument \code{x}.
 ##' @param Sigma Covariance matrix
 dmvnorm <- function(x, mu, Sigma, log=FALSE) {
     if (inherits(x, "osa")) {
