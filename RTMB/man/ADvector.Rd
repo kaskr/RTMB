@@ -99,11 +99,11 @@ re-used for AD vectors.
 
 \item \code{c(advector)}: Equivalent of \link[base]{c}
 
-\item \code{[}: Equivalent of \link[base]{"["}
+\item \code{[}: Equivalent of \link[base]{[}
 
-\item \code{`[`(advector) <- value}: Equivalent of \link[base]{"[<-"}
+\item \code{`[`(advector) <- value}: Equivalent of \link[base]{[<-}
 
-\item \code{[[}: Equivalent of \link[base]{"[["}
+\item \code{[[}: Equivalent of \link[base]{[[}
 
 \item \code{rep(advector)}: Equivalent of \link[base]{rep}. Makes \code{outer(x,x,...)} work.
 

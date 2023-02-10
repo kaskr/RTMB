@@ -82,16 +82,16 @@ aperm.advector <- function(a, perm, ...) {
 c.advector <- function(...) {
     structure(NextMethod(), class="advector")
 }
-##' @describeIn ADvector Equivalent of \link[base]{"["}
+##' @describeIn ADvector Equivalent of \link[base]{[}
 "[.advector" <- function(x, ...) {
     structure(NextMethod(), class="advector")
 }
-##' @describeIn ADvector Equivalent of \link[base]{"[<-"}
+##' @describeIn ADvector Equivalent of \link[base]{[<-}
 "[<-.advector" <- function(x, ..., value) {
     value <- advector(value)
     NextMethod()
 }
-##' @describeIn ADvector Equivalent of \link[base]{"[["}
+##' @describeIn ADvector Equivalent of \link[base]{[[}
 "[[.advector" <- function(x, ...) {
     structure(NextMethod(), class="advector")
 }
