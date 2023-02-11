@@ -16,6 +16,7 @@ parameters <- list(
     h          = matrix(0.0,nrow=n,ncol=p)  #       ---------||---------
 )
 
+parameters$h <- t(parameters$h) ## Workaround: order as old TMB example for unittest
 # Negative joint likelihood (nll) of data and parameters
 f <- function(parms) {
   
@@ -23,7 +24,7 @@ f <- function(parms) {
   sigma <- exp(parms$log_sigma)
   phi <- parms$phi
   sigma_init <- sigma/sqrt(1-phi^2)  
-  h <- parms$h
+  h <- t(parms$h) ## Workaround: order as old TMB example for unittest
 
   nll = 0  # Start collecting contributions
   
@@ -36,7 +37,7 @@ f <- function(parms) {
   L <- diag(p)
   L[lower.tri(L)] <- parms$off_diag_x   
   row_norms <- apply(L, 1, function(row) sqrt(sum(row^2)))
-  L <- t(t(L)/row_norms)
+  L <- L / row_norms
   R <- L%*%t(L)  # Correlation matrix of X (guarantied positive definite)
   
   # Likelihood of data (X) given h
