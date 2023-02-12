@@ -362,6 +362,21 @@ for (int i=0; i<n; i++) Y[i] = qnorm(X1[i % n1], X2[i % n2], X3[i % n3]);
 return as_advector(ans);
 }
 // [[Rcpp::export]]
+Rcpp::ComplexVector distr_qgamma ( Rcpp::ComplexVector p, Rcpp::ComplexVector shape, Rcpp::ComplexVector scale  )
+{
+int n1=p.size();
+int n2=shape.size();
+int n3=scale .size();
+int nmax = std::max({n1, n2, n3});
+int nmin = std::min({n1, n2, n3});
+int n = (nmin == 0 ? 0 : nmax);
+Rcpp::ComplexVector ans(n);
+const ad* X1 = adptr(p); const ad* X2 = adptr(shape); const ad* X3 = adptr(scale );
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = qgamma(X1[i % n1], X2[i % n2], X3[i % n3]);
+return as_advector(ans);
+}
+// [[Rcpp::export]]
 Rcpp::ComplexVector distr_qexp ( Rcpp::ComplexVector p, Rcpp::ComplexVector rate )
 {
 int n1=p.size();

@@ -354,6 +354,23 @@ function( p, mean , sd  ) {
 stats:: qnorm ( p, mean , sd  )
 }
 )
+##' @describeIn Distributions AD implementation of \link[stats]{qgamma}
+setMethod("qgamma",
+signature(p = "ad", shape = "ad", rate = "missing", scale = "ad.", lower.tail = "missing", log.p = "missing"),
+function( p, shape, scale  ) {
+p <-  advector ( p )
+shape <-  advector ( shape )
+scale <-  advector ( scale )
+distr_qgamma ( p, shape, scale  )
+}
+)
+##' @describeIn Distributions Default method
+setMethod("qgamma",
+signature(p = "num", shape = "num", rate = "missing", scale = "num.", lower.tail = "missing", log.p = "missing"),
+function( p, shape, scale  ) {
+stats:: qgamma ( p, shape, scale  )
+}
+)
 ##' @describeIn Distributions AD implementation of \link[stats]{qexp}
 setMethod("qexp",
 signature(p = "ad", rate = "ad.", lower.tail = "missing", log.p = "missing"),

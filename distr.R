@@ -12,7 +12,7 @@ names(df) <- c("name","npar","code")
 df <- subset(df,name!="pow") ## bogus
 df <- subset(df, !(name=="pnorm" & npar==1) ) ## bogus
 df <- subset(df, !(name=="qnorm" & npar==1) ) ## bogus
-skip <- c("pSHASHo", "qSHASHo", "dnorm", "pnorm_approx", "qnorm_approx", "dzipois", "qgamma") ## RTMB uses a dnorm implementation in R
+skip <- c("pSHASHo", "qSHASHo", "dnorm", "pnorm_approx", "qnorm_approx", "dzipois") ## RTMB uses a dnorm implementation in R
 df <- subset(df, !(name %in% skip))
 
 getsig <- function(name) {
@@ -38,6 +38,8 @@ df$signature <- sigtidy(df$signature_raw)
 ## More tidy
 i <- substring(df$name,1,1)=="p"
 substring(df$signature[i],1,1) <- "q"
+i <- substring(df$name,1,1)=="q"
+substring(df$signature[i],1,1) <- "p"
 df$stats <- sapply(df$name, exists, "package:stats")
 getargs <- function(sig)gsub(" ","",strsplit(sig,",[ ]*")[[1]])
 dblargs <- function(sig) { a <- getargs(sig); paste(a,a,sep="=",collapse=", ") }

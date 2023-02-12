@@ -169,6 +169,10 @@ distr_qnorm <- function(p, mean, sd) {
     .Call(`_RTMB_distr_qnorm`, p, mean, sd)
 }
 
+distr_qgamma <- function(p, shape, scale) {
+    .Call(`_RTMB_distr_qgamma`, p, shape, scale)
+}
+
 distr_qexp <- function(p, rate) {
     .Call(`_RTMB_distr_qexp`, p, rate)
 }

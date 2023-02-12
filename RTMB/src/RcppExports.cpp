@@ -546,6 +546,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// distr_qgamma
+Rcpp::ComplexVector distr_qgamma(Rcpp::ComplexVector p, Rcpp::ComplexVector shape, Rcpp::ComplexVector scale);
+RcppExport SEXP _RTMB_distr_qgamma(SEXP pSEXP, SEXP shapeSEXP, SEXP scaleSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type shape(shapeSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type scale(scaleSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_qgamma(p, shape, scale));
+    return rcpp_result_gen;
+END_RCPP
+}
 // distr_qexp
 Rcpp::ComplexVector distr_qexp(Rcpp::ComplexVector p, Rcpp::ComplexVector rate);
 RcppExport SEXP _RTMB_distr_qexp(SEXP pSEXP, SEXP rateSEXP) {
@@ -679,6 +692,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_pweibull", (DL_FUNC) &_RTMB_distr_pweibull, 3},
     {"_RTMB_distr_pbeta", (DL_FUNC) &_RTMB_distr_pbeta, 3},
     {"_RTMB_distr_qnorm", (DL_FUNC) &_RTMB_distr_qnorm, 3},
+    {"_RTMB_distr_qgamma", (DL_FUNC) &_RTMB_distr_qgamma, 3},
     {"_RTMB_distr_qexp", (DL_FUNC) &_RTMB_distr_qexp, 2},
     {"_RTMB_distr_qweibull", (DL_FUNC) &_RTMB_distr_qweibull, 3},
     {"_RTMB_distr_qbeta", (DL_FUNC) &_RTMB_distr_qbeta, 3},
