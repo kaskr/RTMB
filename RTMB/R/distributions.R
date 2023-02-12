@@ -14,7 +14,7 @@ distr_dexp ( x, rate, log )
 setMethod("dexp",
 signature(x = "num", rate = "num.", log = "logical."),
 function( x, rate, log ) {
-stats:: dexp ( x, rate, log )
+stats:: dexp ( x=x, rate=rate, log=log )
 }
 )
 ##' @describeIn Distributions OSA implementation
@@ -38,7 +38,7 @@ distr_dweibull ( x, shape, scale, log )
 setMethod("dweibull",
 signature(x = "num", shape = "num", scale = "num.", log = "logical."),
 function( x, shape, scale, log ) {
-stats:: dweibull ( x, shape, scale, log )
+stats:: dweibull ( x=x, shape=shape, scale=scale, log=log )
 }
 )
 ##' @describeIn Distributions OSA implementation
@@ -62,7 +62,7 @@ distr_dbinom ( x, size, prob, log )
 setMethod("dbinom",
 signature(x = "num", size = "num", prob = "num", log = "logical."),
 function( x, size, prob, log ) {
-stats:: dbinom ( x, size, prob, log )
+stats:: dbinom ( x=x, size=size, prob=prob, log=log )
 }
 )
 ##' @describeIn Distributions OSA implementation
@@ -86,7 +86,7 @@ distr_dbeta ( x, shape1, shape2, log )
 setMethod("dbeta",
 signature(x = "num", shape1 = "num", shape2 = "num", ncp = "missing", log = "logical."),
 function( x, shape1, shape2, log ) {
-stats:: dbeta ( x, shape1, shape2, log )
+stats:: dbeta ( x=x, shape1=shape1, shape2=shape2, log=log )
 }
 )
 ##' @describeIn Distributions OSA implementation
@@ -110,7 +110,7 @@ distr_df ( x, df1, df2, log )
 setMethod("df",
 signature(x = "num", df1 = "num", df2 = "num", ncp = "missing", log = "logical."),
 function( x, df1, df2, log ) {
-stats:: df ( x, df1, df2, log )
+stats:: df ( x=x, df1=df1, df2=df2, log=log )
 }
 )
 ##' @describeIn Distributions OSA implementation
@@ -134,7 +134,7 @@ distr_dlogis ( x, location, scale, log )
 setMethod("dlogis",
 signature(x = "num", location = "num.", scale = "num.", log = "logical."),
 function( x, location, scale, log ) {
-stats:: dlogis ( x, location, scale, log )
+stats:: dlogis ( x=x, location=location, scale=scale, log=log )
 }
 )
 ##' @describeIn Distributions OSA implementation
@@ -157,7 +157,7 @@ distr_dt ( x, df, log )
 setMethod("dt",
 signature(x = "num", df = "num", ncp = "missing", log = "logical."),
 function( x, df, log ) {
-stats:: dt ( x, df, log )
+stats:: dt ( x=x, df=df, log=log )
 }
 )
 ##' @describeIn Distributions OSA implementation
@@ -181,7 +181,7 @@ distr_dnbinom ( x, size, prob, log )
 setMethod("dnbinom",
 signature(x = "num", size = "num", prob = "num", mu = "missing", log = "logical."),
 function( x, size, prob, log ) {
-stats:: dnbinom ( x, size, prob, log )
+stats:: dnbinom ( x=x, size=size, prob=prob, log=log )
 }
 )
 ##' @describeIn Distributions OSA implementation
@@ -204,7 +204,7 @@ distr_dpois ( x, lambda, log )
 setMethod("dpois",
 signature(x = "num", lambda = "num", log = "logical."),
 function( x, lambda, log ) {
-stats:: dpois ( x, lambda, log )
+stats:: dpois ( x=x, lambda=lambda, log=log )
 }
 )
 ##' @describeIn Distributions OSA implementation
@@ -228,7 +228,7 @@ distr_dgamma ( x, shape, scale, log )
 setMethod("dgamma",
 signature(x = "num", shape = "num", rate = "missing", scale = "num.", log = "logical."),
 function( x, shape, scale, log ) {
-stats:: dgamma ( x, shape, scale, log )
+stats:: dgamma ( x=x, shape=shape, scale=scale, log=log )
 }
 )
 ##' @describeIn Distributions OSA implementation
@@ -251,7 +251,7 @@ distr_pnorm ( q, mean , sd  )
 setMethod("pnorm",
 signature(q = "num", mean = "num.", sd = "num.", lower.tail = "missing", log.p = "missing"),
 function( q, mean , sd  ) {
-stats:: pnorm ( q, mean , sd  )
+stats:: pnorm ( q=q, mean=mean, sd=sd )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{pgamma}
@@ -268,7 +268,7 @@ distr_pgamma ( q, shape, scale  )
 setMethod("pgamma",
 signature(q = "num", shape = "num", rate = "missing", scale = "num.", lower.tail = "missing", log.p = "missing"),
 function( q, shape, scale  ) {
-stats:: pgamma ( q, shape, scale  )
+stats:: pgamma ( q=q, shape=shape, scale=scale )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{ppois}
@@ -284,7 +284,7 @@ distr_ppois ( q, lambda )
 setMethod("ppois",
 signature(q = "num", lambda = "num", lower.tail = "missing", log.p = "missing"),
 function( q, lambda ) {
-stats:: ppois ( q, lambda )
+stats:: ppois ( q=q, lambda=lambda )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{pexp}
@@ -300,7 +300,7 @@ distr_pexp ( q, rate )
 setMethod("pexp",
 signature(q = "num", rate = "num.", lower.tail = "missing", log.p = "missing"),
 function( q, rate ) {
-stats:: pexp ( q, rate )
+stats:: pexp ( q=q, rate=rate )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{pweibull}
@@ -317,7 +317,7 @@ distr_pweibull ( q, shape, scale )
 setMethod("pweibull",
 signature(q = "num", shape = "num", scale = "num.", lower.tail = "missing", log.p = "missing"),
 function( q, shape, scale ) {
-stats:: pweibull ( q, shape, scale )
+stats:: pweibull ( q=q, shape=shape, scale=scale )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{pbeta}
@@ -334,7 +334,7 @@ distr_pbeta ( q, shape1, shape2 )
 setMethod("pbeta",
 signature(q = "num", shape1 = "num", shape2 = "num", ncp = "missing", lower.tail = "missing", log.p = "missing"),
 function( q, shape1, shape2 ) {
-stats:: pbeta ( q, shape1, shape2 )
+stats:: pbeta ( q=q, shape1=shape1, shape2=shape2 )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{qnorm}
@@ -351,7 +351,7 @@ distr_qnorm ( p, mean , sd  )
 setMethod("qnorm",
 signature(p = "num", mean = "num.", sd = "num.", lower.tail = "missing", log.p = "missing"),
 function( p, mean , sd  ) {
-stats:: qnorm ( p, mean , sd  )
+stats:: qnorm ( p=p, mean=mean, sd=sd )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{qgamma}
@@ -368,7 +368,7 @@ distr_qgamma ( p, shape, scale  )
 setMethod("qgamma",
 signature(p = "num", shape = "num", rate = "missing", scale = "num.", lower.tail = "missing", log.p = "missing"),
 function( p, shape, scale  ) {
-stats:: qgamma ( p, shape, scale  )
+stats:: qgamma ( p=p, shape=shape, scale=scale )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{qexp}
@@ -384,7 +384,7 @@ distr_qexp ( p, rate )
 setMethod("qexp",
 signature(p = "num", rate = "num.", lower.tail = "missing", log.p = "missing"),
 function( p, rate ) {
-stats:: qexp ( p, rate )
+stats:: qexp ( p=p, rate=rate )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{qweibull}
@@ -401,7 +401,7 @@ distr_qweibull ( p, shape, scale )
 setMethod("qweibull",
 signature(p = "num", shape = "num", scale = "num.", lower.tail = "missing", log.p = "missing"),
 function( p, shape, scale ) {
-stats:: qweibull ( p, shape, scale )
+stats:: qweibull ( p=p, shape=shape, scale=scale )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{qbeta}
@@ -418,7 +418,7 @@ distr_qbeta ( p, shape1, shape2 )
 setMethod("qbeta",
 signature(p = "num", shape1 = "num", shape2 = "num", ncp = "missing", lower.tail = "missing", log.p = "missing"),
 function( p, shape1, shape2 ) {
-stats:: qbeta ( p, shape1, shape2 )
+stats:: qbeta ( p=p, shape1=shape1, shape2=shape2 )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[base]{besselK}
@@ -434,7 +434,7 @@ distr_besselK ( x, nu )
 setMethod("besselK",
 signature(x = "num", nu = "num", expon.scaled = "missing"),
 function( x, nu ) {
-base:: besselK ( x, nu )
+base:: besselK ( x=x, nu=nu )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[base]{besselI}
@@ -450,7 +450,7 @@ distr_besselI ( x, nu )
 setMethod("besselI",
 signature(x = "num", nu = "num", expon.scaled = "missing"),
 function( x, nu ) {
-base:: besselI ( x, nu )
+base:: besselI ( x=x, nu=nu )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[base]{besselJ}
@@ -466,7 +466,7 @@ distr_besselJ ( x, nu )
 setMethod("besselJ",
 signature(x = "num", nu = "num"),
 function( x, nu ) {
-base:: besselJ ( x, nu )
+base:: besselJ ( x=x, nu=nu )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[base]{besselY}
@@ -482,7 +482,7 @@ distr_besselY ( x, nu )
 setMethod("besselY",
 signature(x = "num", nu = "num"),
 function( x, nu ) {
-base:: besselY ( x, nu )
+base:: besselY ( x=x, nu=nu )
 }
 )
 ##' @describeIn Distributions AD implementation

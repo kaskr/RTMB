@@ -148,7 +148,7 @@ getRmethod <- function(i) {
     sig2 <- gsub("ad", "num", sig)
     def2 <- c(
         paste("function(", df$signature[i],") {"),
-        paste(namespace, name,"(",df$signature[i],")"), "}")
+        paste(namespace, name,"(",dblargs(df$signature[i]),")"), "}")
         ##paste("callNextMethod(",df$signature[i],")"), "}")
     meth2 <-
         c(paste0("setMethod(", string(name), ","),
