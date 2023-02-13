@@ -48,6 +48,8 @@
 \alias{pbeta,num,num,num,missing,missing,missing-method}
 \alias{qnorm,ad,ad.,ad.,missing,missing-method}
 \alias{qnorm,num,num.,num.,missing,missing-method}
+\alias{qgamma,ad,ad,missing,ad.,missing,missing-method}
+\alias{qgamma,num,num,missing,num.,missing,missing-method}
 \alias{qexp,ad,ad.,missing,missing-method}
 \alias{qexp,num,num.,missing,missing-method}
 \alias{qweibull,ad,ad,ad.,missing,missing-method}
@@ -162,6 +164,10 @@ dgmrf(x, mu, Q, log = FALSE)
 \S4method{qnorm}{ad,ad.,ad.,missing,missing}(p, mean, sd)
 
 \S4method{qnorm}{num,num.,num.,missing,missing}(p, mean, sd)
+
+\S4method{qgamma}{ad,ad,missing,ad.,missing,missing}(p, shape, scale)
+
+\S4method{qgamma}{num,num,missing,num.,missing,missing}(p, shape, scale)
 
 \S4method{qexp}{ad,ad.,missing,missing}(p, rate)
 
@@ -416,6 +422,24 @@ Specific documentation of the functions and arguments should be looked up elsewh
 \item \code{qnorm(p = ad, mean = ad., sd = ad., lower.tail = missing, log.p = missing)}: AD implementation of \link[stats]{qnorm}
 
 \item \code{qnorm(p = num, mean = num., sd = num., lower.tail = missing, log.p = missing)}: Default method
+
+\item \code{qgamma(
+  p = ad,
+  shape = ad,
+  rate = missing,
+  scale = ad.,
+  lower.tail = missing,
+  log.p = missing
+)}: AD implementation of \link[stats]{qgamma}
+
+\item \code{qgamma(
+  p = num,
+  shape = num,
+  rate = missing,
+  scale = num.,
+  lower.tail = missing,
+  log.p = missing
+)}: Default method
 
 \item \code{qexp(p = ad, rate = ad., lower.tail = missing, log.p = missing)}: AD implementation of \link[stats]{qexp}
 

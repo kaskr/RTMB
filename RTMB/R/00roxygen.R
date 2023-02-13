@@ -15,6 +15,22 @@
 ##' Maintainer: <kaskr@@dtu.dk>
 NULL
 
+##' Interface to TMB
+##'
+##' @rdname TMB-interface
+##' @name TMB-interface
+##' @examples
+##' data(rivers)
+##' f <- function(p) { -sum(dnorm(rivers, p$mu, p$sd, log=TRUE)) }
+##' obj <- MakeADFun(f, list(mu=0, sd=1), silent=TRUE)
+##' opt <- nlminb(obj$par, obj$fn, obj$gr)
+##' sdreport(obj)
+##' ## 'REML trick'
+##' obj2 <- MakeADFun(f, list(mu=0, sd=1), random="mu", silent=TRUE)
+##' opt2 <- nlminb(obj2$par, obj2$fn, obj2$gr)
+##' sdreport(obj2) ## Compare with sd(rivers)
+NULL
+
 ##' The AD vector and its methods
 ##'
 ##' An \code{advector} is a class used behind the scenes to replace

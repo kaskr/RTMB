@@ -312,7 +312,14 @@ TapeConfig <- function(comparison = c("forbid", "tape", "allow"),
 observation.name <- NULL
 data.term.indicator <- NULL
 data <- NULL
-## FIXME: Add data argument?
+##' @describeIn TMB-interface Interface to \link[TMB]{MakeADFun}.
+##' @param func Function taking a parameter list as input.
+##' @param parameters Parameter list used by \code{func}.
+##' @param random As \link[TMB]{MakeADFun}.
+##' @param map As \link[TMB]{MakeADFun}.
+##' @param ADreport As \link[TMB]{MakeADFun}.
+##' @param silent As \link[TMB]{MakeADFun}.
+##' @param ... Passed to TMB
 MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE, silent=FALSE,...) {
     if (is.list(func))
         func <- attr(func, "func")
@@ -424,6 +431,8 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
     obj
 }
 
+##' @describeIn TMB-interface Interface to \link[TMB]{sdreport}.
+##' @param obj TMB model object (output from \link{MakeADFun})
 sdreport <- function(obj, ...) {
     sdreport_patch <- TMB::sdreport
     tmb_envir <- environment(sdreport_patch)
@@ -458,6 +467,8 @@ reporter <- function() {
 }
 ADREPORT_ENV <- reporter()
 REPORT_ENV <- reporter()
-## User exported
+##' @describeIn TMB-interface Can be used inside the objective function to report quantities for which uncertainties will be calculated by \link{sdreport}.
+##' @param x Object to report
 ADREPORT <- ADREPORT_ENV$report
+##' @describeIn TMB-interface Can be used inside the objective function to report quantities.
 REPORT <- REPORT_ENV$report
