@@ -112,6 +112,12 @@ prod.advector <- function(x, ..., na.rm) {
 ## Make cov2cor() work. FIXME: Any unwanted side-effects with this?
 ##' @describeIn ADvector Makes \code{cov2cor()} work. FIXME: Any unwanted side-effects with this?
 is.numeric.advector <- function(x) TRUE
+##' @describeIn ADvector \link{Complex} operations are not allowed and will throw an error.
+Complex.advector <- function(z)
+    stop("'advector' does not allow complex operations")
+##' @describeIn ADvector Non differentiable \link{Summary} operations (e.g. \code{min} \code{max}) are not allowed and will throw an error.
+Summary.advector <- function(..., na.rm = FALSE)
+    stop("'advector' does not allow operation ", sQuote(.Generic))
 ## If an overload has issues we can patch it:
 diff_patch <- base::diff.default
 environment(diff_patch) <- local({unclass <- function(x)x; environment()})
