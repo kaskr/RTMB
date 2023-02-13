@@ -16,6 +16,8 @@
 \alias{sum.advector}
 \alias{prod.advector}
 \alias{is.numeric.advector}
+\alias{Complex.advector}
+\alias{Summary.advector}
 \title{The AD vector and its methods}
 \usage{
 \S4method{ifelse}{logical,advector,advector}(test, yes, no)
@@ -45,6 +47,10 @@ advector(x)
 \method{prod}{advector}(x, ..., na.rm)
 
 \method{is.numeric}{advector}(x)
+
+\method{Complex}{advector}(z)
+
+\method{Summary}{advector}(..., na.rm = FALSE)
 }
 \arguments{
 \item{test}{\code{logical} vector}
@@ -112,6 +118,10 @@ re-used for AD vectors.
 \item \code{prod(advector)}: Equivalent of \link[base]{prod} except \code{na.rm} not allowed.
 
 \item \code{is.numeric(advector)}: Makes \code{cov2cor()} work. FIXME: Any unwanted side-effects with this?
+
+\item \code{Complex(advector)}: \link{Complex} operations are not allowed and will throw an error.
+
+\item \code{Summary(advector)}: Non differentiable \link{Summary} operations (e.g. \code{min} \code{max}) are not allowed and will throw an error.
 
 }}
 \examples{
