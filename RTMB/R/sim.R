@@ -133,3 +133,11 @@ t.simref <- function(x) {
     dim(y) <- itdim
     y
 }
+
+dGenericSim <- function(.Generic, x, ..., log) {
+    if (!log) stop("'simref' is for *log* density evaluation only")
+    substring(.Generic, 1, 1) <- "r"
+    rfun <- match.fun(.Generic)
+    x[] <- rfun(length(x), ...)
+    rep(0, length(x))
+}

@@ -23,6 +23,12 @@ function( x, rate, log ) {
   dGenericOSA( "dexp" , x=x, rate=rate, log=log )
 }
 )
+##' @describeIn Simulation Simulation implementation
+setMethod("dexp", "simref",
+function( x, rate, log ) {
+  dGenericSim( "dexp" , x=x, rate=rate, log=log )
+}
+)
 ##' @describeIn Distributions AD implementation of \link[stats]{dweibull}
 setMethod("dweibull",
 signature(x = "ad", shape = "ad", scale = "ad.", log = "logical."),
@@ -45,6 +51,12 @@ stats:: dweibull ( x=x, shape=shape, scale=scale, log=log )
 setMethod("dweibull", "osa",
 function( x, shape, scale, log ) {
   dGenericOSA( "dweibull" , x=x, shape=shape, scale=scale, log=log )
+}
+)
+##' @describeIn Simulation Simulation implementation
+setMethod("dweibull", "simref",
+function( x, shape, scale, log ) {
+  dGenericSim( "dweibull" , x=x, shape=shape, scale=scale, log=log )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{dbinom}
@@ -71,6 +83,12 @@ function( x, size, prob, log ) {
   dGenericOSA( "dbinom" , x=x, size=size, prob=prob, log=log )
 }
 )
+##' @describeIn Simulation Simulation implementation
+setMethod("dbinom", "simref",
+function( x, size, prob, log ) {
+  dGenericSim( "dbinom" , x=x, size=size, prob=prob, log=log )
+}
+)
 ##' @describeIn Distributions AD implementation of \link[stats]{dbeta}
 setMethod("dbeta",
 signature(x = "ad", shape1 = "ad", shape2 = "ad", ncp = "missing", log = "logical."),
@@ -93,6 +111,12 @@ stats:: dbeta ( x=x, shape1=shape1, shape2=shape2, log=log )
 setMethod("dbeta", "osa",
 function( x, shape1, shape2, log ) {
   dGenericOSA( "dbeta" , x=x, shape1=shape1, shape2=shape2, log=log )
+}
+)
+##' @describeIn Simulation Simulation implementation
+setMethod("dbeta", "simref",
+function( x, shape1, shape2, log ) {
+  dGenericSim( "dbeta" , x=x, shape1=shape1, shape2=shape2, log=log )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{df}
@@ -119,6 +143,12 @@ function( x, df1, df2, log ) {
   dGenericOSA( "df" , x=x, df1=df1, df2=df2, log=log )
 }
 )
+##' @describeIn Simulation Simulation implementation
+setMethod("df", "simref",
+function( x, df1, df2, log ) {
+  dGenericSim( "df" , x=x, df1=df1, df2=df2, log=log )
+}
+)
 ##' @describeIn Distributions AD implementation of \link[stats]{dlogis}
 setMethod("dlogis",
 signature(x = "ad", location = "ad.", scale = "ad.", log = "logical."),
@@ -143,6 +173,12 @@ function( x, location, scale, log ) {
   dGenericOSA( "dlogis" , x=x, location=location, scale=scale, log=log )
 }
 )
+##' @describeIn Simulation Simulation implementation
+setMethod("dlogis", "simref",
+function( x, location, scale, log ) {
+  dGenericSim( "dlogis" , x=x, location=location, scale=scale, log=log )
+}
+)
 ##' @describeIn Distributions AD implementation of \link[stats]{dt}
 setMethod("dt",
 signature(x = "ad", df = "ad", ncp = "missing", log = "logical."),
@@ -164,6 +200,12 @@ stats:: dt ( x=x, df=df, log=log )
 setMethod("dt", "osa",
 function( x, df, log ) {
   dGenericOSA( "dt" , x=x, df=df, log=log )
+}
+)
+##' @describeIn Simulation Simulation implementation
+setMethod("dt", "simref",
+function( x, df, log ) {
+  dGenericSim( "dt" , x=x, df=df, log=log )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{dnbinom}
@@ -190,6 +232,12 @@ function( x, size, prob, log ) {
   dGenericOSA( "dnbinom" , x=x, size=size, prob=prob, log=log )
 }
 )
+##' @describeIn Simulation Simulation implementation
+setMethod("dnbinom", "simref",
+function( x, size, prob, log ) {
+  dGenericSim( "dnbinom" , x=x, size=size, prob=prob, log=log )
+}
+)
 ##' @describeIn Distributions AD implementation of \link[stats]{dpois}
 setMethod("dpois",
 signature(x = "ad", lambda = "ad", log = "logical."),
@@ -211,6 +259,12 @@ stats:: dpois ( x=x, lambda=lambda, log=log )
 setMethod("dpois", "osa",
 function( x, lambda, log ) {
   dGenericOSA( "dpois" , x=x, lambda=lambda, log=log )
+}
+)
+##' @describeIn Simulation Simulation implementation
+setMethod("dpois", "simref",
+function( x, lambda, log ) {
+  dGenericSim( "dpois" , x=x, lambda=lambda, log=log )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{dgamma}
@@ -235,6 +289,12 @@ stats:: dgamma ( x=x, shape=shape, scale=scale, log=log )
 setMethod("dgamma", "osa",
 function( x, shape, scale, log ) {
   dGenericOSA( "dgamma" , x=x, shape=shape, scale=scale, log=log )
+}
+)
+##' @describeIn Simulation Simulation implementation
+setMethod("dgamma", "simref",
+function( x, shape, scale, log ) {
+  dGenericSim( "dgamma" , x=x, shape=shape, scale=scale, log=log )
 }
 )
 ##' @describeIn Distributions AD implementation of \link[stats]{pnorm}
