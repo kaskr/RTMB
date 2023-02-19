@@ -183,6 +183,19 @@ NULL
 ##'                       range=c(0,Inf))$residual
 NULL
 
+##' Simulation
+##'
+##' An RTMB objective function can be run in 'simulation mode' bla bla...
+##'
+##' @rdname simulation
+##' @name simulation
+##' @examples
+##' s <- simref(4)
+##' s2 <- (s[1:2] + 1) * 5
+##' s2[] <- 50
+##' s ## Guess what
+NULL
+
 setClass("advector") ## Virtual class
 setClass("adsparse",
          slots=c(x="advector", i="integer", p="integer", Dim="integer"))
