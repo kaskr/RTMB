@@ -6,7 +6,7 @@
     x[j] <- value
     x
 }
-##' @describeIn Simulation
+##' @describeIn Simulation Construct \code{simref}
 simref <- function(n) {
     parent <- NULL
     value <- rep(NA, n)
@@ -15,23 +15,23 @@ simref <- function(n) {
     }
     asS4(structure(environment(), class="simref"))
 }
-##' @describeIn Simulation
+##' @describeIn Simulation Equivalent of \link[base]{"dim<-"}
 "dim<-.simref" <- function(x, value) {
     dim(x$value) <- value
     x
 }
-##' @describeIn Simulation
+##' @describeIn Simulation Equivalent of \link[base]{length}
 "length.simref" <- function(x) length(x$value)
-##' @describeIn Simulation
+##' @describeIn Simulation Equivalent of \link[base]{dim}
 "dim.simref" <- function(x) dim(x$value)
-##' @describeIn Simulation
+##' @describeIn Simulation Equivalent of \link[base]{is.array}
 is.array.simref <- function(x) is.array(x$value)
 ## FIXME: Not safe to modify x
-##' @describeIn Simulation
+##' @describeIn Simulation Equivalent of \link[base]{as.array}
 as.array.simref<-function(x,...){.x<-x;x<-x$value;.x$value<-NextMethod();.x}
-##' @describeIn Simulation
+##' @describeIn Simulation Equivalent of \link[base]{is.na}
 is.na.simref <- function(x)is.na(x$value)
-##' @describeIn Simulation
+##' @describeIn Simulation Equivalent of \link[base]{"["}
 "[.simref" <- function(x, ...) {
     parent <- x
     x <- seq_along(parent$value)
@@ -58,7 +58,7 @@ setMethod("show", "simref", function(object) {
     cat("class='simref'\n")
     print(object$value)
 })
-##' @describeIn Simulation
+##' @describeIn Simulation Equivalent of \link[base]{"[<-"}
 "[<-.simref" <- function(x, ..., value) {
     cl <- match.call()
     cl <- head(cl, -1) ## Remove 'value'
@@ -70,7 +70,7 @@ setMethod("show", "simref", function(object) {
     x$update(value, j)
     x
 }
-##' @describeIn Simulation
+##' @describeIn Simulation Equivalent of \link[base]{Ops}
 Ops.simref <- function(e1, e2) {
     if (missing(e2)) stop("Not yet implemented")
     e1.unknown <- inherits(e1, "simref")
@@ -111,7 +111,7 @@ Ops.simref <- function(e1, e2) {
     }
     asS4(structure(environment(), class="simref"))
 }
-##' @describeIn Simulation
+##' @describeIn Simulation Equivalent of \link[base]{Math}
 Math.simref <- function(x) {
     .Inverse <- c("exp"="log", "log"="exp")[.Generic]
     inverse <- match.fun(.Inverse)
@@ -123,7 +123,7 @@ Math.simref <- function(x) {
     }
     asS4(structure(environment(), class="simref"))
 }
-##' @describeIn Simulation
+##' @describeIn Simulation Equivalent of \link[base]{t}
 t.simref <- function(x) {
     i <- seq_along(x)
     dim(i) <- dim(x)
