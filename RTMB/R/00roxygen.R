@@ -187,8 +187,8 @@ NULL
 ##'
 ##' An RTMB objective function can be run in 'simulation mode' bla bla...
 ##'
-##' @rdname simulation
-##' @name simulation
+##' @rdname Simulation
+##' @name Simulation
 ##' @examples
 ##' s <- simref(4)
 ##' s2 <- (s[1:2] + 1) * 5
