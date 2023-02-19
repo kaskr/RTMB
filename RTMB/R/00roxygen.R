@@ -195,3 +195,5 @@ setClassUnion("ad.", c("advector", "num."))
 setClassUnion("logical.", c("logical", "missing"))
 ## For OSA residuals
 setClass("osa", list(x="ad", keep="ad"))
+## For simulation
+setClass("simref")
