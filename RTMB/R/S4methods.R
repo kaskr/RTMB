@@ -71,6 +71,10 @@ setMethod("dnorm", signature("num", "num.", "num.", "logical."),
 setMethod("dnorm", "osa", function(x, mean, sd, log) {
     dGenericOSA(.Generic, x=x, mean=mean, sd=sd, log=log)
 })
+## For S4 generics we add the simref version like this:
+setMethod("dnorm", "simref", function(x, mean, sd, log) {
+    dGenericSim(.Generic, x=x, mean=mean, sd=sd, log=log)
+})
 
 ## 'diag' needs patching.
 ## - base::diag works fine for AD matrix input (diagonal extraction and replacement)
