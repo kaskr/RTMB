@@ -73,6 +73,15 @@ setMethod("dnorm", "osa", function(x, mean, sd, log) {
 })
 ## For S4 generics we add the simref version like this:
 setMethod("dnorm", "simref", function(x, mean, sd, log) {
+    ## works when x, mean or sd are simref
+    if (inherits(mean, "simref")) {
+        x <- x - mean
+        mean <- 0
+    }
+    if (inherits(sd, "simref")) {
+        x <- x / sd
+        sd <- 1
+    }
     dGenericSim(.Generic, x=x, mean=mean, sd=sd, log=log)
 })
 
