@@ -150,6 +150,12 @@ print.advector <- function (x, ...)  {
 ##' @describeIn Distributions Multivariate normal distribution. \link{OSA} can be used for argument \code{x}.
 ##' @param Sigma Covariance matrix
 dmvnorm <- function(x, mu, Sigma, log=FALSE) {
+    if (inherits(x, "simref")) {
+        if (!log) stop("'simref' is for *log* density evaluation only")
+        n <- length(x) / nrow(as.matrix(Sigma))
+        x[] <- MASS::mvrnorm(n, mu, Sigma)
+        return( rep(0, n) )
+    }
     if (inherits(x, "osa")) {
         keep <- x@keep
         x <- x@x
