@@ -38,6 +38,8 @@ simref <- function(n) {
 "dim.simref" <- function(x) dim(x$value)
 ##' @describeIn Simulation Equivalent of \link[base]{is.array}
 is.array.simref <- function(x) is.array(x$value)
+##' @describeIn Simulation Equivalent of \link[base]{is.matrix}
+is.matrix.simref <- function(x) is.matrix(x$value)
 ## FIXME: Not safe to modify x
 ##' @describeIn Simulation Equivalent of \link[base]{as.array}
 as.array.simref<-function(x,...){.x<-x;x<-x$value;.x$value<-NextMethod();.x}
