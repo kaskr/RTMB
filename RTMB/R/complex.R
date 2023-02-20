@@ -152,7 +152,9 @@ print.advector <- function (x, ...)  {
 dmvnorm <- function(x, mu, Sigma, log=FALSE) {
     if (inherits(x, "simref")) {
         if (!log) stop("'simref' is for *log* density evaluation only")
-        n <- length(x) / nrow(as.matrix(Sigma))
+        nr <- nrow(as.matrix(Sigma))
+        n <- length(x) / nr
+        if (length(mu)<nr) mu <- rep(mu, length.out=nr)
         x[] <- MASS::mvrnorm(n, mu, Sigma)
         return( rep(0, n) )
     }
