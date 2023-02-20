@@ -196,6 +196,10 @@ t.simref <- function(x) {
     dim(y) <- itdim
     y
 }
+##' @describeIn Simulation Equivalent of \link[base]{diff}
+diff.simref <- function (x, lag = 1L, differences = 1L, ...) {
+    diff_patch(x, lag = 1L, differences = 1L, ...)
+}
 
 dGenericSim <- function(.Generic, x, ..., log) {
     if (!log) stop("'simref' is for *log* density evaluation only")
