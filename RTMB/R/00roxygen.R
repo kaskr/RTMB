@@ -222,9 +222,17 @@ NULL
 ##' @name Simulation
 ##' @examples
 ##' s <- simref(4)
-##' s2 <- (s[1:2] + 1) * 5
-##' s2[] <- 50
-##' s ## Guess what
+##' s2 <- 2 * s[1:2] + 1
+##' s2[] <- 7
+##' s ## 3 3 NA NA
+##' ## Random walk
+##' func <- function(p) {
+##'   u <- p$u
+##'   ans <- -dnorm(u[1], log=TRUE) ## u[1] ~ N(0,1)
+##'   ans <- ans - sum(dnorm(diff(u), log=TRUE)) ## u[i]-u[i-1] ~ N(0,1)
+##' }
+##' obj <- MakeADFun(func, list(u=numeric(20)), random="u")
+##' obj$simulate()
 NULL
 
 setClass("advector") ## Virtual class
