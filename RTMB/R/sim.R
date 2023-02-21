@@ -213,3 +213,23 @@ dGenericSim <- function(.Generic, x, ..., log) {
     x[] <- rfun(length(x), ...)
     rep(0, length(x))
 }
+
+## internal 'simref' constructor with a custom 'finalize':
+## - Overrides 'simref' in its frame when complete
+## - And stores the simulation in SIM_ENV
+SIM_ENV <- reporter()
+simref2 <- function(x, name) {
+    s <- simref(length(x))
+    dim(s) <- dim(x)
+    s$name <- name
+    s$finalize <- function(value) {
+        for (e in sys.frames()) {
+            if (inherits(e[[name]], "simref")) {
+                e[[name]] <- value
+                SIM_ENV$set(name, value)
+                break
+            }
+        }
+    }
+    s
+}
