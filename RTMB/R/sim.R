@@ -27,7 +27,7 @@ simref <- function(n) {
     }
     asS4(structure(environment(), class="simref"))
 }
-##' @describeIn Simulation Equivalent of \link[base]{"dim<-"}
+##' @describeIn Simulation Equivalent of \link[base]{dim<-}
 "dim<-.simref" <- function(x, value) {
     dim(x$value) <- value
     x
@@ -45,7 +45,7 @@ is.matrix.simref <- function(x) is.matrix(x$value)
 as.array.simref<-function(x,...){.x<-x;x<-x$value;.x$value<-NextMethod();.x}
 ##' @describeIn Simulation Equivalent of \link[base]{is.na}
 is.na.simref <- function(x)is.na(x$value)
-##' @describeIn Simulation Equivalent of \link[base]{"["}
+##' @describeIn Simulation Equivalent of \link[base]{[}
 "[.simref" <- function(x, ...) {
     parent <- x
     x <- seq_along(parent$value)
@@ -76,10 +76,10 @@ setMethod("show", "simref", function(object) {
     cat("class='simref'\n")
     print(object$value)
 })
-##' @describeIn Simulation Equivalent of \link[base]{"[<-"}
+##' @describeIn Simulation Equivalent of \link[base]{[<-}
 "[<-.simref" <- function(x, ..., value) {
     cl <- match.call()
-    cl <- head(cl, -1) ## Remove 'value'
+    cl <- cl[-1] ## Remove 'value'
     cl[[1]] <- as.name("[") ## Change generic
     cl[[2]] <- as.name("index")
     index <- seq_along(x)
@@ -172,7 +172,7 @@ Ops.simref <- function(e1, e2) {
     asS4(structure(environment(), class="simref"))
 }
 ##' @describeIn Simulation Equivalent of \link[base]{Math}
-Math.simref <- function(x) {
+Math.simref <- function(x, ...) {
     .Inverse <- c("exp"="log", "log"="exp")[.Generic]
     if (is.na(.Inverse))
         stop("Class 'simref' does not know generic '", .Generic, "'")
