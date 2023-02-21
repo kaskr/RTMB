@@ -435,6 +435,21 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
     obj$env$data.term.indicator <- data.term.indicator
     if (!is.null(data[[observation.name]]))
         obj$env$data[[observation.name]] <- data[[observation.name]]
+    ## Simulate
+    obj$simulate <- function(par=obj$env$last.par,...) {
+        SIM_ENV$clear() ## Stores the simulation
+        OSA_ENV$clear() ## Contains observation(s)
+        p <- obj$env$parList(par=par)
+        for (nm in obj$env$.random) {
+            p[[nm]] <- simref2(p[[nm]], nm)
+        }
+        for (nm in names(obj$env$osa)) {
+            obs <- simref2(obj$env$osa[[nm]], nm)
+            OSA_ENV$set(nm, obs)
+        }
+        func(p)
+        SIM_ENV$result()
+    }
     ## FIXME: Skip for now
     obj$env$MakeDoubleFunObject <- function(...)NULL
     obj$env$EvalDoubleFunObject <- function(...)NULL
