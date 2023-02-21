@@ -3,18 +3,15 @@
 \name{OSA-residuals}
 \alias{OSA-residuals}
 \alias{oneStepPredict}
-\alias{OSA}
 \alias{[.osa}
 \title{Recursive quantile residuals}
 \usage{
 oneStepPredict(
   obj,
-  observation.name = names(obj$env$osa)[1],
+  observation.name = names(obj$env$obs)[1],
   data.term.indicator = "_RTMB_keep_",
   ...
 )
-
-OSA(x)
 
 \method{[}{osa}(x, ...)
 }
@@ -26,13 +23,11 @@ OSA(x)
 \item{data.term.indicator}{Auto detected - use the default}
 
 \item{...}{Passed to \code{TMB::}\link[TMB]{oneStepPredict} - \bold{please carefully read the documentation}, especially the \code{method} argument.}
-
-\item{x}{Observation object}
 }
 \description{
 OSA residuals are computed using the function
 \code{oneStepPredict}. For this to work, you need to mark the
-observation inside the objective function using the \code{OSA}
+observation inside the objective function using the \code{OBS}
 function. Thereafter, residual calculation is as simple as
 \code{oneStepPredict(obj)}. However, you probably want specify a
 \code{method} to use.
@@ -40,12 +35,6 @@ function. Thereafter, residual calculation is as simple as
 \section{Functions}{
 \itemize{
 \item \code{oneStepPredict()}: Calculate the residuals. See documentation of \code{TMB::}\link[TMB]{oneStepPredict}.
-
-\item \code{OSA()}: Mark observation to be used by \code{oneStepPredict}.
-If your objective function is using an observation \code{obs}, you simply need
-to run \code{obs <- OSA(obs)} \emph{inside the objective function}.
-This will allow \code{oneStepPredict} to change the class of \code{obs} to
-\code{"osa"} on request.
 
 \item \code{[}: Subset observations marked for OSA calculation.
 This function makes sure that when you subset an observation of class \code{"osa"} such as
@@ -59,7 +48,7 @@ set.seed(1)
 rw <- cumsum(.5*rnorm(100))
 obs <- rpois(100, lambda=exp(rw))
 func <- function(p) {
-  obs <- OSA(obs) ## Mark 'obs' for OSA calculation on request
+  obs <- OBS(obs) ## Mark 'obs' for OSA calculation on request
   ans <- 0
   jump <- c(p$rw[1], diff(p$rw))
   ans <- ans - sum(dnorm(jump, sd=p$sd, log=TRUE))

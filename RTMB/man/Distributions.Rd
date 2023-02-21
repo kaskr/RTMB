@@ -291,7 +291,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
 }
 \section{Functions}{
 \itemize{
-\item \code{dmvnorm()}: Multivariate normal distribution. \link{OSA} can be used for argument \code{x}.
+\item \code{dmvnorm()}: Multivariate normal distribution. \link{OSA-residuals} can be used for argument \code{x}.
 
 \item \code{dgmrf()}: Multivariate normal distribution. OSA is \emph{not} implemented.
 
