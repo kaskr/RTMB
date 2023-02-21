@@ -225,7 +225,7 @@ simref2 <- function(x, name) {
     s$finalize <- function(value) {
         for (e in sys.frames()) {
             if (inherits(e[[name]], "simref")) {
-                e[[name]] <- value
+                e[[name]] <- e[[name]]$value
                 SIM_ENV$set(name, value)
                 break
             }
