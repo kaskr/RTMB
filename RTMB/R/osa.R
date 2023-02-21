@@ -41,8 +41,8 @@ OBS_ENV <- reporter()
 ##' If your objective function is using an observation \code{x}, you simply need
 ##' to run \code{x <- OBS(x)} \emph{inside the objective function}.
 ##' This will (1) allow \code{oneStepPredict} to change the class of \code{x} to
-##' \code{"osa"} or (2) allow \code{obj$simulate} to change the class of \code{x} to
-##' \code{"simref"} on request.
+##' \code{"osa"} (\link{OSA-residuals}) or (2) allow \code{obj$simulate} to change the class of \code{x} to
+##' \code{"simref"} (\link{Simulation}) on request.
 ##' @param x Observation object
 OBS <- function(x) {
     ## Four evaluation modes (!)
