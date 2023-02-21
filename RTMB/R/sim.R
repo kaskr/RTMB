@@ -202,6 +202,9 @@ t.simref <- function(x) {
 diff.simref <- function (x, lag = 1L, differences = 1L, ...) {
     diff_patch(x, lag = 1L, differences = 1L, ...)
 }
+##' @describeIn Simulation \link{Summary} operations are not invertible and will throw an error.
+Summary.simref <- function(..., na.rm = FALSE)
+    stop("Class 'simref' does not allow operation '", .Generic, "' (argument must be fully simulated)")
 
 dGenericSim <- function(.Generic, x, ..., log) {
     if (!log) stop("'simref' is for *log* density evaluation only")
