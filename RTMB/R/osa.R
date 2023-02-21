@@ -43,12 +43,20 @@ OSA_ENV <- reporter()
 ##' \code{"osa"} on request.
 ##' @param x Observation object
 OSA <- function(x) {
-    if (!ad_context()) return (x)
+    ## Four evaluation modes (!)
+    ## 1. MakeADFun for the first time (ad_context()==TRUE and typeof(obs)=="numeric")
+    ## 2. MakeADFun for OSA (ad_context()==TRUE and OSA_ENV contains 'obs' of class=="osa")
+    ## 3. Normal 'double' evaluation mode (ad_context()==FALSE and typeof(obs)="numeric")
+    ## 4. Simulation mode (ad_context()==FALSE and OSA_ENV contains 'obs' of class=="simref")
     nm <- deparse(substitute(x))
     xosa <- OSA_ENV$get(nm)
     if (is.null(xosa)) {
-        OSA_ENV$set(nm, x)
-        xosa <- x
+        ## Are we running MakeADFun for the first time (i.e. taping)?
+        ## ==> Store the observation inside OSA_ENV
+        if (ad_context()) {
+            OSA_ENV$set(nm, x)
+        }
+        return (x)
     }
     xosa
 }
