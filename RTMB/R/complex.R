@@ -147,7 +147,7 @@ print.advector <- function (x, ...)  {
         .adv2num
 }
 
-##' @describeIn Distributions Multivariate normal distribution. \link{OSA} can be used for argument \code{x}.
+##' @describeIn Distributions Multivariate normal distribution. \link{OSA-residuals} can be used for argument \code{x}.
 ##' @param Sigma Covariance matrix
 dmvnorm <- function(x, mu, Sigma, log=FALSE) {
     if (inherits(x, "simref")) {
@@ -376,7 +376,7 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
     obj$env$MakeADFunObject <- function(data,parameters, reportenv, ADreport = FALSE,...) {
         mapfunc <- function(par) {
             ADREPORT_ENV$clear()
-            OSA_ENV     $clear()
+            OBS_ENV     $clear()
             pl <- parList(parameters, par)
             bias.correct <- ("TMB_epsilon_" %in% names(pl))
             do.osa <- ("_RTMB_keep_" %in% names(pl))
@@ -394,16 +394,16 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
                 obs <- new("osa",
                            x = x,
                            keep = pl[[dti]])
-                OSA_ENV$set(obn, obs)
+                OBS_ENV$set(obn, obs)
                 pl[[obn]] <- NULL
                 pl[[dti]] <- NULL
             }
             ans <- func(pl)
             if (!do.osa) {
                 ## Place OSA marked observations in obj
-                obj$env$osa <- OSA_ENV$result()
+                obj$env$obs <- OBS_ENV$result()
             }
-            OSA_ENV$clear() ## Cleanup
+            OBS_ENV$clear() ## Cleanup
             if (ADreport || bias.correct) {
                 adrep <- do.call("c", lapply(ADREPORT_ENV$result(), advector) )
                 if (length(adrep) == 0) adrep <- advector(numeric(0))
@@ -438,14 +438,14 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
     ## Simulate
     obj$simulate <- function(par=obj$env$last.par,...) {
         SIM_ENV$clear() ## Stores the simulation
-        OSA_ENV$clear() ## Contains observation(s)
+        OBS_ENV$clear() ## Contains observation(s)
         p <- obj$env$parList(par=par)
         for (nm in obj$env$.random) {
             p[[nm]] <- simref2(p[[nm]], nm)
         }
-        for (nm in names(obj$env$osa)) {
-            obs <- simref2(obj$env$osa[[nm]], nm)
-            OSA_ENV$set(nm, obs)
+        for (nm in names(obj$env$obs)) {
+            obs <- simref2(obj$env$obs[[nm]], nm)
+            OBS_ENV$set(nm, obs)
         }
         func(p)
         SIM_ENV$result()

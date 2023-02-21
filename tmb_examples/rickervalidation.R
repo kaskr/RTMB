@@ -47,7 +47,7 @@ parameters0 <- list(
 fixed <- factor(NA)
 
 fun <- function(parms) {
-    Y <- OSA(Y) ## Mark Y for OSA calculation on request
+    Y <- OBS(Y) ## Mark Y for OSA calculation on request
     r = exp(parms$logr)
     theta = exp(parms$logtheta)
     K = exp(parms$logK)

@@ -154,7 +154,7 @@ NULL
 ##'
 ##' OSA residuals are computed using the function
 ##' \code{oneStepPredict}. For this to work, you need to mark the
-##' observation inside the objective function using the \code{OSA}
+##' observation inside the objective function using the \code{OBS}
 ##' function. Thereafter, residual calculation is as simple as
 ##' \code{oneStepPredict(obj)}. However, you probably want specify a
 ##' \code{method} to use.
@@ -166,7 +166,7 @@ NULL
 ##' rw <- cumsum(.5*rnorm(100))
 ##' obs <- rpois(100, lambda=exp(rw))
 ##' func <- function(p) {
-##'   obs <- OSA(obs) ## Mark 'obs' for OSA calculation on request
+##'   obs <- OBS(obs) ## Mark 'obs' for OSA calculation on request
 ##'   ans <- 0
 ##'   jump <- c(p$rw[1], diff(p$rw))
 ##'   ans <- ans - sum(dnorm(jump, sd=p$sd, log=TRUE))

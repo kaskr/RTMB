@@ -4,12 +4,12 @@
 ##' @param data.term.indicator Auto detected - use the default
 ##' @param ... Passed to \code{TMB::}\link[TMB]{oneStepPredict} - \bold{please carefully read the documentation}, especially the \code{method} argument.
 oneStepPredict <- function(obj,
-                           observation.name=names(obj$env$osa)[1],
+                           observation.name=names(obj$env$obs)[1],
                            data.term.indicator="_RTMB_keep_",
                            ...) {
     ## FIXME: Check against valid OSA names
-    ## names(obj$env$osa)
-    obj$env$data[[observation.name]] <- obj$env$osa[[observation.name]]
+    ## names(obj$env$obs)
+    obj$env$data[[observation.name]] <- obj$env$obs[[observation.name]]
     obj$env$observation.name <- observation.name
     obj$env$data.term.indicator <- data.term.indicator
     on.exit({
@@ -34,31 +34,33 @@ oneStepPredict <- function(obj,
                          ...)
 }
 
-OSA_ENV <- reporter()
+OBS_ENV <- reporter()
 
-##' @describeIn OSA-residuals Mark observation to be used by \code{oneStepPredict}.
-##' If your objective function is using an observation \code{obs}, you simply need
-##' to run \code{obs <- OSA(obs)} \emph{inside the objective function}.
-##' This will allow \code{oneStepPredict} to change the class of \code{obs} to
-##' \code{"osa"} on request.
+##' @describeIn TMB-interface Mark the observation
+##' Mark observation to be used by either \code{oneStepPredict} or by \code{obj$simulate}.
+##' If your objective function is using an observation \code{x}, you simply need
+##' to run \code{x <- OBS(x)} \emph{inside the objective function}.
+##' This will (1) allow \code{oneStepPredict} to change the class of \code{x} to
+##' \code{"osa"} or (2) allow \code{obj$simulate} to change the class of \code{x} to
+##' \code{"simref"} on request.
 ##' @param x Observation object
-OSA <- function(x) {
+OBS <- function(x) {
     ## Four evaluation modes (!)
     ## 1. MakeADFun for the first time (ad_context()==TRUE and typeof(obs)=="numeric")
-    ## 2. MakeADFun for OSA (ad_context()==TRUE and OSA_ENV contains 'obs' of class=="osa")
+    ## 2. MakeADFun for OSA (ad_context()==TRUE and OBS_ENV contains 'obs' of class=="osa")
     ## 3. Normal 'double' evaluation mode (ad_context()==FALSE and typeof(obs)="numeric")
-    ## 4. Simulation mode (ad_context()==FALSE and OSA_ENV contains 'obs' of class=="simref")
+    ## 4. Simulation mode (ad_context()==FALSE and OBS_ENV contains 'obs' of class=="simref")
     nm <- deparse(substitute(x))
-    xosa <- OSA_ENV$get(nm)
-    if (is.null(xosa)) {
+    xobs <- OBS_ENV$get(nm)
+    if (is.null(xobs)) {
         ## Are we running MakeADFun for the first time (i.e. taping)?
-        ## ==> Store the observation inside OSA_ENV
+        ## ==> Store the observation inside OBS_ENV
         if (ad_context()) {
-            OSA_ENV$set(nm, x)
+            OBS_ENV$set(nm, x)
         }
         return (x)
     }
-    xosa
+    xobs
 }
 
 ##' @describeIn OSA-residuals Subset observations marked for OSA calculation.
