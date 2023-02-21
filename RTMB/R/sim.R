@@ -79,7 +79,7 @@ setMethod("show", "simref", function(object) {
 ##' @describeIn Simulation Equivalent of \link[base]{[<-}
 "[<-.simref" <- function(x, ..., value) {
     cl <- match.call()
-    cl <- cl[-1] ## Remove 'value'
+    cl <- cl[-length(cl)] ## Remove 'value'
     cl[[1]] <- as.name("[") ## Change generic
     cl[[2]] <- as.name("index")
     index <- seq_along(x)
