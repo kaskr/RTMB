@@ -7,33 +7,43 @@
 \alias{dexp,ad,ad.,logical.-method}
 \alias{dexp,num,num.,logical.-method}
 \alias{dexp,osa,ANY,ANY-method}
+\alias{dexp,simref,ANY,ANY-method}
 \alias{dweibull,ad,ad,ad.,logical.-method}
 \alias{dweibull,num,num,num.,logical.-method}
 \alias{dweibull,osa,ANY,ANY,ANY-method}
+\alias{dweibull,simref,ANY,ANY,ANY-method}
 \alias{dbinom,ad,ad,ad,logical.-method}
 \alias{dbinom,num,num,num,logical.-method}
 \alias{dbinom,osa,ANY,ANY,ANY-method}
+\alias{dbinom,simref,ANY,ANY,ANY-method}
 \alias{dbeta,ad,ad,ad,missing,logical.-method}
 \alias{dbeta,num,num,num,missing,logical.-method}
 \alias{dbeta,osa,ANY,ANY,ANY,ANY-method}
+\alias{dbeta,simref,ANY,ANY,ANY,ANY-method}
 \alias{df,ad,ad,ad,missing,logical.-method}
 \alias{df,num,num,num,missing,logical.-method}
 \alias{df,osa,ANY,ANY,ANY,ANY-method}
+\alias{df,simref,ANY,ANY,ANY,ANY-method}
 \alias{dlogis,ad,ad.,ad.,logical.-method}
 \alias{dlogis,num,num.,num.,logical.-method}
 \alias{dlogis,osa,ANY,ANY,ANY-method}
+\alias{dlogis,simref,ANY,ANY,ANY-method}
 \alias{dt,ad,ad,missing,logical.-method}
 \alias{dt,num,num,missing,logical.-method}
 \alias{dt,osa,ANY,ANY,ANY-method}
+\alias{dt,simref,ANY,ANY,ANY-method}
 \alias{dnbinom,ad,ad,ad,missing,logical.-method}
 \alias{dnbinom,num,num,num,missing,logical.-method}
 \alias{dnbinom,osa,ANY,ANY,ANY,ANY-method}
+\alias{dnbinom,simref,ANY,ANY,ANY,ANY-method}
 \alias{dpois,ad,ad,logical.-method}
 \alias{dpois,num,num,logical.-method}
 \alias{dpois,osa,ANY,ANY-method}
+\alias{dpois,simref,ANY,ANY-method}
 \alias{dgamma,ad,ad,missing,ad.,logical.-method}
 \alias{dgamma,num,num,missing,num.,logical.-method}
 \alias{dgamma,osa,ANY,ANY,ANY,ANY-method}
+\alias{dgamma,simref,ANY,ANY,ANY,ANY-method}
 \alias{pnorm,ad,ad.,ad.,missing,missing-method}
 \alias{pnorm,num,num.,num.,missing,missing-method}
 \alias{pgamma,ad,ad,missing,ad.,missing,missing-method}
@@ -83,11 +93,15 @@ dgmrf(x, mu, Q, log = FALSE)
 
 \S4method{dexp}{osa,ANY,ANY}(x, rate = 1, log = FALSE)
 
+\S4method{dexp}{simref,ANY,ANY}(x, rate = 1, log = FALSE)
+
 \S4method{dweibull}{ad,ad,ad.,logical.}(x, shape, scale = 1, log = FALSE)
 
 \S4method{dweibull}{num,num,num.,logical.}(x, shape, scale = 1, log = FALSE)
 
 \S4method{dweibull}{osa,ANY,ANY,ANY}(x, shape, scale = 1, log = FALSE)
+
+\S4method{dweibull}{simref,ANY,ANY,ANY}(x, shape, scale = 1, log = FALSE)
 
 \S4method{dbinom}{ad,ad,ad,logical.}(x, size, prob, log = FALSE)
 
@@ -95,11 +109,15 @@ dgmrf(x, mu, Q, log = FALSE)
 
 \S4method{dbinom}{osa,ANY,ANY,ANY}(x, size, prob, log = FALSE)
 
+\S4method{dbinom}{simref,ANY,ANY,ANY}(x, size, prob, log = FALSE)
+
 \S4method{dbeta}{ad,ad,ad,missing,logical.}(x, shape1, shape2, log)
 
 \S4method{dbeta}{num,num,num,missing,logical.}(x, shape1, shape2, log)
 
 \S4method{dbeta}{osa,ANY,ANY,ANY,ANY}(x, shape1, shape2, log)
+
+\S4method{dbeta}{simref,ANY,ANY,ANY,ANY}(x, shape1, shape2, log)
 
 \S4method{df}{ad,ad,ad,missing,logical.}(x, df1, df2, log)
 
@@ -107,11 +125,15 @@ dgmrf(x, mu, Q, log = FALSE)
 
 \S4method{df}{osa,ANY,ANY,ANY,ANY}(x, df1, df2, log)
 
+\S4method{df}{simref,ANY,ANY,ANY,ANY}(x, df1, df2, log)
+
 \S4method{dlogis}{ad,ad.,ad.,logical.}(x, location = 0, scale = 1, log = FALSE)
 
 \S4method{dlogis}{num,num.,num.,logical.}(x, location = 0, scale = 1, log = FALSE)
 
 \S4method{dlogis}{osa,ANY,ANY,ANY}(x, location = 0, scale = 1, log = FALSE)
+
+\S4method{dlogis}{simref,ANY,ANY,ANY}(x, location = 0, scale = 1, log = FALSE)
 
 \S4method{dt}{ad,ad,missing,logical.}(x, df, log)
 
@@ -119,11 +141,15 @@ dgmrf(x, mu, Q, log = FALSE)
 
 \S4method{dt}{osa,ANY,ANY,ANY}(x, df, log)
 
+\S4method{dt}{simref,ANY,ANY,ANY}(x, df, log)
+
 \S4method{dnbinom}{ad,ad,ad,missing,logical.}(x, size, prob, log)
 
 \S4method{dnbinom}{num,num,num,missing,logical.}(x, size, prob, log)
 
 \S4method{dnbinom}{osa,ANY,ANY,ANY,ANY}(x, size, prob, log)
+
+\S4method{dnbinom}{simref,ANY,ANY,ANY,ANY}(x, size, prob, log)
 
 \S4method{dpois}{ad,ad,logical.}(x, lambda, log = FALSE)
 
@@ -131,11 +157,15 @@ dgmrf(x, mu, Q, log = FALSE)
 
 \S4method{dpois}{osa,ANY,ANY}(x, lambda, log = FALSE)
 
+\S4method{dpois}{simref,ANY,ANY}(x, lambda, log = FALSE)
+
 \S4method{dgamma}{ad,ad,missing,ad.,logical.}(x, shape, scale, log)
 
 \S4method{dgamma}{num,num,missing,num.,logical.}(x, shape, scale, log)
 
 \S4method{dgamma}{osa,ANY,ANY,ANY,ANY}(x, shape, scale, log)
+
+\S4method{dgamma}{simref,ANY,ANY,ANY,ANY}(x, shape, scale, log)
 
 \S4method{pnorm}{ad,ad.,ad.,missing,missing}(q, mean, sd)
 
@@ -301,11 +331,15 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{dexp(x = osa, rate = ANY, log = ANY)}: OSA implementation
 
+\item \code{dexp(x = simref, rate = ANY, log = ANY)}: Simulation implementation
+
 \item \code{dweibull(x = ad, shape = ad, scale = ad., log = logical.)}: AD implementation of \link[stats]{dweibull}
 
 \item \code{dweibull(x = num, shape = num, scale = num., log = logical.)}: Default method
 
 \item \code{dweibull(x = osa, shape = ANY, scale = ANY, log = ANY)}: OSA implementation
+
+\item \code{dweibull(x = simref, shape = ANY, scale = ANY, log = ANY)}: Simulation implementation
 
 \item \code{dbinom(x = ad, size = ad, prob = ad, log = logical.)}: AD implementation of \link[stats]{dbinom}
 
@@ -313,11 +347,15 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{dbinom(x = osa, size = ANY, prob = ANY, log = ANY)}: OSA implementation
 
+\item \code{dbinom(x = simref, size = ANY, prob = ANY, log = ANY)}: Simulation implementation
+
 \item \code{dbeta(x = ad, shape1 = ad, shape2 = ad, ncp = missing, log = logical.)}: AD implementation of \link[stats]{dbeta}
 
 \item \code{dbeta(x = num, shape1 = num, shape2 = num, ncp = missing, log = logical.)}: Default method
 
 \item \code{dbeta(x = osa, shape1 = ANY, shape2 = ANY, ncp = ANY, log = ANY)}: OSA implementation
+
+\item \code{dbeta(x = simref, shape1 = ANY, shape2 = ANY, ncp = ANY, log = ANY)}: Simulation implementation
 
 \item \code{df(x = ad, df1 = ad, df2 = ad, ncp = missing, log = logical.)}: AD implementation of \link[stats]{df}
 
@@ -325,11 +363,15 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{df(x = osa, df1 = ANY, df2 = ANY, ncp = ANY, log = ANY)}: OSA implementation
 
+\item \code{df(x = simref, df1 = ANY, df2 = ANY, ncp = ANY, log = ANY)}: Simulation implementation
+
 \item \code{dlogis(x = ad, location = ad., scale = ad., log = logical.)}: AD implementation of \link[stats]{dlogis}
 
 \item \code{dlogis(x = num, location = num., scale = num., log = logical.)}: Default method
 
 \item \code{dlogis(x = osa, location = ANY, scale = ANY, log = ANY)}: OSA implementation
+
+\item \code{dlogis(x = simref, location = ANY, scale = ANY, log = ANY)}: Simulation implementation
 
 \item \code{dt(x = ad, df = ad, ncp = missing, log = logical.)}: AD implementation of \link[stats]{dt}
 
@@ -337,11 +379,15 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{dt(x = osa, df = ANY, ncp = ANY, log = ANY)}: OSA implementation
 
+\item \code{dt(x = simref, df = ANY, ncp = ANY, log = ANY)}: Simulation implementation
+
 \item \code{dnbinom(x = ad, size = ad, prob = ad, mu = missing, log = logical.)}: AD implementation of \link[stats]{dnbinom}
 
 \item \code{dnbinom(x = num, size = num, prob = num, mu = missing, log = logical.)}: Default method
 
 \item \code{dnbinom(x = osa, size = ANY, prob = ANY, mu = ANY, log = ANY)}: OSA implementation
+
+\item \code{dnbinom(x = simref, size = ANY, prob = ANY, mu = ANY, log = ANY)}: Simulation implementation
 
 \item \code{dpois(x = ad, lambda = ad, log = logical.)}: AD implementation of \link[stats]{dpois}
 
@@ -349,11 +395,15 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{dpois(x = osa, lambda = ANY, log = ANY)}: OSA implementation
 
+\item \code{dpois(x = simref, lambda = ANY, log = ANY)}: Simulation implementation
+
 \item \code{dgamma(x = ad, shape = ad, rate = missing, scale = ad., log = logical.)}: AD implementation of \link[stats]{dgamma}
 
 \item \code{dgamma(x = num, shape = num, rate = missing, scale = num., log = logical.)}: Default method
 
 \item \code{dgamma(x = osa, shape = ANY, rate = ANY, scale = ANY, log = ANY)}: OSA implementation
+
+\item \code{dgamma(x = simref, shape = ANY, rate = ANY, scale = ANY, log = ANY)}: Simulation implementation
 
 \item \code{pnorm(q = ad, mean = ad., sd = ad., lower.tail = missing, log.p = missing)}: AD implementation of \link[stats]{pnorm}
 
