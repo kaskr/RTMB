@@ -19,7 +19,9 @@ parameters <- list(
 parameters$h <- t(parameters$h) ## Workaround: order as old TMB example for unittest
 # Negative joint likelihood (nll) of data and parameters
 f <- function(parms) {
-  
+  # Optionally mark the observation object
+  X <- OBS(X)
+
   # Parameters on natural scale and remove "parms"
   sigma <- exp(parms$log_sigma)
   phi <- parms$phi

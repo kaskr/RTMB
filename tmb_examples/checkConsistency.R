@@ -1,0 +1,12 @@
+## Check consistency of some models using automatic simulation feature
+## (takes a few minutes)
+source("transform.R")
+chk1 <- checkConsistency(obj)
+source("transform2.R")
+chk2 <- checkConsistency(obj)
+source("sdv_multi.R")
+system.time(chk3 <- checkConsistency(obj))
+##
+(chk1)
+(chk2)
+(chk3)

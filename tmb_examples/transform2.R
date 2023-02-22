@@ -37,6 +37,7 @@ func <- function(phi,
                  sd,
                  u) {
     y <- data$y
+    y <- OBS(y) ## Optional
     res <- 0
     res <- res - dar1(u, phi, log=TRUE)
     unif <- pnorm(u)

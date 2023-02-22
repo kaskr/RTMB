@@ -1,7 +1,7 @@
 rfiles = $(basename $(wildcard *.R))
 efiles = $(basename  $(basename $(wildcard *.expected.RData)) )
 all_examples = $(filter $(rfiles), $(efiles))
-excludes = lr_test
+excludes = lr_test checkConsistency
 examples = $(filter-out $(excludes), $(all_examples))
 outputfiles = $(examples:=.output.RData)
 profiletargets = $(examples:=.profile)
