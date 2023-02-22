@@ -185,7 +185,7 @@ NULL
 
 ##' Simulation
 ##'
-##' An RTMB objective function can be run in 'simulation mode' where standard likelihood evaluation is replaced by corresponding random number generation. This facilitates automatic simulation under some restrictions.
+##' An RTMB objective function can be run in 'simulation mode' where standard likelihood evaluation is replaced by corresponding random number generation. This facilitates automatic simulation under some restrictions. Simulations can be obtained directly from the model object \code{obj$simulate()} or used indirectly via \link{checkConsistency}.
 ##'
 ##' In simulation mode all log density evaluation, involving either random effects or observations, is interpreted as probability assignment.
 ##'
@@ -218,6 +218,7 @@ NULL
 ##'
 ##' The latter will have no effect in simulation mode (the simulation will be \code{NA}).
 ##'
+##' \bold{Return value} Note that when in simulation mode, the density functions all return zero. The actual simulation is written to the input argument by reference. This is very unlike standard R semantics.
 ##' @rdname Simulation
 ##' @name Simulation
 ##' @examples
