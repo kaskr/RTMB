@@ -240,3 +240,18 @@ simref2 <- function(x, name) {
     }
     s
 }
+
+##' @describeIn TMB-interface Interface to \link[TMB]{checkConsistency}.
+checkConsistency <- function(obj,...) {
+    checkConsistency_patch <- TMB::checkConsistency
+    tmb_envir <- environment(checkConsistency_patch)
+    env <- local({
+        MakeADFun <- RTMB::MakeADFun
+        formals(MakeADFun)$data <- list() ## checkConsistency passes data here...
+        formals(MakeADFun)$func <- as.name("data") ## And we redirect it here
+        environment()
+    })
+    parent.env(env) <- tmb_envir
+    environment(checkConsistency_patch) <- env
+    checkConsistency_patch(obj, ...)
+}
