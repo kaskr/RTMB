@@ -457,6 +457,15 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
         func(p)
         SIM_ENV$result()
     }
+    ## Report
+    obj$report <- function(par=obj$env$last.par,...) {
+        SIM_ENV$clear()
+        OBS_ENV$clear()
+        REPORT_ENV$clear()
+        p <- obj$env$parList(par=par)
+        func(p)
+        REPORT_ENV$result()
+    }
     ## FIXME: Skip for now
     obj$env$MakeDoubleFunObject <- function(...)NULL
     obj$env$EvalDoubleFunObject <- function(...)NULL
