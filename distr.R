@@ -174,7 +174,7 @@ getRmethod <- function(i) {
             paste('  dGenericSim(',string(name),',',dblargs(df$signature[i]),')'),
             "}")
         meth4 <- c(
-            "##' @describeIn Distributions Simulation implementation",
+            "##' @describeIn Distributions Simulation implementation. Modifies \\code{x} and returns zero.",
             paste0("setMethod(", string(name), ", ", string("simref"), ","),
             def4, ")" )
     } else {
