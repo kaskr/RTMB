@@ -180,7 +180,7 @@ Math.simref <- function(x, ...) {
     parent <- x
     value <- callGeneric(x$value)
     forward.update <- function(j) {
-        value[j] <- match.fun(.Generic)(parent$forward.update(j))
+        value[j] <<- match.fun(.Generic)(parent$forward.update(j))
     }
     reverse.update <- function(val, j) {
         NACHECK(value, j) <<- val
