@@ -60,7 +60,7 @@ Interface to TMB
 
 \item \code{ADREPORT()}: Can be used inside the objective function to report quantities for which uncertainties will be calculated by \link{sdreport}.
 
-\item \code{REPORT()}: Can be used inside the objective function to report quantities.
+\item \code{REPORT()}: Can be used inside the objective function to report quantities via the model object using \code{obj$report()}.
 
 \item \code{OBS()}: Mark the observation
 Mark observation to be used by either \code{oneStepPredict} or by \code{obj$simulate}.

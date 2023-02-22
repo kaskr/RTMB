@@ -331,7 +331,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{dexp(x = osa, rate = ANY, log = ANY)}: OSA implementation
 
-\item \code{dexp(x = simref, rate = ANY, log = ANY)}: Simulation implementation
+\item \code{dexp(x = simref, rate = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 \item \code{dweibull(x = ad, shape = ad, scale = ad., log = logical.)}: AD implementation of \link[stats]{dweibull}
 
@@ -339,7 +339,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{dweibull(x = osa, shape = ANY, scale = ANY, log = ANY)}: OSA implementation
 
-\item \code{dweibull(x = simref, shape = ANY, scale = ANY, log = ANY)}: Simulation implementation
+\item \code{dweibull(x = simref, shape = ANY, scale = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 \item \code{dbinom(x = ad, size = ad, prob = ad, log = logical.)}: AD implementation of \link[stats]{dbinom}
 
@@ -347,7 +347,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{dbinom(x = osa, size = ANY, prob = ANY, log = ANY)}: OSA implementation
 
-\item \code{dbinom(x = simref, size = ANY, prob = ANY, log = ANY)}: Simulation implementation
+\item \code{dbinom(x = simref, size = ANY, prob = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 \item \code{dbeta(x = ad, shape1 = ad, shape2 = ad, ncp = missing, log = logical.)}: AD implementation of \link[stats]{dbeta}
 
@@ -355,7 +355,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{dbeta(x = osa, shape1 = ANY, shape2 = ANY, ncp = ANY, log = ANY)}: OSA implementation
 
-\item \code{dbeta(x = simref, shape1 = ANY, shape2 = ANY, ncp = ANY, log = ANY)}: Simulation implementation
+\item \code{dbeta(x = simref, shape1 = ANY, shape2 = ANY, ncp = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 \item \code{df(x = ad, df1 = ad, df2 = ad, ncp = missing, log = logical.)}: AD implementation of \link[stats]{df}
 
@@ -363,7 +363,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{df(x = osa, df1 = ANY, df2 = ANY, ncp = ANY, log = ANY)}: OSA implementation
 
-\item \code{df(x = simref, df1 = ANY, df2 = ANY, ncp = ANY, log = ANY)}: Simulation implementation
+\item \code{df(x = simref, df1 = ANY, df2 = ANY, ncp = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 \item \code{dlogis(x = ad, location = ad., scale = ad., log = logical.)}: AD implementation of \link[stats]{dlogis}
 
@@ -371,7 +371,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{dlogis(x = osa, location = ANY, scale = ANY, log = ANY)}: OSA implementation
 
-\item \code{dlogis(x = simref, location = ANY, scale = ANY, log = ANY)}: Simulation implementation
+\item \code{dlogis(x = simref, location = ANY, scale = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 \item \code{dt(x = ad, df = ad, ncp = missing, log = logical.)}: AD implementation of \link[stats]{dt}
 
@@ -379,7 +379,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{dt(x = osa, df = ANY, ncp = ANY, log = ANY)}: OSA implementation
 
-\item \code{dt(x = simref, df = ANY, ncp = ANY, log = ANY)}: Simulation implementation
+\item \code{dt(x = simref, df = ANY, ncp = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 \item \code{dnbinom(x = ad, size = ad, prob = ad, mu = missing, log = logical.)}: AD implementation of \link[stats]{dnbinom}
 
@@ -387,7 +387,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{dnbinom(x = osa, size = ANY, prob = ANY, mu = ANY, log = ANY)}: OSA implementation
 
-\item \code{dnbinom(x = simref, size = ANY, prob = ANY, mu = ANY, log = ANY)}: Simulation implementation
+\item \code{dnbinom(x = simref, size = ANY, prob = ANY, mu = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 \item \code{dpois(x = ad, lambda = ad, log = logical.)}: AD implementation of \link[stats]{dpois}
 
@@ -395,7 +395,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{dpois(x = osa, lambda = ANY, log = ANY)}: OSA implementation
 
-\item \code{dpois(x = simref, lambda = ANY, log = ANY)}: Simulation implementation
+\item \code{dpois(x = simref, lambda = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 \item \code{dgamma(x = ad, shape = ad, rate = missing, scale = ad., log = logical.)}: AD implementation of \link[stats]{dgamma}
 
@@ -403,7 +403,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
 
 \item \code{dgamma(x = osa, shape = ANY, rate = ANY, scale = ANY, log = ANY)}: OSA implementation
 
-\item \code{dgamma(x = simref, shape = ANY, rate = ANY, scale = ANY, log = ANY)}: Simulation implementation
+\item \code{dgamma(x = simref, shape = ANY, rate = ANY, scale = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 \item \code{pnorm(q = ad, mean = ad., sd = ad., lower.tail = missing, log.p = missing)}: AD implementation of \link[stats]{pnorm}
 

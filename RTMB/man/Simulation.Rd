@@ -50,10 +50,10 @@ simref(n)
 \method{Summary}{simref}(..., na.rm = FALSE)
 }
 \description{
-An RTMB objective function can be run in 'simulation mode' where normal likelihood evaluation is replaced by corresponding random number generation. This facilitates automatic simulation under some restrictions.
+An RTMB objective function can be run in 'simulation mode' where standard likelihood evaluation is replaced by corresponding random number generation. This facilitates automatic simulation under some restrictions. Simulations can be obtained directly from the model object \code{obj$simulate()} or used indirectly via \link{checkConsistency}.
 }
 \details{
-In simulation mode all log density evaluation, involving either random effects or oberservations, is interpreted as probability assignment.
+In simulation mode all log density evaluation, involving either random effects or observations, is interpreted as probability assignment.
 
 \bold{direct vs indirect} Assignments can be 'direct' as for example
 
@@ -61,7 +61,7 @@ In simulation mode all log density evaluation, involving either random effects o
 
 or 'indirect' as in
 
-\code{dnorm(2*u+1, log=TRUE)  ## u ~ N(-1, .5)}
+\code{dnorm(2*u+1, log=TRUE)  ## u ~ N(-1, .25)}
 
 Indirect assignment works for a limited set of easily invertible functions - see \code{methods(class="simref")}.
 
@@ -74,7 +74,7 @@ is not valid without a prior specification
 
 \code{dnorm(u[1], log=TRUE)}
 
-\bold{Supported distributions} Assignement must use supported density functions. I.e.
+\bold{Supported distributions} Assignment must use supported density functions. I.e.
 
 \code{dpois(N, exp(u), log=TRUE)}
 
@@ -83,6 +83,8 @@ cannot be replaced by
 \code{N * u - exp(u)}
 
 The latter will have no effect in simulation mode (the simulation will be \code{NA}).
+
+\bold{Return value} Note that when in simulation mode, the density functions all return zero. The actual simulation is written to the input argument by reference. This is very unlike standard R semantics.
 }
 \section{Functions}{
 \itemize{
