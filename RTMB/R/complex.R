@@ -433,7 +433,7 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
     ## OSA
     obj$env$observation.name <- observation.name
     obj$env$data.term.indicator <- data.term.indicator
-    if (!is.null(data[[observation.name]]))
+    if (length(observation.name) && !is.null(data[[observation.name]]))
         obj$env$data[[observation.name]] <- data[[observation.name]]
     ## Simulate
     obj$simulate <- function(par=obj$env$last.par,...) {
