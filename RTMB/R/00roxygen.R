@@ -154,7 +154,7 @@ NULL
 ##'
 ##' OSA residuals are computed using the function
 ##' \code{oneStepPredict}. For this to work, you need to mark the
-##' observation inside the objective function using the \code{OBS}
+##' observation inside the objective function using the \link{OBS}
 ##' function. Thereafter, residual calculation is as simple as
 ##' \code{oneStepPredict(obj)}. However, you probably want specify a
 ##' \code{method} to use.
