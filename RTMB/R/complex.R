@@ -377,6 +377,13 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
         mapfunc <- function(par) {
             ADREPORT_ENV$clear()
             OBS_ENV     $clear()
+            ## obj$env$data is normally empty, however some TMB
+            ## functions (checkConsistency, others?) modifies the data
+            ## and retapes. Let's make this data visible from
+            ## objective:
+            if (length(obj$env$data) > 0) {
+                OBS_ENV$ans <- obj$env$data
+            }
             pl <- parList(parameters, par)
             bias.correct <- ("TMB_epsilon_" %in% names(pl))
             do.osa <- ("_RTMB_keep_" %in% names(pl))
