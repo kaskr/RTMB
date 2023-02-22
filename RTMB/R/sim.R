@@ -90,6 +90,8 @@ setMethod("show", "simref", function(object) {
 }
 ##' @describeIn Simulation Equivalent of \link[base]{Ops}
 Ops.simref <- function(e1, e2) {
+    call <- sys.call()
+    call[[1]] <- as.name(.Generic)
     if (missing(e2)) {
         if (.Generic == "+")
             return(e1)
@@ -147,13 +149,18 @@ Ops.simref <- function(e1, e2) {
     }
     if (e1.unknown && e2.unknown) {
         reverse.update <- function(val, j) {
-            if (length(e1) != length(e2)) stop("")
+            if (length(e1) != length(e2)) stop("Unexpected")
             for (i in seq_along(j)) {
                 e1$forward.update(j[i])
                 e2$forward.update(j[i])
                 NACHECK(value, j[i]) <<- val[i]
-                if (is.na(e1$value[j[i]] && is.na(e2$value[j[i]])))
-                    stop("Implicit simulation failed; Not enough information")
+                if (is.na(e1$value[j[i]] && is.na(e2$value[j[i]]))) {
+                    expr <- deparse(substitute((x)[j], list(x=call,j=j[i])))
+                    stop("Implicit simulation failed.\n",
+                         "Cannot update operands of '",
+                         expr,
+                         "' when both are missing")
+                }
                 if (is.na(e1$value[j[i]]))
                     e1$reverse.update(inverse1(val[i], e2$value[j[i]]), j[i])
                 if (is.na(e2$value[j[i]]))
