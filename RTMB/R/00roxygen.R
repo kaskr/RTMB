@@ -185,9 +185,9 @@ NULL
 
 ##' Simulation
 ##'
-##' An RTMB objective function can be run in 'simulation mode' where normal likelihood evaluation is replaced by corresponding random number generation. This facilitates automatic simulation under some restrictions.
+##' An RTMB objective function can be run in 'simulation mode' where standard likelihood evaluation is replaced by corresponding random number generation. This facilitates automatic simulation under some restrictions.
 ##'
-##' In simulation mode all log density evaluation, involving either random effects or oberservations, is interpreted as probability assignment.
+##' In simulation mode all log density evaluation, involving either random effects or observations, is interpreted as probability assignment.
 ##'
 ##' \bold{direct vs indirect} Assignments can be 'direct' as for example
 ##'
@@ -195,7 +195,7 @@ NULL
 ##'
 ##' or 'indirect' as in
 ##'
-##' \code{dnorm(2*u+1, log=TRUE)  ## u ~ N(-1, .5)}
+##' \code{dnorm(2*u+1, log=TRUE)  ## u ~ N(-1, .25)}
 ##'
 ##' Indirect assignment works for a limited set of easily invertible functions - see \code{methods(class="simref")}.
 ##'
@@ -208,7 +208,7 @@ NULL
 ##'
 ##' \code{dnorm(u[1], log=TRUE)}
 ##'
-##' \bold{Supported distributions} Assignement must use supported density functions. I.e.
+##' \bold{Supported distributions} Assignment must use supported density functions. I.e.
 ##'
 ##' \code{dpois(N, exp(u), log=TRUE)}
 ##'
