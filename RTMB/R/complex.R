@@ -515,5 +515,5 @@ REPORT_ENV <- reporter()
 ##' @describeIn TMB-interface Can be used inside the objective function to report quantities for which uncertainties will be calculated by \link{sdreport}.
 ##' @param x Object to report
 ADREPORT <- ADREPORT_ENV$report
-##' @describeIn TMB-interface Can be used inside the objective function to report quantities.
+##' @describeIn TMB-interface Can be used inside the objective function to report quantities via the model object using \code{obj$report()}.
 REPORT <- REPORT_ENV$report
