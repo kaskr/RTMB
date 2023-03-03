@@ -50,7 +50,7 @@ simref(n)
 \method{Summary}{simref}(..., na.rm = FALSE)
 }
 \description{
-An RTMB objective function can be run in 'simulation mode' where standard likelihood evaluation is replaced by corresponding random number generation. This facilitates automatic simulation under some restrictions. Simulations can be obtained directly from the model object \code{obj$simulate()} or used indirectly via \link{checkConsistency}.
+An RTMB objective function can be run in 'simulation mode' where standard likelihood evaluation is replaced by corresponding random number generation. This facilitates automatic simulation under some restrictions. Simulations can be obtained directly from the model object by \code{obj$simulate()} or used indirectly via \link{checkConsistency}.
 }
 \details{
 In simulation mode all log density evaluation, involving either random effects or observations, is interpreted as probability assignment.
@@ -66,11 +66,12 @@ or 'indirect' as in
 Indirect assignment works for a limited set of easily invertible functions - see \code{methods(class="simref")}.
 
 \bold{Simulation order} Note that probability assignments are sequential: All information required to draw a new variable must already be simulated.
+Vectorized assignment implicitly occurs elementwise from left to right.
 For example the assignment
 
 \code{dnorm(diff(u), log=TRUE)}
 
-is not valid without a prior specification
+is not valid without a prior assignment of \code{u[1]}, e.g.
 
 \code{dnorm(u[1], log=TRUE)}
 
