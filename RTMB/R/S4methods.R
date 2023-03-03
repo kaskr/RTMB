@@ -132,3 +132,7 @@ setMethod("ifelse", signature(test="logical", yes="advector", no="advector"),
               class(ans) <- "advector"
               ans
           })
+
+##' @describeIn ADvector Equivalent of \link[base]{outer}
+setMethod("outer", signature(X="advector", Y="advector", FUN="missing"),
+          function (X, Y) outer(X, Y, function(x, y) x * y))
