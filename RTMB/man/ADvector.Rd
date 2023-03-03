@@ -3,6 +3,7 @@
 \name{ADvector}
 \alias{ADvector}
 \alias{ifelse,logical,advector,advector-method}
+\alias{outer,advector,advector,missing-method}
 \alias{advector}
 \alias{Ops.advector}
 \alias{Math.advector}
@@ -21,6 +22,8 @@
 \title{The AD vector and its methods}
 \usage{
 \S4method{ifelse}{logical,advector,advector}(test, yes, no)
+
+\S4method{outer}{advector,advector,missing}(X, Y)
 
 advector(x)
 
@@ -92,6 +95,8 @@ re-used for AD vectors.
 \section{Functions}{
 \itemize{
 \item \code{ifelse(test = logical, yes = advector, no = advector)}: Equivalent of \link[base]{ifelse}
+
+\item \code{outer(X = advector, Y = advector, FUN = missing)}: Equivalent of \link[base]{outer}
 
 \item \code{advector()}: Construct a new advector
 
