@@ -129,6 +129,7 @@ getRmethod <- function(i) {
         def <- c(
             paste(name,"<- function(", df$signature[i],") {"),
             paste('if (inherits(x,"osa")) return (dGenericOSA(',string(name),',',dblargs(df$signature[i]),'))')[is_density],
+            paste('if (inherits(x,"simref")) return (dGenericSim(',string(name),',',dblargs(df$signature[i]),'))')[is_density],
             paste(a1, "<- ",cast,"(",a1,")"),
             paste(newname(name),"(",df$signature[i],")"), "}")
         meth <- c(
