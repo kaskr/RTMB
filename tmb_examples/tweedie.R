@@ -13,7 +13,9 @@ if(TRUE) {
 parameters <- list(mu=1.1, phi=1.1, p=1.1)
 
 f <- function(parms) {
-  -sum(dtweedie(data$y, parms$mu, parms$phi, parms$p, log=TRUE))
+    y <- data$y
+    y <- OBS(y)
+    -sum(dtweedie(y, parms$mu, parms$phi, parms$p, log=TRUE))
 }
 
 ## Fit model
@@ -22,3 +24,5 @@ model$fn()
 model$gr()
 system.time( opt <- nlminb(model$par, model$fn, model$gr) )
 sdreport(model)
+chk <- checkConsistency(model)
+(chk)

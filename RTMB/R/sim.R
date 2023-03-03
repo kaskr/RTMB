@@ -255,3 +255,14 @@ checkConsistency <- function(obj,...) {
     environment(checkConsistency_patch) <- env
     checkConsistency_patch(obj, ...)
 }
+
+## Internal: Not export
+rtweedie <- function (n, mu, phi, p) {
+    ok <- all( (p > 1) & (p < 2) )
+    if (!ok) stop("'p' must be in the interval (1, 2)")
+    lambda <- mu^(2 - p)/(phi * (2 - p))
+    alpha <- (2 - p)/(1 - p)
+    gam <- phi * (p - 1) * mu^(p - 1)
+    N <- rpois(n, lambda = lambda)
+    rgamma(n, shape = -N * alpha, scale = gam)
+}
