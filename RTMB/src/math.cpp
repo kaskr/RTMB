@@ -266,14 +266,14 @@ Rcpp::S4 SparseArith2(SEXP x,
     else Rf_error("'%s' not implemented", op.c_str());
   }
   // scalar OP Sparse
-  else if (is_scalar(x) && is_adsparse(y)) {
+  else if (is_adscalar(x) && is_adsparse(y)) {
     ad X = ScalarInput(x);
     Eigen::SparseMatrix<ad> Y = SparseInput(y);
     if (!op.compare("*"))      z = SparseOutput(X * Y);
     else Rf_error("'%s' not implemented", op.c_str());
   }
   // Sparse OP scalar
-  else if (is_adsparse(x) && is_scalar(y)) {
+  else if (is_adsparse(x) && is_adscalar(y)) {
     Eigen::SparseMatrix<ad> X = SparseInput(x);
     ad Y = ScalarInput(y);
     if (!op.compare("*"))      z = SparseOutput(X * Y);
