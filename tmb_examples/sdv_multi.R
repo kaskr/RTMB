@@ -2,6 +2,7 @@
 # framework for inference in stochastic volatility models." Computational Statistics & Data Analysis 76 (2014): 642-654.
 
 library(RTMB)
+TapeConfig(atomic="disable") ## Optional (speeds up this model)
 
 # Read data
 source("sdv_multi_data.R")
