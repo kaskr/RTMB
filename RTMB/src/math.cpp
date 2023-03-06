@@ -237,7 +237,7 @@ Rcpp::ComplexVector dgmrf0 (const Rcpp::ComplexMatrix &x,
   // adds to tape!
   if (!ad_context())
     Rcpp::stop("'dgmrf0' currently requires an active tape");
-  if (!is_sparse(q))
+  if (!is_adsparse(q))
     Rcpp::stop("Precision matrix must be sparse");
   Rcpp::IntegerVector Dim = q.slot("Dim");
   if (Dim[0] != Dim[1])
@@ -257,7 +257,7 @@ Rcpp::S4 SparseArith2(SEXP x,
                       std::string op) {
   Rcpp::S4 z;
   // Sparse OP Sparse
-  if (is_sparse(x) && is_sparse(y)) {
+  if (is_adsparse(x) && is_adsparse(y)) {
     Eigen::SparseMatrix<ad> X = SparseInput(x);
     Eigen::SparseMatrix<ad> Y = SparseInput(y);
     if (!op.compare("+"))      z = SparseOutput(X + Y);
@@ -266,14 +266,14 @@ Rcpp::S4 SparseArith2(SEXP x,
     else Rf_error("'%s' not implemented", op.c_str());
   }
   // scalar OP Sparse
-  else if (is_scalar(x) && is_sparse(y)) {
+  else if (is_scalar(x) && is_adsparse(y)) {
     ad X = ScalarInput(x);
     Eigen::SparseMatrix<ad> Y = SparseInput(y);
     if (!op.compare("*"))      z = SparseOutput(X * Y);
     else Rf_error("'%s' not implemented", op.c_str());
   }
   // Sparse OP scalar
-  else if (is_sparse(x) && is_scalar(y)) {
+  else if (is_adsparse(x) && is_scalar(y)) {
     Eigen::SparseMatrix<ad> X = SparseInput(x);
     ad Y = ScalarInput(y);
     if (!op.compare("*"))      z = SparseOutput(X * Y);

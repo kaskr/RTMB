@@ -162,7 +162,7 @@ ad* adptr(const Rcpp::ComplexVector &x) {
 bool is_advector (SEXP x) {
   return Rf_inherits(x, "advector");
 }
-bool is_sparse (SEXP x) {
+bool is_adsparse (SEXP x) {
   return Rf_inherits(x, "adsparse");
 }
 bool is_scalar (SEXP x) {
