@@ -3,7 +3,8 @@
 
 
 typedef TMBad::ad_aug ad;
-typedef std::vector<ad> ad_vec;
+typedef Eigen::Map<Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > MapMatrix;
+typedef Eigen::Map<const Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > ConstMapMatrix;
 
 // Global Tape Configuration
 struct tape_config_t {

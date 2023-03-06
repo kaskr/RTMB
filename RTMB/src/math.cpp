@@ -153,8 +153,6 @@ Rcpp::ComplexVector Reduce1(const Rcpp::ComplexVector &x, std::string op) {
 // [[Rcpp::export]]
 Rcpp::ComplexVector matmul (const Rcpp::ComplexMatrix &x,
                             const Rcpp::ComplexMatrix &y) {
-  typedef Eigen::Map<Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > MapMatrix;
-  typedef Eigen::Map<const Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > ConstMapMatrix;
   if (x.ncol() != y.nrow())
     Rcpp::stop("non-conformable arguments");
   CHECK_INPUT(x);
@@ -181,7 +179,6 @@ template<class nlDensity>
 Rcpp::ComplexVector colApply (const Rcpp::ComplexMatrix &x,
                               nlDensity &F,
                               bool give_log) {
-  typedef Eigen::Map<const Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > ConstMapMatrix;
   ConstMapMatrix X((ad*) x.begin(), x.nrow(), x.ncol());
   Rcpp::ComplexVector z(x.ncol());
   for (int j=0; j < X.cols(); j++) {
@@ -196,7 +193,6 @@ Rcpp::ComplexVector colApply2(const Rcpp::ComplexMatrix &x,
                               const Rcpp::ComplexVector &keep,
                               nlDensity &F,
                               bool give_log) {
-  typedef Eigen::Map<const Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > ConstMapMatrix;
   ConstMapMatrix X((ad*) x.begin(), x.nrow(), x.ncol());
   ConstMapMatrix K((ad*) keep.begin(), x.nrow(), x.ncol());
   Rcpp::ComplexVector z(x.ncol());
@@ -213,7 +209,6 @@ Rcpp::ComplexVector dmvnorm0 (const Rcpp::ComplexMatrix &x,
                               const Rcpp::ComplexMatrix &s,
                               bool give_log,
                               SEXP keep = R_NilValue) {
-  typedef Eigen::Map<const Eigen::Matrix<ad, Eigen::Dynamic, Eigen::Dynamic> > ConstMapMatrix;
   if (s.ncol() != s.nrow())
     Rcpp::stop("cov matrix must be square");
   if (x.nrow() != s.nrow())
