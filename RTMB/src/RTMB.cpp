@@ -234,6 +234,19 @@ Rcpp::ComplexVector independent(const Rcpp::ComplexVector &x) {
   return as_advector(ans);
 }
 
+// ============================== Dense matrices
+ConstMapMatrix MatrixInput(const Rcpp::ComplexMatrix &x) {
+  return ConstMapMatrix ((ad*) x.begin(), x.nrow(), x.ncol());
+}
+Rcpp::ComplexMatrix MatrixOutput(const matrix<ad> &X) {
+  Rcpp::ComplexMatrix z(X.rows(), X.cols());
+  MapMatrix Z((ad*) z.begin(), z.nrow(), z.ncol());
+  Z = X;
+  // FIXME: z = as_advector(z);
+  z.attr("class") = "advector";
+  SET_S4_OBJECT(z);
+  return z;
+}
 
 // ============================== Sparse matrices
 Eigen::SparseMatrix<ad> SparseInput(Rcpp::S4 S) {

@@ -43,6 +43,8 @@ if (!is_advector(x))                                                    \
  if (!valid(Rcpp::ComplexVector(x)))                                    \
   Rcpp::stop("'" #x "' is not a valid 'advector' (constructed using illegal operation?)" );
 
+ConstMapMatrix MatrixInput(const Rcpp::ComplexMatrix &x);
+Rcpp::ComplexMatrix MatrixOutput(const matrix<ad> &X);
 Eigen::SparseMatrix<ad> SparseInput(Rcpp::S4 x);
 Rcpp::S4 SparseOutput (const Eigen::SparseMatrix<ad> &S);
 ad ScalarInput(SEXP x_);

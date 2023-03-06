@@ -151,28 +151,27 @@ Rcpp::ComplexVector Reduce1(const Rcpp::ComplexVector &x, std::string op) {
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector matmul (const Rcpp::ComplexMatrix &x,
+Rcpp::ComplexMatrix matmul (const Rcpp::ComplexMatrix &x,
                             const Rcpp::ComplexMatrix &y) {
   if (x.ncol() != y.nrow())
     Rcpp::stop("non-conformable arguments");
   CHECK_INPUT(x);
   CHECK_INPUT(y);
-  Rcpp::ComplexMatrix z(x.nrow(), y.ncol());
-  ConstMapMatrix X((ad*) x.begin(), x.nrow(), x.ncol());
-  ConstMapMatrix Y((ad*) y.begin(), y.nrow(), y.ncol());
-  MapMatrix Z((ad*) z.begin(), z.nrow(), z.ncol());
+  ConstMapMatrix X = MatrixInput(x);
+  ConstMapMatrix Y = MatrixInput(y);
+  Rcpp::ComplexMatrix Z;
   if ( tape_config.matmul_plain() )
-    Z = X * Y;
+    Z = MatrixOutput(X * Y);
   else if ( tape_config.matmul_atomic() )
-    Z = atomic::matmul(matrix<ad>(X), matrix<ad>(Y));
+    Z = MatrixOutput(atomic::matmul(matrix<ad>(X), matrix<ad>(Y)));
   else if ( tape_config.matmul_TMBad() ) {
     if (!ad_context())
       Rcpp::stop("tape_config.matmul_TMBad() requires an active AD context");
-    Z = TMBad::matmul(matrix<ad>(X), matrix<ad>(Y));
+    Z = MatrixOutput(TMBad::matmul(matrix<ad>(X), matrix<ad>(Y)));
   }
   else
     Rcpp::stop("Nothing selected by tape_config.matmul_* !");
-  return as_advector(z);
+  return Z;
 }
 
 template<class nlDensity>
