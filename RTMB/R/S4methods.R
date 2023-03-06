@@ -45,6 +45,9 @@ setMethod("%*%",
           signature("adsparse", "ad"),
           function(x, y) SparseArith2(x, advector(y), .Generic) )
 setMethod("%*%",
+          signature("ad", "adsparse"),
+          function(x, y) SparseArith2(advector(x), y, .Generic) )
+setMethod("%*%",
           signature("adsparse", "adsparse"),
           function(x, y) SparseArith2(x, y, .Generic) )
 
