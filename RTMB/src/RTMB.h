@@ -29,6 +29,7 @@ Rcomplex ad2cplx(const ad &x);
 ad cplx2ad(const Rcomplex &x);
 ad* adptr(const Rcpp::ComplexVector &x);
 bool is_advector (SEXP x);
+bool is_admatrix (SEXP x);
 bool is_adsparse (SEXP x);
 bool is_adscalar (SEXP x);
 bool valid(const ad &x);
