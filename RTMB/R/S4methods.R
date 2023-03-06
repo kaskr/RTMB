@@ -30,6 +30,7 @@ setMethod("Ops",
           function(e1, e2) callGeneric( e1, as(e2, "adsparse") ) )
 
 ## Methods adsparse
+setMethod("dim", "adsparse", function(x) x@Dim)
 
 setMethod("Ops",
           signature("ad", "adsparse"),
@@ -39,17 +40,35 @@ setMethod("Ops",
           function(e1, e2) SparseArith2(e1, advector(e2), .Generic) )
 setMethod("Ops",
           signature("adsparse", "adsparse"),
-          function(e1, e2) SparseArith2(e1, e2, .Generic) )
+          function(e1, e2) {
+              if (!identical(e1@Dim, e2@Dim))
+                  stop("non-conformable arguments")
+              SparseArith2(e1, e2, .Generic)
+          })
 
 setMethod("%*%",
           signature("adsparse", "ad"),
-          function(x, y) SparseArith2(x, advector(y), .Generic) )
+          function(x, y) {
+              y <- as.matrix(advector(y))
+              if ( ncol(x) != nrow(y) )
+                  stop("non-conformable arguments")
+              SparseArith2(x, y, .Generic)
+          })
 setMethod("%*%",
           signature("ad", "adsparse"),
-          function(x, y) SparseArith2(advector(x), y, .Generic) )
+          function(x, y) {
+              x <- as.matrix(advector(x))
+              if ( ncol(x) != nrow(y) )
+                  stop("non-conformable arguments")
+              SparseArith2(x, y, .Generic)
+          })
 setMethod("%*%",
           signature("adsparse", "adsparse"),
-          function(x, y) SparseArith2(x, y, .Generic) )
+          function(x, y) {
+              if ( ncol(x) != nrow(y) )
+                  stop("non-conformable arguments")
+              SparseArith2(x, y, .Generic)
+          })
 
 setMethod("%*%",
           signature("ad", "ad"),
