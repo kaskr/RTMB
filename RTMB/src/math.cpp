@@ -296,3 +296,18 @@ SEXP SparseArith2(SEXP x,
   else Rf_error("Wrong use of 'SparseArith2'");
   return z;
 }
+
+// [[Rcpp::export]]
+Rcpp::ComplexMatrix math_expm (SEXP x) {
+  matrix<ad> X;
+  if (is_adsparse(x)) {
+    X = SparseInput(x);
+  } else if (is_admatrix(x)) {
+    X = MatrixInput(x);
+  } else {
+    Rcpp::stop("expm: Expected matrix-like input");
+  }
+  if (X.rows() != X.cols())
+    Rcpp::stop("expm: Expected square matrix");
+  return MatrixOutput(expm(X));
+}

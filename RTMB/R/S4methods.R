@@ -10,6 +10,8 @@ setAs("sparseMatrix", "adsparse",
 
 ##setClassUnion("advector_castable", c("advector", "numeric"))
 
+setMethod("expm", "advector", function(x) math_expm(x))
+setMethod("expm", "adsparse", function(x) math_expm(x))
 
 ## Methods sparseMatrix -> adsparse
 
