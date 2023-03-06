@@ -99,43 +99,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// Arith2
-Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector& x, const Rcpp::ComplexVector& y, std::string op);
-RcppExport SEXP _RTMB_Arith2(SEXP xSEXP, SEXP ySEXP, SEXP opSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< std::string >::type op(opSEXP);
-    rcpp_result_gen = Rcpp::wrap(Arith2(x, y, op));
-    return rcpp_result_gen;
-END_RCPP
-}
-// Math1
-Rcpp::ComplexVector Math1(const Rcpp::ComplexVector& x, std::string op);
-RcppExport SEXP _RTMB_Math1(SEXP xSEXP, SEXP opSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< std::string >::type op(opSEXP);
-    rcpp_result_gen = Rcpp::wrap(Math1(x, op));
-    return rcpp_result_gen;
-END_RCPP
-}
-// Reduce1
-Rcpp::ComplexVector Reduce1(const Rcpp::ComplexVector& x, std::string op);
-RcppExport SEXP _RTMB_Reduce1(SEXP xSEXP, SEXP opSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< std::string >::type op(opSEXP);
-    rcpp_result_gen = Rcpp::wrap(Reduce1(x, op));
-    return rcpp_result_gen;
-END_RCPP
-}
 // getValues
 Rcpp::NumericVector getValues(const Rcpp::ComplexVector& x);
 RcppExport SEXP _RTMB_getValues(SEXP xSEXP) {
@@ -166,58 +129,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type x(xSEXP);
     dbgprint(x);
     return R_NilValue;
-END_RCPP
-}
-// matmul
-Rcpp::ComplexVector matmul(const Rcpp::ComplexMatrix& x, const Rcpp::ComplexMatrix& y);
-RcppExport SEXP _RTMB_matmul(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(matmul(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// dmvnorm0
-Rcpp::ComplexVector dmvnorm0(const Rcpp::ComplexMatrix& x, const Rcpp::ComplexMatrix& s, bool give_log, SEXP keep);
-RcppExport SEXP _RTMB_dmvnorm0(SEXP xSEXP, SEXP sSEXP, SEXP give_logSEXP, SEXP keepSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type s(sSEXP);
-    Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type keep(keepSEXP);
-    rcpp_result_gen = Rcpp::wrap(dmvnorm0(x, s, give_log, keep));
-    return rcpp_result_gen;
-END_RCPP
-}
-// dgmrf0
-Rcpp::ComplexVector dgmrf0(const Rcpp::ComplexMatrix& x, Rcpp::S4 q, bool give_log);
-RcppExport SEXP _RTMB_dgmrf0(SEXP xSEXP, SEXP qSEXP, SEXP give_logSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< Rcpp::S4 >::type q(qSEXP);
-    Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
-    rcpp_result_gen = Rcpp::wrap(dgmrf0(x, q, give_log));
-    return rcpp_result_gen;
-END_RCPP
-}
-// SparseArith2
-Rcpp::S4 SparseArith2(SEXP x, SEXP y, std::string op);
-RcppExport SEXP _RTMB_SparseArith2(SEXP xSEXP, SEXP ySEXP, SEXP opSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type y(ySEXP);
-    Rcpp::traits::input_parameter< std::string >::type op(opSEXP);
-    rcpp_result_gen = Rcpp::wrap(SparseArith2(x, y, op));
-    return rcpp_result_gen;
 END_RCPP
 }
 // distr_dexp
@@ -645,6 +556,95 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Arith2
+Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector& x, const Rcpp::ComplexVector& y, std::string op);
+RcppExport SEXP _RTMB_Arith2(SEXP xSEXP, SEXP ySEXP, SEXP opSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< std::string >::type op(opSEXP);
+    rcpp_result_gen = Rcpp::wrap(Arith2(x, y, op));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Math1
+Rcpp::ComplexVector Math1(const Rcpp::ComplexVector& x, std::string op);
+RcppExport SEXP _RTMB_Math1(SEXP xSEXP, SEXP opSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< std::string >::type op(opSEXP);
+    rcpp_result_gen = Rcpp::wrap(Math1(x, op));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Reduce1
+Rcpp::ComplexVector Reduce1(const Rcpp::ComplexVector& x, std::string op);
+RcppExport SEXP _RTMB_Reduce1(SEXP xSEXP, SEXP opSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< std::string >::type op(opSEXP);
+    rcpp_result_gen = Rcpp::wrap(Reduce1(x, op));
+    return rcpp_result_gen;
+END_RCPP
+}
+// matmul
+Rcpp::ComplexVector matmul(const Rcpp::ComplexMatrix& x, const Rcpp::ComplexMatrix& y);
+RcppExport SEXP _RTMB_matmul(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(matmul(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// dmvnorm0
+Rcpp::ComplexVector dmvnorm0(const Rcpp::ComplexMatrix& x, const Rcpp::ComplexMatrix& s, bool give_log, SEXP keep);
+RcppExport SEXP _RTMB_dmvnorm0(SEXP xSEXP, SEXP sSEXP, SEXP give_logSEXP, SEXP keepSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type s(sSEXP);
+    Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type keep(keepSEXP);
+    rcpp_result_gen = Rcpp::wrap(dmvnorm0(x, s, give_log, keep));
+    return rcpp_result_gen;
+END_RCPP
+}
+// dgmrf0
+Rcpp::ComplexVector dgmrf0(const Rcpp::ComplexMatrix& x, Rcpp::S4 q, bool give_log);
+RcppExport SEXP _RTMB_dgmrf0(SEXP xSEXP, SEXP qSEXP, SEXP give_logSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::S4 >::type q(qSEXP);
+    Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
+    rcpp_result_gen = Rcpp::wrap(dgmrf0(x, q, give_log));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SparseArith2
+Rcpp::S4 SparseArith2(SEXP x, SEXP y, std::string op);
+RcppExport SEXP _RTMB_SparseArith2(SEXP xSEXP, SEXP ySEXP, SEXP opSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type y(ySEXP);
+    Rcpp::traits::input_parameter< std::string >::type op(opSEXP);
+    rcpp_result_gen = Rcpp::wrap(SparseArith2(x, y, op));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP _rcpp_module_boot_mod_adfun();
 
@@ -658,16 +658,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_advec", (DL_FUNC) &_RTMB_advec, 1},
     {"_RTMB_dependent", (DL_FUNC) &_RTMB_dependent, 1},
     {"_RTMB_independent", (DL_FUNC) &_RTMB_independent, 1},
-    {"_RTMB_Arith2", (DL_FUNC) &_RTMB_Arith2, 3},
-    {"_RTMB_Math1", (DL_FUNC) &_RTMB_Math1, 2},
-    {"_RTMB_Reduce1", (DL_FUNC) &_RTMB_Reduce1, 2},
     {"_RTMB_getValues", (DL_FUNC) &_RTMB_getValues, 1},
     {"_RTMB_getVariables", (DL_FUNC) &_RTMB_getVariables, 1},
     {"_RTMB_dbgprint", (DL_FUNC) &_RTMB_dbgprint, 1},
-    {"_RTMB_matmul", (DL_FUNC) &_RTMB_matmul, 2},
-    {"_RTMB_dmvnorm0", (DL_FUNC) &_RTMB_dmvnorm0, 4},
-    {"_RTMB_dgmrf0", (DL_FUNC) &_RTMB_dgmrf0, 3},
-    {"_RTMB_SparseArith2", (DL_FUNC) &_RTMB_SparseArith2, 3},
     {"_RTMB_distr_dexp", (DL_FUNC) &_RTMB_distr_dexp, 3},
     {"_RTMB_distr_dweibull", (DL_FUNC) &_RTMB_distr_dweibull, 4},
     {"_RTMB_distr_dbinom", (DL_FUNC) &_RTMB_distr_dbinom, 4},
@@ -700,6 +693,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_besselI", (DL_FUNC) &_RTMB_distr_besselI, 2},
     {"_RTMB_distr_besselJ", (DL_FUNC) &_RTMB_distr_besselJ, 2},
     {"_RTMB_distr_besselY", (DL_FUNC) &_RTMB_distr_besselY, 2},
+    {"_RTMB_Arith2", (DL_FUNC) &_RTMB_Arith2, 3},
+    {"_RTMB_Math1", (DL_FUNC) &_RTMB_Math1, 2},
+    {"_RTMB_Reduce1", (DL_FUNC) &_RTMB_Reduce1, 2},
+    {"_RTMB_matmul", (DL_FUNC) &_RTMB_matmul, 2},
+    {"_RTMB_dmvnorm0", (DL_FUNC) &_RTMB_dmvnorm0, 4},
+    {"_RTMB_dgmrf0", (DL_FUNC) &_RTMB_dgmrf0, 3},
+    {"_RTMB_SparseArith2", (DL_FUNC) &_RTMB_SparseArith2, 3},
     {"_rcpp_module_boot_mod_adfun", (DL_FUNC) &_rcpp_module_boot_mod_adfun, 0},
     {NULL, NULL, 0}
 };

@@ -33,18 +33,6 @@ independent <- function(x) {
     .Call(`_RTMB_independent`, x)
 }
 
-Arith2 <- function(x, y, op) {
-    .Call(`_RTMB_Arith2`, x, y, op)
-}
-
-Math1 <- function(x, op) {
-    .Call(`_RTMB_Math1`, x, op)
-}
-
-Reduce1 <- function(x, op) {
-    .Call(`_RTMB_Reduce1`, x, op)
-}
-
 getValues <- function(x) {
     .Call(`_RTMB_getValues`, x)
 }
@@ -55,22 +43,6 @@ getVariables <- function(x) {
 
 dbgprint <- function(x) {
     invisible(.Call(`_RTMB_dbgprint`, x))
-}
-
-matmul <- function(x, y) {
-    .Call(`_RTMB_matmul`, x, y)
-}
-
-dmvnorm0 <- function(x, s, give_log, keep = NULL) {
-    .Call(`_RTMB_dmvnorm0`, x, s, give_log, keep)
-}
-
-dgmrf0 <- function(x, q, give_log) {
-    .Call(`_RTMB_dgmrf0`, x, q, give_log)
-}
-
-SparseArith2 <- function(x, y, op) {
-    .Call(`_RTMB_SparseArith2`, x, y, op)
 }
 
 distr_dexp <- function(x, rate, give_log) {
@@ -199,5 +171,33 @@ distr_besselJ <- function(x, nu) {
 
 distr_besselY <- function(x, nu) {
     .Call(`_RTMB_distr_besselY`, x, nu)
+}
+
+Arith2 <- function(x, y, op) {
+    .Call(`_RTMB_Arith2`, x, y, op)
+}
+
+Math1 <- function(x, op) {
+    .Call(`_RTMB_Math1`, x, op)
+}
+
+Reduce1 <- function(x, op) {
+    .Call(`_RTMB_Reduce1`, x, op)
+}
+
+matmul <- function(x, y) {
+    .Call(`_RTMB_matmul`, x, y)
+}
+
+dmvnorm0 <- function(x, s, give_log, keep = NULL) {
+    .Call(`_RTMB_dmvnorm0`, x, s, give_log, keep)
+}
+
+dgmrf0 <- function(x, q, give_log) {
+    .Call(`_RTMB_dgmrf0`, x, q, give_log)
+}
+
+SparseArith2 <- function(x, y, op) {
+    .Call(`_RTMB_SparseArith2`, x, y, op)
 }
 
