@@ -251,10 +251,10 @@ Rcpp::ComplexVector dgmrf0 (const Rcpp::ComplexMatrix &x,
 }
 
 // [[Rcpp::export]]
-Rcpp::S4 SparseArith2(SEXP x,
-                      SEXP y,
-                      std::string op) {
-  Rcpp::S4 z;
+SEXP SparseArith2(SEXP x,
+                  SEXP y,
+                  std::string op) {
+  SEXP z;
   // Sparse OP Sparse
   if (is_adsparse(x) && is_adsparse(y)) {
     Eigen::SparseMatrix<ad> X = SparseInput(x);
@@ -277,6 +277,13 @@ Rcpp::S4 SparseArith2(SEXP x,
     ad Y = ScalarInput(y);
     if (!op.compare("*"))      z = SparseOutput(X * Y);
     else if (!op.compare("/"))      z = SparseOutput(X / Y);
+    else Rf_error("'%s' not implemented", op.c_str());
+  }
+  // Sparse OP Dense
+  else if (is_adsparse(x) && is_admatrix(y)) {
+    Eigen::SparseMatrix<ad> X = SparseInput(x);
+    ConstMapMatrix          Y = MatrixInput(y);
+    if (!op.compare("%*%")) z = MatrixOutput(X * Y);
     else Rf_error("'%s' not implemented", op.c_str());
   }
   else Rf_error("Wrong use of 'SparseArith2'");

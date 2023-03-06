@@ -594,7 +594,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // matmul
-Rcpp::ComplexVector matmul(const Rcpp::ComplexMatrix& x, const Rcpp::ComplexMatrix& y);
+Rcpp::ComplexMatrix matmul(const Rcpp::ComplexMatrix& x, const Rcpp::ComplexMatrix& y);
 RcppExport SEXP _RTMB_matmul(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -633,7 +633,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // SparseArith2
-Rcpp::S4 SparseArith2(SEXP x, SEXP y, std::string op);
+SEXP SparseArith2(SEXP x, SEXP y, std::string op);
 RcppExport SEXP _RTMB_SparseArith2(SEXP xSEXP, SEXP ySEXP, SEXP opSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
