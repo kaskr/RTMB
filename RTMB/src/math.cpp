@@ -267,6 +267,7 @@ Rcpp::S4 SparseArith2(SEXP x,
     Eigen::SparseMatrix<ad> Y = SparseInput(y);
     if (!op.compare("+"))      z = SparseOutput(X + Y);
     else if (!op.compare("-")) z = SparseOutput(X - Y);
+    else if (!op.compare("%*%")) z = SparseOutput(X * Y);
     else Rf_error("'%s' not implemented", op.c_str());
   }
   // scalar OP Sparse
