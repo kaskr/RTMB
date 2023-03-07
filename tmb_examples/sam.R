@@ -70,7 +70,7 @@ func <- function(
     ## Now take care of N
     nvar <- outer(1:stateDimN, 1:stateDimN,
                   function(i,j) (i==j)*varLogN[ keyVarLogN[1,i]+1L ])
-    predN <- magic(numeric(stateDimN)) ## FIXME (magic) !!!
+    predN <- numeric(stateDimN)
     for(i in 2:timeSteps) {
         if(stockRecruitmentModelCode==0){ ## straight RW
             predN[1] = logN[1, i-1]

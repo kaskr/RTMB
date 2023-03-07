@@ -61,7 +61,7 @@ fvade <- function(sde, grid) {
     ## Simpler (FIXME): rbind(0, cbind(diag(x), 0))
     subdiag <- function(x) {
         n <- length(x) + 1
-        m <- magic(matrix(0, n, n)) ## FIXME: magic !!!
+        m <- matrix(0, n, n)
         m[col(m) == row(m) - 1] <- x
         m
     }
