@@ -75,6 +75,7 @@ Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
    
    • ‘cumsum’, ‘cumprod’, ‘cummax’, ‘cummin’
 */
+ad rtmb_gamma(ad x) { return exp(lgamma(x)); }
 
 // [[Rcpp::export]]
 Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
@@ -115,6 +116,7 @@ Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
   // else if (!op.compare("asinh")) VCALL(asinh)
   // else if (!op.compare("atanh")) VCALL(atanh)
   else if (!op.compare("lgamma")) CALL(lgamma);
+  else if (!op.compare("gamma")) CALL(rtmb_gamma);
   else if (!op.compare("cumsum")) {
     if (n > 0) { Y[0] = X[0]; CUMC(+); }
   }
