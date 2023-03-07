@@ -120,6 +120,7 @@ setMethod("dnorm", "simref", function(x, mean, sd, log) {
 ## - base::diag works fine for AD matrix input (diagonal extraction and replacement)
 ## - However, matrix construction has issues
 
+##' @describeIn ADconstruct Equivalent of \link[base]{diag}
 setMethod("diag", signature(x="num.", nrow="num.", ncol="num."),
           function(x, nrow, ncol) {
               ans <- callNextMethod()
@@ -127,6 +128,7 @@ setMethod("diag", signature(x="num.", nrow="num.", ncol="num."),
               ans
           })
 
+##' @describeIn ADconstruct Equivalent of \link[base]{diag}
 setMethod("diag", signature(x="advector", nrow="ANY", ncol="ANY"),
           function(x, nrow, ncol) {
               ## Diagonal extraction: base::diag works fine
@@ -135,6 +137,29 @@ setMethod("diag", signature(x="advector", nrow="ANY", ncol="ANY"),
               ## Matrix creation
               ans <- advector(base::diag(seq_along(x), nrow=nrow, ncol=ncol))
               diag(ans) <- x
+              ans
+          })
+
+## Constructors that need 'magic'
+##' @describeIn ADconstruct Equivalent of \link[base]{numeric}
+setMethod("numeric", signature(length="num."),
+          function(length) {
+              ans <- callNextMethod()
+              if (ad_context()) ans <- advector(ans)
+              ans
+          })
+##' @describeIn ADconstruct Equivalent of \link[base]{matrix}
+setMethod("matrix", signature(data="num."),
+          function(data, nrow, ncol, byrow, dimnames) {
+              ans <- callNextMethod()
+              if (ad_context()) ans <- advector(ans)
+              ans
+          })
+##' @describeIn ADconstruct Equivalent of \link[base]{array}
+setMethod("array", signature(data="num."),
+          function(data, dim, dimnames) {
+              ans <- callNextMethod()
+              if (ad_context()) ans <- advector(ans)
               ans
           })
 

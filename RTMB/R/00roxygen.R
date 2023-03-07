@@ -61,6 +61,22 @@ NULL
 ##' rev(x)           ## Implicit via '['
 NULL
 
+##' AD aware numeric constructors
+##'
+##' These base functions, that construct numeric like objects, have been modified to return AD objects when used inside an active AD context. This is necessary due to limitations in R's method dispatch machinery (\code{[<-} cannot dispatch on the \code{value} argument).
+##'
+##' @rdname ADconstruct
+##' @name ADconstruct
+##' @examples
+##' func <- function(t) {
+##'   x <- numeric(5)
+##'   print(class(x))
+##'   t
+##' }
+##' invisible(func(1))            ## 'numeric'
+##' invisible(MakeTape(func, 1))  ## 'advector'
+NULL
+
 ##' The AD tape
 ##'
 ##' The AD tape as an R function
