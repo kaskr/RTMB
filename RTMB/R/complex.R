@@ -195,6 +195,23 @@ dgmrf <- function(x, mu, Q, log=FALSE) {
     anstype( dgmrf0(advector(x0), as(Q, "adsparse"), log) )
 }
 
+##' @describeIn Distributions Conway-Maxwell-Poisson. Calculate density.
+dcompois <- function(x, mode, nu, log = FALSE) {
+  loglambda <- nu * log(mode)
+  ans <- x * loglambda - nu * lfactorial(x)
+  ans <- ans - compois_calc_logZ(loglambda, nu)
+  if (log) ans else exp(ans)
+}
+
+##' @describeIn Distributions Conway-Maxwell-Poisson. Calculate density parameterized via the mean.
+dcompois2 <- function(x, mean, nu, log = FALSE) {
+  logmean <- log(mean)
+  loglambda <- compois_calc_loglambda(logmean, nu)
+  ans <- x * loglambda - nu * lfactorial(x)
+  ans <- ans - compois_calc_logZ(loglambda, nu)
+  if (log) ans else exp(ans)
+}
+
 ## Low level version: Everything available
 .MakeTape <- function(f, x) {
     F <- new(adfun)
