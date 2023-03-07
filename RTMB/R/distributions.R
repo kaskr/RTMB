@@ -617,3 +617,15 @@ scale <-  advector ( scale )
 log <-  as.logical ( log )
 distr_dlgamma ( x, shape, scale, log )
 }
+##' @describeIn Distributions AD implementation
+compois_calc_logZ <- function( loglambda, nu ) {
+loglambda <-  advector ( loglambda )
+nu <-  advector ( nu )
+distr_compois_calc_logZ ( loglambda, nu )
+}
+##' @describeIn Distributions AD implementation
+compois_calc_loglambda <- function( logmean, nu ) {
+logmean <-  advector ( logmean )
+nu <-  advector ( nu )
+distr_compois_calc_loglambda ( logmean, nu )
+}

@@ -556,6 +556,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// distr_compois_calc_logZ
+Rcpp::ComplexVector distr_compois_calc_logZ(Rcpp::ComplexVector loglambda, Rcpp::ComplexVector nu);
+RcppExport SEXP _RTMB_distr_compois_calc_logZ(SEXP loglambdaSEXP, SEXP nuSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type loglambda(loglambdaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type nu(nuSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_compois_calc_logZ(loglambda, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_compois_calc_loglambda
+Rcpp::ComplexVector distr_compois_calc_loglambda(Rcpp::ComplexVector logmean, Rcpp::ComplexVector nu);
+RcppExport SEXP _RTMB_distr_compois_calc_loglambda(SEXP logmeanSEXP, SEXP nuSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type logmean(logmeanSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type nu(nuSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_compois_calc_loglambda(logmean, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Arith2
 Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector& x, const Rcpp::ComplexVector& y, std::string op);
 RcppExport SEXP _RTMB_Arith2(SEXP xSEXP, SEXP ySEXP, SEXP opSEXP) {
@@ -704,6 +728,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_besselI", (DL_FUNC) &_RTMB_distr_besselI, 2},
     {"_RTMB_distr_besselJ", (DL_FUNC) &_RTMB_distr_besselJ, 2},
     {"_RTMB_distr_besselY", (DL_FUNC) &_RTMB_distr_besselY, 2},
+    {"_RTMB_distr_compois_calc_logZ", (DL_FUNC) &_RTMB_distr_compois_calc_logZ, 2},
+    {"_RTMB_distr_compois_calc_loglambda", (DL_FUNC) &_RTMB_distr_compois_calc_loglambda, 2},
     {"_RTMB_Arith2", (DL_FUNC) &_RTMB_Arith2, 3},
     {"_RTMB_Math1", (DL_FUNC) &_RTMB_Math1, 2},
     {"_RTMB_Reduce1", (DL_FUNC) &_RTMB_Reduce1, 2},

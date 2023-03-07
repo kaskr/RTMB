@@ -472,3 +472,31 @@ ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = besselY(X1[i % n1], X2[i % n2]);
 return as_advector(ans);
 }
+// [[Rcpp::export]]
+Rcpp::ComplexVector distr_compois_calc_logZ ( Rcpp::ComplexVector loglambda, Rcpp::ComplexVector nu )
+{
+int n1=loglambda.size();
+int n2=nu.size();
+int nmax = std::max({n1, n2});
+int nmin = std::min({n1, n2});
+int n = (nmin == 0 ? 0 : nmax);
+Rcpp::ComplexVector ans(n);
+const ad* X1 = adptr(loglambda); const ad* X2 = adptr(nu);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = compois_calc_logZ(X1[i % n1], X2[i % n2]);
+return as_advector(ans);
+}
+// [[Rcpp::export]]
+Rcpp::ComplexVector distr_compois_calc_loglambda ( Rcpp::ComplexVector logmean, Rcpp::ComplexVector nu )
+{
+int n1=logmean.size();
+int n2=nu.size();
+int nmax = std::max({n1, n2});
+int nmin = std::min({n1, n2});
+int n = (nmin == 0 ? 0 : nmax);
+Rcpp::ComplexVector ans(n);
+const ad* X1 = adptr(logmean); const ad* X2 = adptr(nu);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = compois_calc_loglambda(X1[i % n1], X2[i % n2]);
+return as_advector(ans);
+}

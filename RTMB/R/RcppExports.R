@@ -173,6 +173,14 @@ distr_besselY <- function(x, nu) {
     .Call(`_RTMB_distr_besselY`, x, nu)
 }
 
+distr_compois_calc_logZ <- function(loglambda, nu) {
+    .Call(`_RTMB_distr_compois_calc_logZ`, loglambda, nu)
+}
+
+distr_compois_calc_loglambda <- function(logmean, nu) {
+    .Call(`_RTMB_distr_compois_calc_loglambda`, logmean, nu)
+}
+
 Arith2 <- function(x, y, op) {
     .Call(`_RTMB_Arith2`, x, y, op)
 }
