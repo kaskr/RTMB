@@ -6,7 +6,7 @@
 \alias{RTMB}
 \title{RTMB: R bindings for 'TMB'}
 \description{
-The package 'RTMB' provides a native R interface for *a subset of*
+The package 'RTMB' provides a native R interface for \emph{a subset of}
 'TMB' so you can avoid coding in C++.  'RTMB' only affects the
 'TMB' function 'MakeADFun' that builds the objective function. Once
 'MakeADFun' has been invoked, everything else is \emph{exactly the same}
@@ -15,5 +15,5 @@ and \emph{models run as fast} as if coded in C++.
 \author{
 Kasper Kristensen
 
-Maintainer: <kaskr@dtu.dk>
+Maintainer: \href{mailto:kaskr@dtu.dk}{kaskr@dtu.dk}
 }

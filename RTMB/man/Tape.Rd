@@ -39,13 +39,17 @@ The tape can be constructed using \code{F <- MakeTape(f, x)} where \code{f} is a
 Having constructed a tape F, a number of methods are available:
 
 Evaluation:
-- Normal function evaluation 'F(x)' for numeric input.
-- AD evaluation 'F(x)' as part of other tapes.
-- Jacobian calculations using 'F$jacobian(x)'.
+\itemize{
+\item Normal function evaluation 'F(x)' for numeric input.
+\item AD evaluation 'F(x)' as part of other tapes.
+\item Jacobian calculations using 'F$jacobian(x)'.
+}
 
 Transformation:
-- Jacobian function transformation 'F$jacfun()'
-- Laplace approximation transformation 'F$laplace()'. Also allows Saddle Point Approximation (SPA).
+\itemize{
+\item Jacobian function transformation 'F$jacfun()'
+\item Laplace approximation transformation 'F$laplace()'. Also allows Saddle Point Approximation (SPA).
+}
 }
 \section{Methods (by generic)}{
 \itemize{

@@ -9,3 +9,4 @@ Description: This package provides a native R interface to a subset of 'TMB'.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.9), Matrix, methods, TMB (>= 1.9.2), MASS
 LinkingTo: Rcpp, TMB, RcppEigen
+Roxygen: list(markdown = TRUE)

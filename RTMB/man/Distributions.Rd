@@ -313,11 +313,13 @@ Argument recycling follows the R standard (although wihout any warnings).
 }
 \details{
 Specific documentation of the functions and arguments should be looked up elsewhere:
-- All S4 methods behave as the corresponding functions in the
-  \bold{stats} package. However, some arguements may not be
-  implemented in the AD case (e.g. \code{lower-tail}).
-- Other funtions behave as the corresponding TMB versions for
-  which documentation should be looked up online.
+\itemize{
+\item All S4 methods behave as the corresponding functions in the
+\bold{stats} package. However, some arguements may not be
+implemented in the AD case (e.g. \code{lower-tail}).
+\item Other funtions behave as the corresponding TMB versions for
+which documentation should be looked up online.
+}
 }
 \section{Functions}{
 \itemize{
