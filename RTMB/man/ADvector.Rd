@@ -20,6 +20,8 @@
 \alias{is.numeric.advector}
 \alias{Complex.advector}
 \alias{Summary.advector}
+\alias{diff.advector}
+\alias{print.advector}
 \title{The AD vector and its methods}
 \usage{
 \S4method{ifelse}{num,ad,ad}(test, yes, no)
@@ -57,6 +59,10 @@ advector(x)
 \method{Complex}{advector}(z)
 
 \method{Summary}{advector}(..., na.rm = FALSE)
+
+\method{diff}{advector}(x, lag = 1L, differences = 1L, ...)
+
+\method{print}{advector}(x, ...)
 }
 \arguments{
 \item{test}{\code{logical} vector}
@@ -88,6 +94,10 @@ advector(x)
 \item{na.rm}{Must be FALSE (default)}
 
 \item{z}{Complex (not allowed)}
+
+\item{lag}{As \link[base]{diff}}
+
+\item{differences}{As \link[base]{diff}}
 }
 \description{
 An \code{advector} is a class used behind the scenes to replace
@@ -138,6 +148,10 @@ re-used for AD vectors.
 \item \code{Complex(advector)}: \link{Complex} operations are not allowed and will throw an error.
 
 \item \code{Summary(advector)}: Non differentiable \link{Summary} operations (e.g. \code{min} \code{max}) are not allowed and will throw an error.
+
+\item \code{diff(advector)}: Equivalent of \link[base]{diff}
+
+\item \code{print(advector)}: Print method
 
 }}
 \examples{

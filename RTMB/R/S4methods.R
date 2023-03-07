@@ -87,6 +87,7 @@ setMethod( "crossprod", signature("advector"),
 
 ## Show general idea which is automated in 'distributions.R'
 ## First we generate the version we want for AD types (dot signifies 'default argument')
+##' @describeIn Distributions AD implementation of \link[stats]{dnorm}
 setMethod("dnorm", signature("ad", "ad.", "ad.", "logical."),
           function(x, mean, sd, log) {
               r <- (x - mean) / sd
@@ -94,15 +95,18 @@ setMethod("dnorm", signature("ad", "ad.", "ad.", "logical."),
               if (log) ans else exp(ans)
           })
 ## This matches 'too much', so we fix by adding a specialization:
+##' @describeIn Distributions Default method
 setMethod("dnorm", signature("num", "num.", "num.", "logical."),
           function(x, mean, sd, log) {
               stats::dnorm(x, mean, sd, log)
           })
 ## For S4 generics we add the OSA version like this:
+##' @describeIn Distributions OSA implementation
 setMethod("dnorm", "osa", function(x, mean, sd, log) {
     dGenericOSA(.Generic, x=x, mean=mean, sd=sd, log=log)
 })
 ## For S4 generics we add the simref version like this:
+##' @describeIn Distributions Simulation implementation. Modifies \code{x} and returns zero.
 setMethod("dnorm", "simref", function(x, mean, sd, log) {
     ## works when x, mean or sd are simref
     if (inherits(mean, "simref")) {

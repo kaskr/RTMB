@@ -122,10 +122,14 @@ Summary.advector <- function(..., na.rm = FALSE)
 ## If an overload has issues we can patch it:
 diff_patch <- base::diff.default
 environment(diff_patch) <- local({unclass <- function(x)x; environment()})
+##' @describeIn ADvector Equivalent of \link[base]{diff}
+##' @param lag As \link[base]{diff}
+##' @param differences As \link[base]{diff}
 diff.advector <- function (x, lag = 1L, differences = 1L, ...) {
     diff_patch(x, lag = 1L, differences = 1L, ...)
 }
 
+##' @describeIn ADvector Print method
 print.advector <- function (x, ...)  {
     cat("class='advector'\n")
     y <- .adv2num(x)
@@ -274,6 +278,8 @@ MakeTape <- function(f, x) {
 }
 ##' @describeIn Tape Get a tape method.
 "$.Tape" <- function(x, name) attr(x, "methods")[[name]]
+##' @describeIn Tape Print method
+##' @param ... Ignored
 print.Tape <- function(x,...){
     cat("Object of class='Tape'\n")
     ptr <- environment(x)$mod$ptrTMB()$ptr

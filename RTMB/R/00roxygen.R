@@ -157,6 +157,7 @@ NULL
 ##' @param log_var_minus_mu parameter
 ##' @param lambda parameter
 ##' @param mean parameter
+##' @param mode parameter
 ##' @param sd parameter
 ##' @param scale parameter
 ##' @param log Logical; Return log density/probability?

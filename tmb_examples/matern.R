@@ -11,7 +11,7 @@ matern <- function (u, phi, kappa)
     uphi <- ifelse(u > 0, (((2^(-(kappa - 1)))/ifelse(0, Inf, 
         gamma(kappa))) * (uphi^kappa) * besselK(x = uphi, nu = kappa)), 
         1)
-    if (!ad_context()) ## FIXME
+    if (!RTMB:::ad_context()) ## FIXME
         uphi[u > 600 * phi] <- 0
     return(uphi)
 }

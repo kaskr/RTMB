@@ -4,12 +4,15 @@
 \alias{Tape}
 \alias{MakeTape}
 \alias{$.Tape}
+\alias{print.Tape}
 \alias{TapeConfig}
 \title{The AD tape}
 \usage{
 MakeTape(f, x)
 
 \method{$}{Tape}(x, name)
+
+\method{print}{Tape}(x, ...)
 
 TapeConfig(
   comparison = c("forbid", "tape", "allow"),
@@ -23,6 +26,8 @@ TapeConfig(
 \item{x}{numeric vector}
 
 \item{name}{Name of a tape method}
+
+\item{...}{Ignored}
 
 \item{comparison}{Set behaviour of AD comparison (\code{">"},\code{"=="}, etc).}
 
@@ -54,6 +59,8 @@ Transformation:
 \section{Methods (by generic)}{
 \itemize{
 \item \code{$}: Get a tape method.
+
+\item \code{print(Tape)}: Print method
 
 }}
 \section{Functions}{

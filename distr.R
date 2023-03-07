@@ -16,6 +16,9 @@ df <- subset(df, !(name=="qnorm" & npar==1) ) ## bogus
 skip <- c("pSHASHo", "qSHASHo", "dnorm", "pnorm_approx", "qnorm_approx", "dzipois") ## RTMB uses a dnorm implementation in R
 df <- subset(df, !(name %in% skip))
 
+skip <- c("compois_calc_logZ", "compois_calc_loglambda")
+df$export <- !(df$name %in% skip)
+
 getsig <- function(name) {
     x <- sub(paste0(".*Type ",name,"\\((.*?)\\).*"),"\\1",tmb1)
     x <- gsub("[ ]*( )","\\1", x)
@@ -99,6 +102,7 @@ df$signature <- sub("give_log","log",df$signature)
 string <- function(x)paste0('"',x,'"')
 getRmethod <- function(i) {
     name <- df$name[i]
+    export <- df$export[i]
     is_density <- (substring(name,1,1) == "d")
     stats <- exists(name,"package:stats")
     if(stats) {
@@ -130,7 +134,7 @@ getRmethod <- function(i) {
             paste(a1, "<- ",cast,"(",a1,")"),
             paste(newname(name),"(",df$signature[i],")"), "}")
         meth <- c(
-            "##' @describeIn Distributions AD implementation",
+            "##' @describeIn Distributions AD implementation"[export],
             def)
         return (meth)
     }
