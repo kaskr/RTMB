@@ -68,6 +68,7 @@ OBS <- function(x) {
 ##' \code{obs <- new("osa", x=advector(matrix(1:10,2)), keep = cbind(rep(TRUE,10),FALSE,FALSE))}
 ##' the 'keep' attribute will be adjusted accordingly
 ##' \code{obs[,1:2]}
+##' @param x Object of class 'osa'
 "[.osa" <- function(x, ...) {
     keep <- x@keep
     ord <- attr(keep, "ord")

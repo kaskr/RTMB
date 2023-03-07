@@ -49,6 +49,25 @@ simref(n)
 
 \method{Summary}{simref}(..., na.rm = FALSE)
 }
+\arguments{
+\item{n}{Length}
+
+\item{x}{Object of class 'simref'}
+
+\item{value}{Replacement (numeric)}
+
+\item{...}{Extra arguments}
+
+\item{e1}{First argument}
+
+\item{e2}{Second argument}
+
+\item{lag}{As \link[base]{diff}}
+
+\item{differences}{As \link[base]{diff}}
+
+\item{na.rm}{Ignored}
+}
 \description{
 An RTMB objective function can be run in 'simulation mode' where standard likelihood evaluation is replaced by corresponding random number generation. This facilitates automatic simulation under some restrictions. Simulations can be obtained directly from the model object by \code{obj$simulate()} or used indirectly via \link{checkConsistency}.
 }

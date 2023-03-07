@@ -23,6 +23,8 @@ oneStepPredict(
 \item{data.term.indicator}{Auto detected - use the default}
 
 \item{...}{Passed to \code{TMB::}\link[TMB]{oneStepPredict} - \bold{please carefully read the documentation}, especially the \code{method} argument.}
+
+\item{x}{Object of class 'osa'}
 }
 \description{
 OSA residuals are computed using the function

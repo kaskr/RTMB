@@ -113,6 +113,7 @@ prod.advector <- function(x, ..., na.rm) {
 ##' @describeIn ADvector Makes \code{cov2cor()} work. FIXME: Any unwanted side-effects with this?
 is.numeric.advector <- function(x) TRUE
 ##' @describeIn ADvector \link{Complex} operations are not allowed and will throw an error.
+##' @param z Complex (not allowed)
 Complex.advector <- function(z)
     stop("'advector' does not allow complex operations")
 ##' @describeIn ADvector Non differentiable \link{Summary} operations (e.g. \code{min} \code{max}) are not allowed and will throw an error.

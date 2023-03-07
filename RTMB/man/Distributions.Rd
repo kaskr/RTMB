@@ -4,6 +4,8 @@
 \alias{Distributions}
 \alias{dmvnorm}
 \alias{dgmrf}
+\alias{dcompois}
+\alias{dcompois2}
 \alias{dexp,ad,ad.,logical.-method}
 \alias{dexp,num,num.,logical.-method}
 \alias{dexp,osa,ANY,ANY-method}
@@ -81,11 +83,17 @@
 \alias{dnbinom2}
 \alias{dnbinom_robust}
 \alias{dlgamma}
+\alias{compois_calc_logZ}
+\alias{compois_calc_loglambda}
 \title{Distributions and special functions for which AD is implemented}
 \usage{
 dmvnorm(x, mu, Sigma, log = FALSE)
 
 dgmrf(x, mu, Q, log = FALSE)
+
+dcompois(x, mode, nu, log = FALSE)
+
+dcompois2(x, mean, nu, log = FALSE)
 
 \S4method{dexp}{ad,ad.,logical.}(x, rate = 1, log = FALSE)
 
@@ -240,6 +248,10 @@ dnbinom2(x, mu, var, log)
 dnbinom_robust(x, log_mu, log_var_minus_mu, log)
 
 dlgamma(x, shape, scale, log)
+
+compois_calc_logZ(loglambda, nu)
+
+compois_calc_loglambda(logmean, nu)
 }
 \arguments{
 \item{x}{observation vector}
@@ -251,6 +263,10 @@ dlgamma(x, shape, scale, log)
 \item{log}{Logical; Return log density/probability?}
 
 \item{Q}{Sparse precision matrix}
+
+\item{nu}{parameter}
+
+\item{mean}{parameter}
 
 \item{rate}{parameter}
 
@@ -278,13 +294,9 @@ dlgamma(x, shape, scale, log)
 
 \item{q}{vector of quantiles}
 
-\item{mean}{parameter}
-
 \item{sd}{parameter}
 
 \item{p}{parameter}
-
-\item{nu}{parameter}
 
 \item{logit_p}{parameter}
 
@@ -326,6 +338,10 @@ which documentation should be looked up online.
 \item \code{dmvnorm()}: Multivariate normal distribution. \link{OSA-residuals} can be used for argument \code{x}.
 
 \item \code{dgmrf()}: Multivariate normal distribution. OSA is \emph{not} implemented.
+
+\item \code{dcompois()}: Conway-Maxwell-Poisson. Calculate density.
+
+\item \code{dcompois2()}: Conway-Maxwell-Poisson. Calculate density parameterized via the mean.
 
 \item \code{dexp(x = ad, rate = ad., log = logical.)}: AD implementation of \link[stats]{dexp}
 
@@ -560,6 +576,10 @@ which documentation should be looked up online.
 \item \code{dnbinom_robust()}: AD implementation
 
 \item \code{dlgamma()}: AD implementation
+
+\item \code{compois_calc_logZ()}: AD implementation
+
+\item \code{compois_calc_loglambda()}: AD implementation
 
 }}
 \examples{

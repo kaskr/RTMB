@@ -7,6 +7,7 @@
     x
 }
 ##' @describeIn Simulation Construct \code{simref}
+##' @param n Length
 simref <- function(n) {
     parent <- NULL
     value <- rep(NA, n)
@@ -28,6 +29,8 @@ simref <- function(n) {
     asS4(structure(environment(), class="simref"))
 }
 ##' @describeIn Simulation Equivalent of \link[base]{dim<-}
+##' @param x Object of class 'simref'
+##' @param value Replacement (numeric)
 "dim<-.simref" <- function(x, value) {
     dim(x$value) <- value
     x
@@ -46,6 +49,7 @@ as.array.simref<-function(x,...){.x<-x;x<-x$value;.x$value<-NextMethod();.x}
 ##' @describeIn Simulation Equivalent of \link[base]{is.na}
 is.na.simref <- function(x)is.na(x$value)
 ##' @describeIn Simulation Equivalent of \link[base]{[}
+##' @param ... Extra arguments
 "[.simref" <- function(x, ...) {
     parent <- x
     x <- seq_along(parent$value)
@@ -89,6 +93,8 @@ setMethod("show", "simref", function(object) {
     x
 }
 ##' @describeIn Simulation Equivalent of \link[base]{Ops}
+##' @param e1 First argument
+##' @param e2 Second argument
 Ops.simref <- function(e1, e2) {
     call <- sys.call()
     call[[1]] <- as.name(.Generic)
@@ -206,10 +212,13 @@ t.simref <- function(x) {
     y
 }
 ##' @describeIn Simulation Equivalent of \link[base]{diff}
+##' @param lag As \link[base]{diff}
+##' @param differences As \link[base]{diff}
 diff.simref <- function (x, lag = 1L, differences = 1L, ...) {
     diff_patch(x, lag = 1L, differences = 1L, ...)
 }
 ##' @describeIn Simulation \link{Summary} operations are not invertible and will throw an error.
+##' @param na.rm Ignored
 Summary.simref <- function(..., na.rm = FALSE)
     stop("Class 'simref' does not allow operation '", .Generic, "' (argument must be fully simulated)")
 

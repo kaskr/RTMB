@@ -2,7 +2,8 @@
 % Please edit documentation in R/00roxygen.R, R/S4methods.R, R/complex.R
 \name{ADvector}
 \alias{ADvector}
-\alias{ifelse,logical,advector,advector-method}
+\alias{ifelse,num,ad,ad-method}
+\alias{ifelse,num,num,num-method}
 \alias{outer,advector,advector,missing-method}
 \alias{advector}
 \alias{Ops.advector}
@@ -21,7 +22,9 @@
 \alias{Summary.advector}
 \title{The AD vector and its methods}
 \usage{
-\S4method{ifelse}{logical,advector,advector}(test, yes, no)
+\S4method{ifelse}{num,ad,ad}(test, yes, no)
+
+\S4method{ifelse}{num,num,num}(test, yes, no)
 
 \S4method{outer}{advector,advector,missing}(X, Y)
 
@@ -62,6 +65,10 @@ advector(x)
 
 \item{no}{\code{advector}}
 
+\item{X}{As \link[base]{outer}}
+
+\item{Y}{As \link[base]{outer}}
+
 \item{x}{numeric or advector}
 
 \item{e1}{advector}
@@ -79,6 +86,8 @@ advector(x)
 \item{value}{Replacement value implicitly converted to AD}
 
 \item{na.rm}{Must be FALSE (default)}
+
+\item{z}{Complex (not allowed)}
 }
 \description{
 An \code{advector} is a class used behind the scenes to replace
@@ -94,7 +103,9 @@ re-used for AD vectors.
 }
 \section{Functions}{
 \itemize{
-\item \code{ifelse(test = logical, yes = advector, no = advector)}: Equivalent of \link[base]{ifelse}
+\item \code{ifelse(test = num, yes = ad, no = ad)}: Equivalent of \link[base]{ifelse}
+
+\item \code{ifelse(test = num, yes = num, no = num)}: Default method
 
 \item \code{outer(X = advector, Y = advector, FUN = missing)}: Equivalent of \link[base]{outer}
 

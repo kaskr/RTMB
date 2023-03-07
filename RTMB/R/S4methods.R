@@ -121,6 +121,9 @@ setMethod("dnorm", "simref", function(x, mean, sd, log) {
 ## - However, matrix construction has issues
 
 ##' @describeIn ADconstruct Equivalent of \link[base]{diag}
+##' @param x As \link[base]{diag}
+##' @param nrow As \link[base]{diag}
+##' @param ncol As \link[base]{diag}
 setMethod("diag", signature(x="num.", nrow="num.", ncol="num."),
           function(x, nrow, ncol) {
               ans <- callNextMethod()
@@ -142,6 +145,7 @@ setMethod("diag", signature(x="advector", nrow="ANY", ncol="ANY"),
 
 ## Constructors that need 'magic'
 ##' @describeIn ADconstruct Equivalent of \link[base]{numeric}
+##' @param length As \link[base]{numeric}
 setMethod("numeric", signature(length="num."),
           function(length) {
               ans <- callNextMethod()
@@ -149,6 +153,8 @@ setMethod("numeric", signature(length="num."),
               ans
           })
 ##' @describeIn ADconstruct Equivalent of \link[base]{matrix}
+##' @param data As \link[base]{matrix}
+##' @param byrow As \link[base]{matrix}
 setMethod("matrix", signature(data="num."),
           function(data, nrow, ncol, byrow, dimnames) {
               ans <- callNextMethod()
@@ -156,6 +162,9 @@ setMethod("matrix", signature(data="num."),
               ans
           })
 ##' @describeIn ADconstruct Equivalent of \link[base]{array}
+##' @param data As \link[base]{array}
+##' @param dim As \link[base]{array}
+##' @param dimnames As \link[base]{array}
 setMethod("array", signature(data="num."),
           function(data, dim, dimnames) {
               ans <- callNextMethod()
@@ -197,5 +206,7 @@ setMethod("ifelse", signature(test="num", yes="num", no="num"),
           })
 
 ##' @describeIn ADvector Equivalent of \link[base]{outer}
+##' @param X As \link[base]{outer}
+##' @param Y As \link[base]{outer}
 setMethod("outer", signature(X="advector", Y="advector", FUN="missing"),
           function (X, Y) outer(X, Y, function(x, y) x * y))

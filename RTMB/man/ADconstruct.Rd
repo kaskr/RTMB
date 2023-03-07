@@ -19,6 +19,23 @@
 
 \S4method{array}{num.}(data = NA, dim = length(data), dimnames = NULL)
 }
+\arguments{
+\item{x}{As \link[base]{diag}}
+
+\item{nrow}{As \link[base]{diag}}
+
+\item{ncol}{As \link[base]{diag}}
+
+\item{length}{As \link[base]{numeric}}
+
+\item{data}{As \link[base]{array}}
+
+\item{byrow}{As \link[base]{matrix}}
+
+\item{dimnames}{As \link[base]{array}}
+
+\item{dim}{As \link[base]{array}}
+}
 \description{
 These base functions, that construct numeric like objects, have been modified to return AD objects when used inside an active AD context. This is necessary due to limitations in R's method dispatch machinery (\code{[<-} cannot dispatch on the \code{value} argument).
 }
