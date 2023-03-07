@@ -182,11 +182,18 @@ setMethod("sapply", signature(X="advector"),
 ##' @param test \code{logical} vector
 ##' @param yes \code{advector}
 ##' @param no \code{advector}
-setMethod("ifelse", signature(test="logical", yes="advector", no="advector"),
+setMethod("ifelse", signature(test="num", yes="ad", no="ad"),
           function(test, yes, no) {
+              yes <- advector(yes)
+              no <- advector(no)
               ans <- callNextMethod()
               class(ans) <- "advector"
               ans
+          })
+##' @describeIn ADvector Default method
+setMethod("ifelse", signature(test="num", yes="num", no="num"),
+          function(test, yes, no) {
+              base::ifelse(test, yes, no)
           })
 
 ##' @describeIn ADvector Equivalent of \link[base]{outer}
