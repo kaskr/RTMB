@@ -36,3 +36,11 @@ spde:
 
 sdv_multi:
 	cd tmb_examples; R --slave < sdv_multi.R
+
+cran-version:
+	sed -i 's/-DTMB_SAFEBOUNDS//g' RTMB/src/Makevars
+	R CMD build RTMB
+	git checkout RTMB/src/Makevars
+
+cran-check:
+	R CMD check --as-cran RTMB*.tar.gz

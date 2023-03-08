@@ -206,8 +206,8 @@ NULL
 ##' @name OSA-residuals
 ##' @examples
 ##' set.seed(1)
-##' rw <- cumsum(.5*rnorm(100))
-##' obs <- rpois(100, lambda=exp(rw))
+##' rw <- cumsum(.5*rnorm(20))
+##' obs <- rpois(20, lambda=exp(rw))
 ##' func <- function(p) {
 ##'   obs <- OBS(obs) ## Mark 'obs' for OSA calculation on request
 ##'   ans <- 0
@@ -217,7 +217,7 @@ NULL
 ##'   ans
 ##' }
 ##' obj <- MakeADFun(func,
-##'                  parameters=list(rw=rep(0,100), sd=1),
+##'                  parameters=list(rw=rep(0,20), sd=1),
 ##'                  random="rw")
 ##' nlminb(obj$par, obj$fn, obj$gr)
 ##' res <- oneStepPredict(obj,
