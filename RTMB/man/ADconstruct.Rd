@@ -6,6 +6,7 @@
 \alias{diag,advector,ANY,ANY-method}
 \alias{numeric,num.-method}
 \alias{matrix,num.-method}
+\alias{matrix,advector-method}
 \alias{array,num.-method}
 \title{AD aware numeric constructors}
 \usage{
@@ -16,6 +17,8 @@
 \S4method{numeric}{num.}(length = 0L)
 
 \S4method{matrix}{num.}(data = NA, nrow = 1, ncol = 1, byrow = FALSE, dimnames = NULL)
+
+\S4method{matrix}{advector}(data = NA, nrow = 1, ncol = 1, byrow = FALSE, dimnames = NULL)
 
 \S4method{array}{num.}(data = NA, dim = length(data), dimnames = NULL)
 }
@@ -48,6 +51,8 @@ These base functions, that construct numeric like objects, have been modified to
 \item \code{numeric(num.)}: Equivalent of \link[base]{numeric}
 
 \item \code{matrix(num.)}: Equivalent of \link[base]{matrix}
+
+\item \code{matrix(advector)}: Equivalent of \link[base]{matrix}
 
 \item \code{array(num.)}: Equivalent of \link[base]{array}
 

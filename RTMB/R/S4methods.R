@@ -10,7 +10,9 @@ setAs("sparseMatrix", "adsparse",
 
 ##setClassUnion("advector_castable", c("advector", "numeric"))
 
+##' @describeIn ADmatrix AD matrix exponential
 setMethod("expm", "advector", function(x) math_expm(x))
+##' @describeIn ADmatrix AD matrix exponential
 setMethod("expm", "adsparse", function(x) math_expm(x))
 
 ## Methods sparseMatrix -> adsparse
@@ -32,6 +34,7 @@ setMethod("Ops",
           function(e1, e2) callGeneric( e1, as(e2, "adsparse") ) )
 
 ## Methods adsparse
+##' @describeIn ADmatrix AD sparse matrix dimension
 setMethod("dim", "adsparse", function(x) x@Dim)
 
 setMethod("Ops",
@@ -48,6 +51,7 @@ setMethod("Ops",
               SparseArith2(e1, e2, .Generic)
           })
 
+##' @describeIn ADmatrix AD matrix multiply
 setMethod("%*%",
           signature("adsparse", "ad"),
           function(x, y) {
@@ -56,6 +60,7 @@ setMethod("%*%",
                   stop("non-conformable arguments")
               SparseArith2(x, y, .Generic)
           })
+##' @describeIn ADmatrix AD matrix multiply
 setMethod("%*%",
           signature("ad", "adsparse"),
           function(x, y) {
@@ -64,6 +69,7 @@ setMethod("%*%",
                   stop("non-conformable arguments")
               SparseArith2(x, y, .Generic)
           })
+##' @describeIn ADmatrix AD matrix multiply
 setMethod("%*%",
           signature("adsparse", "adsparse"),
           function(x, y) {
@@ -71,7 +77,7 @@ setMethod("%*%",
                   stop("non-conformable arguments")
               SparseArith2(x, y, .Generic)
           })
-
+##' @describeIn ADmatrix AD matrix multiply
 setMethod("%*%",
           signature("ad", "ad"),
           function(x, y) {
@@ -79,9 +85,10 @@ setMethod("%*%",
               y <- as.matrix(y)
               matmul(advector(x), advector(y))
           })
-
+##' @describeIn ADmatrix AD matrix multiply
 setMethod("tcrossprod", signature("advector"),
           function(x, y=NULL) {if (is.null(y)) y <- x; x %*% t(y)} )
+##' @describeIn ADmatrix AD matrix multiply
 setMethod( "crossprod", signature("advector"),
           function(x, y=NULL) {if (is.null(y)) y <- x; t(x) %*% y} )
 
@@ -165,6 +172,13 @@ setMethod("matrix", signature(data="num."),
               if (ad_context()) ans <- advector(ans)
               ans
           })
+##' @describeIn ADconstruct Equivalent of \link[base]{matrix}
+setMethod("matrix", signature(data="advector"),
+          function(data, nrow, ncol, byrow, dimnames) {
+              ans <- callNextMethod()
+              class(ans) <- "advector"
+              ans
+          })
 ##' @describeIn ADconstruct Equivalent of \link[base]{array}
 ##' @param data As \link[base]{array}
 ##' @param dim As \link[base]{array}
@@ -175,21 +189,28 @@ setMethod("array", signature(data="num."),
               if (ad_context()) ans <- advector(ans)
               ans
           })
-
+##' @describeIn ADapply As \link[base]{apply}
+##' @param X As \link[base]{apply}
+##' @param MARGIN As \link[base]{apply}
+##' @param FUN As \link[base]{apply}
+##' @param ... As \link[base]{apply}
 setMethod("apply", signature(X="advector"),
           function (X, MARGIN, FUN, ...)  {
               ans <- callNextMethod()
               if (is.complex(ans))
                   class(ans) <- "advector"
               ans
-})
+          })
+##' @describeIn ADapply As \link[base]{sapply}
+##' @param simplify As \link[base]{sapply}
+##' @param USE.NAMES As \link[base]{sapply}
 setMethod("sapply", signature(X="advector"),
           function (X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE) {
               ans <- callNextMethod()
               if (is.complex(ans))
                   class(ans) <- "advector"
               ans
-})
+          })
 
 ##' @describeIn ADvector Equivalent of \link[base]{ifelse}
 ##' @param test \code{logical} vector

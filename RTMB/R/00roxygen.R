@@ -61,6 +61,21 @@ NULL
 ##' rev(x)           ## Implicit via '['
 NULL
 
+##' AD matrix methods (sparse and dense)
+##'
+##' Matrices (**base** package) and sparse matrices (**Matrix** package) can be used inside the \code{RTMB} objective function as part of the calculations. Behind the scenes these R objects are converted to AD representations when needed. AD objects have a temporary lifetime, so you probably won't see them / need to know them. The only important thing is which *methods* work for the objects.
+##'
+##' @param x matrix (sparse or dense)
+##' @param y matrix (sparse or dense)
+##' @rdname ADmatrix
+##' @name ADmatrix
+##' @examples
+##' F <- MakeTape(function(x) matrix(1:9,3,3) %*% x, numeric(3))
+##' F$jacobian(1:3)
+##' F <- MakeTape(function(x) Matrix::expm(matrix(x,2,2)), numeric(4))
+##' F$jacobian(1:4)
+NULL
+
 ##' AD aware numeric constructors
 ##'
 ##' These base functions, that construct numeric like objects, have been modified to return AD objects when used inside an active AD context. This is necessary due to limitations in R's method dispatch machinery (\code{[<-} cannot dispatch on the \code{value} argument).
@@ -75,6 +90,17 @@ NULL
 ##' }
 ##' invisible(func(1))            ## 'numeric'
 ##' invisible(MakeTape(func, 1))  ## 'advector'
+NULL
+
+##' AD apply functions
+##'
+##' These **base** apply methods have been modified to keep the AD class attribute (which would otherwise be lost).
+##'
+##' @rdname ADapply
+##' @name ADapply
+##' @examples
+##' F <- MakeTape(function(x) apply(matrix(x,2,2), 2, sum), numeric(4))
+##' F$jacobian(1:4)
 NULL
 
 ##' The AD tape
