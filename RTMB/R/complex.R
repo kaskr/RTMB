@@ -558,3 +558,22 @@ REPORT_ENV <- reporter()
 ADREPORT <- ADREPORT_ENV$report
 ##' @describeIn TMB-interface Can be used inside the objective function to report quantities via the model object using \code{obj$report()}.
 REPORT <- REPORT_ENV$report
+
+##' @describeIn TMB-interface Can be used to assign all parameter or data objects from a list inside the objective function.
+##' @param warn Give a warning if overwriting an existing object?
+getAll <- function(..., warn=TRUE) {
+    fr <- parent.frame()
+    x <- c(...)
+    if (!is.list(x)) stop("'getAll' is for lists only")
+    nm <- names(x)
+    if (is.null(nm) || any(nm==""))
+        stop("'getAll' is for *named* lists only")
+    for (i in seq_along(x)) {
+        if (warn) {
+            if (!is.null(fr[[nm[i]]]))
+                warning("Object '", nm[i], "' already defined")
+        }
+        fr[[nm[i]]] <- x[[i]]
+    }
+    invisible(NULL)
+}

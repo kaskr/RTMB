@@ -116,18 +116,9 @@ hmm.filter <- function(A, grid, dt) {
 
 ## FIXME:
 colSums <- function(x) apply(x, 2, sum)
-## Helper to make all objects visible inside objective:
-## (Is this generally useful...?)
-getAll <- function(x) {
-    fr <- parent.frame()
-    for (nm in names(x))
-        fr[[nm]] <- x[[nm]]
-    invisible(NULL)
-}
 
 func <- function(parameters) {
-    getAll(parameters)
-    getAll(data)
+    getAll(parameters, data)
     sigmaX <- exp(logsX)
     sigmaY <- exp(logsY)
     ## Construct the SDE

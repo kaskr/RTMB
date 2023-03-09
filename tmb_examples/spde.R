@@ -36,16 +36,7 @@ Q_spde <- function(spde, kappa) {
   kappa_pow4 * spde$M0 + 2 * kappa_pow2 * spde$M1 + spde$M2    ## M0=G0, M1=G1, M2=G2
 }
 f <- function(parms) {
-    time <- data$time
-    notcens <- as.logical(data$notcens)
-    meshidxloc <- data$meshidxloc
-    X <- data$X
-    spde <- data$spde
-    beta <- parms$beta
-    log_tau <- parms$log_tau
-    log_kappa <- parms$log_kappa
-    log_omega <- parms$log_omega
-    x <- parms$x
+    getAll(parms, data)
     tau <- exp(log_tau)
     kappa <- exp(log_kappa)
     omega <- exp(log_omega)  ## Parameter of Weibull distribution

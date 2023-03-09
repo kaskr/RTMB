@@ -6,6 +6,7 @@
 \alias{sdreport}
 \alias{ADREPORT}
 \alias{REPORT}
+\alias{getAll}
 \alias{OBS}
 \alias{checkConsistency}
 \title{Interface to TMB}
@@ -25,6 +26,8 @@ sdreport(obj, ...)
 ADREPORT(x)
 
 REPORT(x)
+
+getAll(..., warn = TRUE)
 
 OBS(x)
 
@@ -48,6 +51,8 @@ checkConsistency(obj, ...)
 \item{obj}{TMB model object (output from \link{MakeADFun})}
 
 \item{x}{Observation object}
+
+\item{warn}{Give a warning if overwriting an existing object?}
 }
 \description{
 Interface to TMB
@@ -61,6 +66,8 @@ Interface to TMB
 \item \code{ADREPORT()}: Can be used inside the objective function to report quantities for which uncertainties will be calculated by \link{sdreport}.
 
 \item \code{REPORT()}: Can be used inside the objective function to report quantities via the model object using \code{obj$report()}.
+
+\item \code{getAll()}: Can be used to assign all parameter or data objects from a list inside the objective function.
 
 \item \code{OBS()}: Mark the observation
 Mark observation to be used by either \code{oneStepPredict} or by \code{obj$simulate}.
