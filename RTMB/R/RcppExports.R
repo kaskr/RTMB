@@ -181,6 +181,10 @@ distr_compois_calc_loglambda <- function(logmean, nu) {
     .Call(`_RTMB_distr_compois_calc_loglambda`, logmean, nu)
 }
 
+distr_rcompois <- function(loglambda, nu) {
+    .Call(`_RTMB_distr_rcompois`, loglambda, nu)
+}
+
 Arith2 <- function(x, y, op) {
     .Call(`_RTMB_Arith2`, x, y, op)
 }

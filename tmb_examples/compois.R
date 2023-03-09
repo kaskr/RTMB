@@ -19,6 +19,7 @@ func <- function(p) {
     nu <- exp(p$lognu)
     ADREPORT(mu)
     ADREPORT(nu)
+    x <- OBS(x)
     if (parameterization == "mode")
         -sum(dcompois(x, mu, nu, TRUE))
     else ## mean

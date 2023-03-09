@@ -500,3 +500,5 @@ ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = compois_calc_loglambda(X1[i % n1], X2[i % n2]);
 return as_advector(ans);
 }
+// [[Rcpp::export]]
+double distr_rcompois(double loglambda, double nu) { return atomic::compois_utils::simulate(loglambda, nu); }

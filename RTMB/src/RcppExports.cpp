@@ -580,6 +580,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// distr_rcompois
+double distr_rcompois(double loglambda, double nu);
+RcppExport SEXP _RTMB_distr_rcompois(SEXP loglambdaSEXP, SEXP nuSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type loglambda(loglambdaSEXP);
+    Rcpp::traits::input_parameter< double >::type nu(nuSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_rcompois(loglambda, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Arith2
 Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector& x, const Rcpp::ComplexVector& y, std::string op);
 RcppExport SEXP _RTMB_Arith2(SEXP xSEXP, SEXP ySEXP, SEXP opSEXP) {
@@ -730,6 +742,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_besselY", (DL_FUNC) &_RTMB_distr_besselY, 2},
     {"_RTMB_distr_compois_calc_logZ", (DL_FUNC) &_RTMB_distr_compois_calc_logZ, 2},
     {"_RTMB_distr_compois_calc_loglambda", (DL_FUNC) &_RTMB_distr_compois_calc_loglambda, 2},
+    {"_RTMB_distr_rcompois", (DL_FUNC) &_RTMB_distr_rcompois, 2},
     {"_RTMB_Arith2", (DL_FUNC) &_RTMB_Arith2, 3},
     {"_RTMB_Math1", (DL_FUNC) &_RTMB_Math1, 2},
     {"_RTMB_Reduce1", (DL_FUNC) &_RTMB_Reduce1, 2},
