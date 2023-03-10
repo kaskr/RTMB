@@ -7,6 +7,8 @@
 \alias{dnorm,num,num.,num.,logical.-method}
 \alias{dnorm,osa,ANY,ANY,ANY-method}
 \alias{dnorm,simref,ANY,ANY,ANY-method}
+\alias{plogis,advector,missing,missing,missing,missing-method}
+\alias{qlogis,advector,missing,missing,missing,missing-method}
 \alias{dmvnorm}
 \alias{dgmrf}
 \alias{dcompois}
@@ -97,6 +99,10 @@
 \S4method{dnorm}{osa,ANY,ANY,ANY}(x, mean = 0, sd = 1, log = FALSE)
 
 \S4method{dnorm}{simref,ANY,ANY,ANY}(x, mean = 0, sd = 1, log = FALSE)
+
+\S4method{plogis}{advector,missing,missing,missing,missing}(q)
+
+\S4method{qlogis}{advector,missing,missing,missing,missing}(p)
 
 dmvnorm(x, mu, Sigma, log = FALSE)
 
@@ -269,6 +275,10 @@ dlgamma(x, shape, scale, log)
 
 \item{log}{Logical; Return log density/probability?}
 
+\item{q}{vector of quantiles}
+
+\item{p}{parameter}
+
 \item{mu}{parameter}
 
 \item{Sigma}{Covariance matrix}
@@ -302,10 +312,6 @@ dlgamma(x, shape, scale, log)
 \item{df}{parameter}
 
 \item{lambda}{parameter}
-
-\item{q}{vector of quantiles}
-
-\item{p}{parameter}
 
 \item{logit_p}{parameter}
 
@@ -351,6 +357,22 @@ which documentation should be looked up online.
 \item \code{dnorm(x = osa, mean = ANY, sd = ANY, log = ANY)}: OSA implementation
 
 \item \code{dnorm(x = simref, mean = ANY, sd = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
+
+\item \code{plogis(
+  q = advector,
+  location = missing,
+  scale = missing,
+  lower.tail = missing,
+  log.p = missing
+)}: Minimal AD implementation of \link[stats]{plogis}
+
+\item \code{qlogis(
+  p = advector,
+  location = missing,
+  scale = missing,
+  lower.tail = missing,
+  log.p = missing
+)}: Minimal AD implementation of \link[stats]{qlogis}
 
 \item \code{dmvnorm()}: Multivariate normal distribution. \link{OSA-residuals} can be used for argument \code{x}.
 

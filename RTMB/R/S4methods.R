@@ -127,6 +127,13 @@ setMethod("dnorm", "simref", function(x, mean, sd, log) {
     dGenericSim(.Generic, x=x, mean=mean, sd=sd, log=log)
 })
 
+##' @describeIn Distributions Minimal AD implementation of \link[stats]{plogis}
+setMethod("plogis", c("advector", "missing", "missing", "missing", "missing"),
+          function(q) 1 / (1 + exp(-q) ) )
+##' @describeIn Distributions Minimal AD implementation of \link[stats]{qlogis}
+setMethod("qlogis", c("advector", "missing", "missing", "missing", "missing"),
+          function(p) log( p / ( 1 - p ) ) )
+
 ## 'diag' needs patching.
 ## - base::diag works fine for AD matrix input (diagonal extraction and replacement)
 ## - However, matrix construction has issues
