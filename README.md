@@ -22,3 +22,7 @@ NOTE: Requires at least `TMB-1.9.2`.
 ```r
 remotes::install_github("https://github.com/kaskr/RTMB", subdir="RTMB")
 ```
+
+## Known issues
+
+- If you get a segfault while installing the package, please re-install `Rcpp` from source and try again (see https://github.com/kaskr/RTMB/issues/5).
