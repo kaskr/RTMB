@@ -467,6 +467,8 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
         lgt <- lengths(parameters)
         names(obj$env$par) <- rep(names(lgt), lgt)
         rcpp <- .MakeTape(mapfunc, obj$env$par)
+        if (TMB::config(DLL="RTMB")$optimize.instantly)
+            rcpp$optimize()
         ans <- rcpp$ptrTMB()
         ans$DLL <- obj$env$DLL
         attr(ans$ptr, "par") <- obj$env$par
