@@ -193,6 +193,14 @@ NULL
 ##' MakeTape( function(x) pnorm(x), x=numeric(5))$jacobian(1:5)
 NULL
 
+##' Multivariate Gaussian densities
+##'
+##' Multivariate Gaussian densities
+##'
+##' @rdname MVgauss
+##' @name MVgauss
+NULL
+
 ##' Recursive quantile residuals
 ##'
 ##' OSA residuals are computed using the function

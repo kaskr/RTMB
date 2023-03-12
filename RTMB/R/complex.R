@@ -152,54 +152,6 @@ print.advector <- function (x, ...)  {
         .adv2num
 }
 
-##' @describeIn Distributions Multivariate normal distribution. \link{OSA-residuals} can be used for argument \code{x}.
-##' @param Sigma Covariance matrix
-dmvnorm <- function(x, mu, Sigma, log=FALSE) {
-    if (inherits(x, "simref")) {
-        if (!log) stop("'simref' is for *log* density evaluation only")
-        nr <- nrow(as.matrix(Sigma))
-        n <- length(x) / nr
-        if (length(mu)<nr) mu <- rep(mu, length.out=nr)
-        x[] <- MASS::mvrnorm(n, mu, Sigma)
-        return( rep(0, n) )
-    }
-    if (inherits(x, "osa")) {
-        keep <- x@keep
-        x <- x@x
-        dim(keep) <- dim(x)
-    } else {
-        keep <- NULL
-    }
-    ## R convention is to have samples by row
-    x <- t(as.matrix(x))
-    if (!is.null(keep))
-        keep <- t(as.matrix(keep))
-    mu <- t(as.matrix(mu))
-    Sigma <- as.matrix(Sigma)
-    d <- nrow(Sigma)
-    x0 <- as.vector(x) - as.vector(mu)
-    dim(x0) <- c(d, length(x0) / d)
-    anstype <- .anstype(x0, Sigma)
-    anstype( dmvnorm0(advector(x0), advector(Sigma), log, keep) )
-}
-
-##' @describeIn Distributions Multivariate normal distribution. OSA is \emph{not} implemented.
-##' @param Q Sparse precision matrix
-dgmrf <- function(x, mu, Q, log=FALSE) {
-    if (!ad_context()) { ## Workaround: see C++ code 'gmrf0'
-        F <- .MakeTape(function(...)advector(dgmrf(x,mu,Q,log)),numeric(0))
-        return (F$eval(numeric(0)))
-    }
-    ## R convention is to have samples by row
-    x <- t(as.matrix(x))
-    mu <- t(as.matrix(mu))
-    d <- attr(Q, "Dim")[1]
-    x0 <- as.vector(x) - as.vector(mu)
-    dim(x0) <- c(d, length(x0) / d)
-    anstype <- .anstype(x0, Q)
-    anstype( dgmrf0(advector(x0), as(Q, "adsparse"), log) )
-}
-
 ##' @describeIn Distributions Conway-Maxwell-Poisson. Calculate density.
 dcompois <- function(x, mode, nu, log = FALSE) {
     if (inherits(x,"osa"))    return (dGenericOSA( "dcompois" , x=x, mode=mode, nu=nu, log=log ))

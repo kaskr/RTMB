@@ -641,6 +641,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// matinv
+Rcpp::ComplexMatrix matinv(const Rcpp::ComplexMatrix& x);
+RcppExport SEXP _RTMB_matinv(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::ComplexMatrix& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(matinv(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // dmvnorm0
 Rcpp::ComplexVector dmvnorm0(const Rcpp::ComplexMatrix& x, const Rcpp::ComplexMatrix& s, bool give_log, SEXP keep);
 RcppExport SEXP _RTMB_dmvnorm0(SEXP xSEXP, SEXP sSEXP, SEXP give_logSEXP, SEXP keepSEXP) {
@@ -747,6 +758,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_Math1", (DL_FUNC) &_RTMB_Math1, 2},
     {"_RTMB_Reduce1", (DL_FUNC) &_RTMB_Reduce1, 2},
     {"_RTMB_matmul", (DL_FUNC) &_RTMB_matmul, 2},
+    {"_RTMB_matinv", (DL_FUNC) &_RTMB_matinv, 1},
     {"_RTMB_dmvnorm0", (DL_FUNC) &_RTMB_dmvnorm0, 4},
     {"_RTMB_dgmrf0", (DL_FUNC) &_RTMB_dgmrf0, 3},
     {"_RTMB_SparseArith2", (DL_FUNC) &_RTMB_SparseArith2, 3},

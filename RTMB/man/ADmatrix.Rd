@@ -11,6 +11,7 @@
 \alias{\%*\%,ad,ad-method}
 \alias{tcrossprod,advector,ANY-method}
 \alias{crossprod,advector,ANY-method}
+\alias{solve,advector,ad.-method}
 \title{AD matrix methods (sparse and dense)}
 \usage{
 \S4method{expm}{advector}(x)
@@ -30,11 +31,17 @@
 \S4method{tcrossprod}{advector,ANY}(x, y = NULL)
 
 \S4method{crossprod}{advector,ANY}(x, y = NULL)
+
+\S4method{solve}{advector,ad.}(a, b)
 }
 \arguments{
 \item{x}{matrix (sparse or dense)}
 
 \item{y}{matrix (sparse or dense)}
+
+\item{a}{matrix}
+
+\item{b}{matrix, vector or missing}
 }
 \description{
 Matrices (\strong{base} package) and sparse matrices (\strong{Matrix} package) can be used inside the \code{RTMB} objective function as part of the calculations. Behind the scenes these R objects are converted to AD representations when needed. AD objects have a temporary lifetime, so you probably won't see them / need to know them. The only important thing is which \emph{methods} work for the objects.
@@ -58,6 +65,8 @@ Matrices (\strong{base} package) and sparse matrices (\strong{Matrix} package) c
 \item \code{tcrossprod(x = advector, y = ANY)}: AD matrix multiply
 
 \item \code{crossprod(x = advector, y = ANY)}: AD matrix multiply
+
+\item \code{solve(a = advector, b = ad.)}: AD matrix inversion and solve
 
 }}
 \examples{

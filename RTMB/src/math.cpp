@@ -176,6 +176,15 @@ Rcpp::ComplexMatrix matmul (const Rcpp::ComplexMatrix &x,
   return Z;
 }
 
+// [[Rcpp::export]]
+Rcpp::ComplexMatrix matinv (const Rcpp::ComplexMatrix &x) {
+  if (x.ncol() != x.nrow())
+    Rcpp::stop("Expected a square matrix");
+  CHECK_INPUT(x);
+  ConstMapMatrix X = MatrixInput(x);
+  return MatrixOutput(atomic::matinv(matrix<ad>(X)));
+}
+
 template<class nlDensity>
 Rcpp::ComplexVector colApply (const Rcpp::ComplexMatrix &x,
                               nlDensity &F,

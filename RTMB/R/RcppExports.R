@@ -201,6 +201,10 @@ matmul <- function(x, y) {
     .Call(`_RTMB_matmul`, x, y)
 }
 
+matinv <- function(x) {
+    .Call(`_RTMB_matinv`, x)
+}
+
 dmvnorm0 <- function(x, s, give_log, keep = NULL) {
     .Call(`_RTMB_dmvnorm0`, x, s, give_log, keep)
 }

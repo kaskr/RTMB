@@ -91,6 +91,20 @@ setMethod("tcrossprod", signature("advector"),
 ##' @describeIn ADmatrix AD matrix multiply
 setMethod( "crossprod", signature("advector"),
           function(x, y=NULL) {if (is.null(y)) y <- x; t(x) %*% y} )
+##' @describeIn ADmatrix AD matrix inversion and solve
+##' @param a matrix
+##' @param b matrix, vector or missing
+setMethod("solve",
+          signature("advector", "ad."),
+          function(a, b) {
+              a <- as.matrix(a)
+              ans <- matinv(advector(a))
+              if (!missing(b)) {
+                  b <- as.matrix(b)
+                  ans <- ans %*% b
+              }
+              ans
+          })
 
 ## Show general idea which is automated in 'distributions.R'
 ## First we generate the version we want for AD types (dot signifies 'default argument')

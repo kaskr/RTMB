@@ -9,8 +9,6 @@
 \alias{dnorm,simref,ANY,ANY,ANY-method}
 \alias{plogis,advector,missing,missing,missing,missing-method}
 \alias{qlogis,advector,missing,missing,missing,missing-method}
-\alias{dmvnorm}
-\alias{dgmrf}
 \alias{dcompois}
 \alias{dcompois2}
 \alias{dexp,ad,ad.,logical.-method}
@@ -103,10 +101,6 @@
 \S4method{plogis}{advector,missing,missing,missing,missing}(q)
 
 \S4method{qlogis}{advector,missing,missing,missing,missing}(p)
-
-dmvnorm(x, mu, Sigma, log = FALSE)
-
-dgmrf(x, mu, Q, log = FALSE)
 
 dcompois(x, mode, nu, log = FALSE)
 
@@ -279,12 +273,6 @@ dlgamma(x, shape, scale, log)
 
 \item{p}{parameter}
 
-\item{mu}{parameter}
-
-\item{Sigma}{Covariance matrix}
-
-\item{Q}{Sparse precision matrix}
-
 \item{mode}{parameter}
 
 \item{nu}{parameter}
@@ -316,6 +304,8 @@ dlgamma(x, shape, scale, log)
 \item{logit_p}{parameter}
 
 \item{alpha}{parameter}
+
+\item{mu}{parameter}
 
 \item{sigma}{parameter}
 
@@ -373,10 +363,6 @@ which documentation should be looked up online.
   lower.tail = missing,
   log.p = missing
 )}: Minimal AD implementation of \link[stats]{qlogis}
-
-\item \code{dmvnorm()}: Multivariate normal distribution. \link{OSA-residuals} can be used for argument \code{x}.
-
-\item \code{dgmrf()}: Multivariate normal distribution. OSA is \emph{not} implemented.
 
 \item \code{dcompois()}: Conway-Maxwell-Poisson. Calculate density.
 
