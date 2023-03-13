@@ -58,12 +58,8 @@ fvade <- function(sde, grid) {
     h <- diff(grid)[1]
     D <- .5 * sde$dispersion(grid)^2
     ## Helper
-    ## Simpler (FIXME): rbind(0, cbind(diag(x), 0))
     subdiag <- function(x) {
-        n <- length(x) + 1
-        m <- matrix(0, n, n)
-        m[col(m) == row(m) - 1] <- x
-        m
+        rbind(0, cbind(diag(x), 0))
     }
     ## L matrix (dim nvol = n-1)
     L <- subdiag(D[-c(1, length(D))])
@@ -113,9 +109,6 @@ hmm.filter <- function(A, grid, dt) {
     }
     environment()
 }
-
-## FIXME:
-colSums <- function(x) apply(x, 2, sum)
 
 func <- function(parameters) {
     getAll(parameters, data)

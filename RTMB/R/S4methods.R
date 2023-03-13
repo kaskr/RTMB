@@ -105,6 +105,27 @@ setMethod("solve",
               }
               ans
           })
+##' @describeIn ADmatrix AD matrix (or array) colsums
+setMethod("colSums", signature(x="advector"),
+          function(x) { apply(x, seq_len(length(dim(x)))[-1L], sum) } )
+##' @describeIn ADmatrix AD matrix (or array) rowsums
+setMethod("rowSums", signature("advector"),
+          function(x) { apply(x, 1L, sum) } )
+##' @describeIn ADmatrix AD matrix column bind
+##' @param ... As \link[base]{cbind}
+cbind.advector <- function (...) {
+    args <- lapply(list(...), advector)
+    ans <- do.call("cbind", lapply(args, unclass))
+    class(ans) <- "advector"
+    ans
+}
+##' @describeIn ADmatrix AD matrix row bind
+rbind.advector <- function (...) {
+    args <- lapply(list(...), advector)
+    ans <- do.call("rbind", lapply(args, unclass))
+    class(ans) <- "advector"
+    ans
+}
 
 ## Show general idea which is automated in 'distributions.R'
 ## First we generate the version we want for AD types (dot signifies 'default argument')
