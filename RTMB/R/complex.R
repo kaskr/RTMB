@@ -89,6 +89,65 @@ c.advector <- function(...) {
 "[.advector" <- function(x, ...) {
     asS4(structure(NextMethod(), class="advector"))
 }
+
+## Extra RTMB overloads
+xtra <- local({
+    "[<-" <- function(x, ..., value) {
+        if (inherits(value, "advector")) {
+            if (is.numeric(x))
+                x <- advector(x)
+        }
+        .Primitive("[<-")(x, ..., value=value)
+    }
+    "diag<-" <- function(x, value) {
+        if (inherits(value, "advector")) {
+            if (is.numeric(x)) {
+                x <- advector(x)
+            }
+        }
+        RTMB:::"diag<-"(x, value)
+    }
+    c <- function(...) {
+        args <- list(...)
+        if (any(unlist(lapply(args, inherits, "advector")))) {
+            args <- lapply(args, advector)
+            ans <- structure(unlist(args), class="advector")
+            return(ans)
+        }
+        .Primitive("c")(...)
+    }
+    environment()
+})
+##' Enable extra RTMB convenience methods
+##' @details Work around limitations in R's method dispatch system by overloading some selected primitives, currently:
+##' - Inplace replacement, so you can do `x[i] <- y` when `x` is numeric and `y` is AD.
+##' - Mixed combine, so you can do e.g. `c(1., x)` when `x` is AD.
+##' - Diagonal assignment, so you can do `diag(x) <- y` when `x` is a numeric matrix and `y` is AD.
+##' @param enable Logical; enable if TRUE, disable if FALSE.
+##' @param ... Passed to \link[base]{attach}, so can contain e.g. `warn=FALSE`.
+##' @examples
+##' test <- function() {
+##'   x <- 1:3
+##'   y <- advector(1.2)
+##'   x[2] <- y
+##'   x
+##' }
+##' ADoverloads(TRUE) ## Enable
+##' test() ## With ADoverloads
+##' ADoverloads(FALSE) ## Disable
+##' test() ## Without ADoverloads it doesn't work
+ADoverloads <- function(enable=TRUE, ...) {
+    attached <- ( "AD-overloads" %in% search() )
+    if (enable) {
+         if (!attached)
+             attach(xtra, name="AD-overloads", ...)
+    } else {
+        if (attached)
+            detach("AD-overloads")
+    }
+    enable
+}
+
 ##' @describeIn ADvector Equivalent of \link[base]{[<-}
 "[<-.advector" <- function(x, ..., value) {
     value <- advector(value)
