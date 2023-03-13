@@ -89,8 +89,11 @@ c.advector <- function(...) {
 "[.advector" <- function(x, ...) {
     asS4(structure(NextMethod(), class="advector"))
 }
+##' @describeIn ADconstruct This overload is needed to enable sub assignment from advector to numeric
+"[<-" <- function(x, ..., value)UseMethod("[<-", value)
 ##' @describeIn ADvector Equivalent of \link[base]{[<-}
 "[<-.advector" <- function(x, ..., value) {
+    x <- advector(x) ## Needed in the non standard case
     value <- advector(value)
     NextMethod()
 }
