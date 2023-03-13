@@ -6,7 +6,6 @@
 \alias{[.adsparse}
 \alias{[<-.adsparse}
 \alias{diag,adsparse,missing,missing-method}
-\alias{diag<-,adsparse,ad-method}
 \alias{expm,advector-method}
 \alias{expm,adsparse-method}
 \alias{dim,adsparse-method}
@@ -16,7 +15,8 @@
 \alias{\%*\%,ad,ad-method}
 \alias{tcrossprod,advector,ANY-method}
 \alias{crossprod,advector,ANY-method}
-\alias{solve,advector,ad.-method}
+\alias{solve,ad,ad.-method}
+\alias{solve,num,num.-method}
 \alias{solve,anysparse,ad.-method}
 \alias{colSums,advector-method}
 \alias{rowSums,advector-method}
@@ -31,8 +31,6 @@
 \method{[}{adsparse}(x, ...) <- value
 
 \S4method{diag}{adsparse,missing,missing}(x)
-
-\S4method{diag}{adsparse,ad}(x) <- value
 
 \S4method{expm}{advector}(x)
 
@@ -52,7 +50,9 @@
 
 \S4method{crossprod}{advector,ANY}(x, y = NULL)
 
-\S4method{solve}{advector,ad.}(a, b)
+\S4method{solve}{ad,ad.}(a, b)
+
+\S4method{solve}{num,num.}(a, b)
 
 \S4method{solve}{anysparse,ad.}(a, b)
 
@@ -90,8 +90,6 @@ Matrices (\strong{base} package) and sparse matrices (\strong{Matrix} package) c
 
 \item \code{diag(x = adsparse, nrow = missing, ncol = missing)}: AD sparse matrix diagonal extract. Re-directs to \link[Matrix]{diag,CsparseMatrix-method}.
 
-\item \code{diag(x = adsparse) <- value}: AD sparse matrix diagonal replacement. Re-directs to \link[Matrix]{diag<-,CsparseMatrix-method}.
-
 \item \code{expm(advector)}: AD matrix exponential
 
 \item \code{expm(adsparse)}: AD matrix exponential
@@ -110,7 +108,9 @@ Matrices (\strong{base} package) and sparse matrices (\strong{Matrix} package) c
 
 \item \code{crossprod(x = advector, y = ANY)}: AD matrix multiply
 
-\item \code{solve(a = advector, b = ad.)}: AD matrix inversion and solve
+\item \code{solve(a = ad, b = ad.)}: AD matrix inversion and solve
+
+\item \code{solve(a = num, b = num.)}: AD matrix inversion and solve
 
 \item \code{solve(a = anysparse, b = ad.)}: Sparse AD matrix solve (not yet implemented)
 
