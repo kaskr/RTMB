@@ -56,6 +56,8 @@ S3method(Summary, simref)
 
 export("rbind.advector")
 export("cbind.advector")
+export("colSums")
+export("rowSums")
 ##export("_rcpp_module_boot_mod_adfun")
 export("[.advector")
 export("[.osa")

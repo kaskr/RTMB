@@ -76,15 +76,15 @@ as.vector.advector <- function(x, mode = "any") {
 
 ##' @describeIn ADvector Equivalent of \link[base]{aperm}
 aperm.advector <- function(a, perm, ...) {
-    structure(NextMethod(), class="advector")
+    asS4(structure(NextMethod(), class="advector"))
 }
 ##' @describeIn ADvector Equivalent of \link[base]{c}
 c.advector <- function(...) {
-    structure(NextMethod(), class="advector")
+    asS4(structure(NextMethod(), class="advector"))
 }
 ##' @describeIn ADvector Equivalent of \link[base]{[}
 "[.advector" <- function(x, ...) {
-    structure(NextMethod(), class="advector")
+    asS4(structure(NextMethod(), class="advector"))
 }
 ##' @describeIn ADvector Equivalent of \link[base]{[<-}
 "[<-.advector" <- function(x, ..., value) {
@@ -93,7 +93,7 @@ c.advector <- function(...) {
 }
 ##' @describeIn ADvector Equivalent of \link[base]{[[}
 "[[.advector" <- function(x, ...) {
-    structure(NextMethod(), class="advector")
+    asS4(structure(NextMethod(), class="advector"))
 }
 ##' @describeIn ADvector Equivalent of \link[base]{rep}. Makes \code{outer(x,x,...)} work.
 rep.advector <- function (x, ...) {

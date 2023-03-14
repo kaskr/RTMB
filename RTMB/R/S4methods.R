@@ -117,14 +117,14 @@ cbind.advector <- function (...) {
     args <- lapply(list(...), advector)
     ans <- do.call("cbind", lapply(args, unclass))
     class(ans) <- "advector"
-    ans
+    asS4(ans)
 }
 ##' @describeIn ADmatrix AD matrix row bind
 rbind.advector <- function (...) {
     args <- lapply(list(...), advector)
     ans <- do.call("rbind", lapply(args, unclass))
     class(ans) <- "advector"
-    ans
+    asS4(ans)
 }
 
 ## Show general idea which is automated in 'distributions.R'
