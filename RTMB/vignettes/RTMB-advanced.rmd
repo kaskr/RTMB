@@ -1,0 +1,38 @@
+---
+title: "Details behind the AD Tape"
+author: "Kasper Kristensen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE, message=FALSE}
+##library(knitr)
+library(RTMB)
+set.seed(1)
+formals(MakeADFun)$silent <- TRUE
+```
+
+## Content
+
+### MakeADFun vs MakeTape
+
+### The tape methods
+- print() + jacobian(): View and explain the AD storage
+- Introduce graph() visualize
+
+### Tape transformations:
+- Tape eliminate vs optimize
+- jacfun(), Laplace(), SPA option
+- atomic()
+
+### Tape configuration
+- Understand plain vs atomic matrix multiply
+- Understand AD comparision
+- Understand vectorized ops
+
+### Nested tapes:
+- Using tapes as part of the objective function
+- Using derivatives in the objective function
