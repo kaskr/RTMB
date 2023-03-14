@@ -1,0 +1,94 @@
+---
+title: "Introduction to 'RTMB'"
+author: "Kasper Kristensen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE, message=FALSE}
+##library(knitr)
+library(RTMB)
+set.seed(1)
+formals(MakeADFun)$silent <- TRUE
+```
+
+## Content
+
+- type invariant implementation
+- parameter branching
+- methods that can be used
+- simulation: catching common errors
+- TMB interface: ADREPORT, REPORT,...
+- OSA-residuals
+- idea model: ar1xar1 plus noise fit to volcano data
+- density namespace
+
+
+## An example model
+
+```{r ar1xar1}
+data(volcano)
+data <- list(y = volcano)
+parameters <- list(u=array(0, dim(volcano)), phi1=c(.1), phi2=c(.1), mu=0, sd.field=1, sd.meas=1)
+func <- function(parameters) {
+    getAll(parameters, data)
+    y <- OBS(y)
+    ## Autoregresssive models
+    f1 <- function(x)dautoreg(x, phi=phi1, log=TRUE)
+    f2 <- function(x)dautoreg(x, phi=phi2, log=TRUE)
+    jnll <- -dseparable(f1, f2)(u)
+    jnll <- jnll - sum(dnorm(y, mu + sd.field*u, sd=sd.meas, log=TRUE))
+    jnll
+}
+```
+
+First, we check that we can evaluate the function for standard numeric inputs:
+
+```{r}
+func(parameters)
+```
+
+## The TMB interface
+
+Next, we setup the TMB objective using `MakeADFun()` and fit the model using the recommended optimizer `nlminb`:
+
+```{r}
+obj <- MakeADFun(func, parameters, random="u")
+opt <- nlminb(obj$par, obj$fn, obj$gr)
+```
+
+During the optimization it is common that the optimizer `nlminb` evaluates the objective function for parameters that are extreme. This may cause warnings such as
+
+> Warning messages:
+> 1: In nlminb(obj$par, obj$fn, obj$gr) : NA/NaN function evaluation
+
+which is harmless as long as there are only a few of them.
+
+The TMB function `sdreport` gives a standard summary of the fitted object:
+
+```{r}
+sdr <- sdreport(obj)
+sdr
+```
+
+## Simulating from the model object
+
+
+```{r}
+sim <- obj$simulate()
+
+```
+
+What if we want to try AR2 instead of AR1? Set
+
+
+```{r}
+parameters$phi1 <- c(.1,0)
+parameters$phi2 <- c(.1,0)
+
+```
+
+and repeat the analysis.
