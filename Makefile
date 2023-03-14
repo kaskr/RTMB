@@ -67,4 +67,4 @@ parallel-version:
 ## vignettes
 %.html: %.rmd
 	cd RTMB/vignettes; echo "rmarkdown::render(basename(\"$<\"))" | R --slave
-vignettes-build: RTMB/vignettes/RTMB-introduction.html
+vignettes-build: RTMB/vignettes/RTMB-introduction.html RTMB/vignettes/RTMB-advanced.html
