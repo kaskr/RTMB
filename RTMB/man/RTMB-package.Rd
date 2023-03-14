@@ -12,6 +12,22 @@ The package 'RTMB' provides a native R interface for \emph{a subset of}
 'MakeADFun' has been invoked, everything else is \emph{exactly the same}
 and \emph{models run as fast} as if coded in C++.
 }
+\details{
+'RTMB' offers a greatly simplified interface to 'TMB'. The TMB objective function can now be written entirely in R rather than C++ (\link{TMB-interface}). In addition, we highlight two new simplifications:
+\enumerate{
+\item For the most cases, simulation testing can be carried \emph{automatically} without the need to add simulation blocks (\link{Simulation}).
+\item Also, quantile residuals can be obtained without any essential modifications to the objective function (\link{OSA-residuals}).
+}
+
+The introduction vignette describes these basic features - see \code{vignette("RTMB-introduction")}.
+
+In addition to the usual \link{MakeADFun} interface, 'RTMB' offers a lower level interface to the AD machinery (\link{MakeTape}). \link{MakeTape} replaces the functionality you would normally get in 'TMB' using C++ functors, such as calculating derivatives inside the objective function.
+
+The advanced vignette covers these topics - see \code{vignette("RTMB-advanced")}.
+}
+\note{
+'RTMB' relies heavily on the new AD framework 'TMBad' without which this interface would not be possible.
+}
 \author{
 Kasper Kristensen
 
