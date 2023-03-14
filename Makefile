@@ -44,3 +44,8 @@ cran-version:
 
 cran-check:
 	R CMD check --as-cran RTMB*.tar.gz
+
+## vignettes
+%.html: %.rmd
+	cd RTMB/vignettes; echo "rmarkdown::render(basename(\"$<\"))" | R --slave
+vignettes-build: RTMB/vignettes/RTMB-introduction.html
