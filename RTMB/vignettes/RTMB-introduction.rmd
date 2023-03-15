@@ -1,9 +1,10 @@
 ---
-title: "Introduction to 'RTMB'"
+title: "Introduction to RTMB"
 author: "Kasper Kristensen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
+  %\VignetteIndexEntry{Introduction to RTMB}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
