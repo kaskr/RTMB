@@ -10,14 +10,43 @@ vignette: >
 
 ```{r setup, include=FALSE, message=FALSE}
 ##library(knitr)
+knitr::opts_chunk$set(fig.align='center')
 library(RTMB)
 set.seed(1)
 formals(MakeADFun)$silent <- TRUE
+## Utilites for graph visulization
+library(igraph)
+## To tweak the vertex names
+iformat <- function(n, to=c("superscript", "subscript")) {
+    to <- match.arg(to)
+    digits <- strsplit(as.character(n),"")[[1]]
+    if (to=="superscript")
+        x <- paste0("0x", c("2070", "00B9", "00B2", "00B3", paste0("207",4:9)))
+    else
+        x <- paste0("208", 0:9)
+    names(x) <- 0:9
+    intToUtf8(x[digits])
+}
+addindex <- function(x, to) {
+    paste0(x, sapply(seq_along(x), iformat, to))
+}
+showGraph <- function(F) {
+    g <- F$graph()
+    colnames(g)[colnames(g)=="Inv"] <- "X"
+    colnames(g)[colnames(g)=="Dep"] <- "Y"
+    colnames(g) <- addindex(colnames(g), "sup")
+    G <- graph_from_adjacency_matrix(g)
+    par(mar=c(0,0,0,0),oma=c(0,0,0,0))
+    ##plot(G, vertex.size=17, layout=layout_as_tree)
+    plot(G, vertex.size=23, layout=layout_as_tree)
+}
 ```
 
 ## Content
 
 ### MakeADFun vs MakeTape
+
+
 
 ### The tape methods
 - print() + jacobian(): View and explain the AD storage
@@ -30,6 +59,50 @@ formals(MakeADFun)$silent <- TRUE
 
 ### Tape configuration
 - Understand plain vs atomic matrix multiply
+
+Consider the following test function that multiplies a matrix by it self:
+
+$$
+f(x)=
+\begin{pmatrix}
+  x_{1} & x_{3} \\
+  x_{2} & x_{4} \\
+\end{pmatrix}
+^2
+=
+\begin{pmatrix}
+  x_{1}x_{1} + x_{3}x_{2} & x_{1}x_{3} + x_{3}x_{4} \\
+  x_{2}x_{1} + x_{4}x_{2} & x_{2}x_{3} + x_{4}x_{4} \\
+\end{pmatrix}
+$$
+
+
+In R this corresponds to the function
+
+```{r}
+f <- function(X) X %*% X
+```
+
+We will consider how this function is represented as a tape. First, we disable atomic matrix multiply. This gives a representation corresponding exactly to the above formula:
+
+
+```{r, fig.cap="Plain matrix multiply: Expands all operations"}
+TapeConfig(atomic="disable")
+F <- MakeTape(f, matrix(0, 2, 2))
+showGraph(F)
+```
+
+This is only possible to show for very small matrices. The representation grows very fast (cubic) in the dimension of the input.
+By default the 'atomic' flag is set to true.
+
+```{r, fig.cap="Atomic matrix multiply: Callapses to a single operation. The constants are the matrix dimensions which are represented as additional inputs."}
+TapeConfig(atomic="enable")
+F <- MakeTape(f, matrix(0, 2, 2))
+showGraph(F)
+```
+
+PROS/CONS: Atomic matrix multiply is faster and takes up much less space. However, sparsity of the jacobian is lost for the atomic version (all outputs depend and all inputs). There are elements of the jacobian that will always be zero. This can only be seen from the plain representation.
+
 - Understand AD comparision
 - Understand vectorized ops
 

@@ -11,4 +11,4 @@ Imports: Rcpp (>= 1.0.9), Matrix, methods, TMB (>= 1.9.3), MASS
 LinkingTo: Rcpp, TMB, RcppEigen
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr, rmarkdown
-Suggests: knitr, rmarkdown
+Suggests: knitr, rmarkdown, igraph
