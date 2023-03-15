@@ -88,11 +88,33 @@ F(3:4)
 F$print()
 ```
 
-Note how the function output or *dependent variable* ('DepOp') is located at the end of the value array.
+Note how the *function output* or *dependent variable* ('DepOp') is located at the end of the value array.
 
-### The tape methods
-- print() + jacobian(): View and explain the AD storage
-- Introduce graph() visualize
+### Evaluating derivatives
+
+Derivatives are calculated using the `jacobian()` method. This seeds the derivative of the dependent variable to one, and triggers a *reverse operator loop* effectively updating the entire 'deriv' array:
+
+```{r}
+F$jacobian(3:4)
+F$print()
+```
+
+Note how the derivatives are located at the beginning of the 'deriv' array.
+
+### The operator graph
+
+The *operator graph* is defined by connecting operators $i$ and $j$ ( $i \rightarrow j$ ) if some output of operator $i$ is input to operator $j$.
+Its adjacency matrix is obtained using the `graph()` method:
+
+```{r}
+F$graph()
+```
+
+It is conveniently visualized using the **igraph** package:
+
+```{r, fig.cap="Operator graph of test function"}
+showGraph(F)
+```
 
 ### Tape transformations:
 - Tape eliminate vs optimize
