@@ -171,5 +171,21 @@ PROS/CONS: Atomic matrix multiply is faster and takes up much less space. Howeve
 - Understand vectorized ops
 
 ### Nested tapes:
+
 - Using tapes as part of the objective function
 - Using derivatives in the objective function
+
+In the folowing example we construct a tape $F$. *While* $F$ is being constructed, a new tape $G$ is created which accesses a temporary variable $a$ in the scope of $F$.
+
+```{r}
+F <- MakeTape(function(x) {
+    a <- sin(x)
+    G <- MakeTape(function(y) {
+        a * y
+    }, numeric(1))
+    DG <- G$jacfun()
+    DG(x * x)
+}, numeric(1))
+```
+
+Implicitly, $a$ becomes a *variable* within $G$ without us having to pass it explicitly as a function argument. This greatly simplifies things when all we care about is the derivatives of $G$ with respect to $y$ (not $a$).
