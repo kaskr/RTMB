@@ -46,8 +46,8 @@ showGraph <- function(F) {
 
 ### MakeADFun vs MakeTape
 
-- `MakeADFun` is the *high level* version. This actually creates several internal tapes gathered in a 'model object' often referred to as 'obj'.
-- `MakeTape` is the *low level* version. This creates *a single tape*.
+- `MakeADFun` is the *high level* version. It actually creates several internal tapes gathered in a 'model object' often referred to as 'obj'.
+- `MakeTape` is the *low level* version. It creates *a single tape*.
 
 There are things you can do with the tape that you can't do with 'obj':
 
@@ -116,6 +116,35 @@ It is conveniently visualized using the **igraph** package:
 showGraph(F)
 ```
 
+### Atomic functions
+
+The tape $F$ can be used to create new tapes. Consider for example a new tape $G$ which evaluates $F$ twice:
+
+```{r}
+G <- MakeTape(function(x) c( F(x) , F(x) ), numeric(2))
+```
+
+Compare this with the graph of $F$: Clearly every node (except inputs) have been doubled.
+
+```{r, fig.cap="Operator graph of test function evaluated twice"}
+showGraph(G)
+```
+
+When applying the same function many times it is sometimes beneficial to collapse its nodes into a single 'super node' rather than replaying all individual operators over and over. In our example we could turn $F$ into such a 'super node' using the `atomic()` method:
+
+```{r}
+F <- F$atomic()
+```
+
+Now, construct $G$ again and see what it looks like:
+
+```{r, fig.cap="Operator graph of *atomic* test function evaluated twice"}
+G <- MakeTape(function(x) c( F(x) , F(x) ), numeric(2))
+showGraph(G)
+```
+
+Internally, these atomic operators are shared pointers to a single instance of the actual tape of $F$. Therefore, auto-generated atomic functions generally reduce memory. But there are disadvantages, so they should normally only be used in case of memory issues.
+
 ### Tape transformations:
 - Tape eliminate vs optimize
 - jacfun(), Laplace(), SPA option
@@ -140,14 +169,13 @@ f(x)=
 \end{pmatrix}
 $$
 
-
-In R this corresponds to the function
+The corresponding function coded in R is
 
 ```{r}
 f <- function(X) X %*% X
 ```
 
-We will consider how this function is represented as a tape. First, we disable atomic matrix multiply. This gives a representation corresponding exactly to the above formula:
+and we will examine how it is represented as a tape. First, we disable atomic matrix multiply. This gives a representation corresponding exactly to the above formula:
 
 
 ```{r, fig.cap="Plain matrix multiply: Expands all operations"}
