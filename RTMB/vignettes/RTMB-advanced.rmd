@@ -46,7 +46,49 @@ showGraph <- function(F) {
 
 ### MakeADFun vs MakeTape
 
+- `MakeADFun` is the *high level* version. This actually creates several internal tapes gathered in a 'model object' often referred to as 'obj'.
+- `MakeTape` is the *low level* version. This creates *a single tape*.
 
+There are things you can do with the tape that you can't do with 'obj':
+
+- Tapes can be reused to create new tapes.
+- Tapes can be nested, i.e. an inner tape can refer to variables in an outer tape's scope.
+- Derivatives of tapes can be calculated at any time whether in *evaluation mode* or in *taping mode*.
+
+To understand these concepts let's look at some examples.
+
+### Creating our first tape
+
+A simple R function such as
+
+```{r}
+f <- function(x) exp( x[1] + 1.23 * x[2] )
+```
+
+is turned into a 'tape' using
+
+
+```{r}
+F <- MakeTape(f, numeric(2))
+F
+```
+
+We can print the tape by
+
+```{r}
+F$print()
+```
+
+This is the internal tape representation of the function. At first sight it looks a bit like a data frame. The first column ('OpName') holds the tape operators and the second column ('Node') the operator index. Each operator calculates an output variable which sits in the 'value' column. Each value has a derivative ('deriv' column) which is not yet allocated ('NA'). In addition, each value has an 'index'. The final column holds the inputs to each node. For example, node number 3 (multiplication) has inputs '1' and '2' referring to the 'index' / 'value' column.
+
+The tape can be evaluated as a normal R function. This sets the independent values ('InvOp') to the inputs and triggers a *forward operator loop* effectively updating the entire value array:
+
+```{r}
+F(3:4)
+F$print()
+```
+
+Note how the function output or *dependent variable* ('DepOp') is located at the end of the value array.
 
 ### The tape methods
 - print() + jacobian(): View and explain the AD storage
