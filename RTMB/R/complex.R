@@ -368,8 +368,8 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
     ## Overload and retape
     obj$env$MakeADFunObject <- function(data,parameters, reportenv, ADreport = FALSE,...) {
         mapfunc <- function(par) {
-            ADREPORT_ENV$clear()
-            OBS_ENV     $clear()
+            clear_all()
+            on.exit(clear_all())
             ## obj$env$data is normally empty, however some TMB
             ## functions (checkConsistency, others?) modifies the data
             ## and retapes. Let's make this data visible from
@@ -403,7 +403,6 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
                 ## Place OSA marked observations in obj
                 obj$env$obs <- OBS_ENV$result()
             }
-            OBS_ENV$clear() ## Cleanup
             if (ADreport || bias.correct) {
                 adrep <- do.call("c", lapply(ADREPORT_ENV$result(), advector) )
                 if (length(adrep) == 0) adrep <- advector(numeric(0))
@@ -439,8 +438,8 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
         obj$env$data[[observation.name]] <- data[[observation.name]]
     ## Simulate
     obj$simulate <- function(par=obj$env$last.par,...) {
-        SIM_ENV$clear() ## Stores the simulation
-        OBS_ENV$clear() ## Contains observation(s)
+        clear_all()
+        on.exit(clear_all())
         p <- obj$env$parList(par=par)
         for (nm in obj$env$.random) {
             p[[nm]] <- simref2(p[[nm]], nm)
@@ -450,13 +449,13 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
             OBS_ENV$set(nm, obs)
         }
         func(p)
-        SIM_ENV$result()
+        c(SIM_ENV$result(),
+          REPORT_ENV$result())
     }
     ## Report
     obj$report <- function(par=obj$env$last.par,...) {
-        SIM_ENV$clear()
-        OBS_ENV$clear()
-        REPORT_ENV$clear()
+        clear_all()
+        on.exit(clear_all())
         p <- obj$env$parList(par=par)
         func(p)
         REPORT_ENV$result()
@@ -512,6 +511,14 @@ REPORT_ENV <- reporter()
 ADREPORT <- ADREPORT_ENV$report
 ##' @describeIn TMB-interface Can be used inside the objective function to report quantities via the model object using \code{obj$report()}.
 REPORT <- REPORT_ENV$report
+
+## Clear *all* exchange environments:
+clear_all <- function() {
+    OBS_ENV$clear()
+    SIM_ENV$clear()
+    REPORT_ENV$clear()
+    ADREPORT_ENV$clear()
+}
 
 ##' @describeIn TMB-interface Can be used to assign all parameter or data objects from a list inside the objective function.
 ##' @param warn Give a warning if overwriting an existing object?
