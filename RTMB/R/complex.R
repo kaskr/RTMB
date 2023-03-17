@@ -368,8 +368,6 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
     ## Overload and retape
     obj$env$MakeADFunObject <- function(data,parameters, reportenv, ADreport = FALSE,...) {
         mapfunc <- function(par) {
-            clear_all()
-            on.exit(clear_all())
             ## obj$env$data is normally empty, however some TMB
             ## functions (checkConsistency, others?) modifies the data
             ## and retapes. Let's make this data visible from
@@ -417,6 +415,9 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
         obj$env$par <- unlist(parameters, use.names=FALSE)
         lgt <- lengths(parameters)
         names(obj$env$par) <- rep(names(lgt), lgt)
+        ## 'mapfunc' uses the 'exchange environments'. Clear before and after use:
+        clear_all()
+        on.exit(clear_all())
         rcpp <- .MakeTape(mapfunc, obj$env$par)
         if (TMB::config(DLL="RTMB")$optimize.instantly)
             rcpp$optimize()
