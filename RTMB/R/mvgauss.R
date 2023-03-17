@@ -116,6 +116,15 @@ dseparable <- function(...) {
     f <- list(...)
     stopifnot(all(sapply(f, is.function)))
     function(x) {
+        if (inherits(x, "osa")) {
+            ok <-
+                (length(x@x) == length(x@keep)) &&  ## no CDF method!
+                all(!getVariables(x@keep)) &&       ## All 'keep' are constant
+                all(getValues(x@keep) == 1)         ## and equal to one.
+            if (!ok)
+                stop("'osa' (marginalization) is not fully implemented for separable densities")
+            x <- x@x
+        }
         dosim <- inherits(x, "simref")
         d <- dim(x)
         stopifnot(length(d) == length(f))
