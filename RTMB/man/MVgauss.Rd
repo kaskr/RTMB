@@ -43,7 +43,7 @@ Autoregressive density evaluation is implemented for all orders via \code{dautor
 We note that this variant is for a \emph{stationary}, \emph{mean zero} and \emph{variance one} process.
 FIXME: Provide parameterization via partial correlations.
 
-Separable extension can be constructed for an unlimited number of inputs. Each input must be a function returning a \emph{gaussian} \emph{mean zero} \strong{log} density. The output of \code{dseparable} is another \strong{log} density which can be evaluated for array arguments. For example \code{dseparable(f1,f2,f3)} takes as input a 3D array. \code{f1} acts in 1st array dimension, `f2' in 2nd dimension and so on.
+Separable extension can be constructed for an unlimited number of inputs. Each input must be a function returning a \emph{gaussian} \emph{mean zero} \strong{log} density. The output of \code{dseparable} is another \strong{log} density which can be evaluated for array arguments. For example \code{dseparable(f1,f2,f3)} takes as input a 3D array \code{x}. \code{f1} acts in 1st array dimension of \code{x}, \code{f2} in 2nd dimension and so on. In addition to \code{x}, parameters \code{mu} and \code{scale} can be supplied.
 }
 \section{Functions}{
 \itemize{

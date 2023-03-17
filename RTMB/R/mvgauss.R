@@ -90,7 +90,7 @@ dautoreg <- function(x, phi, log=FALSE) {
 }
 
 ##' @describeIn MVgauss Separable extension of Gaussian log-densities
-##' @details Separable extension can be constructed for an unlimited number of inputs. Each input must be a function returning a *gaussian* *mean zero* **log** density. The output of `dseparable` is another **log** density which can be evaluated for array arguments. For example `dseparable(f1,f2,f3)` takes as input a 3D array. `f1` acts in 1st array dimension, `f2' in 2nd dimension and so on.
+##' @details Separable extension can be constructed for an unlimited number of inputs. Each input must be a function returning a *gaussian* *mean zero* **log** density. The output of `dseparable` is another **log** density which can be evaluated for array arguments. For example `dseparable(f1,f2,f3)` takes as input a 3D array `x`. `f1` acts in 1st array dimension of `x`, `f2` in 2nd dimension and so on. In addition to `x`, parameters `mu` and `scale` can be supplied.
 ##' @param ... Log densities
 ##' @examples
 ##' func <- function(x, sd, parm, phi) {
@@ -115,7 +115,9 @@ dautoreg <- function(x, phi, log=FALSE) {
 dseparable <- function(...) {
     f <- list(...)
     stopifnot(all(sapply(f, is.function)))
-    function(x) {
+    function(x, mu=0, scale=1) {
+        have.mu <- !identical(mu, 0)
+        have.scale <- !identical(scale, 1)
         if (inherits(x, "osa")) {
             ok <-
                 (length(x@x) == length(x@keep)) &&  ## no CDF method!
@@ -125,6 +127,8 @@ dseparable <- function(...) {
                 stop("'osa' (marginalization) is not fully implemented for separable densities")
             x <- x@x
         }
+        if (have.mu) x <- x - mu
+        if (have.scale) x <- x / scale
         dosim <- inherits(x, "simref")
         d <- dim(x)
         stopifnot(length(d) == length(f))
@@ -155,6 +159,8 @@ dseparable <- function(...) {
         }
         ans <- ans - .5 * sum(x * x0)
         ans <- ans - length(x) * log(sqrt(2 * pi))
+        if (have.scale)
+            ans <- ans - sum(rep(log(scale), length.out=length(x)))
         ans
     }
 }
