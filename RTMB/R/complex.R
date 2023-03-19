@@ -37,7 +37,9 @@ magic <- function(x, condition = ad_context()) {
 ##' @describeIn ADvector Binary operations
 "Ops.advector" <- function(e1, e2) {
     if (compare_allow() && (.Generic %in% .Compare)) {
-        return (NextMethod(getValues(e1), getValues(e2)))
+        e1 <- getValues(advector(e1))
+        e2 <- getValues(advector(e2))
+        return (NextMethod())
     }
     if (missing(e2)) {
         if (.Generic=="-" || .Generic=="+") {
