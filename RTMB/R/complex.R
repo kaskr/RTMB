@@ -330,8 +330,11 @@ data <- NULL
 ##' @param silent As \link[TMB]{MakeADFun}.
 ##' @param ... Passed to TMB
 MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE, silent=FALSE,...) {
-    if (is.list(func))
+    setdata <- NULL
+    if (is.list(func)) {
+        setdata <- attr(func, "setdata")
         func <- attr(func, "func")
+    }
     ## Make empty object
     obj <- TMB::MakeADFun(data=list(),
                           parameters=parameters,
@@ -378,6 +381,18 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
                 OBS_ENV$ans <- obj$env$data
             }
             pl <- parList(parameters, par)
+            ## TMB is allowed to move data items to parameter list. We
+            ## move such parmeters to the exchange environment OBS_ENV
+            ## so can be obtained by 'OBS()' rather than 'parameters':
+            if (length(obj$env$data) == 0) {
+                setnm <- attr(obj$env$data, "setdata")
+                if (!is.null(setnm)) {
+                    for (nm in setnm) {
+                        OBS_ENV$set(nm, pl[[nm]])
+                        pl[[nm]] <- NULL
+                    }
+                }
+            }
             bias.correct <- ("TMB_epsilon_" %in% names(pl))
             do.osa <- ("_RTMB_keep_" %in% names(pl))
             if (bias.correct) {
@@ -467,6 +482,7 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
     obj$env$MakeDoubleFunObject <- function(...)NULL
     obj$env$EvalDoubleFunObject <- function(...)NULL
     attr(obj$env$data, "func") <- func
+    attr(obj$env$data, "setdata") <- setdata
     obj$env$ADreport <- ADreport
     obj$retape()
     obj$par <- obj$env$par[obj$env$lfixed()]

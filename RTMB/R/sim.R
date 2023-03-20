@@ -250,8 +250,22 @@ simref2 <- function(x, name) {
     s
 }
 
+## Special set/unset to handle cases where TMB moves items from data
+## list to parameters list. 'RTMB::MakeADFun' needs to know the names
+## of these items.
+setdata <- function(obj) {
+    obj$env$data[names(obj$env$obs)] <- obj$env$obs
+    attr(obj$env$data, "setdata") <- names(obj$env$obs)
+    NULL
+}
+unsetdata <- function(obj) {
+    obj$env$data[] <- NULL
+}
+
 ##' @describeIn TMB-interface Interface to \link[TMB]{checkConsistency}.
-checkConsistency <- function(obj,...) {
+##' @param fast Pass `observation.name` to `TMB` ?
+checkConsistency <- function(obj, fast=TRUE, ...) {
+    ## ######
     checkConsistency_patch <- TMB::checkConsistency
     tmb_envir <- environment(checkConsistency_patch)
     env <- local({
@@ -262,7 +276,19 @@ checkConsistency <- function(obj,...) {
     })
     parent.env(env) <- tmb_envir
     environment(checkConsistency_patch) <- env
-    checkConsistency_patch(obj, ...)
+    ## ######
+    args <- list(obj, ...)
+    if (fast) {
+        supported <- "observation.name" %in% names(formals(checkConsistency_patch))
+        if (!supported) {
+            warning("'fast' selected but not supported")
+        } else {
+            setdata(obj)
+            on.exit(unsetdata(obj))
+            args$observation.name <- names(obj$env$obs)
+        }
+    }
+    do.call("checkConsistency_patch", args)
 }
 
 ## Internal: Not export
