@@ -81,6 +81,17 @@ dautoreg <- function(x, phi, log=FALSE) {
     }
     k <- min(length(x), k)
     V0 <- V0[1:k, 1:k]
+    ## Speedup (code would work the same without)
+    if (inherits(x, "simref")) {
+        xref <- x
+        x <- x$value
+        x[1:k] <- MASS::mvrnorm(1, 0, V0)
+        for (i in (tail(seq_along(x), -k))) {
+            x[i] <- rnorm(1, sum(phi * x[i - (1:k)]), sigma)
+        }
+        xref[] <- x
+        return (0)
+    }
     ans <- dmvnorm(x[1:k], 0, V0, log=TRUE)
     for (i in (tail(seq_along(x), -k))) {
         ans <- ans + dnorm(x[i], sum(phi * x[i - (1:k)]), sigma, log=TRUE)
