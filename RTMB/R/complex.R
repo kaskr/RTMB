@@ -322,18 +322,29 @@ observation.name <- NULL
 data.term.indicator <- NULL
 data <- NULL
 ##' @describeIn TMB-interface Interface to \link[TMB]{MakeADFun}.
-##' @param func Function taking a parameter list as input.
-##' @param parameters Parameter list used by \code{func}.
+##' @param func Function taking a parameter list (or parameter vector) as input.
+##' @param parameters Parameter list (or parameter vector) used by \code{func}.
 ##' @param random As \link[TMB]{MakeADFun}.
 ##' @param map As \link[TMB]{MakeADFun}.
 ##' @param ADreport As \link[TMB]{MakeADFun}.
 ##' @param silent As \link[TMB]{MakeADFun}.
 ##' @param ... Passed to TMB
+##' @examples
+##' ## Single argument vector function with numeric 'parameters'
+##' obj <- MakeADFun(function(x)-sum(dnorm(x, log=TRUE)), 1:10)
 MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE, silent=FALSE,...) {
     setdata <- NULL
     if (is.list(func)) {
         setdata <- attr(func, "setdata")
         func <- attr(func, "func")
+    }
+    if (is.numeric(parameters)) {
+        parnames <- names(formals(args(func)))
+        if (length(parnames) != 1)
+            stop("When 'parameters' is numeric 'func' must have a single argument")
+        func1 <- func
+        func <- function(p) do.call(func1, p)
+        parameters <- structure(list(parameters), names=parnames)
     }
     ## Make empty object
     obj <- TMB::MakeADFun(data=list(),
