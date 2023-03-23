@@ -31,12 +31,12 @@ getAll(..., warn = TRUE)
 
 OBS(x)
 
-checkConsistency(obj, ...)
+checkConsistency(obj, fast = TRUE, ...)
 }
 \arguments{
-\item{func}{Function taking a parameter list as input.}
+\item{func}{Function taking a parameter list (or parameter vector) as input.}
 
-\item{parameters}{Parameter list used by \code{func}.}
+\item{parameters}{Parameter list (or parameter vector) used by \code{func}.}
 
 \item{random}{As \link[TMB]{MakeADFun}.}
 
@@ -53,6 +53,8 @@ checkConsistency(obj, ...)
 \item{x}{Observation object}
 
 \item{warn}{Give a warning if overwriting an existing object?}
+
+\item{fast}{Pass \code{observation.name} to \code{TMB} ?}
 }
 \description{
 Interface to TMB
@@ -90,4 +92,6 @@ sdreport(obj)
 obj2 <- MakeADFun(f, list(mu=0, sd=1), random="mu", silent=TRUE)
 opt2 <- nlminb(obj2$par, obj2$fn, obj2$gr)
 sdreport(obj2) ## Compare with sd(rivers)
+## Single argument vector function with numeric 'parameters'
+obj <- MakeADFun(function(x)-sum(dnorm(x, log=TRUE)), 1:10)
 }
