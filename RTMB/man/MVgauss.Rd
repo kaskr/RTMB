@@ -8,11 +8,11 @@
 \alias{dseparable}
 \title{Multivariate Gaussian densities}
 \usage{
-dmvnorm(x, mu = 0, Sigma, log = FALSE)
+dmvnorm(x, mu = 0, Sigma, log = FALSE, scale = 1)
 
-dgmrf(x, mu = 0, Q, log = FALSE)
+dgmrf(x, mu = 0, Q, log = FALSE, scale = 1)
 
-dautoreg(x, phi, log = FALSE)
+dautoreg(x, mu = 0, phi, log = FALSE, scale = 1)
 
 dseparable(...)
 }
@@ -24,6 +24,8 @@ dseparable(...)
 \item{Sigma}{Covariance matrix}
 
 \item{log}{Logical; Return log density?}
+
+\item{scale}{Extra scale parameter - see section 'Scaling'.}
 
 \item{Q}{Sparse precision matrix}
 
@@ -43,7 +45,7 @@ Autoregressive density evaluation is implemented for all orders via \code{dautor
 We note that this variant is for a \emph{stationary}, \emph{mean zero} and \emph{variance one} process.
 FIXME: Provide parameterization via partial correlations.
 
-Separable extension can be constructed for an unlimited number of inputs. Each input must be a function returning a \emph{gaussian} \emph{mean zero} \strong{log} density. The output of \code{dseparable} is another \strong{log} density which can be evaluated for array arguments. For example \code{dseparable(f1,f2,f3)} takes as input a 3D array \code{x}. \code{f1} acts in 1st array dimension of \code{x}, \code{f2} in 2nd dimension and so on. In addition to \code{x}, parameters \code{mu} and \code{scale} can be supplied.
+Separable extension can be constructed for an unlimited number of inputs. Each input must be a function returning a \emph{gaussian} \emph{mean zero} \strong{log} density. The output of \code{dseparable} is another \strong{log} density which can be evaluated for array arguments. For example \code{dseparable(f1,f2,f3)} takes as input a 3D array \code{x}. \code{f1} acts in 1st array dimension of \code{x}, \code{f2} in 2nd dimension and so on. In addition to \code{x}, parameters \code{mu} and \code{scale} can be supplied - see below.
 }
 \section{Functions}{
 \itemize{
@@ -56,6 +58,13 @@ Separable extension can be constructed for an unlimited number of inputs. Each i
 \item \code{dseparable()}: Separable extension of Gaussian log-densities
 
 }}
+\section{Scaling}{
+
+All the densities accept a \code{scale} argument which replaces \code{SCALE} and \code{VECSCALE} functionality of TMB.
+Scaling is applied elementwise on the residual \code{x-mu}. This works as expected when \code{scale} is a \emph{scalar} or a \emph{vector} object of the same length as \code{x}.
+In addition, \code{dmvnorm} and \code{dgmrf} can be scaled by a vector of length equal to the covariance/precision dimension. In this case the \code{scale} parameter is recycled by row to meet the special row-wise vectorization of these densities.
+}
+
 \examples{
 func <- function(x, sd, parm, phi) {
    ## IID N(0, sd^2)
