@@ -4,7 +4,12 @@
 ##' @param Sigma Covariance matrix
 ##' @param mu Mean parameter vector
 ##' @param log Logical; Return log density?
-dmvnorm <- function(x, mu=0, Sigma, log=FALSE) {
+##' @param scale Extra scale parameter - see section 'Scaling'.
+dmvnorm <- function(x, mu=0, Sigma, log=FALSE, scale=1) {
+    if (!unit(scale)) {
+        return (dscale("dmvnorm", x, mu, Sigma,
+                       log=log, scale=scale, vectorize=TRUE))
+    }
     if (inherits(x, "simref")) {
         if (!log) stop("'simref' is for *log* density evaluation only")
         nr <- nrow(as.matrix(Sigma))
@@ -36,7 +41,12 @@ dmvnorm <- function(x, mu=0, Sigma, log=FALSE) {
 ##' @describeIn MVgauss Multivariate normal distribution. OSA is \emph{not} implemented.
 ##' @details The function `dgmrf()` is essentially identical to `dmvnorm()` with the only difference that `dgmrf()` is specified via the *precision* matrix (inverse covariance) assuming that this matrix is *sparse*.
 ##' @param Q Sparse precision matrix
-dgmrf <- function(x, mu=0, Q, log=FALSE) {
+dgmrf <- function(x, mu=0, Q, log=FALSE, scale=1) {
+    if (!unit(scale)) {
+        return (dscale("dgmrf", x, mu, Q,
+                       log=log, scale=scale, vectorize=TRUE))
+    }
+
     if (!ad_context()) { ## Workaround: see C++ code 'gmrf0'
         F <- .MakeTape(function(...)advector(dgmrf(x,mu,Q,log)),numeric(0))
         return (F$eval(numeric(0)))
@@ -56,7 +66,11 @@ dgmrf <- function(x, mu=0, Q, log=FALSE) {
 ##' We note that this variant is for a *stationary*, *mean zero* and *variance one* process.
 ##' FIXME: Provide parameterization via partial correlations.
 ##' @param phi Autoregressive parameters
-dautoreg <- function(x, phi, log=FALSE) {
+dautoreg <- function(x, mu=0, phi, log=FALSE, scale=1) {
+    if (!zero(mu) || !unit(scale)) {
+        return (dscale("dautoreg", x, 0, phi,
+                       log=log, center=mu, scale=scale))
+    }
     k <- length(phi)
     M <- matrix(0, k, k)
     for (i in 1:k) {
@@ -101,7 +115,11 @@ dautoreg <- function(x, phi, log=FALSE) {
 }
 
 ##' @describeIn MVgauss Separable extension of Gaussian log-densities
-##' @details Separable extension can be constructed for an unlimited number of inputs. Each input must be a function returning a *gaussian* *mean zero* **log** density. The output of `dseparable` is another **log** density which can be evaluated for array arguments. For example `dseparable(f1,f2,f3)` takes as input a 3D array `x`. `f1` acts in 1st array dimension of `x`, `f2` in 2nd dimension and so on. In addition to `x`, parameters `mu` and `scale` can be supplied.
+##' @details Separable extension can be constructed for an unlimited number of inputs. Each input must be a function returning a *gaussian* *mean zero* **log** density. The output of `dseparable` is another **log** density which can be evaluated for array arguments. For example `dseparable(f1,f2,f3)` takes as input a 3D array `x`. `f1` acts in 1st array dimension of `x`, `f2` in 2nd dimension and so on. In addition to `x`, parameters `mu` and `scale` can be supplied - see below.
+##' @section Scaling:
+##' All the densities accept a `scale` argument which replaces `SCALE` and `VECSCALE` functionality of TMB.
+##' Scaling is applied elementwise on the residual `x-mu`. This works as expected when `scale` is a *scalar* or a *vector* object of the same length as `x`.
+##' In addition, `dmvnorm` and `dgmrf` can be scaled by a vector of length equal to the covariance/precision dimension. In this case the `scale` parameter is recycled by row to meet the special row-wise vectorization of these densities.
 ##' @param ... Log densities
 ##' @examples
 ##' func <- function(x, sd, parm, phi) {
@@ -126,9 +144,12 @@ dautoreg <- function(x, phi, log=FALSE) {
 dseparable <- function(...) {
     f <- list(...)
     stopifnot(all(sapply(f, is.function)))
-    function(x, mu=0, scale=1) {
-        have.mu <- !identical(mu, 0)
-        have.scale <- !identical(scale, 1)
+    dsep <- function(x, mu=0, scale=1, log=TRUE) {
+        if (!log) stop("'dseparable' is for *log* density evaluation only")
+        if (!zero(mu) || !unit(scale)) {
+            return (dscale(dsep, x,
+                           log=log, center=mu, scale=scale))
+        }
         if (inherits(x, "osa")) {
             ok <-
                 (length(x@x) == length(x@keep)) &&  ## no CDF method!
@@ -138,8 +159,6 @@ dseparable <- function(...) {
                 stop("'osa' (marginalization) is not fully implemented for separable densities")
             x <- x@x
         }
-        if (have.mu) x <- x - mu
-        if (have.scale) x <- x / scale
         dosim <- inherits(x, "simref")
         d <- dim(x)
         stopifnot(length(d) == length(f))
@@ -170,8 +189,62 @@ dseparable <- function(...) {
         }
         ans <- ans - .5 * sum(x * x0)
         ans <- ans - length(x) * log(sqrt(2 * pi))
-        if (have.scale)
-            ans <- ans - sum(rep(log(scale), length.out=length(x)))
         ans
     }
+    dsep
 }
+
+## Utility to scale a density:
+dscale <- function(f, x, ...,
+                   log=FALSE, center=0, scale, vectorize=FALSE) {
+    f <- match.fun(f)
+    ## Handle the special 'byrow' vectorization offered by 'mvnorm' and 'gmrf'
+    if (vectorize) {
+        if (length(scale) > 1) {
+            if (length(scale) != length(x)) {
+                ## weird 'byrow' case
+                if (!is.matrix(x))
+                    stop("'x' must be a matrix")
+                nc <- ncol(x)
+                if (length(scale) != nc)
+                    stop("Vector 'scale' must be compatible with *rows* of 'x'")
+                scale <- matrix(scale, nrow(x), ncol(x), byrow=TRUE)
+            } else {
+                if (!is.null(dim(x))) {
+                    if (!identical(dim(x), dim(scale))) {
+                        stop("'dim(scale)' must equal 'dim(x)'")
+                    }
+                }
+            }
+        }
+    }
+    ## Aggregation 'byrow' in vectorized case
+    if (vectorize)
+        Sum <- rowSums
+    else
+        Sum <- sum
+    ## Check 'center' and 'scale'
+    if (length(scale) != 1L)
+        if (length(scale) != length(x))
+            stop("Vector 'scale' must have same length as 'x'")
+    if (length(center) != 1L)
+        if (length(center) != length(x))
+            stop("Vector 'center' must have same length as 'x'")
+    do.center <- !zero(center)
+    if (inherits(x, "osa")) {
+        if (!log) stop("'osa' is for *log* density evaluation only")
+        if (do.center) x@x <- x@x - center
+        x@x <- x@x / scale
+        keep <- as.matrix(x@keep)[,1] ## Ignore CDF adjustment (it is zero)
+        dim(keep) <- dim(x)
+        ans <- f(x, ..., log=TRUE) - Sum(keep * log(scale))
+        return (ans)
+    }
+    if (do.center) x <- x - center
+    nrep <- length(x) / length(scale)
+    ans <- f(x / scale, ..., log=TRUE) - nrep * Sum(log(scale))
+    if (log) ans else exp(ans)
+}
+
+zero <- function(x) identical(x, 0)
+unit <- function(x) identical(x, 1)
