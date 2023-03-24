@@ -85,6 +85,15 @@ OBS <- function(x) {
     new("osa", x=x., keep=keep)
 }
 
+##' @describeIn OSA-residuals Equivalent of \link[base]{length}
+"length.osa" <- function(x) length(x@x)
+##' @describeIn OSA-residuals Equivalent of \link[base]{dim}
+"dim.osa" <- function(x) dim(x@x)
+##' @describeIn OSA-residuals Equivalent of \link[base]{is.array}
+is.array.osa <- function(x) is.array(x@x)
+##' @describeIn OSA-residuals Equivalent of \link[base]{is.matrix}
+is.matrix.osa <- function(x) is.matrix(x@x)
+
 dGenericOSA <- function(.Generic, x, ..., log) {
     if (!log) stop("'OSA' is for *log* density evaluation only")
     keep <- x@keep

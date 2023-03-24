@@ -4,6 +4,10 @@
 \alias{OSA-residuals}
 \alias{oneStepPredict}
 \alias{[.osa}
+\alias{length.osa}
+\alias{dim.osa}
+\alias{is.array.osa}
+\alias{is.matrix.osa}
 \title{Recursive quantile residuals}
 \usage{
 oneStepPredict(
@@ -14,6 +18,14 @@ oneStepPredict(
 )
 
 \method{[}{osa}(x, ...)
+
+\method{length}{osa}(x)
+
+\method{dim}{osa}(x)
+
+\method{is.array}{osa}(x)
+
+\method{is.matrix}{osa}(x)
 }
 \arguments{
 \item{obj}{TMB model object (output from \code{MakeADFun})}
@@ -43,6 +55,14 @@ This function makes sure that when you subset an observation of class \code{"osa
 \code{obs <- new("osa", x=advector(matrix(1:10,2)), keep = cbind(rep(TRUE,10),FALSE,FALSE))}
 the 'keep' attribute will be adjusted accordingly
 \code{obs[,1:2]}
+
+\item \code{length(osa)}: Equivalent of \link[base]{length}
+
+\item \code{dim(osa)}: Equivalent of \link[base]{dim}
+
+\item \code{is.array(osa)}: Equivalent of \link[base]{is.array}
+
+\item \code{is.matrix(osa)}: Equivalent of \link[base]{is.matrix}
 
 }}
 \examples{
