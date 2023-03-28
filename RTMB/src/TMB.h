@@ -1,5 +1,4 @@
-#include <Rcpp.h>
-#define TMB_ABORT Rcpp::stop("Bailing out")
+#include "config.h"
 #ifndef TMB_H
 #define TMB_H
 #ifdef TMB_PRECOMPILE
