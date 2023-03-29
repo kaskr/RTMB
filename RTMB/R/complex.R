@@ -206,6 +206,7 @@ rcompois2 <- function(n, mean, nu) {
         x <- activate(x)
     }
     y <- f(x)
+    y <- advector(y)
     dependent(y)
     F
 }
