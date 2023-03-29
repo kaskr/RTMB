@@ -2,7 +2,7 @@ install:
 	R CMD INSTALL RTMB
 
 doc-update:
-	echo "suppressWarnings(roxygen2::roxygenize(\"RTMB\",roclets = c(\"collate\", \"rd\")))" | R --slave
+	echo "library(roxygen2);suppressWarnings(roxygenize(\"RTMB\",roclets = c(\"collate\", \"rd\"), load_code=load_installed))" | R --slave
 	sed -i '/RoxygenNote/d' RTMB/DESCRIPTION
 
 unexport TEXINPUTS

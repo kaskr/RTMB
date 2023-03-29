@@ -129,7 +129,7 @@ re-used for AD vectors.
 
 \item \code{aperm(advector)}: Equivalent of \link[base]{aperm}
 
-\item \code{c(advector)}: Equivalent of \link[base]{c}
+\item \code{c(advector)}: Equivalent of \link[base]{c}. However note the limitation for mixed types: If \code{x} is an AD type, \code{c(x,1)} works while \code{c(1,x)} does not!
 
 \item \code{[}: Equivalent of \link[base]{[}
 
