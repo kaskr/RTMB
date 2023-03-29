@@ -7,12 +7,26 @@ library(RTMB)
 source("sdv_multi_data.R")
 X=y
 
+## Helper to generate UNSTRUCTURED_CORR: Move to MVgauss
+unstructured <- function(k) {
+    N <- (k * k - k) / 2
+    list(
+        parms = function() rep(0, N),
+        corr = function(x) {
+            if (length(x) != N) stop("Expected ", N, " parameters")
+            L <- diag(k)
+            L[lower.tri(L)] <- x
+            cov2cor( L %*% t(L) )
+        })
+}
+
 ## Parameter initial guess
+us <- unstructured(p) ## Unstructured pxp correlation
 parameters <- list(
     phi        = rep(0.97,p),               # See eqn (12) in Skaug and Yu (2014)
     log_sigma  = rep(-1.7,p),               #       ---------||---------
     mu_x       = rep(-0.5,p),               #       ---------||---------
-    off_diag_x = rep(0.0,p),                #       ---------||---------
+    off_diag_x = us$parms(),                #       ---------||---------
     h          = matrix(0.0,nrow=n,ncol=p)  #       ---------||---------
 )
 
@@ -33,9 +47,7 @@ f <- function(parms) {
         nll <- nll - dautoreg(h[,j], phi=phi[j], scale=sigma_init[j], log=TRUE)
     }
     ## Parameterizes correlation matrix of X in terms of Cholesky factor
-    L <- diag(p)
-    L[lower.tri(L)] <- parms$off_diag_x   
-    R <- cov2cor(L%*%t(L))  # Correlation matrix of X (guarantied positive definite)
+    R <- us$corr(parms$off_diag_x)
     ## Scaling parameter
     mux <- matrix(parms$mu_x, nrow(h), ncol(h), byrow=TRUE)
     sigma_y <- exp( .5 * (h + mux) )
