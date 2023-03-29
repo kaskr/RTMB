@@ -17,7 +17,7 @@ CONS:
 
 ## Install
 
-NOTE: Requires at least `TMB-1.9.2`.
+NOTE: Requires at least `TMB-1.9.3`.
 
 ```r
 remotes::install_github("https://github.com/kaskr/RTMB", subdir="RTMB")

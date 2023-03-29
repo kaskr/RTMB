@@ -1,3 +1,4 @@
+#include "config.h"
 #ifndef TMB_H
 #define TMB_H
 #ifdef TMB_PRECOMPILE
