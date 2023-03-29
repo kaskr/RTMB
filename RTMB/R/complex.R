@@ -80,9 +80,10 @@ as.vector.advector <- function(x, mode = "any") {
 aperm.advector <- function(a, perm, ...) {
     asS4(structure(NextMethod(), class="advector"))
 }
-##' @describeIn ADvector Equivalent of \link[base]{c}
+##' @describeIn ADvector Equivalent of \link[base]{c}. However note the limitation for mixed types: If `x` is an AD type, `c(x,1)` works while `c(1,x)` does not!
 c.advector <- function(...) {
-    asS4(structure(NextMethod(), class="advector"))
+    ans <- unlist(lapply(list(...), advector))
+    asS4(structure(ans, class = "advector"))
 }
 ##' @describeIn ADvector Equivalent of \link[base]{[}
 "[.advector" <- function(x, ...) {
