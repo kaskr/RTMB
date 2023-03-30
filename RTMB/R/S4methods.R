@@ -14,7 +14,8 @@ setAs("sparseMatrix", "adsparse",
 IndexMap <- function(x) new("dgCMatrix",
                             i=x@i, p=x@p, Dim=x@Dim, x=as.numeric(seq_along(x@x)))
 ApplyMatrixMethod <- function(method, x, ...) {
-    method <- match.fun(method)
+    if (is.character(method))
+        method <- match.fun(method)
     ans <- method(IndexMap(x), ...)
     if (!is.null(dim(ans))) {
         ans <- as(as(ans, "generalMatrix"), "sparseMatrix")
@@ -35,10 +36,11 @@ ApplyMatrixReplaceMethod <- function(method, x, ..., value) {
 }
 
 ##' @describeIn ADmatrix AD sparse matrix transpose. Re-directs to \link[Matrix]{t,CsparseMatrix-method}.
-setMethod("t", "adsparse", function(x) ApplyMatrixMethod("t", x) )
+t.adsparse <- function(x) ApplyMatrixMethod(Matrix::t, x)
 ##' @describeIn ADmatrix AD sparse matrix subsetting. Re-directs to \link[Matrix]{[-methods}.
 "[.adsparse" <- function(x, ...) ApplyMatrixMethod("[", x, ...)
 ##' @describeIn ADmatrix AD sparse matrix subset assignment. Re-directs to \link[Matrix]{[<--methods}.
+##' @param value Replacement value
 "[<-.adsparse" <- function(x, ..., value) {
     x <- ApplyMatrixReplaceMethod("[<-", x, ..., value=value)
     x

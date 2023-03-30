@@ -49,6 +49,7 @@ S3method(is.na, simref)
 S3method(t, simref)
 S3method(diff, simref)
 S3method(Summary, simref)
+S3method(t, adsparse)
 S3method("[", adsparse)
 S3method("[<-", adsparse)
 

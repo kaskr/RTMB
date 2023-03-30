@@ -2,7 +2,7 @@
 % Please edit documentation in R/00roxygen.R, R/S4methods.R
 \name{ADmatrix}
 \alias{ADmatrix}
-\alias{t,adsparse-method}
+\alias{t.adsparse}
 \alias{[.adsparse}
 \alias{[<-.adsparse}
 \alias{diag,adsparse,missing,missing-method}
@@ -24,7 +24,7 @@
 \alias{rbind.advector}
 \title{AD matrix methods (sparse and dense)}
 \usage{
-\S4method{t}{adsparse}(x)
+\method{t}{adsparse}(x)
 
 \method{[}{adsparse}(x, ...)
 
@@ -68,6 +68,8 @@
 \item{x}{matrix (sparse or dense)}
 
 \item{...}{As \link[base]{cbind}}
+
+\item{value}{Replacement value}
 
 \item{y}{matrix (sparse or dense)}
 
