@@ -2,31 +2,47 @@
 % Please edit documentation in R/00roxygen.R, R/S4methods.R
 \name{ADmatrix}
 \alias{ADmatrix}
+\alias{t,adsparse-method}
+\alias{[.adsparse}
+\alias{[<-.adsparse}
+\alias{diag,adsparse,missing,missing-method}
+\alias{diag<-,adsparse,ad-method}
 \alias{expm,advector-method}
 \alias{expm,adsparse-method}
 \alias{dim,adsparse-method}
-\alias{\%*\%,adsparse,ad-method}
-\alias{\%*\%,ad,adsparse-method}
+\alias{\%*\%,anysparse,ad-method}
+\alias{\%*\%,ad,anysparse-method}
 \alias{\%*\%,adsparse,adsparse-method}
 \alias{\%*\%,ad,ad-method}
 \alias{tcrossprod,advector,ANY-method}
 \alias{crossprod,advector,ANY-method}
 \alias{solve,advector,ad.-method}
+\alias{solve,anysparse,ad.-method}
 \alias{colSums,advector-method}
 \alias{rowSums,advector-method}
 \alias{cbind.advector}
 \alias{rbind.advector}
 \title{AD matrix methods (sparse and dense)}
 \usage{
+\S4method{t}{adsparse}(x)
+
+\method{[}{adsparse}(x, ...)
+
+\method{[}{adsparse}(x, ...) <- value
+
+\S4method{diag}{adsparse,missing,missing}(x)
+
+\S4method{diag}{adsparse,ad}(x) <- value
+
 \S4method{expm}{advector}(x)
 
 \S4method{expm}{adsparse}(x)
 
 \S4method{dim}{adsparse}(x)
 
-\S4method{\%*\%}{adsparse,ad}(x, y)
+\S4method{\%*\%}{anysparse,ad}(x, y)
 
-\S4method{\%*\%}{ad,adsparse}(x, y)
+\S4method{\%*\%}{ad,anysparse}(x, y)
 
 \S4method{\%*\%}{adsparse,adsparse}(x, y)
 
@@ -37,6 +53,8 @@
 \S4method{crossprod}{advector,ANY}(x, y = NULL)
 
 \S4method{solve}{advector,ad.}(a, b)
+
+\S4method{solve}{anysparse,ad.}(a, b)
 
 \S4method{colSums}{advector}(x)
 
@@ -49,19 +67,29 @@
 \arguments{
 \item{x}{matrix (sparse or dense)}
 
+\item{...}{As \link[base]{cbind}}
+
 \item{y}{matrix (sparse or dense)}
 
 \item{a}{matrix}
 
 \item{b}{matrix, vector or missing}
-
-\item{...}{As \link[base]{cbind}}
 }
 \description{
 Matrices (\strong{base} package) and sparse matrices (\strong{Matrix} package) can be used inside the \code{RTMB} objective function as part of the calculations. Behind the scenes these R objects are converted to AD representations when needed. AD objects have a temporary lifetime, so you probably won't see them / need to know them. The only important thing is which \emph{methods} work for the objects.
 }
 \section{Functions}{
 \itemize{
+\item \code{t(adsparse)}: AD sparse matrix transpose. Re-directs to \link[Matrix]{t,CsparseMatrix-method}.
+
+\item \code{[}: AD sparse matrix subsetting. Re-directs to \link[Matrix]{[-methods}.
+
+\item \code{`[`(adsparse) <- value}: AD sparse matrix subset assignment. Re-directs to \link[Matrix]{[<--methods}.
+
+\item \code{diag(x = adsparse, nrow = missing, ncol = missing)}: AD sparse matrix diagonal extract. Re-directs to \link[Matrix]{diag,CsparseMatrix-method}.
+
+\item \code{diag(x = adsparse) <- value}: AD sparse matrix diagonal replacement. Re-directs to \link[Matrix]{diag<-,CsparseMatrix-method}.
+
 \item \code{expm(advector)}: AD matrix exponential
 
 \item \code{expm(adsparse)}: AD matrix exponential
@@ -81,6 +109,8 @@ Matrices (\strong{base} package) and sparse matrices (\strong{Matrix} package) c
 \item \code{crossprod(x = advector, y = ANY)}: AD matrix multiply
 
 \item \code{solve(a = advector, b = ad.)}: AD matrix inversion and solve
+
+\item \code{solve(a = anysparse, b = ad.)}: Sparse AD matrix solve (not yet implemented)
 
 \item \code{colSums(advector)}: AD matrix (or array) colsums
 

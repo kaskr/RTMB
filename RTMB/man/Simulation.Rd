@@ -43,7 +43,7 @@ simref(n)
 
 \method{Math}{simref}(x, ...)
 
-\method{t}{simref}(x)
+t.simref(x)
 
 \method{diff}{simref}(x, lag = 1L, differences = 1L, ...)
 
@@ -132,7 +132,7 @@ The latter will have no effect in simulation mode (the simulation will be \code{
 
 \item \code{Math(simref)}: Equivalent of \link[base]{Math}
 
-\item \code{t(simref)}: Equivalent of \link[base]{t}
+\item \code{t.simref()}: Equivalent of \link[base]{t}
 
 \item \code{diff(simref)}: Equivalent of \link[base]{diff}
 
