@@ -7,6 +7,9 @@ Type objective_function<Type>::operator() () {
   this->index = this->theta.size();
   return 0;
 }
+// Force instantiation (needed on some platforms)
+template ad objective_function<ad>::operator() ();
+template double objective_function<double>::operator() ();
 
 /* ========================================================================== */
 /* ADFun object */
