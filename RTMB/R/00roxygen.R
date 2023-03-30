@@ -300,6 +300,12 @@ NULL
 ##' obj$simulate()
 NULL
 
+## FIXME: Tidy the class union names
+## - Given a class 'A', what's a good name for a union that can be converted to 'A' ?
+## * For example, we currently use 'ad' to denote an argument type that is convertable to 'advector'.
+## * And we use 'anysparse' to denote an argument type that is convertable to 'adsparse'.
+## * We add a dot '.' to the class union to signify that it might be missing.
+## Obviously, a bit of a mess.
 setClass("advector") ## Virtual class
 setClass("adsparse",
          slots=c(x="advector", i="integer", p="integer", Dim="integer"))
@@ -310,6 +316,7 @@ setClassUnion("num.", c("num", "missing"))
 setClassUnion("ad",  c("advector", "num"))
 setClassUnion("ad.", c("advector", "num."))
 setClassUnion("logical.", c("logical", "missing"))
+setClassUnion("anysparse",  c("adsparse", "sparseMatrix"))
 ## For OSA residuals
 setClass("osa", list(x="ad", keep="ad"))
 ## For simulation

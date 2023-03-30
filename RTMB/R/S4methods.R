@@ -8,6 +8,46 @@ setAs("sparseMatrix", "adsparse",
           new("adsparse", x=advector(x@x), i=x@i, p=x@p, Dim=x@Dim)
       })
 
+################################################################################
+## Utilities to reuse methods from the Matrix package
+################################################################################
+IndexMap <- function(x) new("dgCMatrix",
+                            i=x@i, p=x@p, Dim=x@Dim, x=as.numeric(seq_along(x@x)))
+ApplyMatrixMethod <- function(method, x, ...) {
+    method <- match.fun(method)
+    ans <- method(IndexMap(x), ...)
+    if (!is.null(dim(ans))) {
+        ans <- as(as(ans, "generalMatrix"), "sparseMatrix")
+        new("adsparse", i=ans@i, p=ans@p, Dim=ans@Dim, x=x@x[ans@x])
+    }
+    else
+        c(advector(0), x@x)[ans + 1L]
+}
+ApplyMatrixReplaceMethod <- function(method, x, ..., value) {
+    method <- match.fun(method)
+    xmap <- IndexMap(x)
+    vmap <- seq_along(value) + length(x@x)
+    ans <- method(xmap, ..., value=vmap)
+    if (is.null(dim(ans))) stop("unexpected")
+    ans <- as(as(ans, "generalMatrix"), "sparseMatrix")
+    new("adsparse", i=ans@i, p=ans@p, Dim=ans@Dim,
+        x=c(advector(0), x@x, value)[ans@x + 1L])
+}
+
+##' @describeIn ADmatrix AD sparse matrix transpose. Re-directs to \link[Matrix]{t,CsparseMatrix-method}.
+setMethod("t", "adsparse", function(x) ApplyMatrixMethod("t", x) )
+##' @describeIn ADmatrix AD sparse matrix subsetting. Re-directs to \link[Matrix]{[-methods}.
+"[.adsparse" <- function(x, ...) ApplyMatrixMethod("[", x, ...)
+##' @describeIn ADmatrix AD sparse matrix subset assignment. Re-directs to \link[Matrix]{[<--methods}.
+"[<-.adsparse" <- function(x, ..., value) {
+    x <- ApplyMatrixReplaceMethod("[<-", x, ..., value=value)
+    x
+}
+##' @describeIn ADmatrix AD sparse matrix diagonal extract. Re-directs to \link[Matrix]{diag,CsparseMatrix-method}.
+setMethod("diag", c("adsparse", "missing", "missing"), function(x) ApplyMatrixMethod("diag", x) )
+##' @describeIn ADmatrix AD sparse matrix diagonal replacement. Re-directs to \link[Matrix]{diag<-,CsparseMatrix-method}.
+setReplaceMethod("diag", c("adsparse", "ad"), function(x, value) ApplyMatrixReplaceMethod("diag<-", x, value=value) )
+
 ##setClassUnion("advector_castable", c("advector", "numeric"))
 
 ##' @describeIn ADmatrix AD matrix exponential
@@ -53,8 +93,9 @@ setMethod("Ops",
 
 ##' @describeIn ADmatrix AD matrix multiply
 setMethod("%*%",
-          signature("adsparse", "ad"),
+          signature("anysparse", "ad"),
           function(x, y) {
+              x <- as(x, "adsparse")
               y <- as.matrix(advector(y))
               if ( ncol(x) != nrow(y) )
                   stop("non-conformable arguments")
@@ -62,9 +103,10 @@ setMethod("%*%",
           })
 ##' @describeIn ADmatrix AD matrix multiply
 setMethod("%*%",
-          signature("ad", "adsparse"),
+          signature("ad", "anysparse"),
           function(x, y) {
               x <- as.matrix(advector(x))
+              y <- as(y, "adsparse")
               if ( ncol(x) != nrow(y) )
                   stop("non-conformable arguments")
               SparseArith2(x, y, .Generic)
@@ -104,6 +146,14 @@ setMethod("solve",
                   ans <- ans %*% b
               }
               ans
+          })
+##' @describeIn ADmatrix Sparse AD matrix solve (not yet implemented)
+##' @param a matrix
+##' @param b matrix, vector or missing
+setMethod("solve",
+          signature("anysparse", "ad."),
+          function(a, b) {
+              stop("Sparse AD solve is not yet implemented")
           })
 ##' @describeIn ADmatrix AD matrix (or array) colsums
 setMethod("colSums", signature(x="advector"),
