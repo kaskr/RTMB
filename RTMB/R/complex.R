@@ -140,10 +140,10 @@ ADoverloads <- function(enable=TRUE, ...) {
     attached <- ( "AD-overloads" %in% search() )
     if (enable) {
          if (!attached)
-             attach(xtra, name="AD-overloads", ...)
+             base::attach(xtra, name="AD-overloads", ...)
     } else {
         if (attached)
-            detach("AD-overloads")
+            base::detach("AD-overloads")
     }
     enable
 }
