@@ -251,9 +251,9 @@ rcompois2 <- function(n, mean, nu) {
 ## Low level version: Everything available
 .MakeTape <- function(f, x) {
     F <- new(adfun)
-    F$start()
+    F$start(); ADoverloads(TRUE, warn=FALSE)
     ## Make sure to stop even in case of failure
-    on.exit(F$stop())
+    on.exit({F$stop(); ADoverloads(FALSE, warn=FALSE)})
     activate <- function(x) {
         x <- advector(x)
         x[] <- independent(x)
