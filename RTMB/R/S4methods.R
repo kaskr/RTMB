@@ -137,7 +137,7 @@ setMethod( "crossprod", signature("advector"),
 ##' @param a matrix
 ##' @param b matrix, vector or missing
 setMethod("solve",
-          signature("advector", "ad."),
+          signature("ad", "ad."),
           function(a, b) {
               a <- as.matrix(a)
               ans <- matinv(advector(a))
@@ -146,6 +146,11 @@ setMethod("solve",
                   ans <- ans %*% b
               }
               ans
+          })
+##' @describeIn ADmatrix AD matrix inversion and solve
+setMethod("solve", signature("num", "num."),
+          function(a, b) {
+              base::solve(a, b)
           })
 ##' @describeIn ADmatrix Sparse AD matrix solve (not yet implemented)
 ##' @param a matrix
