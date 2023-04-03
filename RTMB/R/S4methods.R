@@ -47,8 +47,6 @@ t.adsparse <- function(x) ApplyMatrixMethod(Matrix::t, x)
 }
 ##' @describeIn ADmatrix AD sparse matrix diagonal extract. Re-directs to \link[Matrix]{diag,CsparseMatrix-method}.
 setMethod("diag", c("adsparse", "missing", "missing"), function(x) ApplyMatrixMethod("diag", x) )
-##' @describeIn ADmatrix AD sparse matrix diagonal replacement. Re-directs to \link[Matrix]{diag<-,CsparseMatrix-method}.
-setReplaceMethod("diag", c("adsparse", "ad"), function(x, value) ApplyMatrixReplaceMethod("diag<-", x, value=value) )
 
 ##setClassUnion("advector_castable", c("advector", "numeric"))
 
@@ -226,17 +224,6 @@ setMethod("qlogis", c("advector", "missing", "missing", "missing", "missing"),
 ## - However, matrix construction has issues
 
 ##' @describeIn ADconstruct Equivalent of \link[base]{diag}
-##' @param x As \link[base]{diag}
-##' @param nrow As \link[base]{diag}
-##' @param ncol As \link[base]{diag}
-setMethod("diag", signature(x="num.", nrow="num.", ncol="num."),
-          function(x, nrow, ncol) {
-              ans <- callNextMethod()
-              if (ad_context()) ans <- advector(ans)
-              ans
-          })
-
-##' @describeIn ADconstruct Equivalent of \link[base]{diag}
 setMethod("diag", signature(x="advector", nrow="ANY", ncol="ANY"),
           function(x, nrow, ncol) {
               ## Diagonal extraction: base::diag works fine
@@ -248,39 +235,11 @@ setMethod("diag", signature(x="advector", nrow="ANY", ncol="ANY"),
               ans
           })
 
-## Constructors that need 'magic'
-##' @describeIn ADconstruct Equivalent of \link[base]{numeric}
-##' @param length As \link[base]{numeric}
-setMethod("numeric", signature(length="num."),
-          function(length) {
-              ans <- callNextMethod()
-              if (ad_context()) ans <- advector(ans)
-              ans
-          })
-##' @describeIn ADconstruct Equivalent of \link[base]{matrix}
-##' @param data As \link[base]{matrix}
-##' @param byrow As \link[base]{matrix}
-setMethod("matrix", signature(data="num."),
-          function(data, nrow, ncol, byrow, dimnames) {
-              ans <- callNextMethod()
-              if (ad_context()) ans <- advector(ans)
-              ans
-          })
 ##' @describeIn ADconstruct Equivalent of \link[base]{matrix}
 setMethod("matrix", signature(data="advector"),
           function(data, nrow, ncol, byrow, dimnames) {
               ans <- callNextMethod()
               class(ans) <- "advector"
-              ans
-          })
-##' @describeIn ADconstruct Equivalent of \link[base]{array}
-##' @param data As \link[base]{array}
-##' @param dim As \link[base]{array}
-##' @param dimnames As \link[base]{array}
-setMethod("array", signature(data="num."),
-          function(data, dim, dimnames) {
-              ans <- callNextMethod()
-              if (ad_context()) ans <- advector(ans)
               ans
           })
 ##' @describeIn ADapply As \link[base]{apply}

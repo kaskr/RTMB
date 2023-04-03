@@ -97,15 +97,18 @@ xtra <- local({
             if (is.numeric(x))
                 x <- advector(x)
         }
-        .Primitive("[<-")(x, ..., value=value)
+        base::"[<-" (x, ..., value=value)
     }
     "diag<-" <- function(x, value) {
         if (inherits(value, "advector")) {
             if (is.numeric(x)) {
                 x <- advector(x)
-            }
+            } else
+                if (inherits(x, "sparseMatrix")) {
+                    x <- as(x, "adsparse")
+                }
         }
-        RTMB:::"diag<-"(x, value)
+        base::"diag<-" (x, value)
     }
     c <- function(...) {
         args <- list(...)
@@ -114,7 +117,7 @@ xtra <- local({
             ans <- structure(unlist(args), class="advector")
             return(ans)
         }
-        .Primitive("c")(...)
+        base::"c" (...)
     }
     environment()
 })
