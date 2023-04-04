@@ -1,0 +1,3 @@
+import("RTMB") ## All RTMB functions and classes
+importFrom("stats", "cov2cor", "nlminb") ## Additional imports
+export("sdvmulti")

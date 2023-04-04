@@ -1,0 +1,10 @@
+Package: rtmbTest
+Type: Package
+Title: Test that a Package can Import and Apply RTMB
+Version: 1.0
+Date: 2023-04-04
+Author: Kasper Kristensen
+Maintainer: kaskr <kaskr@dtu.dk>
+Description: Test that a package, which imports RTMB, can still pass R CMD check.
+License: GPL (>= 2)
+Imports: RTMB
