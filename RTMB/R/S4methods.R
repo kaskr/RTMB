@@ -229,6 +229,7 @@ setMethod("qlogis", c("advector", "missing", "missing", "missing", "missing"),
 ## - However, matrix construction has issues
 
 ##' @describeIn ADconstruct Equivalent of \link[base]{diag}
+##' @param x As \link[base]{diag}
 setMethod("diag", signature(x="advector", nrow="ANY", ncol="ANY"),
           function(x, nrow, ncol) {
               ## Diagonal extraction: base::diag works fine
@@ -241,6 +242,11 @@ setMethod("diag", signature(x="advector", nrow="ANY", ncol="ANY"),
           })
 
 ##' @describeIn ADconstruct Equivalent of \link[base]{matrix}
+##' @param data As \link[base]{matrix}
+##' @param nrow As \link[base]{matrix}
+##' @param ncol As \link[base]{matrix}
+##' @param byrow As \link[base]{matrix}
+##' @param dimnames As \link[base]{matrix}
 setMethod("matrix", signature(data="advector"),
           function(data, nrow, ncol, byrow, dimnames) {
               ans <- callNextMethod()
