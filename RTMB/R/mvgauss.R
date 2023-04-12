@@ -6,6 +6,7 @@
 ##' @param log Logical; Return log density?
 ##' @param scale Extra scale parameter - see section 'Scaling'.
 dmvnorm <- function(x, mu=0, Sigma, log=FALSE, scale=1) {
+    ADoverload()
     if (!unit(scale)) {
         return (dscale("dmvnorm", x, mu, Sigma,
                        log=log, scale=scale, vectorize=TRUE))
@@ -42,6 +43,7 @@ dmvnorm <- function(x, mu=0, Sigma, log=FALSE, scale=1) {
 ##' @details The function `dgmrf()` is essentially identical to `dmvnorm()` with the only difference that `dgmrf()` is specified via the *precision* matrix (inverse covariance) assuming that this matrix is *sparse*.
 ##' @param Q Sparse precision matrix
 dgmrf <- function(x, mu=0, Q, log=FALSE, scale=1) {
+    ADoverload()
     if (!unit(scale)) {
         return (dscale("dgmrf", x, mu, Q,
                        log=log, scale=scale, vectorize=TRUE))
@@ -67,6 +69,7 @@ dgmrf <- function(x, mu=0, Q, log=FALSE, scale=1) {
 ##' FIXME: Provide parameterization via partial correlations.
 ##' @param phi Autoregressive parameters
 dautoreg <- function(x, mu=0, phi, log=FALSE, scale=1) {
+    "[<-" <- ADoverload("[<-")
     if (!zero(mu) || !unit(scale)) {
         return (dscale("dautoreg", x, 0, phi,
                        log=log, center=mu, scale=scale))
@@ -145,6 +148,7 @@ dseparable <- function(...) {
     f <- list(...)
     stopifnot(all(sapply(f, is.function)))
     dsep <- function(x, mu=0, scale=1, log=TRUE) {
+        ADoverload()
         if (!log) stop("'dseparable' is for *log* density evaluation only")
         if (!zero(mu) || !unit(scale)) {
             return (dscale(dsep, x,
@@ -197,6 +201,7 @@ dseparable <- function(...) {
 ## Utility to scale a density:
 dscale <- function(f, x, ...,
                    log=FALSE, center=0, scale, vectorize=FALSE) {
+    ADoverload()
     f <- match.fun(f)
     ## Handle the special 'byrow' vectorization offered by 'mvnorm' and 'gmrf'
     if (vectorize) {

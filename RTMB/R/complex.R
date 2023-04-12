@@ -130,24 +130,21 @@ xtra <- local({
 ##'
 ##' In all cases, the result should be AD.
 ##' The methods are automatically **temporarily** attached to the search path (`search()`) when entering \link{MakeTape} or \link{MakeADFun}.
-##' Alternatively, by running `ADoverloads()`, the methods will be added to the calling environment (`parent.frame()`). This is only necessary when using RTMB from a package.
+##' Alternatively, methods can be overloaded locally inside functions using e.g. `"[<-" <- ADoverload("[<-")`. This is only needed when using RTMB from a package.
 ##'
 ##' @examples
 ##' MakeTape(function(x) {print(search()); x}, numeric(0))
 ##' MakeTape(function(x) c(1,x), 1:3)
 ##' MakeTape(function(x) {y <- 1:3; y[2] <- x; y}, 1)
 ##' MakeTape(function(x) {y <- matrix(0,3,3); diag(y) <- x; y}, 1:3)
-ADoverloads <- function() {
-    e <- parent.frame()
-    for (nm in ls(xtra)) {
-        if (is.null(e[[nm]]))
-            e[[nm]] <- xtra[[nm]]
-        else
-            warning("Not overriding '", nm, "' because it already exists")
-    }
-    NULL
+##' @param x Name of primitive to overload
+ADoverload <- function(x = c("[<-", "c", "diag<-")) {
+    x <- match.arg(x)
+    if (!ad_context())
+        get(x, envir=baseenv())
+    else
+        get(x, envir=xtra, inherits=FALSE)
 }
-ADoverloads() ## Make visible from namespace:RTMB (used by MVgauss etc)
 ## For internal use
 attachADoverloads <- function() {
     attached <- ( "AD-overloads" %in% search() )
