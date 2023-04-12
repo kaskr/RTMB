@@ -17,6 +17,18 @@ CONS:
 
 ## Install
 
+### Binary (Windows/Mac without compiler)
+
+Run from R:
+
+```r
+install.packages('RTMB', repos = c('https://kaskr.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+See [documentation page](https://kaskr.r-universe.dev/RTMB).
+
+### Source
+
 NOTE: Requires at least `TMB-1.9.3`.
 
 ```r
