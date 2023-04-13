@@ -2,67 +2,45 @@
 % Please edit documentation in R/00roxygen.R, R/S4methods.R
 \name{ADconstruct}
 \alias{ADconstruct}
-\alias{diag,num.,num.,num.-method}
 \alias{diag,advector,ANY,ANY-method}
-\alias{numeric,num.-method}
-\alias{matrix,num.-method}
 \alias{matrix,advector-method}
-\alias{array,num.-method}
 \title{AD aware numeric constructors}
 \usage{
-\S4method{diag}{num.,num.,num.}(x, nrow, ncol)
-
 \S4method{diag}{advector,ANY,ANY}(x, nrow, ncol)
 
-\S4method{numeric}{num.}(length = 0L)
-
-\S4method{matrix}{num.}(data = NA, nrow = 1, ncol = 1, byrow = FALSE, dimnames = NULL)
-
 \S4method{matrix}{advector}(data = NA, nrow = 1, ncol = 1, byrow = FALSE, dimnames = NULL)
-
-\S4method{array}{num.}(data = NA, dim = length(data), dimnames = NULL)
 }
 \arguments{
 \item{x}{As \link[base]{diag}}
 
-\item{nrow}{As \link[base]{diag}}
+\item{nrow}{As \link[base]{matrix}}
 
-\item{ncol}{As \link[base]{diag}}
+\item{ncol}{As \link[base]{matrix}}
 
-\item{length}{As \link[base]{numeric}}
-
-\item{data}{As \link[base]{array}}
+\item{data}{As \link[base]{matrix}}
 
 \item{byrow}{As \link[base]{matrix}}
 
-\item{dimnames}{As \link[base]{array}}
-
-\item{dim}{As \link[base]{array}}
+\item{dimnames}{As \link[base]{matrix}}
 }
 \description{
-These base functions, that construct numeric like objects, have been modified to return AD objects when used inside an active AD context. This is necessary due to limitations in R's method dispatch machinery (\code{[<-} cannot dispatch on the \code{value} argument).
+These base constructors have been extended to keep the AD class attribute of the data argument.
 }
 \section{Functions}{
 \itemize{
-\item \code{diag(x = num., nrow = num., ncol = num.)}: Equivalent of \link[base]{diag}
-
 \item \code{diag(x = advector, nrow = ANY, ncol = ANY)}: Equivalent of \link[base]{diag}
-
-\item \code{numeric(num.)}: Equivalent of \link[base]{numeric}
-
-\item \code{matrix(num.)}: Equivalent of \link[base]{matrix}
 
 \item \code{matrix(advector)}: Equivalent of \link[base]{matrix}
 
-\item \code{array(num.)}: Equivalent of \link[base]{array}
-
 }}
 \examples{
-func <- function(t) {
-  x <- numeric(5)
-  print(class(x))
-  t
+func <- function(x) {
+  M <- matrix(x, 2, 2)
+  print(class(M))
+  D <- diag(x)
+  print(class(D))
+  0
 }
-invisible(func(1))            ## 'numeric'
-invisible(MakeTape(func, 1))  ## 'advector'
+invisible(func(1:4))            ## 'matrix' 'array'
+invisible(MakeTape(func, 1:4))  ## 'advector'
 }

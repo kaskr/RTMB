@@ -89,6 +89,76 @@ c.advector <- function(...) {
 "[.advector" <- function(x, ...) {
     asS4(structure(NextMethod(), class="advector"))
 }
+
+## Extra RTMB overloads
+xtra <- local({
+    "[<-" <- function(x, ..., value) {
+        if (inherits(value, "advector")) {
+            if (is.numeric(x))
+                x <- advector(x)
+        }
+        base::"[<-" (x, ..., value=value)
+    }
+    "diag<-" <- function(x, value) {
+        if (inherits(value, "advector")) {
+            if (is.numeric(x)) {
+                x <- advector(x)
+            } else
+                if (inherits(x, "sparseMatrix")) {
+                    x <- as(x, "adsparse")
+                }
+        }
+        base::"diag<-" (x, value)
+    }
+    c <- function(...) {
+        args <- list(...)
+        if (any(unlist(lapply(args, inherits, "advector")))) {
+            args <- lapply(args, advector)
+            ans <- structure(unlist(args), class="advector")
+            return(ans)
+        }
+        base::"c" (...)
+    }
+    environment()
+})
+##' Enable extra RTMB convenience methods
+##' @details Work around limitations in R's method dispatch system by overloading some selected primitives, currently:
+##'
+##' - Inplace replacement, so you can do `x[i] <- y` when `x` is numeric and `y` is AD.
+##' - Mixed combine, so you can do e.g. `c(x, y)` when `x` numeric and `y` is AD.
+##' - Diagonal assignment, so you can do `diag(x) <- y` when `x` is a numeric matrix and `y` is AD.
+##'
+##' In all cases, the result should be AD.
+##' The methods are automatically **temporarily** attached to the search path (`search()`) when entering \link{MakeTape} or \link{MakeADFun}.
+##' Alternatively, methods can be overloaded locally inside functions using e.g. `"[<-" <- ADoverload("[<-")`. This is only needed when using RTMB from a package.
+##'
+##' @examples
+##' MakeTape(function(x) {print(search()); x}, numeric(0))
+##' MakeTape(function(x) c(1,x), 1:3)
+##' MakeTape(function(x) {y <- 1:3; y[2] <- x; y}, 1)
+##' MakeTape(function(x) {y <- matrix(0,3,3); diag(y) <- x; y}, 1:3)
+##' @param x Name of primitive to overload
+ADoverload <- function(x = c("[<-", "c", "diag<-")) {
+    x <- match.arg(x)
+    if (!ad_context())
+        get(x, envir=baseenv())
+    else
+        get(x, envir=xtra, inherits=FALSE)
+}
+## For internal use
+attachADoverloads <- function() {
+    attached <- ( "AD-overloads" %in% search() )
+    if (!attached)
+        base::attach(xtra, length(search()),name="AD-overloads", warn=FALSE)
+    NULL
+}
+detachADoverloads <- function(enable=TRUE, ...) {
+    attached <- ( "AD-overloads" %in% search() )
+    if (attached)
+        base::detach("AD-overloads")
+    NULL
+}
+
 ##' @describeIn ADvector Equivalent of \link[base]{[<-}
 "[<-.advector" <- function(x, ..., value) {
     value <- advector(value)
@@ -192,9 +262,14 @@ rcompois2 <- function(n, mean, nu) {
 ## Low level version: Everything available
 .MakeTape <- function(f, x) {
     F <- new(adfun)
+    ## Start and attach overloads
     F$start()
-    ## Make sure to stop even in case of failure
-    on.exit(F$stop())
+    attachADoverloads()
+    ## Make sure to stop and detach overloads (even in case of failure)
+    on.exit({
+        F$stop()
+        detachADoverloads()
+    })
     activate <- function(x) {
         x <- advector(x)
         x[] <- independent(x)

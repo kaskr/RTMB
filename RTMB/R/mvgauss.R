@@ -67,6 +67,7 @@ dgmrf <- function(x, mu=0, Q, log=FALSE, scale=1) {
 ##' FIXME: Provide parameterization via partial correlations.
 ##' @param phi Autoregressive parameters
 dautoreg <- function(x, mu=0, phi, log=FALSE, scale=1) {
+    "[<-" <- ADoverload("[<-")
     if (!zero(mu) || !unit(scale)) {
         return (dscale("dautoreg", x, 0, phi,
                        log=log, center=mu, scale=scale))

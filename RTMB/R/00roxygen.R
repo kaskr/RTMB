@@ -90,18 +90,20 @@ NULL
 
 ##' AD aware numeric constructors
 ##'
-##' These base functions, that construct numeric like objects, have been modified to return AD objects when used inside an active AD context. This is necessary due to limitations in R's method dispatch machinery (\code{[<-} cannot dispatch on the \code{value} argument).
+##' These base constructors have been extended to keep the AD class attribute of the data argument.
 ##'
 ##' @rdname ADconstruct
 ##' @name ADconstruct
 ##' @examples
-##' func <- function(t) {
-##'   x <- numeric(5)
-##'   print(class(x))
-##'   t
+##' func <- function(x) {
+##'   M <- matrix(x, 2, 2)
+##'   print(class(M))
+##'   D <- diag(x)
+##'   print(class(D))
+##'   0
 ##' }
-##' invisible(func(1))            ## 'numeric'
-##' invisible(MakeTape(func, 1))  ## 'advector'
+##' invisible(func(1:4))            ## 'matrix' 'array'
+##' invisible(MakeTape(func, 1:4))  ## 'advector'
 NULL
 
 ##' AD apply functions
