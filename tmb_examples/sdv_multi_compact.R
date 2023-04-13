@@ -21,10 +21,10 @@ parameters$h <- t(parameters$h) ## Workaround: order as old TMB example for unit
 
 ## Negative joint likelihood (nll) of data and parameters
 f <- function(parms) {
-    ## Optionally mark the observation object (so can 'checkConsistency' and 'oneStepPredict')
-    X <- OBS(X)
     ## Make all parms visible
     getAll(parms)
+    ## Optionally mark the observation object (so can 'checkConsistency' and 'oneStepPredict')
+    X <- OBS(X)
     ## Parameters on natural scale
     sigma <- exp(log_sigma)
     sigma_init <- sigma/sqrt(1-phi^2)  
