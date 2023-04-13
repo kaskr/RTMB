@@ -249,3 +249,21 @@ dscale <- function(f, x, ...,
 
 zero <- function(x) identical(x, 0)
 unit <- function(x) identical(x, 1)
+
+##' @describeIn MVgauss Helper to generate an unstructured correlation matrix to use with `dmvnorm`
+##' @section Unstructured correlation:
+##' Replacement of `UNSTRUCTURED_CORR` functionality of TMB. Constuct object using `us <- unstructured(k)`.
+##' Now `us` has two methods: `x <- us$parms()` gives the parameter vector used as input to the objective function, and `us$corr(x)` turns the parameter vector into an unstructured correlation matrix.
+##' @param k Dimension
+unstructured <- function(k) {
+    N <- (k * k - k) / 2
+    list(
+        parms = function() rep(0, N),
+        corr = function(x) {
+            "[<-" <- ADoverload("[<-")
+            if (length(x) != N) stop("Expected ", N, " parameters")
+            L <- diag(k)
+            L[lower.tri(L)] <- x
+            cov2cor( L %*% t(L) )
+        })
+}

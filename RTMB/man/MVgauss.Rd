@@ -6,6 +6,7 @@
 \alias{dgmrf}
 \alias{dautoreg}
 \alias{dseparable}
+\alias{unstructured}
 \title{Multivariate Gaussian densities}
 \usage{
 dmvnorm(x, mu = 0, Sigma, log = FALSE, scale = 1)
@@ -15,6 +16,8 @@ dgmrf(x, mu = 0, Q, log = FALSE, scale = 1)
 dautoreg(x, mu = 0, phi, log = FALSE, scale = 1)
 
 dseparable(...)
+
+unstructured(k)
 }
 \arguments{
 \item{x}{Density evaluation point}
@@ -32,6 +35,8 @@ dseparable(...)
 \item{phi}{Autoregressive parameters}
 
 \item{...}{Log densities}
+
+\item{k}{Dimension}
 }
 \description{
 Multivariate Gaussian densities
@@ -57,12 +62,20 @@ Separable extension can be constructed for an unlimited number of inputs. Each i
 
 \item \code{dseparable()}: Separable extension of Gaussian log-densities
 
+\item \code{unstructured()}: Helper to generate an unstructured correlation matrix to use with \code{dmvnorm}
+
 }}
 \section{Scaling}{
 
 All the densities accept a \code{scale} argument which replaces \code{SCALE} and \code{VECSCALE} functionality of TMB.
 Scaling is applied elementwise on the residual \code{x-mu}. This works as expected when \code{scale} is a \emph{scalar} or a \emph{vector} object of the same length as \code{x}.
 In addition, \code{dmvnorm} and \code{dgmrf} can be scaled by a vector of length equal to the covariance/precision dimension. In this case the \code{scale} parameter is recycled by row to meet the special row-wise vectorization of these densities.
+}
+
+\section{Unstructured correlation}{
+
+Replacement of \code{UNSTRUCTURED_CORR} functionality of TMB. Constuct object using \code{us <- unstructured(k)}.
+Now \code{us} has two methods: \code{x <- us$parms()} gives the parameter vector used as input to the objective function, and \code{us$corr(x)} turns the parameter vector into an unstructured correlation matrix.
 }
 
 \examples{
