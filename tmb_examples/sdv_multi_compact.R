@@ -23,20 +23,21 @@ parameters$h <- t(parameters$h) ## Workaround: order as old TMB example for unit
 f <- function(parms) {
     ## Optionally mark the observation object (so can 'checkConsistency' and 'oneStepPredict')
     X <- OBS(X)
-    ## Parameters on natural scale and remove "parms"
-    sigma <- exp(parms$log_sigma)
-    phi <- parms$phi
+    ## Make all parms visible
+    getAll(parms)
+    ## Parameters on natural scale
+    sigma <- exp(log_sigma)
     sigma_init <- sigma/sqrt(1-phi^2)  
-    h <- t(parms$h)  # Workaround: order as old TMB example for unittest
+    h <- t(h)  # Workaround: order as old TMB example for unittest
     nll <- 0  # Start collecting contributions
     ## Process likelihood
     for (j in 1:p) {
         nll <- nll - dautoreg(h[,j], phi=phi[j], scale=sigma_init[j], log=TRUE)
     }
     ## Parameterizes correlation matrix of X in terms of Cholesky factor
-    R <- us$corr(parms$off_diag_x)
+    R <- us$corr(off_diag_x)
     ## Scaling parameter
-    mux <- matrix(parms$mu_x, nrow(h), ncol(h), byrow=TRUE)
+    mux <- matrix(mu_x, nrow(h), ncol(h), byrow=TRUE)
     sigma_y <- exp( .5 * (h + mux) )
     ## Observation likelihood (dmvnorm is row-wise vectorized)
     nll <- nll - sum(dmvnorm(X, 0, R, scale=sigma_y, log=TRUE))
