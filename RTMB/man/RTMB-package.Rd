@@ -21,7 +21,7 @@ and \emph{models run as fast} as if coded in C++.
 
 The introduction vignette describes these basic features - see \code{vignette("RTMB-introduction")}.
 
-In addition to the usual \link{MakeADFun} interface, 'RTMB' offers a lower level interface to the AD machinery (\link{MakeTape}). \link{MakeTape} replaces the functionality you would normally get in 'TMB' using C++ functors, such as calculating derivatives inside the objective function.
+In addition to the usual \link{MakeADFun} interface, 'RTMB' offers a lower level interface to the AD machinery (\code{MakeTape}). \link{MakeTape} replaces the functionality you would normally get in 'TMB' using C++ functors, such as calculating derivatives inside the objective function.
 
 The advanced vignette covers these topics - see \code{vignette("RTMB-advanced")}.
 }
