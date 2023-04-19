@@ -240,7 +240,15 @@ simref2 <- function(x, name) {
     s$name <- name
     s$finalize <- function(value) {
         for (e in sys.frames()) {
-            if (inherits(e[[name]], "simref")) {
+            ## When scanning the sys.frames we might encounter
+            ## unexpected stuff, e.g. unevaluated default function
+            ## arguments (promises) that cannot be inspected without
+            ## evaluation (=> error).
+            ## Ideally, we want to skip these using something like
+            ## 'is.promise(e[[name]])' but no such function is
+            ## available in base R.
+            ## Workaround: Using 'try' for now.
+            if (inherits( try(e[[name]], silent=TRUE), "simref")) {
                 e[[name]] <- e[[name]]$value
                 SIM_ENV$set(name, value)
                 break
