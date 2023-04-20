@@ -268,6 +268,8 @@ setdata <- function(obj) {
 }
 unsetdata <- function(obj) {
     obj$env$data[] <- NULL
+    attr(obj$env$data, "setdata") <- NULL
+    NULL
 }
 
 ##' @describeIn TMB-interface Interface to \link[TMB]{checkConsistency}.
