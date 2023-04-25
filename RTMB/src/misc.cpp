@@ -1,0 +1,68 @@
+// [[Rcpp::depends(TMB)]]
+#include "RTMB.h"
+
+// [[Rcpp::export]]
+Rcpp::ComplexVector TapedSubset(Rcpp::List x, Rcpp::ComplexVector i) {
+  if (!ad_context()) Rcpp::stop("TapedSubset requires an active ad context");
+  if (!is_adscalar(i)) Rcpp::stop("TapedSubset requires ad scalar 'i'");
+  ad i_ = ScalarInput(i);
+  ad t1 = atomic::dynamic_data::sexp_to_double(x);
+  ad t2 = atomic::dynamic_data::list_lookup_by_index(t1, i_);
+  vector<ad> ans = atomic::dynamic_data::sexp_to_vector(t2);
+  Rcpp::ComplexVector z(ans.size());
+  for (int j=0; j < z.size(); j++) {
+    z[j] = ad2cplx(ans[j]);
+  }
+  return as_advector(z);
+}
+
+
+namespace TMBad {
+// Operator that evaluates an R function taking single numeric scalar as input
+struct EvalOp : global::DynamicOperator< 1 , -1 > {
+  static const bool is_linear = true;
+  static const bool have_input_size_output_size = true; // FIXME: Should give compile time error if 'false'
+  static const bool add_forward_replay_copy = true;
+  Rcpp::Function F;
+  size_t n;
+  Index input_size()  const { return 1; }
+  Index output_size() const { return n; }
+  EvalOp (Rcpp::Function F, size_t n) : F(F), n(n) { }
+  void forward(ForwardArgs<double> &args) {
+    //double i = args.x(0);
+    Rcpp::NumericVector  i = Rcpp::NumericVector::create(args.x(0));
+    SEXP y = F(i);
+    if ((size_t) LENGTH(y) != n) Rcpp::stop("Wrong output length");
+    double* py = REAL(y);
+    for (size_t i=0; i<n; i++) { args.y(i) = py[i]; }
+  }
+  template <class Type> void forward(ForwardArgs<Type> &args) {
+    TMBAD_ASSERT(false);
+  }
+  template <class Type> void reverse(ReverseArgs<Type> &args) {
+    // Void derivs
+  }
+  const char* op_name() {return "EvalOp";}
+};
+}
+
+// [[Rcpp::export]]
+Rcpp::ComplexVector TapedEval(Rcpp::Function F, Rcpp::ComplexVector i) {
+  if (!ad_context()) Rcpp::stop("TapedSubset requires an active ad context");
+  if (!is_adscalar(i)) Rcpp::stop("TapedSubset requires ad scalar 'i'");
+  ad i_ = ScalarInput(i);
+  // Test eval to get n
+  Rcpp::NumericVector i_test = Rcpp::NumericVector::create(i_.Value());
+  Rcpp::NumericVector y_test = F(i_test);
+  size_t n = LENGTH(y_test);
+  // Add to tape
+  std::vector<ad> x(1, i_);
+  std::vector<ad> y = TMBad::global::Complete<TMBad::EvalOp>(F, n) (x);
+  // Pass to R
+  Rcpp::ComplexVector ans(n);
+  for (size_t j=0; j < n; j++) {
+    ans[j] = ad2cplx(y[j]);
+  }
+  DUPLICATE_ATTRIB(ans, y_test);
+  return as_advector(ans);
+}

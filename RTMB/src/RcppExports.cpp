@@ -703,6 +703,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// TapedSubset
+Rcpp::ComplexVector TapedSubset(Rcpp::List x, Rcpp::ComplexVector i);
+RcppExport SEXP _RTMB_TapedSubset(SEXP xSEXP, SEXP iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type i(iSEXP);
+    rcpp_result_gen = Rcpp::wrap(TapedSubset(x, i));
+    return rcpp_result_gen;
+END_RCPP
+}
+// TapedEval
+Rcpp::ComplexVector TapedEval(Rcpp::Function F, Rcpp::ComplexVector i);
+RcppExport SEXP _RTMB_TapedEval(SEXP FSEXP, SEXP iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::Function >::type F(FSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type i(iSEXP);
+    rcpp_result_gen = Rcpp::wrap(TapedEval(F, i));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP _rcpp_module_boot_mod_adfun();
 
@@ -763,6 +787,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_dgmrf0", (DL_FUNC) &_RTMB_dgmrf0, 3},
     {"_RTMB_SparseArith2", (DL_FUNC) &_RTMB_SparseArith2, 3},
     {"_RTMB_math_expm", (DL_FUNC) &_RTMB_math_expm, 1},
+    {"_RTMB_TapedSubset", (DL_FUNC) &_RTMB_TapedSubset, 2},
+    {"_RTMB_TapedEval", (DL_FUNC) &_RTMB_TapedEval, 2},
     {"_rcpp_module_boot_mod_adfun", (DL_FUNC) &_rcpp_module_boot_mod_adfun, 0},
     {NULL, NULL, 0}
 };
