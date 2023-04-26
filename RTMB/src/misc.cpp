@@ -43,6 +43,11 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
     // Void derivs
   }
   const char* op_name() {return "EvalOp";}
+  void print(TMBad::global::print_config cfg) {
+    Rcout << cfg.prefix;
+    Rcout << "F=" << F << " ";
+    Rcout << "n=" << n << "\n";
+  }
 };
 }
 
