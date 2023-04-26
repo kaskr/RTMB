@@ -55,13 +55,19 @@ void atomic_transform(TMBad::ADFun<>* adf) {
   *adf = (*adf).atomic();
 }
 SEXP ptrTMB(TMBad::ADFun<>* pf) {
-  SEXP res;
-  PROTECT(res=R_MakeExternalPtr((void*) pf,Rf_install("ADFun"),R_NilValue));
-  //Rf_setAttrib(res,Rf_install("range.names"),info);
   SEXP ans;
-  //Rf_setAttrib(res,Rf_install("par"),par);
-  PROTECT(ans=ptrList(res));
-  UNPROTECT(2);
+#ifdef _OPENMP
+  TMBad::ADFun<>* pf_cpy = new TMBad::ADFun<>();
+  std::swap (*pf, *pf_cpy); // Take ownership of pf
+  vector<TMBad::ADFun<>* > ppf(1);
+  ppf[0] = pf_cpy;
+  parallelADFun<double>* paf = new parallelADFun<double> (ppf); // 'paf' now owns memory
+  SEXP ptr = Rcpp::XPtr< parallelADFun<double> >(paf, true, Rf_install("parallelADFun"));
+  ans = Rcpp::List::create(Rcpp::Named("ptr") = ptr);
+#else
+  SEXP ptr = Rcpp::XPtr< TMBad::ADFun<> >(pf, false, Rf_install("ADFun"));
+  ans = Rcpp::List::create(Rcpp::Named("ptr") = ptr);
+#endif
   return ans;
 }
 // [[Rcpp::export]]
