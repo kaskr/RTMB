@@ -29,12 +29,18 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
   Index output_size() const { return n; }
   EvalOp (Rcpp::Function F, size_t n) : F(F), n(n) { }
   void forward(ForwardArgs<double> &args) {
-    //double i = args.x(0);
-    Rcpp::NumericVector  i = Rcpp::NumericVector::create(args.x(0));
-    SEXP y = F(i);
-    if ((size_t) LENGTH(y) != n) Rcpp::stop("Wrong output length");
-    double* py = REAL(y);
-    for (size_t i=0; i<n; i++) { args.y(i) = py[i]; }
+#undef REAL
+#undef LENGTH
+#pragma omp critical
+    {
+      Rcout << thread_num() << "\n";
+      double* py;
+      Rcpp::NumericVector i = Rcpp::NumericVector::create(args.x(0));
+      SEXP y = F(i);
+      if ((size_t) LENGTH(y) != n) Rcpp::stop("Wrong output length");
+      py = REAL(y);
+      for (size_t i=0; i<n; i++) { args.y(i) = py[i]; }
+    }
   }
   template <class Type> void forward(ForwardArgs<Type> &args) {
     TMBAD_ASSERT(false);
