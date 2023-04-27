@@ -16,6 +16,24 @@ Rcpp::ComplexVector TapedSubset(Rcpp::List x, Rcpp::ComplexVector i) {
   return as_advector(z);
 }
 
+#ifdef _OPENMP
+extern int	R_CStackDir;
+#endif
+struct CStackWorkaround {
+#ifdef _OPENMP
+  int old;
+  void begin() {
+    old = R_CStackDir;
+    if (omp_get_thread_num() != 0) R_CStackDir = 0;
+  }
+  void end() {
+    R_CStackDir = old;
+  }
+#else
+  void begin() { }
+  void end() { }
+#endif
+};
 
 namespace TMBad {
 // Operator that evaluates an R function taking single numeric scalar as input
@@ -29,18 +47,32 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
   Index output_size() const { return n; }
   EvalOp (Rcpp::Function F, size_t n) : F(F), n(n) { }
   void forward(ForwardArgs<double> &args) {
-#undef REAL
-#undef LENGTH
+#ifdef _OPENMP
 #pragma omp critical
     {
-      Rcout << thread_num() << "\n";
-      double* py;
+#endif
+      CStackWorkaround R;
+      R.begin();
       Rcpp::NumericVector i = Rcpp::NumericVector::create(args.x(0));
       SEXP y = F(i);
-      if ((size_t) LENGTH(y) != n) Rcpp::stop("Wrong output length");
-      py = REAL(y);
-      for (size_t i=0; i<n; i++) { args.y(i) = py[i]; }
+      if ((size_t) LENGTH(y) != n) {
+        R.end();
+        Rcpp::stop("Wrong output length");
+      }
+      if (Rf_isReal(y)) {
+        double* py = REAL(y);
+        for (size_t i=0; i<n; i++) { args.y(i) = py[i]; }
+      } else if (Rf_isInteger(y)) {
+        int* py = INTEGER(y);
+        for (size_t i=0; i<n; i++) { args.y(i) = py[i]; }
+      } else {
+        R.end();
+        Rcpp::stop("DataEval: Function must return 'real' or 'integer'");
+      }
+      R.end();
+#ifdef _OPENMP
     }
+#endif
   }
   template <class Type> void forward(ForwardArgs<Type> &args) {
     TMBAD_ASSERT(false);
