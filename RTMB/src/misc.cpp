@@ -1,21 +1,9 @@
 // [[Rcpp::depends(TMB)]]
 #include "RTMB.h"
 
-// [[Rcpp::export]]
-Rcpp::ComplexVector TapedSubset(Rcpp::List x, Rcpp::ComplexVector i) {
-  if (!ad_context()) Rcpp::stop("TapedSubset requires an active ad context");
-  if (!is_adscalar(i)) Rcpp::stop("TapedSubset requires ad scalar 'i'");
-  ad i_ = ScalarInput(i);
-  ad t1 = atomic::dynamic_data::sexp_to_double(x);
-  ad t2 = atomic::dynamic_data::list_lookup_by_index(t1, i_);
-  vector<ad> ans = atomic::dynamic_data::sexp_to_vector(t2);
-  Rcpp::ComplexVector z(ans.size());
-  for (int j=0; j < z.size(); j++) {
-    z[j] = ad2cplx(ans[j]);
-  }
-  return as_advector(z);
-}
-
+// Workarounds needed for parallel case:
+// R_CheckStack() is junk when called from non-master thread.
+// We can effectively disable the check by setting 'R_CStackDir = 0'.
 #ifdef _OPENMP
 extern int	R_CStackDir;
 #endif
@@ -67,7 +55,7 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
         for (size_t i=0; i<n; i++) { args.y(i) = py[i]; }
       } else {
         R.end();
-        Rcpp::stop("DataEval: Function must return 'real' or 'integer'");
+        Rcpp::stop("EvalOp: Function must return 'real' or 'integer'");
       }
       R.end();
 #ifdef _OPENMP

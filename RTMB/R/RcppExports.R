@@ -221,10 +221,6 @@ math_expm <- function(x) {
     .Call(`_RTMB_math_expm`, x)
 }
 
-TapedSubset <- function(x, i) {
-    .Call(`_RTMB_TapedSubset`, x, i)
-}
-
 TapedEval <- function(F, i) {
     .Call(`_RTMB_TapedEval`, F, i)
 }
