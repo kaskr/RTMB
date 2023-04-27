@@ -6,6 +6,7 @@
 // We can effectively disable the check by setting 'R_CStackDir = 0'.
 #ifdef _OPENMP
 extern int	R_CStackDir;
+extern int	R_PPStackTop;
 #endif
 struct CStackWorkaround {
 #ifdef _OPENMP
@@ -39,6 +40,7 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
 #pragma omp critical
     {
 #endif
+      std::cout << "========\n" << R_PPStackTop << "\n";
       CStackWorkaround R;
       R.begin();
       Rcpp::NumericVector i = Rcpp::NumericVector::create(args.x(0));
@@ -58,6 +60,7 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
         Rcpp::stop("EvalOp: Function must return 'real' or 'integer'");
       }
       R.end();
+      std::cout << R_PPStackTop << "\n";
 #ifdef _OPENMP
     }
 #endif
