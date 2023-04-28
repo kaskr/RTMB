@@ -5,8 +5,7 @@
 // R_CheckStack() is junk when called from non-master thread.
 // We can effectively disable the check by setting 'R_CStackDir = 0'.
 #ifdef _OPENMP
-extern int	R_CStackDir;
-extern int	R_PPStackTop;
+extern int R_CStackDir;
 #endif
 struct CStackWorkaround {
 #ifdef _OPENMP
@@ -25,10 +24,39 @@ struct CStackWorkaround {
 };
 
 namespace TMBad {
-// Operator that evaluates an R function taking single numeric scalar as input
+/*
+  EvalOp: Operator that evaluates an R function taking single numeric
+  scalar as input.
+
+  Memory management:
+
+  - 'Rcpp::Function' automatically PROTECTs/UNPROTECTs. This is in
+    general useful for temporary liftime objects, but we have to be
+    careful when placing a 'Rcpp::Function' as a member of an object
+    with 'unlimited lifetime' (e.g. an AD operator). If the object is
+    copied (from R), it'll invoke PROTECTs that are not followed by
+    the corresponding UNPROTECTs. A simple solution is to place
+    'Rcpp::Function' in a shared pointer. That effectively disables
+    the Rcpp memory management, while still taking advantage of the
+    Rcpp cleanup code triggered when the last reference dies. I have
+    verified that cleanup code is indeed triggered when the tapes
+    (obj) *and* R function (F) are removed from the R
+    workspace. Removing just F is not enough (nice).
+
+  - Evaluating F from C++ is known to not work in parallel. We use
+    'omp critical' to make sure F is never evaluated by two threads at
+    the same time. However, that's not enough. R occasionally runs
+    'R_StackCheck()' which works in a highly thead unsafe manner. It
+    will fail for any other thread than the master. Inspection of
+    'R_StackCheck()' reveals that it can be disabled by temporarily
+    setting 'R_CStackDir = 0'. FIXME: We could probably work out the
+    rest of these 'R_CStack...' variables in order for
+    'R_StackCheck()' to work reliably for all threads. Don't know if
+    this is worth while though.
+*/
 struct EvalOp : global::DynamicOperator< 1 , -1 > {
   static const bool is_linear = true;
-  static const bool have_input_size_output_size = true; // FIXME: Should give compile time error if 'false'
+  static const bool have_input_size_output_size = true;
   static const bool add_forward_replay_copy = true;
   std::shared_ptr<Rcpp::Function> Fptr;
   size_t n;
@@ -40,15 +68,15 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
 #pragma omp critical
     {
 #endif
-      std::cout << "========\n" << R_PPStackTop << "\n";
       CStackWorkaround R;
       R.begin();
       Rcpp::NumericVector i = Rcpp::NumericVector::create(args.x(0));
       SEXP y = (*Fptr)(i);
+      // FIXME: Any Rcpp way of handling arbitrary output? For now doing PROTECT/UNPROTECT manually...
       PROTECT(y);
       if ((size_t) LENGTH(y) != n) {
         R.end();
-	UNPROTECT(1);
+	UNPROTECT(1); // y
         Rcpp::stop("Wrong output length");
       }
       if (Rf_isReal(y)) {
@@ -59,12 +87,11 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
         for (size_t i=0; i<n; i++) { args.y(i) = py[i]; }
       } else {
         R.end();
-	UNPROTECT(1);
+	UNPROTECT(1); // y
         Rcpp::stop("EvalOp: Function must return 'real' or 'integer'");
       }
       R.end();
-      UNPROTECT(1);
-      std::cout << R_PPStackTop << "\n";
+      UNPROTECT(1); // y
 #ifdef _OPENMP
     }
 #endif
@@ -78,7 +105,7 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
   const char* op_name() {return "EvalOp";}
   void print(TMBad::global::print_config cfg) {
     Rcout << cfg.prefix;
-    Rcout << "F=" << Fptr << " ";
+    Rcout << "F=" << *Fptr << " ";
     Rcout << "n=" << n << "\n";
   }
 };
