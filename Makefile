@@ -45,3 +45,15 @@ cran-version:
 
 cran-check:
 	R CMD check --as-cran RTMB*.tar.gz
+
+parallel-version:
+	rm -rf RTMBp
+	cp -r RTMB RTMBp
+	sed -i 's/RTMB::/RTMBp::/g' RTMBp/R/*.R
+	sed -i 's/DLL="RTMB"/DLL="RTMBp"/g' RTMBp/R/*.R
+	sed -i 's/RTMB/RTMBp/g' RTMBp/DESCRIPTION
+	sed -i 's/RTMB/RTMBp/g' RTMBp/NAMESPACE
+	sed -i 's/"RTMB"/"RTMBp"/g' RTMBp/src/RcppExports.cpp
+	sed -i 's/R_init_RTMB/R_init_RTMBp/g' RTMBp/src/RcppExports.cpp
+	echo 'PKG_LIBS = $$(SHLIB_OPENMP_CXXFLAGS)' >> RTMBp/src/Makevars
+	echo 'PKG_CXXFLAGS=$$(SHLIB_OPENMP_CXXFLAGS)' >> RTMBp/src/Makevars
