@@ -221,3 +221,7 @@ math_expm <- function(x) {
     .Call(`_RTMB_math_expm`, x)
 }
 
+TapedEval <- function(F, i) {
+    .Call(`_RTMB_TapedEval`, F, i)
+}
+
