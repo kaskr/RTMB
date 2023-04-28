@@ -6,6 +6,7 @@
 \alias{$.Tape}
 \alias{print.Tape}
 \alias{TapeConfig}
+\alias{DataEval}
 \title{The AD tape}
 \usage{
 MakeTape(f, x)
@@ -19,6 +20,8 @@ TapeConfig(
   atomic = c("enable", "disable"),
   vectorize = c("disable", "enable")
 )
+
+DataEval(f, x)
 }
 \arguments{
 \item{f}{R function}
@@ -77,6 +80,8 @@ then use \code{comparison="tape"} to add the indicators to the
 tape. A final option \code{comparison="allow"} exists for
 testing/illustration purposes. Do not use.
 
+\item \code{DataEval()}: Move a chunk of data from R to the tape by evaluating a normal R function (replaces TMB functionality 'DATA_UPDATE').
+
 }}
 \examples{
 F <- MakeTape(prod, numeric(3))
@@ -91,4 +96,8 @@ if (require(igraph)) {
    plot(G, vertex.size=17, layout=layout_as_tree)
 }
 }
+## Taped access of an element of 'rivers' dataset
+F <- MakeTape(function(i) DataEval( function(i) rivers[i] , i), 1 )
+F(1)
+F(2)
 }

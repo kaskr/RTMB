@@ -394,6 +394,19 @@ TapeConfig <- function(comparison = c("forbid", "tape", "allow"),
     invisible(ans)
 }
 
+##' @describeIn Tape Move a chunk of data from R to the tape by evaluating a normal R function (replaces TMB functionality 'DATA_UPDATE').
+##' @examples
+##' ## Taped access of an element of 'rivers' dataset
+##' F <- MakeTape(function(i) DataEval( function(i) rivers[i] , i), 1 )
+##' F(1)
+##' F(2)
+DataEval <- function(f, x) {
+    if (ad_context())
+        TapedEval(f, x)
+    else
+        f(x)
+}
+
 ## Visible bindings:
 observation.name <- NULL
 data.term.indicator <- NULL
