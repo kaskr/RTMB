@@ -30,11 +30,11 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
   static const bool is_linear = true;
   static const bool have_input_size_output_size = true; // FIXME: Should give compile time error if 'false'
   static const bool add_forward_replay_copy = true;
-  Rcpp::Function F;
+  SEXP F_;
   size_t n;
   Index input_size()  const { return 1; }
   Index output_size() const { return n; }
-  EvalOp (Rcpp::Function F, size_t n) : F(F), n(n) { }
+  EvalOp (Rcpp::Function F, size_t n) : F_(F), n(n) { }
   void forward(ForwardArgs<double> &args) {
 #ifdef _OPENMP
 #pragma omp critical
@@ -44,9 +44,12 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
       CStackWorkaround R;
       R.begin();
       Rcpp::NumericVector i = Rcpp::NumericVector::create(args.x(0));
+      Rcpp::Function F(F_);
       SEXP y = F(i);
+      PROTECT(y);
       if ((size_t) LENGTH(y) != n) {
         R.end();
+	UNPROTECT(1);
         Rcpp::stop("Wrong output length");
       }
       if (Rf_isReal(y)) {
@@ -57,9 +60,11 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
         for (size_t i=0; i<n; i++) { args.y(i) = py[i]; }
       } else {
         R.end();
+	UNPROTECT(1);
         Rcpp::stop("EvalOp: Function must return 'real' or 'integer'");
       }
       R.end();
+      UNPROTECT(1);
       std::cout << R_PPStackTop << "\n";
 #ifdef _OPENMP
     }
@@ -74,7 +79,7 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
   const char* op_name() {return "EvalOp";}
   void print(TMBad::global::print_config cfg) {
     Rcout << cfg.prefix;
-    Rcout << "F=" << F << " ";
+    Rcout << "F=" << F_ << " ";
     Rcout << "n=" << n << "\n";
   }
 };
