@@ -30,11 +30,11 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
   static const bool is_linear = true;
   static const bool have_input_size_output_size = true; // FIXME: Should give compile time error if 'false'
   static const bool add_forward_replay_copy = true;
-  SEXP F_;
+  std::shared_ptr<Rcpp::Function> Fptr;
   size_t n;
   Index input_size()  const { return 1; }
   Index output_size() const { return n; }
-  EvalOp (Rcpp::Function F, size_t n) : F_(F), n(n) { }
+  EvalOp (Rcpp::Function F, size_t n) : Fptr(std::make_shared<Rcpp::Function>(F)), n(n) { }
   void forward(ForwardArgs<double> &args) {
 #ifdef _OPENMP
 #pragma omp critical
@@ -44,8 +44,7 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
       CStackWorkaround R;
       R.begin();
       Rcpp::NumericVector i = Rcpp::NumericVector::create(args.x(0));
-      Rcpp::Function F(F_);
-      SEXP y = F(i);
+      SEXP y = (*Fptr)(i);
       PROTECT(y);
       if ((size_t) LENGTH(y) != n) {
         R.end();
@@ -79,7 +78,7 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
   const char* op_name() {return "EvalOp";}
   void print(TMBad::global::print_config cfg) {
     Rcout << cfg.prefix;
-    Rcout << "F=" << F_ << " ";
+    Rcout << "F=" << Fptr << " ";
     Rcout << "n=" << n << "\n";
   }
 };
