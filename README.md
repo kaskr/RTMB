@@ -25,7 +25,7 @@ Run from R:
 install.packages('RTMB', repos = c('https://kaskr.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
-See [documentation page](https://kaskr.r-universe.dev/RTMB).
+See [documentation page](https://kaskr.r-universe.dev/RTMB). **A parallel version is available as a separate package 'RTMBp'**
 
 ### Source
 
