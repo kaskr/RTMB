@@ -57,3 +57,4 @@ parallel-version:
 	sed -i 's/R_init_RTMB/R_init_RTMBp/g' RTMBp/src/RcppExports.cpp
 	echo 'PKG_LIBS = $$(SHLIB_OPENMP_CXXFLAGS)' >> RTMBp/src/Makevars
 	echo 'PKG_CXXFLAGS=$$(SHLIB_OPENMP_CXXFLAGS)' >> RTMBp/src/Makevars
+	echo '.onLoad <- function(libname, pkgname) { TMB::openmp(parallel::detectCores(), autopar=TRUE, DLL="RTMBp") }' >> RTMBp/R/zzz.R
