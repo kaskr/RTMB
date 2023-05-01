@@ -55,7 +55,6 @@ namespace TMBad {
     this is worth while though.
 */
 struct EvalOp : global::DynamicOperator< 1 , -1 > {
-  static const bool is_linear = true;
   static const bool have_input_size_output_size = true;
   static const bool add_forward_replay_copy = true;
   std::shared_ptr<Rcpp::Function> Fptr;
