@@ -58,3 +58,8 @@ parallel-version:
 	echo 'PKG_LIBS = $$(SHLIB_OPENMP_CXXFLAGS)' >> RTMBp/src/Makevars
 	echo 'PKG_CXXFLAGS=$$(SHLIB_OPENMP_CXXFLAGS)' >> RTMBp/src/Makevars
 	echo '.onLoad <- function(libname, pkgname) { TMB::openmp(parallel::detectCores(), autopar=TRUE, DLL="RTMBp") }' >> RTMBp/R/zzz.R
+	git branch -D RTMBp
+	git checkout -b RTMBp
+	git add `git ls-files RTMB | sed 's/^RTMB/RTMBp/g'`
+	git commit -m "autogenerate"
+	git checkout master
