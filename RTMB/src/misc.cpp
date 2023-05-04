@@ -54,14 +54,14 @@ namespace TMBad {
     'R_StackCheck()' to work reliably for all threads. Don't know if
     this is worth while though.
 */
-struct EvalOp : global::DynamicOperator< 1 , -1 > {
+struct EvalOp : global::DynamicOperator< -1 , -1 > {
   static const bool have_input_size_output_size = true;
   static const bool add_forward_replay_copy = true;
   std::shared_ptr<Rcpp::Function> Fptr;
-  size_t n;
-  Index input_size()  const { return 1; }
+  size_t m, n;
+  Index input_size()  const { return m; }
   Index output_size() const { return n; }
-  EvalOp (Rcpp::Function F, size_t n) : Fptr(std::make_shared<Rcpp::Function>(F)), n(n) { }
+  EvalOp (Rcpp::Function F, size_t m, size_t n) : Fptr(std::make_shared<Rcpp::Function>(F)), m(m), n(n) { }
   void forward(ForwardArgs<double> &args) {
 #ifdef _OPENMP
 #pragma omp critical
@@ -69,7 +69,8 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
 #endif
       CStackWorkaround R;
       R.begin();
-      Rcpp::NumericVector i = Rcpp::NumericVector::create(args.x(0));
+      Rcpp::NumericVector i(m);
+      for (size_t l=0; l<m; l++) i[l] = args.x(l);
       SEXP y = (*Fptr)(i);
       // FIXME: Any Rcpp way of handling arbitrary output? For now doing PROTECT/UNPROTECT manually...
       PROTECT(y);
@@ -113,15 +114,17 @@ struct EvalOp : global::DynamicOperator< 1 , -1 > {
 // [[Rcpp::export]]
 Rcpp::ComplexVector TapedEval(Rcpp::Function F, Rcpp::ComplexVector i) {
   if (!ad_context()) Rcpp::stop("TapedSubset requires an active ad context");
-  if (!is_adscalar(i)) Rcpp::stop("TapedSubset requires ad scalar 'i'");
-  ad i_ = ScalarInput(i);
+  CHECK_INPUT(i);
+  size_t m = i.size();
+  ad* pi = adptr(i);
   // Test eval to get n
-  Rcpp::NumericVector i_test = Rcpp::NumericVector::create(i_.Value());
+  Rcpp::NumericVector i_test(m);
+  for (size_t l=0; l<m; l++) i_test[l] = pi[l].Value();
   Rcpp::NumericVector y_test = F(i_test);
   size_t n = LENGTH(y_test);
   // Add to tape
-  std::vector<ad> x(1, i_);
-  std::vector<ad> y = TMBad::global::Complete<TMBad::EvalOp>(F, n) (x);
+  std::vector<ad> x(pi, pi + m);
+  std::vector<ad> y = TMBad::global::Complete<TMBad::EvalOp>(F, m, n) (x);
   // Pass to R
   Rcpp::ComplexVector ans(n);
   for (size_t j=0; j < n; j++) {
