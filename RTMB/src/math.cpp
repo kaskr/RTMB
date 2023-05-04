@@ -322,3 +322,33 @@ Rcpp::ComplexMatrix math_expm (SEXP x) {
     Rcpp::stop("expm: Expected square matrix");
   return MatrixOutput(expm(X));
 }
+
+// [[Rcpp::export]]
+Rcpp::ComplexMatrix expATv (SEXP AT,
+                            Rcpp::ComplexMatrix v,
+                            Rcpp::ComplexVector N,
+                            Rcpp::List cfg) {
+  if (!is_adsparse(AT)) Rcpp::stop("Expecting adsparse 'AT'");
+  if (!is_adscalar(N)) Rcpp::stop("Expecting adscalar 'N'");
+  // Inputs
+  Eigen::SparseMatrix<ad> AT_ = SparseInput(AT);
+  matrix<ad> v_ = MatrixInput(v);
+  ad N_ = ScalarInput(N);
+  // Configuration parameters
+  sparse_matrix_exponential::config<ad> cfg_;
+#define SET_CONFIG(XXX) if (!Rf_isNull(cfg[#XXX]))      \
+  cfg_.XXX = Rcpp::IntegerVector((SEXP) cfg[#XXX])[0]
+  SET_CONFIG(Nmax);
+  SET_CONFIG(trace);
+  SET_CONFIG(warn);
+#undef SET_CONFIG
+  // Evaluate
+  matrix<ad> ans(v_.rows(), v_.cols());
+  sparse_matrix_exponential::expm_series<ad> F(AT_, N_, cfg_);
+  for (int j=0; j<ans.cols(); j++) {
+    vector<ad> vec = v_.col(j).array();
+    vector<ad> out = F(vec);
+    ans.col(j).array() = out;
+  }
+  return MatrixOutput(ans);
+}
