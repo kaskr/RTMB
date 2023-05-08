@@ -13,15 +13,21 @@ eigenDisc <- function(A) {
 
 ##' Matrix exponential of sparse matrix multiplied by a vector.
 ##'
-##' This function calculates `expm(A) %*% v` using plain series summation. The number of terms is determined adaptively when `uniformization=TRUE`.
+##' Calculates `expm(A) %*% v` using plain series summation. The number of terms is determined adaptively when `uniformization=TRUE`.
 ##' The uniformization method essentially pushes the spectrum of the operator inside a zero centered disc, within which a uniform error bound is available.
 ##' If `A` is a generator matrix (i.e. `expm(A)` is a probability matrix) and if `v` is a probability vector, then the relative error of the result is bounded by `tol`.
+##'
+##' Additional supported arguments via `...` currently include:
+##'
+##' - `Nmax` Use no more than this number of terms even if the spcified accuracy cannot be met.
+##' - `warn` Give warning if number of terms is truncated by `Nmax`.
+##' - `trace` Trace the number of terms when it adaptively changes.
 ##'
 ##' @param A Sparse matrix (usually a generator)
 ##' @param v Vector (or matrix)
 ##' @param transpose Calculate `expm(t(A)) %*% v` ? (faster due to the way sparse matrices are stored)
 ##' @param uniformization Use uniformization method?
-##' @param tol Accuracy which holds if A is a generator matrix.
+##' @param tol Accuracy if A is a generator matrix and v a probability vector.
 ##' @param ... Extra configuration parameters
 ##' @return Vector (or matrix)
 expAv <- function(A, v, transpose=FALSE, uniformization=TRUE, tol=1e-8, ...) {
