@@ -63,6 +63,6 @@ expAv <- function(A, v, transpose=FALSE, uniformization=TRUE, tol=1e-8, ...) {
             ans <- ans + term
         }
     }
-    if (uniformization) ans <- exp(disc["R"]) * ans
+    if (uniformization) ans <- exp(disc["C"]) * ans
     ans
 }
