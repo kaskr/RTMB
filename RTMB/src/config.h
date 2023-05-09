@@ -9,3 +9,8 @@
 #ifdef _OPENMP
 #define TMB_HAVE_THREAD_SAFE_R
 #endif
+// TMB FIXME: Some occurances of ASSERT and ASSERT2
+#undef  ASSERT
+#define ASSERT(x) TMBAD_ASSERT(x)
+#undef  ASSERT2
+#define ASSERT2(x, msg) TMBAD_ASSERT2(x, msg)
