@@ -2,7 +2,9 @@
 title: "Details behind the AD Tape"
 author: "Kasper Kristensen"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{Details behind the AD Tape}
   %\VignetteEngine{knitr::rmarkdown}
