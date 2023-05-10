@@ -250,8 +250,7 @@ setMethod("diag", signature(x="advector", nrow="ANY", ncol="ANY"),
 setMethod("matrix", signature(data="advector"),
           function(data, nrow, ncol, byrow, dimnames) {
               ans <- callNextMethod()
-              class(ans) <- "advector"
-              ans
+              asS4(structure(ans, class="advector"))
           })
 ##' @describeIn ADapply As \link[base]{apply}
 ##' @param X As \link[base]{apply}
