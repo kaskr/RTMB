@@ -37,7 +37,6 @@ func <- function(p) {
 ################################################################################
 
 obj <- MakeADFun(func, parameters, map=map, DLL="matern")
-TMB:::TransformADFunObject(obj$env$ADFun,"optimize") ## FIXME !!!
 system.time( fit <- nlminb(obj$par, obj$fn, obj$gr, obj$he) )
 system.time( rep <- sdreport(obj, fit$par, obj$he(fit$par)) )
 print(rep)

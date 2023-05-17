@@ -21,7 +21,7 @@ F <- MakeTape(function(x) {
     -sum(dnorm(y , parms$a * x + parms$b, parms$sd, log=TRUE))
 }, unlist(plist))
 
-F$optimize() ## Simplify the operation sequence if possible
+F$simplify() ## Simplify the operation sequence if possible
 F <- F$atomic() ## Turn into atomic function
 
 ## Aggregate tape by summing over 'i'
