@@ -57,6 +57,9 @@ void fuse(TMBad::ADFun<>* adf) {
 void optimize(TMBad::ADFun<>* adf) {
   (*adf).optimize();
 }
+void eliminate(TMBad::ADFun<>* adf) {
+  (*adf).eliminate();
+}
 void atomic_transform(TMBad::ADFun<>* adf) {
   *adf = (*adf).atomic();
 }
@@ -114,6 +117,7 @@ RCPP_MODULE(mod_adfun) {
   .method("parallelize", &parallelize)
   .method("fuse", &fuse)
   .method("optimize", &optimize)
+  .method("eliminate", &eliminate)
   .method("atomic", &atomic_transform)
   .method("ptrTMB", &ptrTMB)
   ;
