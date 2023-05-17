@@ -311,7 +311,15 @@ MakeTape <- function(f, x) {
         },
         methods = list(
             jacobian = mod$jacobian,
-            optimize = mod$optimize,
+            simplify = function(method=c("optimize", "eliminate")) {
+                method <- match.arg(method)
+                if (method == "optimize")
+                    mod$optimize()
+                else if (method == "eliminate")
+                    mod$eliminate()
+                else
+                    stop("Unknown method")
+            },
             print = mod$print,
             jacfun = function() {
                 .jacfun(mod)
