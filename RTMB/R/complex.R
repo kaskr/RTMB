@@ -330,9 +330,8 @@ MakeTape <- function(f, x) {
 ##' @param ... Ignored
 print.Tape <- function(x,...){
     cat("Object of class='Tape'\n")
-    ptr <- environment(x)$mod$ptrTMB()$ptr
-    info <- (.Call)(InfoADFunObject, ptr)
-    txt <- paste0(" : ","R^",info$Domain, " -> " , "R^", info$Range, "\n")
+    mod <- environment(x)$mod
+    txt <- paste0(" : ","R^",mod$domain(), " -> " , "R^", mod$range(), "\n")
     cat(txt)
     cat( c( "Methods:\n", paste0("$", names(attr(x,"methods")), "()\n")) )
 }

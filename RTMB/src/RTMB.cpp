@@ -36,6 +36,12 @@ Rcpp::NumericMatrix Jacobian(TMBad::ADFun<>* tp, const std::vector<double> &x) {
   Rcpp::NumericMatrix Jt(x.size(), y.size() / x.size(), y.begin());
   return Rcpp::transpose(Jt);
 }
+int GetDomain(TMBad::ADFun<>* adf) {
+  return (*adf).Domain();
+}
+int GetRange(TMBad::ADFun<>* adf) {
+  return (*adf).Range();
+}
 // Some ADFun object transformations
 void JacFun(TMBad::ADFun<>* adf) {
   (*adf) = (*adf).JacFun();
@@ -102,6 +108,8 @@ RCPP_MODULE(mod_adfun) {
   .method("eval",  &Eval)
   .method("evalAD",  &EvalAD)
   .method("jacobian", &Jacobian)
+  .method("domain", &GetDomain)
+  .method("range", &GetRange)
   .method("jacfun", &JacFun)
   .method("parallelize", &parallelize)
   .method("fuse", &fuse)
