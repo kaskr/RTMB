@@ -294,14 +294,20 @@ MakeTape <- function(f, x) {
     .expose(mod)
 }
 .expose <- function(mod) {
+    Dim <- NULL
+    output <- function(x) {
+        if (!is.null(Dim))
+            dim(x) <- Dim
+        x
+    }
     structure(
         function(x) {
             if (is.list(x))
                 x <- do.call("c", x)
             if (inherits(x, "advector") && ad_context())
-                mod$evalAD(x)
+                output(mod$evalAD(x))
             else
-                mod$eval(x)
+                output(mod$eval(x))
         },
         methods = list(
             jacobian = mod$jacobian,
@@ -345,9 +351,12 @@ print.Tape <- function(x,...){
     ans
 }
 .jacfun <- function(mod) {
+    jacdim <- c(mod$range(), mod$domain())
     mod <- .copy(mod)
     mod$jacfun()
-    .expose(mod)
+    ans <- .expose(mod)
+    environment(ans)$Dim <- jacdim
+    ans
 }
 .atomic <- function(mod) {
     mod <- .copy(mod)
