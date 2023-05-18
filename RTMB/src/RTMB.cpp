@@ -63,6 +63,9 @@ void eliminate(TMBad::ADFun<>* adf) {
 void atomic_transform(TMBad::ADFun<>* adf) {
   *adf = (*adf).atomic();
 }
+// Defined in misc.cpp
+void laplace_transform(TMBad::ADFun<>* adf, std::vector<TMBad::Index> random, SEXP config);
+void newton_transform(TMBad::ADFun<>* adf, std::vector<TMBad::Index> random, SEXP config);
 SEXP ptrTMB(TMBad::ADFun<>* pf) {
   SEXP ans;
 #ifdef _OPENMP
@@ -119,6 +122,8 @@ RCPP_MODULE(mod_adfun) {
   .method("optimize", &optimize)
   .method("eliminate", &eliminate)
   .method("atomic", &atomic_transform)
+  .method("laplace", &laplace_transform)
+  .method("newton", &newton_transform)
   .method("ptrTMB", &ptrTMB)
   ;
 }

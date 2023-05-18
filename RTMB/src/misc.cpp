@@ -133,3 +133,47 @@ Rcpp::ComplexVector TapedEval(Rcpp::Function F, Rcpp::ComplexVector i) {
   DUPLICATE_ATTRIB(ans, y_test);
   return as_advector(ans);
 }
+
+/* Interface to some computational graph transforms which are also available from TMB*/
+
+// Helper for 'laplace' and 'newton'
+void remove_random_parameters(TMBad::ADFun<>* adf, const std::vector<TMBad::Index>& random) {
+  std::vector<bool> mask(adf->Domain(), true);
+  for (size_t i = 0; i<random.size(); i++)
+    mask[random[i]] = false;
+  adf->glob.inv_index = TMBad::subset(adf->glob.inv_index, mask);
+}
+std::vector<TMBad::Index> zero_based_unique_index (const std::vector<TMBad::Index> &x, TMBad::Index max) {
+  std::vector<TMBad::Index> y(x);
+  std::vector<bool> mark(max, false);
+  for (size_t i=0; i<y.size(); i++) {
+    y[i]--;
+    if (y[i] >= max) Rcpp::stop("Index out of bounds");
+    if (mark[y[i]])  Rcpp::stop("Index not unique");
+    mark[y[i]] = true;
+  }
+  return y;
+}
+void laplace_transform(TMBad::ADFun<>* adf, std::vector<TMBad::Index> random, SEXP config) {
+  random = zero_based_unique_index(random, adf->Domain());
+  newton::newton_config cfg(config);
+  *adf = newton::Laplace_(*adf, random, cfg);
+  remove_random_parameters(adf, random);
+}
+void newton_transform(TMBad::ADFun<>* adf, std::vector<TMBad::Index> random, SEXP config) {
+  // TMB FIXME: This code is almost copy-paste from 'newton::Laplace_'. Add it 'Newton_' there.
+  random = zero_based_unique_index(random, adf->Domain());;
+  newton::newton_config cfg(config);
+  newton::slice<> S(*adf, random);
+  TMBad::ADFun<> ans;
+  std::vector<double> xd = (*adf).DomainVec();
+  S.x = std::vector<ad> (xd.begin(), xd.end());
+  ans.glob.ad_start();
+  TMBad::Independent(S.x);
+  vector<ad> start = TMBad::subset(S.x, random);
+  std::vector<ad> y = newton::Newton(S, start, cfg);
+  TMBad::Dependent(y);
+  ans.glob.ad_stop();
+  *adf = ans;
+  remove_random_parameters(adf, random);
+}
