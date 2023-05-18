@@ -76,13 +76,14 @@ F <- MakeTape(f, numeric(2))
 F
 ```
 
-A number of methods are available for the tape
+A number of methods are available for the tape.
 
 ```{r}
 F$methods()
 ```
 
-We can print the tape by
+These methods are part of the tape object and documented under `?Tape`.
+We can print the tape using the `print` method:
 
 ```{r}
 F$print()
@@ -94,6 +95,12 @@ The tape can be evaluated as a normal R function. This sets the independent valu
 
 ```{r}
 F(3:4)
+```
+
+To see how the internal structures have been updated, we print the tape again:
+
+
+```{r}
 F$print()
 ```
 
@@ -101,10 +108,15 @@ Note how the *function output* or *dependent variable* ('DepOp') is located at t
 
 ### Evaluating derivatives
 
-Derivatives are calculated using the `jacobian()` method. This seeds the derivative of the dependent variable to one, and triggers a *reverse operator loop* effectively updating the entire 'deriv' array:
+Derivatives are calculated using the `jacobian()` method. This method seeds the derivative of the dependent variable to one, and triggers a *reverse operator loop* effectively updating the entire 'deriv' array:
 
 ```{r}
 F$jacobian(3:4)
+```
+
+Again, we print the tape to see the effect on the internal representation:
+
+```{r}
 F$print()
 ```
 
@@ -196,7 +208,7 @@ showGraph(F)
 This is only possible to show for very small matrices. The representation grows very fast (cubic) in the dimension of the input.
 By default the 'atomic' flag is set to true.
 
-```{r, fig.cap="Atomic matrix multiply: Callapses to a single operation. The constants are the matrix dimensions which are represented as additional inputs."}
+```{r, fig.cap="Atomic matrix multiply: Collapses to a single operation. The constants are the matrix dimensions which are represented as additional inputs."}
 TapeConfig(atomic="enable")
 F <- MakeTape(f, matrix(0, 2, 2))
 showGraph(F)
