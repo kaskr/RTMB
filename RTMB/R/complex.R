@@ -342,7 +342,10 @@ MakeTape <- function(f, x) {
         class="Tape")
 }
 ##' @describeIn Tape Get a tape method.
-"$.Tape" <- function(x, name) attr(x, "methods")[[name]]
+"$.Tape" <- function(x, name) {
+    if (name == "methods") return (function()names(attr(x, "methods")))
+    attr(x, "methods")[[name]]
+}
 ##' @describeIn Tape Print method
 ##' @param ... Ignored
 print.Tape <- function(x,...){
@@ -350,7 +353,7 @@ print.Tape <- function(x,...){
     mod <- environment(x)$mod
     txt <- paste0(" : ","R^",mod$domain(), " -> " , "R^", mod$range(), "\n")
     cat(txt)
-    cat( c( "Methods:\n", paste0("$", names(attr(x,"methods")), "()\n")) )
+    ## cat( c( "Methods:\n", paste0("$", names(attr(x,"methods")), "()\n")) )
 }
 .pointer <- function(mod) { ## FIXME: Is this safe Rcpp?
     env <- as.environment(mod)
