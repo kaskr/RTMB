@@ -330,6 +330,9 @@ MakeTape <- function(f, x) {
             laplace = function(random, sparse=TRUE, SPA=FALSE, ...) {
                 .laplace(mod, random, sparse=sparse, SPA=SPA, ...)
             },
+            newton = function(random, sparse=TRUE, ...) {
+                .newton(mod, random, sparse=sparse, ...)
+            },
             graph = function() {
                 G <- get_graph(.pointer(mod))
                 colnames(G) <- rownames(G) <- sub("Op","",colnames(G))
@@ -375,19 +378,16 @@ print.Tape <- function(x,...){
     mod <- .copy(mod)
     random <- as.integer(random)
     cfg <- lapply(list(...), as.double)
-    .transform(mod, "laplace", config=cfg,
-               random_order=random, mustWork=1L)
-    .transform(mod, "remove_random_parameters",
-               random_order=random, mustWork=1L)
+    mod$laplace(random, cfg)
     .expose(mod)
 }
-.transform <- function(mod, method, ...) {
-    ptr <- mod$ptrTMB()$ptr
-    (.Call)(TransformADFunObject,
-            f = ptr,
-            control = list(method = as.character(method), ...))
+.newton <- function(mod, random, ...) {
+    mod <- .copy(mod)
+    random <- as.integer(random)
+    cfg <- lapply(list(...), as.double)
+    mod$newton(random, cfg)
+    .expose(mod)
 }
-
 ##' @describeIn Tape Global configuration parameters of the tape (experts only!)
 ##' \bold{comparison} By default, AD comparison gives an error
 ##' (\code{comparison="forbid"}).
