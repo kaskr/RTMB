@@ -76,6 +76,12 @@ F <- MakeTape(f, numeric(2))
 F
 ```
 
+A number of methods are available for the tape
+
+```{r}
+F$methods()
+```
+
 We can print the tape by
 
 ```{r}
