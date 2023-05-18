@@ -166,6 +166,63 @@ showGraph(G)
 
 Internally, these atomic operators are shared pointers to a single instance of the actual tape of $F$. Therefore, auto-generated atomic functions generally reduce memory. But there are disadvantages, so they should normally only be used in case of memory issues.
 
+### Tape simplification
+
+It often happens that a tape has redundant operations.
+For example, consider the tape
+
+```{r}
+F <- MakeTape(function(x) {
+    y1 <- sin(x[1] + x[2])
+    y2 <- sin(x[1] + x[2])
+    y3 <- cos(x[1] + x[2])
+    y1+y2
+}, numeric(2))
+```
+
+This tape representation is not optimal because
+
+- It calculates an intermediate value `y3` which doesn't affect the output.
+- The two expressions `y1` and `y2` are identical, so `y2` could have just copied `y1`.
+
+We visualize the graph of the inefficient tape and note that it contains two `sin` operators and one `cos` operator:
+
+```{r, fig.cap="Tape of function"}
+showGraph(F)
+```
+
+Two methods are available to simplify the tape
+
+- `F$simplify("eliminate")` : Eliminates operations that do not affect the output.
+- `F$simplify("optimize")` : In addition to `eliminate` also remaps expressions that have already been computed.
+
+By running
+
+```{r}
+F$simplify("eliminate")
+```
+
+the tape is modified in-place, and no longer contains the `cos` operator:
+
+
+```{r, fig.cap="Tape of function after eliminate"}
+showGraph(F)
+```
+
+The full optimization
+
+```{r}
+F$simplify("optimize")
+```
+
+also removes the redundant `sin` expression which has already been calculated.:
+
+```{r, fig.cap="Tape of function after optimize"}
+showGraph(F)
+```
+
+In contrast to `MakeTape`, we note that `MakeADFun` automatically calls `F$simplify("optimize")` for all tapes.
+
 ### Tape transformations:
 - Tape eliminate vs optimize
 - jacfun(), Laplace(), SPA option
