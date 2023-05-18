@@ -63,3 +63,8 @@ parallel-version:
 	git add `git ls-files RTMB | sed 's/^RTMB/RTMBp/g'`
 	git commit -m "autogenerate"
 	git checkout master
+
+## vignettes
+%.html: %.rmd
+	cd RTMB/vignettes; echo "rmarkdown::render(basename(\"$<\"))" | R --slave
+vignettes-build: RTMB/vignettes/RTMB-introduction.html RTMB/vignettes/RTMB-advanced.html

@@ -1,0 +1,172 @@
+---
+title: "Introduction to RTMB"
+author: "Kasper Kristensen"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Introduction to RTMB}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE, message=FALSE}
+##library(knitr)
+library(RTMB)
+set.seed(1)
+formals(MakeADFun)$silent <- TRUE
+```
+
+## Introduction
+
+This vignette demonstrates basic features of `RTMB` by implementing a *random regression* model from scratch and fit it to a built-in R dataset.
+
+## Random regression
+
+### Getting the data
+
+We'll take as starting point the built-in data set 'ChickWeight':
+
+```{r}
+data(ChickWeight)
+```
+
+The data contains `weight` of 50 chicks by `Time` and individual identifier `Chick`. A useful plot of growth by individual is available from the help page by running `example(ChickWeight)`.
+
+### Defining a model
+
+Although not the most natural based on the plot, we'll setup a *random regression model*.
+It is defined by first drawing slopes and intercepts by individual from an underlying distribution
+
+\[ a_1,...,a_{50} \sim N(\mu_a , \sigma_a^2) \]
+\[ b_1,...,b_{50} \sim N(\mu_b , \sigma_b^2) \]
+
+and then state a normal regression given these random coefficients:
+
+\[ \text{weight}_{i} \sim N(a_{\text{Chick}_i} * \text{Time}_i + b_{\text{Chick}_i}, \sigma^2) \]
+
+### Implementing the model in RTMB
+
+To implement the model in RTMB we have set up the objective function and define the parameters and random effects.
+
+Parameter objects are gathered in a list that also serves as intial guess when fitting the model:
+
+```{r}
+parameters <- list(
+    mua=0,          ## Mean slope
+    sda=1,          ## Std of slopes
+    mub=0,          ## Mean intercept
+    sdb=1,          ## Std of intercepts
+    sdeps=1,        ## Residual Std
+    a=rep(0, 50),   ## Random slope by chick
+    b=rep(0, 50)    ## Random intercept by chick
+)
+```
+
+The objective function takes as input such a parameter list, and is defined by
+
+```{r}
+f <- function(parms) {
+    getAll(ChickWeight, parms, warn=FALSE)
+    ## Optional (enables extra RTMB features)
+    weight <- OBS(weight)
+    ## Initialize joint negative log likelihood
+    nll <- 0
+    ## Random slopes
+    nll <- nll - sum(dnorm(a, mean=mua, sd=sda, log=TRUE))
+    ## Random intercepts
+    nll <- nll - sum(dnorm(b, mean=mub, sd=sdb, log=TRUE))
+    ## Data
+    predWeight <- a[Chick] * Time + b[Chick]
+    nll <- nll - sum(dnorm(weight, predWeight, sd=sdeps, log=TRUE))
+    ## Get predicted weight uncertainties
+    ADREPORT(predWeight)
+    ## Return
+    nll
+}
+```
+
+This function calculates the negative log likelihood `nll` using straight forward R operations corresponding exactly to the model definition.
+In addition, some RTMB specific statements are used:
+
+- The `getAll` function makes all the list elements of data and parameters visible inside the function, so that one can write e.g. `weight` rather than `ChickWeight$weight`.
+- The `weight <- OBS(weight)` statement tells RTMB that that `weight` is the response. This is needed to enable automatic simulation and residual calculations from the model object.
+- The `ADREPORT(predWeight)` statement tells RTMB that we want uncertainties for this intermediate calculation.
+
+The objective function `f` is processed by RTMB using the call
+
+```{r}
+obj <- MakeADFun(f, parameters, random=c("a", "b"))
+```
+
+where we also specify that `a` and `b` are random effects.
+
+### Fitting the model
+
+We optimize the model using `nlminb` (or any other suitable gradient based optimizer in R)
+
+```{r}
+opt <- nlminb(obj$par, obj$fn, obj$gr)
+```
+
+### Calculating model output
+
+Uncertainties are now calculated using
+
+```{r}
+sdr <- sdreport(obj)
+sdr
+```
+
+By default, the shown output is very brief, containing only the model parameters. The `sdr` object contains much more.
+It is often convenient to inspect parameter estimates and other output as a list similar to the one containing the parameters.
+For instance, to get parameters estimates and standard errors as separate lists use:
+
+```r
+as.list(sdr, "Est") ## parameter estimates
+as.list(sdr, "Std") ## parameter uncertainties
+```
+
+Pass `report=TRUE` to get `ADREPORT`ed quantities:
+
+```r
+as.list(sdr, "Est", report=TRUE) ## ADREPORT estimates
+as.list(sdr, "Std", report=TRUE) ## ADREPORT uncertainties
+```
+
+### Simulating from the model object
+
+New datasets can be generated from the estimated model using  `obj$simulate()` assuming that the model is implemented in accordance with the principles defined in the help page `?Simulation`.
+
+### Checking correctness of the implementation using simulation
+
+When building random effect models from scratch, many mistakes can be made leading to wrong results. We always recommend to run the model through the completely automatic consistency check (this requires that `obj$simulate()` works for the implementation). By default, the check simulates 100 datasets and calculates gradients for each replicate. A standard output tells you whether the implementation is consistent with simulation (message 'simulation appears to be correct'). It also gives an idea of the parameter bias usually caused by the Laplace approximation (not an issue for the random regression model for which the Laplace approximation is exact). We run the standard check by:
+
+```{r}
+set.seed(1)
+chk <- checkConsistency(obj)
+chk
+```
+
+As expected for this case, everything looks fine.
+A complete simulation study, that re-estimates parameters for each replicate, can also be performed although that takes longer to run:
+
+```r
+chk <- checkConsistency(obj, estimate=TRUE)
+summary(chk)
+```
+
+For more details we refer to the help page `?TMB::checkConsistency`.
+
+### Goodness-of-fit using quantile residuals
+
+Quantile residuals can be generated automatically using the `oneStepPredict` function. These residuals are conceptually superior to other methods (e.g. Pearson residuals), but much tricker to calculate. It is very important to specify an appropriate `method` (see `?TMB::oneStepPredict`) because using an inappropriate method can give wrong residuals. For the random effects the 'fullGaussian' method is computationally exact.
+
+```{r}
+osa <- oneStepPredict(obj, method="fullGaussian", discrete=FALSE)
+qqnorm(osa$res); abline(0,1)
+```
+
+The argument `discrete=FALSE` is necessary in this case because the data has duplicates, which is a zero-probability event for continuous distributions.
+If the model is correct, the residuals are standard, independent normally distributed, which is obviously not the case here.
