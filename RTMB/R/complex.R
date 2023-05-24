@@ -426,6 +426,40 @@ DataEval <- function(f, x) {
         f(x)
 }
 
+##' @describeIn Tape Extract tapes from a model object created by `MakeADFun`.
+##' @param obj Output from `MakeADFun`
+##' @param warn Give warning if `obj` was created using another DLL?
+GetTape <- function(obj, name = c("ADFun", "ADGrad", "ADHess"), warn=TRUE) {
+    name <- match.arg(name)
+    if (name == "ADHess")
+        env <- environment(obj$env$spHess)
+    else
+        env <- obj$env
+    ADFun <- get(name, env, inherits=FALSE)
+    stopifnot(is(ADFun$ptr ,"externalptr"))
+    if (ADFun$DLL != "RTMB") {
+        ok <- "getSetGlobalPtr" %in% names(getDLLRegisteredRoutines("sam")$.Call)
+        if (!ok) {
+            message("'getSetGlobalPtr' not found in '", ADFun$DLL, "'")
+            stop("Please update TMB and recompile DLL '", ADFun$DLL, "'")
+        }
+        if (! exists("getSetGlobalPtr", getNamespace("RTMB")) ) {
+            message("'getSetGlobalPtr' not found in 'RTMB'")
+            stop("Please update TMB and recompile 'RTMB'")
+        }
+        getSetGlobalPtr <- get("getSetGlobalPtr", getNamespace("RTMB"))
+        RTMBptr <- .Call(getSetGlobalPtr, NULL)
+        DLLptr <- .Call("getSetGlobalPtr", NULL, PACKAGE=ADFun$DLL)
+        if (!identical(RTMBptr, DLLptr)) {
+            if (warn) warning("Permanently changing the global pointer of DLL '", ADFun$DLL, "'")
+            .Call("getSetGlobalPtr", RTMBptr, PACKAGE=ADFun$DLL)
+        }
+    }
+    ans <- new(adfun)
+    ans$copy(ADFun$ptr)
+    .expose(ans)
+}
+
 ## Visible bindings:
 observation.name <- NULL
 data.term.indicator <- NULL

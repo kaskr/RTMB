@@ -7,6 +7,7 @@
 \alias{print.Tape}
 \alias{TapeConfig}
 \alias{DataEval}
+\alias{GetTape}
 \title{The AD tape}
 \usage{
 MakeTape(f, x)
@@ -22,6 +23,8 @@ TapeConfig(
 )
 
 DataEval(f, x)
+
+GetTape(obj, name = c("ADFun", "ADGrad", "ADHess"), warn = TRUE)
 }
 \arguments{
 \item{f}{R function}
@@ -37,6 +40,10 @@ DataEval(f, x)
 \item{atomic}{Set behaviour of AD BLAS operations (notably matrix multiply).}
 
 \item{vectorize}{Enable/disable AD vectorized 'Ops' and 'Math'.}
+
+\item{obj}{Output from \code{MakeADFun}}
+
+\item{warn}{Give warning if \code{obj} was created using another DLL?}
 }
 \description{
 The AD tape as an R function
@@ -81,6 +88,8 @@ tape. A final option \code{comparison="allow"} exists for
 testing/illustration purposes. Do not use.
 
 \item \code{DataEval()}: Move a chunk of data from R to the tape by evaluating a normal R function (replaces TMB functionality 'DATA_UPDATE').
+
+\item \code{GetTape()}: Extract tapes from a model object created by \code{MakeADFun}.
 
 }}
 \examples{
