@@ -201,6 +201,7 @@ dscale <- function(f, x, ...,
     f <- match.fun(f)
     ## Handle the special 'byrow' vectorization offered by 'mvnorm' and 'gmrf'
     if (vectorize) {
+        ## Make 'scale' conformable
         if (length(scale) > 1) {
             if (length(scale) != length(x)) {
                 ## weird 'byrow' case
@@ -211,6 +212,7 @@ dscale <- function(f, x, ...,
                     stop("Vector 'scale' must be compatible with *rows* of 'x'")
                 scale <- matrix(scale, nrow(x), ncol(x), byrow=TRUE)
             } else {
+                ## length(scale) == length(x)
                 if (!is.null(dim(x))) {
                     if (!identical(dim(x), dim(scale))) {
                         stop("'dim(scale)' must equal 'dim(x)'")
@@ -219,11 +221,8 @@ dscale <- function(f, x, ...,
             }
         }
     }
-    ## Aggregation 'byrow' in vectorized case
-    if (vectorize)
-        Sum <- rowSums
-    else
-        Sum <- sum
+    ## NOTE: At this point there are only two valid options
+    ##     length(scale) %in% c( 1 , length(x) )
     ## Check 'center' and 'scale'
     if (length(scale) != 1L)
         if (length(scale) != length(x))
@@ -238,12 +237,30 @@ dscale <- function(f, x, ...,
         x@x <- x@x / scale
         keep <- as.matrix(x@keep)[,1] ## Ignore CDF adjustment (it is zero)
         dim(keep) <- dim(x)
-        ans <- f(x, ..., log=TRUE) - Sum(keep * log(scale))
+        ans <- f(x, ..., log=TRUE)
+        if (length(ans) == 1) {
+            ## plain non-vectorized case
+            ans <- ans - sum(keep * log(scale))
+        } else {
+            ## length(ans) > 1
+            ## row-wise vectorized case
+            ans <- ans - rowSums(keep * log(scale))
+        }
         return (ans)
     }
     if (do.center) x <- x - center
-    nrep <- length(x) / length(scale)
-    ans <- f(x / scale, ..., log=TRUE) - nrep * Sum(log(scale))
+    ans <- f(x / scale, ..., log=TRUE)
+    if (length(ans) == 1) {
+        ## plain non-vectorized case
+        ans <- ans - (length(x)/length(scale)) * sum(log(scale))
+    } else {
+        ## length(ans) > 1
+        ## row-wise vectorized case
+        if (length(scale) == 1)
+            ans <- ans - ncol(x) * log(scale)
+        else
+            ans <- ans - rowSums(log(scale))
+    }
     if (log) ans else exp(ans)
 }
 
