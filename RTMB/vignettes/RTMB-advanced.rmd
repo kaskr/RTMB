@@ -357,9 +357,9 @@ set.seed(1)
 x <- rdblpois(100)
 ```
 
-We want to estimate the two unknown parameters (`muX=5; muN=10`), but the density is not available on closed form. However, we do have access to the moment generating function.
+We want to estimate the two unknown parameters (`muX=5; muN=10`), but the density is not available on closed form. However, we do have access to the *cumulant generating function* (CGF).
 
-The moment generating function for the Poisson distribution is
+The CGF for the Poisson distribution is
 
 ```{r}
 Kpois <- function(t, mu) mu * (exp(t) - 1)
@@ -381,7 +381,7 @@ To approximate the (negative log) density we
 nldens <- function(obs, muX, muN) {
     ## 1
     F <- MakeTape(function(s) {
-        K <- Kpois2(s, muX, muN)  ## MGF
+        K <- Kpois2(s, muX, muN)  ## CGF
         K <- K - s * obs          ## SPA adjustment
         sum(K)
     }, rep(1, length(obs)))
