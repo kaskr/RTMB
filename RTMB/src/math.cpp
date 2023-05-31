@@ -113,9 +113,9 @@ Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
   else if (!op.compare("sinh")) VCALL(sinh)
   else if (!op.compare("tanh")) VCALL(tanh)
   // FIXME:
-  // else if (!op.compare("acosh")) VCALL(acosh)
-  // else if (!op.compare("asinh")) VCALL(asinh)
-  // else if (!op.compare("atanh")) VCALL(atanh)
+  else if (!op.compare("acosh")) CALL(acosh);
+  else if (!op.compare("asinh")) CALL(asinh);
+  else if (!op.compare("atanh")) CALL(atanh);
   else if (!op.compare("lgamma")) CALL(lgamma);
   else if (!op.compare("gamma")) CALL(rtmb_gamma);
   else if (!op.compare("cumsum")) {
