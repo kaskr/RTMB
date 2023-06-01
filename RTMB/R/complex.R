@@ -448,11 +448,11 @@ GetTape <- function(obj, name = c("ADFun", "ADGrad", "ADHess"), warn=TRUE) {
             stop("Please update TMB and recompile 'RTMB'")
         }
         getSetGlobalPtr <- get("getSetGlobalPtr", getNamespace("RTMB"))
-        RTMBptr <- .Call(getSetGlobalPtr, NULL)
-        DLLptr <- .Call("getSetGlobalPtr", NULL, PACKAGE=ADFun$DLL)
+        RTMBptr <- .Call((getSetGlobalPtr), NULL)
+        DLLptr <- .Call(("getSetGlobalPtr"), NULL, PACKAGE=ADFun$DLL)
         if (!identical(RTMBptr, DLLptr)) {
             if (warn) warning("Permanently changing the global pointer of DLL '", ADFun$DLL, "'")
-            .Call("getSetGlobalPtr", RTMBptr, PACKAGE=ADFun$DLL)
+            .Call(("getSetGlobalPtr"), RTMBptr, PACKAGE=ADFun$DLL)
         }
     }
     ans <- new(adfun)
