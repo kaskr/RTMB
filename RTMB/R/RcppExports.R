@@ -225,6 +225,14 @@ expATv <- function(AT, v, N, cfg) {
     .Call(`_RTMB_expATv`, AT, v, N, cfg)
 }
 
+Arith2_complex <- function(x, y, op) {
+    .Call(`_RTMB_Arith2_complex`, x, y, op)
+}
+
+Math1_complex <- function(x, op) {
+    .Call(`_RTMB_Math1_complex`, x, op)
+}
+
 TapedEval <- function(F, i) {
     .Call(`_RTMB_TapedEval`, F, i)
 }
