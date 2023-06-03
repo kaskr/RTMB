@@ -87,35 +87,55 @@ Rcpp::ComplexVector Math1_complex(const Rcpp::ComplexVector &x, std::string op) 
 }
 
 namespace TMBad {
+
+template<bool adjoint=false>
+void fft_array(std::complex<double>* x,
+               std::vector<int> dim) {
+  Eigen::FFT<double> fft;
+  typedef Eigen::Matrix<std::complex<double>, Eigen::Dynamic, Eigen::Dynamic> Matrix;
+  typedef Eigen::Map<Matrix> Mat;
+  vector<std::complex<double> > buf;
+  int n=1;
+  for (size_t i=0; i<dim.size(); i++) {
+    n *= dim[i];
+  }
+  for (size_t i=0; i<dim.size(); i++) {
+    int nrow = dim[i];
+    int ncol = n / dim[i];
+    Mat X(x, nrow, ncol);
+    buf.resize(nrow);
+    for (int j=0; j<ncol; j++) {
+      std::complex<double>* src = X.col(j).data();
+      std::complex<double>* dest = buf.data();
+      if (!adjoint)
+        fft.fwd(dest, src, nrow);
+      else
+        fft.inv(dest, src, nrow);
+      X.col(j).array() = buf;
+    }
+    if ((nrow != 1) && (ncol != 1))
+      X = X.transpose();
+  }
+}
+
 template<bool adjoint=false>
 struct FFTOp : global::DynamicOperator< -1 , -1 > {
   typedef std::complex<double> cplx;
   static const bool have_input_size_output_size = true;
   static const bool add_forward_replay_copy = true;
   size_t n;
+  std::vector<int> dim;
   Index input_size()  const { return n; }
   Index output_size() const { return n; }
-  FFTOp (size_t n) : n(n) { }
+  FFTOp (size_t n) : n(n), dim(1, n/2) { }
   void forward(ForwardArgs<double> &args) {
-    Eigen::FFT<double> fft;
-    std::vector<double> buf(n);
-    for (size_t i=0; i<n; i++) buf[i] = args.x(i);
-    cplx* src = (cplx*) buf.data();
-    cplx* dest = (cplx*) args.y_ptr(0);
-    if (!adjoint)
-      fft.fwd(dest, src, n/2);
-    else
-      fft.inv(dest, src, n/2);
+    for (size_t i=0; i<n; i++) args.y(i) = args.x(i);
+    fft_array<adjoint>( (cplx*) args.y_ptr(0), dim);
   }
   void reverse(ReverseArgs<double> &args) {
-    Eigen::FFT<double> fft;
     std::vector<double> buf(n);
-    cplx* dest = (cplx*) buf.data();
-    cplx* src = (cplx*) args.dy_ptr(0);
-    if (adjoint)
-      fft.fwd(dest, src, n/2);
-    else
-      fft.inv(dest, src, n/2);
+    for (size_t i=0; i<n; i++) buf[i] = args.dy(i);
+    fft_array<!adjoint>( (cplx*) buf.data(), dim);
     for (size_t i=0; i<n; i++) args.dx(i) += buf[i];
   }
   template <class Type> void forward(ForwardArgs<Type> &args) {
