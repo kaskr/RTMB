@@ -90,15 +90,12 @@ namespace TMBad {
 
 template<bool adjoint=false>
 void fft_array(std::complex<double>* x,
-               std::vector<int> dim) {
+               std::vector<size_t> dim) {
   Eigen::FFT<double> fft;
   typedef Eigen::Matrix<std::complex<double>, Eigen::Dynamic, Eigen::Dynamic> Matrix;
   typedef Eigen::Map<Matrix> Mat;
   vector<std::complex<double> > buf;
-  int n=1;
-  for (size_t i=0; i<dim.size(); i++) {
-    n *= dim[i];
-  }
+  size_t n = TMBad::prod_int(dim);
   for (size_t i=0; i<dim.size(); i++) {
     int nrow = dim[i];
     int ncol = n / dim[i];
@@ -124,10 +121,10 @@ struct FFTOp : global::DynamicOperator< -1 , -1 > {
   static const bool have_input_size_output_size = true;
   static const bool add_forward_replay_copy = true;
   size_t n;
-  std::vector<int> dim;
+  std::vector<size_t> dim;
   Index input_size()  const { return n; }
   Index output_size() const { return n; }
-  FFTOp (size_t n) : n(n), dim(1, n/2) { }
+  FFTOp (size_t n, std::vector<size_t> dim) : n(n), dim(dim) { }
   void forward(ForwardArgs<double> &args) {
     for (size_t i=0; i<n; i++) args.y(i) = args.x(i);
     fft_array<adjoint>( (cplx*) args.y_ptr(0), dim);
@@ -152,13 +149,16 @@ struct FFTOp : global::DynamicOperator< -1 , -1 > {
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector fft(const Rcpp::ComplexVector &x, bool adjoint=false) {
+Rcpp::ComplexVector fft(const Rcpp::ComplexVector &x, std::vector<size_t> dim) {
   CHECK_INPUT(x);
   size_t n = x.size();
+  // Check dim
+  if (TMBad::prod_int(dim) * 2 != n)
+    Rcpp::stop("prod(dim) must equal length(x)/2");
   ad* X = adptr(x);
   // Add to tape
   std::vector<ad> X_(X, X + n);
-  std::vector<ad> Y_ = TMBad::global::Complete<TMBad::FFTOp<> >(n) (X_);
+  std::vector<ad> Y_ = TMBad::global::Complete<TMBad::FFTOp<> >(n, dim) (X_);
   // Pass to R
   Rcpp::ComplexVector y(n);
   for (size_t j=0; j < n; j++) {
