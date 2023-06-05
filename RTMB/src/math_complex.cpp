@@ -110,8 +110,11 @@ void fft_array(std::complex<double>* x,
         fft.inv(dest, src, nrow);
       X.col(j).array() = buf;
     }
-    if ((nrow != 1) && (ncol != 1))
-      X = X.transpose();
+    if ((nrow != 1) && (ncol != 1)) {
+      Matrix XT = X.transpose();
+      XT.resize(nrow, ncol);
+      X = XT;
+    }
   }
 }
 
@@ -126,23 +129,23 @@ struct FFTOp : global::DynamicOperator< -1 , -1 > {
   Index output_size() const { return n; }
   FFTOp (size_t n, std::vector<size_t> dim) : n(n), dim(dim) { }
   void forward(ForwardArgs<double> &args) {
-    for (size_t i=0; i<n; i++) args.y(i) = args.x(i);
+    args.y_segment(0, n) = args.x_segment(0, n);
     fft_array<adjoint>( (cplx*) args.y_ptr(0), dim);
   }
   void reverse(ReverseArgs<double> &args) {
-    std::vector<double> buf(n);
-    for (size_t i=0; i<n; i++) buf[i] = args.dy(i);
+    std::vector<double> buf = args.dy_segment(0, n);
     fft_array<!adjoint>( (cplx*) buf.data(), dim);
-    for (size_t i=0; i<n; i++) args.dx(i) += buf[i];
+    args.dx_segment(0, n) += buf;
+  }
+  void reverse(ReverseArgs<Replay> &args) {
+    std::vector<Replay> buf = args.dy_segment(0, n);
+    args.dx_segment(0, n) += global::Complete<FFTOp<!adjoint> >(n, dim)(buf);
   }
   template <class Type> void forward(ForwardArgs<Type> &args) {
-    TMBAD_ASSERT(false);
+    TMBAD_ASSERT2(false, "FFT forward not implemented for this type");
   }
   template <class Type> void reverse(ReverseArgs<Type> &args) {
-    //TMBad::ad_segment seg(args.py(0), n);
-    //TMBad::ad_segment res = TMBad::get_glob()->getOperator<FFTOp<!adjoint>>(n)(seg);
-    // Not yet implemented
-    ASSERT(false);
+    TMBAD_ASSERT2(false, "FFT reverse not implemented for this type");
   }
   const char* op_name() {return adjoint ? "iFFT" : "FFT";}
 };
