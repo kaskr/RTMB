@@ -1,20 +1,46 @@
+##' AD complex numbers
+##'
+##' A limited set of complex number operations can be used when constructing AD tapes. The available methods are listed in this help page.
+##'
+##' @rdname ADcomplex
+##' @name ADcomplex
+##' @examples
+##' F <- MakeTape(function(x) sum(Re(fft(x))), numeric(3))
+##' F$jacobian(1:3)
+NULL
+
 setClass("adcomplex",
          slots=c(real="advector", imag="advector"))
+##' @describeIn ADcomplex Construct \code{adcomplex} vector
+##' @param real Real part
+##' @param imag Imaginary part
 adcomplex <- function(real, imag=rep(advector(0), length(real))) {
     real <- advector(real)
     dim(imag) <- dim(real)
     new("adcomplex", real=real, imag=imag)
 }
+##' @describeIn ADcomplex As \link[base]{complex}
+##' @param x An object of class \code{'adcomplex'}
+##' @param y An object of class \code{'adcomplex'}
 Re.adcomplex <- function(x) x@real
+##' @describeIn ADcomplex As \link[base]{complex}
 Im.adcomplex <- function(x) x@imag
+##' @describeIn ADcomplex As \link[base]{dim}
 dim.adcomplex <- function(x) dim(Re(x))
+##' @describeIn ADcomplex As \link[base]{dim}
+##' @param value Replacement value
 "dim<-.adcomplex" <- function(x, value) { dim(x@real) <- dim(x@imag) <- value; x }
+##' @describeIn ADcomplex As \link[base]{length}
 length.adcomplex <- function(x) length(Re(x))
+##' @describeIn ADcomplex As \link[base]{complex}
 Conj.adcomplex <- function(x) adcomplex(Re(x), -Im(x))
+##' @describeIn ADcomplex As \link[base]{complex}
 Mod.adcomplex <- function(x) sqrt(Re(x)*Re(x)+Im(x)*Im(x))
+##' @describeIn ADcomplex As \link[base]{complex}
 "+.adcomplex" <- function(x, y) {
     adcomplex(Re(x)+Re(y), Im(x)+Im(y))
 }
+##' @describeIn ADcomplex As \link[base]{complex}
 "-.adcomplex" <- function(x, y) {
     if (missing(y)) {y <- x; x <- 0}
     adcomplex(Re(x)-Re(y), Im(x)-Im(y))
