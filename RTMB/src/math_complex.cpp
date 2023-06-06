@@ -92,6 +92,7 @@ template<bool adjoint=false>
 void fft_array(std::complex<double>* x,
                std::vector<size_t> dim) {
   Eigen::FFT<double> fft;
+  fft.SetFlag(fft.Unscaled);
   typedef Eigen::Matrix<std::complex<double>, Eigen::Dynamic, Eigen::Dynamic> Matrix;
   typedef Eigen::Map<Matrix> Mat;
   vector<std::complex<double> > buf;
