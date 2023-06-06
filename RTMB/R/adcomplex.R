@@ -47,7 +47,7 @@ setMethod("fft", "adcomplex",
               d <- dim(z)
               if (is.null(d)) d0 <- length(z) else d0 <- d
               z <- unsplit(z)
-              ans <- fft_complex(z, d0)
+              ans <- fft_complex(z, d0, inverse)
               ans <- resplit(ans)
               dim(ans) <- d
               ans
