@@ -25,6 +25,13 @@ adcomplex <- function(real, imag=rep(advector(0), length(real))) {
 Re.adcomplex <- function(x) x@real
 ##' @describeIn ADcomplex As \link[base]{complex}
 Im.adcomplex <- function(x) x@imag
+##' @describeIn ADcomplex Print method
+setMethod("show", "adcomplex", function (object)  {
+    cat("class='adcomplex'\n")
+    y <- complex(real=getValues(Re(object)), imag=getValues(Im(object)))
+    dim(y) <- dim(object)
+    print(y)
+})
 ##' @describeIn ADcomplex As \link[base]{dim}
 dim.adcomplex <- function(x) dim(Re(x))
 ##' @describeIn ADcomplex As \link[base]{dim}
@@ -71,11 +78,9 @@ resplit <- function(x) {
 ##' @describeIn ADcomplex Fast Fourier Transform equivalent to \link[stats]{fft}. Notably this is the **multivariate** transform when `x` is an array.
 setMethod("fft", "adcomplex",
           function(z, inverse) {
-              ## if (!ad_context()) { ## Workaround
-              ##     F <- .MakeTape(function(...)
-              ##         fft(z,inverse),numeric(0))
-              ##     return advector(F$eval(numeric(0)))
-              ## }
+              if (!ad_context()) {
+                  stop("No active AD context")
+              }
               d <- dim(z)
               if (is.null(d)) d0 <- length(z) else d0 <- d
               z <- unsplit(z)
