@@ -233,6 +233,10 @@ Math1_complex <- function(x, op) {
     .Call(`_RTMB_Math1_complex`, x, op)
 }
 
+fft_complex <- function(x, dim, inverse = FALSE) {
+    .Call(`_RTMB_fft_complex`, x, dim, inverse)
+}
+
 TapedEval <- function(F, i) {
     .Call(`_RTMB_TapedEval`, F, i)
 }

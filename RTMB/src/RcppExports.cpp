@@ -742,6 +742,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fft_complex
+Rcpp::ComplexVector fft_complex(const Rcpp::ComplexVector& x, std::vector<size_t> dim, bool inverse);
+RcppExport SEXP _RTMB_fft_complex(SEXP xSEXP, SEXP dimSEXP, SEXP inverseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< std::vector<size_t> >::type dim(dimSEXP);
+    Rcpp::traits::input_parameter< bool >::type inverse(inverseSEXP);
+    rcpp_result_gen = Rcpp::wrap(fft_complex(x, dim, inverse));
+    return rcpp_result_gen;
+END_RCPP
+}
 // TapedEval
 Rcpp::ComplexVector TapedEval(Rcpp::Function F, Rcpp::ComplexVector i);
 RcppExport SEXP _RTMB_TapedEval(SEXP FSEXP, SEXP iSEXP) {
@@ -817,6 +830,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_expATv", (DL_FUNC) &_RTMB_expATv, 4},
     {"_RTMB_Arith2_complex", (DL_FUNC) &_RTMB_Arith2_complex, 3},
     {"_RTMB_Math1_complex", (DL_FUNC) &_RTMB_Math1_complex, 2},
+    {"_RTMB_fft_complex", (DL_FUNC) &_RTMB_fft_complex, 3},
     {"_RTMB_TapedEval", (DL_FUNC) &_RTMB_TapedEval, 2},
     {"_rcpp_module_boot_mod_adfun", (DL_FUNC) &_rcpp_module_boot_mod_adfun, 0},
     {NULL, NULL, 0}
