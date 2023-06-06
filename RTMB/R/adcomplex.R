@@ -45,19 +45,19 @@ Mod.adcomplex <- function(x) sqrt(Re(x)*Re(x)+Im(x)*Im(x))
     if (missing(y)) {y <- x; x <- 0}
     adcomplex(Re(x)-Re(y), Im(x)-Im(y))
 }
-##' @describeIn ADcomplex
+##' @describeIn ADcomplex Multiply
 "*.adcomplex" <- function(x, y) {
     adcomplex(Re(x)*Re(y) - Im(x)*Im(y), Re(x)*Im(y) + Im(x)*Re(y))
 }
 recip <- function(x) adcomplex(1/Re(x * Conj(x))) * Conj(x)
-##' @describeIn ADcomplex
+##' @describeIn ADcomplex Division
 "/.adcomplex" <- function(x, y) x * recip(y)
-##' @describeIn ADcomplex
+##' @describeIn ADcomplex Exp
 exp.adcomplex <- function(x) {
     s <- exp(Re(x))
     adcomplex(s*cos(Im(x)), s*sin(Im(x)))
 }
-##' @describeIn ADcomplex
+##' @describeIn ADcomplex Square root
 sqrt.adcomplex <- function(x) {
     M <- Mod(x)
     s <- x/abs(x) ## FIXME: AD sign
@@ -68,7 +68,7 @@ resplit <- function(x) {
     dim(x) <- c(2, length(x)/2)
     adcomplex(x[1,], x[2,])
 }
-##' @describeIn ADcomplex
+##' @describeIn ADcomplex Fast Fourier Transform equivalent to \link[stats]{fft}. Notably this is the **multivariate** transform when `x` is an array.
 setMethod("fft", "adcomplex",
           function(z, inverse) {
               ## if (!ad_context()) { ## Workaround
@@ -84,7 +84,7 @@ setMethod("fft", "adcomplex",
               dim(ans) <- d
               ans
           })
-##' @describeIn ADcomplex
+##' @describeIn ADcomplex If real input is supplied it is first converted to complex.
 setMethod("fft", "advector",
           function(z, inverse) {
               fft(adcomplex(z), inverse)
