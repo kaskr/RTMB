@@ -34,7 +34,7 @@ resplit <- function(x) {
     dim(x) <- c(2, length(x)/2)
     adcomplex(x[1,], x[2,])
 }
-setMethod(fft, "advector",
+setMethod("fft", "advector",
           function(z, inverse) {
               ## if (!ad_context()) { ## Workaround
               ##     F <- .MakeTape(function(...)
