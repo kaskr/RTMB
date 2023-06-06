@@ -152,7 +152,7 @@ struct FFTOp : global::DynamicOperator< -1 , -1 > {
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector fft(const Rcpp::ComplexVector &x, std::vector<size_t> dim) {
+Rcpp::ComplexVector fft_complex(const Rcpp::ComplexVector &x, std::vector<size_t> dim) {
   CHECK_INPUT(x);
   size_t n = x.size();
   // Check dim
