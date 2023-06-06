@@ -8,6 +8,7 @@ adcomplex <- function(real, imag=rep(advector(0), length(real))) {
 Re.adcomplex <- function(x) x@real
 Im.adcomplex <- function(x) x@imag
 dim.adcomplex <- function(x) dim(Re(x))
+"dim<-.adcomplex" <- function(x, value) { dim(x@real) <- dim(x@imag) <- value; x }
 Conj.adcomplex <- function(x) adcomplex(Re(x), -Im(x))
 Mod.adcomplex <- function(x) sqrt(Re(x)*Re(x)+Im(x)*Im(x))
 "+.adcomplex" <- function(x, y) {
