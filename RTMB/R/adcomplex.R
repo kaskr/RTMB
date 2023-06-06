@@ -45,19 +45,19 @@ Mod.adcomplex <- function(x) sqrt(Re(x)*Re(x)+Im(x)*Im(x))
     if (missing(y)) {y <- x; x <- 0}
     adcomplex(Re(x)-Re(y), Im(x)-Im(y))
 }
-##' @describeIn ADcomplex Multiply
+##' @describeIn ADcomplex As \link[base]{complex}
 "*.adcomplex" <- function(x, y) {
     adcomplex(Re(x)*Re(y) - Im(x)*Im(y), Re(x)*Im(y) + Im(x)*Re(y))
 }
 recip <- function(x) adcomplex(1/Re(x * Conj(x))) * Conj(x)
-##' @describeIn ADcomplex Division
+##' @describeIn ADcomplex As \link[base]{complex}
 "/.adcomplex" <- function(x, y) x * recip(y)
-##' @describeIn ADcomplex Exp
+##' @describeIn ADcomplex As \link[base]{complex}
 exp.adcomplex <- function(x) {
     s <- exp(Re(x))
     adcomplex(s*cos(Im(x)), s*sin(Im(x)))
 }
-##' @describeIn ADcomplex Square root
+##' @describeIn ADcomplex As \link[base]{complex}
 sqrt.adcomplex <- function(x) {
     M <- Mod(x)
     s <- x/abs(x) ## FIXME: AD sign
