@@ -70,7 +70,10 @@ sqrt.adcomplex <- function(x) {
     s <- x/abs(x) ## FIXME: AD sign
     adcomplex(sqrt(.5*(Re(x)+M)), sqrt(.5*(-Re(x)+M)))
 }
-unsplit <- function(z) as.vector(t(cbind(Re(z), Im(z))))
+unsplit <- function(z) {
+    dim(z) <- NULL
+    as.vector(t(cbind(Re(z), Im(z))))
+}
 resplit <- function(x) {
     dim(x) <- c(2, length(x)/2)
     adcomplex(x[1,], x[2,])
