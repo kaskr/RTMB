@@ -67,8 +67,8 @@ exp.adcomplex <- function(x) {
 ##' @describeIn ADcomplex As \link[base]{complex}
 sqrt.adcomplex <- function(x) {
     M <- Mod(x)
-    s <- x/abs(x) ## FIXME: AD sign
-    adcomplex(sqrt(.5*(Re(x)+M)), sqrt(.5*(-Re(x)+M)))
+    s <- sign(Im(x))
+    adcomplex(sqrt(.5*(Re(x)+M)), s * sqrt(.5*(-Re(x)+M)))
 }
 unsplit <- function(z) {
     dim(z) <- NULL
