@@ -97,6 +97,7 @@ Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
   }
 #define CUMC(OP) for (size_t i=1; i<n; i++) Y[i] = Y[i-1] OP X[i];
   if (!op.compare("abs")) CALL(fabs);
+  else if (!op.compare("sign")) CALL(sign);
   else if (!op.compare("sqrt")) VCALL(sqrt)
   else if (!op.compare("exp")) VCALL(exp)
   else if (!op.compare("log")) VCALL(log)
