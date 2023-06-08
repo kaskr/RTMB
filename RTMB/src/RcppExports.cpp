@@ -717,31 +717,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// Arith2_complex
-Rcpp::ComplexVector Arith2_complex(const Rcpp::ComplexVector& x, const Rcpp::ComplexVector& y, std::string op);
-RcppExport SEXP _RTMB_Arith2_complex(SEXP xSEXP, SEXP ySEXP, SEXP opSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< std::string >::type op(opSEXP);
-    rcpp_result_gen = Rcpp::wrap(Arith2_complex(x, y, op));
-    return rcpp_result_gen;
-END_RCPP
-}
-// Math1_complex
-Rcpp::ComplexVector Math1_complex(const Rcpp::ComplexVector& x, std::string op);
-RcppExport SEXP _RTMB_Math1_complex(SEXP xSEXP, SEXP opSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< std::string >::type op(opSEXP);
-    rcpp_result_gen = Rcpp::wrap(Math1_complex(x, op));
-    return rcpp_result_gen;
-END_RCPP
-}
 // fft_complex
 Rcpp::ComplexVector fft_complex(const Rcpp::ComplexVector& x, std::vector<size_t> dim, bool inverse);
 RcppExport SEXP _RTMB_fft_complex(SEXP xSEXP, SEXP dimSEXP, SEXP inverseSEXP) {
@@ -828,8 +803,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_SparseArith2", (DL_FUNC) &_RTMB_SparseArith2, 3},
     {"_RTMB_math_expm", (DL_FUNC) &_RTMB_math_expm, 1},
     {"_RTMB_expATv", (DL_FUNC) &_RTMB_expATv, 4},
-    {"_RTMB_Arith2_complex", (DL_FUNC) &_RTMB_Arith2_complex, 3},
-    {"_RTMB_Math1_complex", (DL_FUNC) &_RTMB_Math1_complex, 2},
     {"_RTMB_fft_complex", (DL_FUNC) &_RTMB_fft_complex, 3},
     {"_RTMB_TapedEval", (DL_FUNC) &_RTMB_TapedEval, 2},
     {"_rcpp_module_boot_mod_adfun", (DL_FUNC) &_rcpp_module_boot_mod_adfun, 0},
