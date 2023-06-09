@@ -438,7 +438,7 @@ GetTape <- function(obj, name = c("ADFun", "ADGrad", "ADHess"), warn=TRUE) {
     ADFun <- get(name, env, inherits=FALSE)
     stopifnot(is(ADFun$ptr ,"externalptr"))
     if (ADFun$DLL != "RTMB") {
-        ok <- "getSetGlobalPtr" %in% names(getDLLRegisteredRoutines("sam")$.Call)
+        ok <- "getSetGlobalPtr" %in% names(getDLLRegisteredRoutines(ADFun$DLL)$.Call)
         if (!ok) {
             message("'getSetGlobalPtr' not found in '", ADFun$DLL, "'")
             stop("Please update TMB and recompile DLL '", ADFun$DLL, "'")
