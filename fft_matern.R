@@ -27,11 +27,17 @@ Dmax <- 10
 ## dim <- c(20,20)
 ## Dmax <- 2
 
+## Formulas are simplest when working entirely in complex domain.
+## When drawing IID normal we may want to do
+rcnorm <- function(n) rnorm(n) + 1i * rnorm(n)
+## because this gives the property that fft(rcnorm(n))/sqrt(n) == rcnorm(n)
 
 ##D <- circDist()
 D <- circDist(dim)
 C <- matern(D, 10, 2.5)
 s <- Re(fft( fft(structure(rnorm(length(C)),dim=dim(C))) * sqrt(fft(C)) , inverse=TRUE)) / length(C)
+
+s <- Re(fft( fft(array(rcnorm(length(C)),dim=dim(C))) * sqrt(fft(C)) , inverse=TRUE)) / length(C)
 
 ## Eigen value approximation analysis (depends on smoothness)
 lam <- fft(C)
@@ -48,26 +54,31 @@ sum(lam!=0)
 loc <- sample(1:length(C), 10000)
 obs <- s[loc] + rnorm(length(loc), sd=1)
 ## objective function
-parms <- list(mu=0, phi=10, kappa=2.5, sd=1, sd_obs=1, u=numeric(sum(D<=Dmax)))
+Nfreq <- sum(D<=Dmax) ## Number of frequencies in approximation
+parms <- list(mu=0, phi=10, kappa=2.5, sd=1, sd_obs=1,
+              ureal=numeric(Nfreq), uimag=numeric(Nfreq)  )
 f <- function(parms) {
     getAll(as.list(parms))
     C <- matern(D, phi, kappa)
-    i <- order(D)[1:length(u)]
-    ans <- -sum(dnorm(u, log=TRUE))
-    U <- C * 0
-    U[i] <- u
-    ##U <- adcomplex(U)
+    i <- order(D)[1:Nfreq] ## small distance => slow frequencies
+    ans <- -sum(dnorm(c(ureal, uimag), sd=sqrt(length(C)), log=TRUE))
+    fftU <- as.complex(C*0)
+    dim(fftU) <- dim(C)
+    fftU[i] <- as.complex(ureal) + 1i*as.complex(uimag)
     ## simulation
-    S <- Re(fft( fft(U) * Re(sqrt(fft(C))) , inverse=TRUE)) / length(C)
+    S <- Re(fft( fftU * as.complex(Re(sqrt(fft(C)))) , inverse=TRUE)) / length(C)
     REPORT(S)
     ans <- ans - sum(dnorm(obs, sd * S[loc] + mu, sd=sd_obs, log=TRUE))
     ans
 }
 TMB::config(tmbad.sparse_hessian_compress=1)
-obj <- MakeADFun(f,parms,random="u")
+obj <- MakeADFun(f,parms,random=c("ureal", "uimag"))
 obj$fn()
 obj$gr()
 opt <- nlminb(obj$par,obj$fn,obj$gr)
 
 lpb <- obj$env$last.par.best
 qw <- obj$report(lpb)
+layout(t(1:2))
+image(s)
+image(qw$S)
