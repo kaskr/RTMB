@@ -22,8 +22,8 @@ matern <- function (u, phi, kappa)
 }
 
 ## config:
-dim <- c(200,200)
-Dmax <- 10
+dim <- c(100,100)
+Dmax <- 5
 ## dim <- c(20,20)
 ## Dmax <- 2
 
@@ -34,7 +34,7 @@ rcnorm <- function(n) rnorm(n) + 1i * rnorm(n)
 
 ##D <- circDist()
 D <- circDist(dim)
-C <- matern(D, 10, 2.5)
+C <- matern(D, 5, 2.5)
 s <- Re(fft( fft(structure(rnorm(length(C)),dim=dim(C))) * sqrt(fft(C)) , inverse=TRUE)) / length(C)
 
 s <- Re(fft( fft(array(rcnorm(length(C)),dim=dim(C))) * sqrt(fft(C)) , inverse=TRUE)) / length(C)
@@ -51,8 +51,8 @@ abline(0,1)
 sum(lam!=0)
 
 ## Observations
-loc <- sample(1:length(C), 10000)
-obs <- s[loc] + rnorm(length(loc), sd=1)
+loc <- sample(1:length(C), 1000)
+obs <- s[loc] + 2 * rnorm(length(loc), sd=.5)
 ## objective function
 Nfreq <- sum(D<=Dmax) ## Number of frequencies in approximation
 parms <- list(mu=0, phi=10, kappa=2.5, sd=1, sd_obs=1,
