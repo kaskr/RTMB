@@ -9,6 +9,7 @@
 \alias{Ops.advector}
 \alias{Math.advector}
 \alias{as.vector.advector}
+\alias{as.complex.advector}
 \alias{aperm.advector}
 \alias{c.advector}
 \alias{[.advector}
@@ -37,6 +38,8 @@ advector(x)
 \method{Math}{advector}(x, ...)
 
 \method{as.vector}{advector}(x, mode = "any")
+
+\method{as.complex}{advector}(x, ...)
 
 \method{aperm}{advector}(a, perm, ...)
 
@@ -126,6 +129,8 @@ re-used for AD vectors.
 \item \code{Math(advector)}: Unary operations
 
 \item \code{as.vector(advector)}: Makes \code{array(x)} work.
+
+\item \code{as.complex(advector)}: Convert to \link{ADcomplex}. Note that dimensions are dropped for consistency with base R.
 
 \item \code{aperm(advector)}: Equivalent of \link[base]{aperm}
 
