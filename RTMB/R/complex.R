@@ -72,6 +72,14 @@ as.vector.advector <- function(x, mode = "any") {
     ## FIXME: Rcpp export 'as_advector' and use it
     asS4(structure(NextMethod(), class="advector"))
 }
+
+##' @describeIn ADvector Convert to \link{ADcomplex}. Note that dimensions are dropped for consistency with base R.
+as.complex.advector <- function(x, ...) {
+    ans <- adcomplex(x)
+    dim(ans) <- NULL ## For base R consistency
+    ans
+}
+
 ## unlist.advector <- function (x, recursive = TRUE, use.names = TRUE)  {
 ##     structure(NextMethod(), class="advector")
 ## }
