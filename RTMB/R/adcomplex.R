@@ -5,8 +5,18 @@
 ##' @rdname ADcomplex
 ##' @name ADcomplex
 ##' @examples
-##' F <- MakeTape(function(x) sum(Re(fft(x))), numeric(3))
-##' F$jacobian(1:3)
+##' ## Tape using complex operations
+##' F <- MakeTape(function(x) {
+##'   x <- as.complex(x)
+##'   y <- exp( x * ( 1 + 2i ) )
+##'   c(Re(y), Im(y))
+##' }, numeric(1))
+##' F
+##' F(1)
+##' ## Complex FFT on the tape
+##' G <- MakeTape(function(x) sum(Re(fft(x))), numeric(3))
+##' G$simplify()
+##' G$print()
 NULL
 
 setClass("adcomplex",
