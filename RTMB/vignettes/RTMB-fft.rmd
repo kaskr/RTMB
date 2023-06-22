@@ -1,0 +1,271 @@
+---
+title: "Fast Fourier Transform with RTMB"
+author: "Kasper Kristensen"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Fast Fourier Transform with RTMB}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE, message=FALSE}
+##library(knitr)
+knitr::opts_chunk$set(fig.align='center')
+library(RTMB)
+set.seed(1)
+formals(MakeADFun)$silent <- TRUE
+```
+
+## Introduction
+
+The purpose of this vignette is to demonstrate how to work with complex numbers in RTMB by implementing a spatial model that uses the Fast Fourier Transform (FFT).
+
+## Complex numbers and AD
+
+RTMB tapes cannot be directly evaluated or constructed using complex numbers. However, it is possible to use intermediate calculations with complex numbers via `as.complex`.
+
+An example could be an R function using the complex exponential:
+
+```{r}
+f <- function(x) {
+    xreal <- x[1]
+    ximag <- x[2]
+    z <- as.complex(xreal) + 1i * as.complex(ximag)
+    Mod(exp(z))
+}
+```
+
+We can tape it
+
+```{r}
+F <- MakeTape(f, numeric(2))
+show(F)
+```
+
+and check that it works as expected:
+
+```{r}
+f(1:2)
+```
+
+```{r}
+F(1:2)
+```
+
+## A quick FFT tutorial
+
+The `fft` function, available in R, is essentially a method to perform eigen decompositions ($C=F \Lambda F^H$) of matrices ($C$) of a certain *circulant* structure. The `fft` function provides *both* the eigen values of $C$ *and* matrix-vector multiplication $F v$ by an arbitrary vector $v$.
+
+A circulant domain can be constructed in any number of dimensions, but for illustration purposes we'll consider 2D. A 2D lattice is made circulant by 'gluing' left/right sides and top/bottom sides. The circulant lattice thus have a strucure like the surface of a doughnut.
+
+It is instructive to consider the Euclidian distance in this domain.
+A circulant distance matrix can be constructed using the function
+
+```{r}
+circDist <- function(dim) {
+    cd <- function(n) pmin(1:n-1, n:1)
+    g <- expand.grid(lapply(dim, cd))
+    structure(sqrt(rowSums(g^2)), dim=dim)
+}
+```
+
+For example, a *circulant* 5-by-5 grid has distance matrix
+
+```{r}
+circDist(c(5, 5))
+```
+
+giving the distance from a reference point (distance 0) to all other points in the domain. Notice how distances wrap around the two coordinate directions. Strictly speaking, this corresponds to a single column of the distance matrix. 
+
+Because the domain has 25 points, a general covariance matrix in the domain would have dimension 25-by-25. However, assuming 2D-stationarity we can represent a spatial covariance by its *circulant base* defined as the covariance between an arbitrary reference point and all other points. For example the 5-by-5 circulant base
+
+```{r}
+CB <- exp(-circDist(c(5, 5)))
+CB
+```
+
+uniquely determines a 2D-circulant exponential covariance of dimension 25-by-25. Its 25 eigen values are given by `fft(CB)`.
+
+### Basic properties
+
+- $C=\frac{1}{n}F \Lambda F^H$
+- In particular $FF^H=nI$
+- $C^{1/2}=\frac{1}{n}F \Lambda^{1/2} F^H$
+
+Let $C_B$ denote the basis array
+
+- $\text{diag}(\Lambda)=fft(C_B)$
+- $Fz = fft(z)$
+
+
+**Sampling from covariance**
+
+Let $u~N(0,I)$. Then $\frac{1}{n} F \Lambda^{1/2} F^H u$ is a sample from $N(0,C)$ (discarding the imaginariy part of the sample which is zero).
+However, this formula requires two transforms. If we draw another $v~N(0,I)$ and instead apply the same formula on $u+iv$ rather than just $u$, i.e.
+\[s=\frac{1}{n} F \Lambda^{1/2} F^H (u+iv)\]
+Then we obviously get two independent samples $Re(s)$ and $Im(s)$ from the same $N(0,C)$ distribution. The difference is that we can now directly draw $F^H (u+iv)$ because we know its distribution is $\tilde u+ i \tilde v$ where $\tilde u, \tilde v\sim N(0, nI)$.
+
+
+## Example covariance: Matern
+
+The Matern correlation function with parameters $\phi$ (range) and $\kappa$ (smoothness) can be calculated using the function
+
+```{r}
+matern <- function (u, phi, kappa) {
+    uphi <- u / phi
+    corr <- 2^(1-kappa) / gamma(kappa) * (uphi^kappa) * besselK(uphi, kappa)
+    ifelse(u > 0, corr, 1)
+}
+```
+
+We'll try it on a 100-by-100 circulant lattice
+
+```{r}
+D <- circDist(c(100, 100))
+```
+
+The circulant base is
+
+```{r}
+##CB <- matern(D, 5, 2.5)
+##CB <- matern(D, 7, 2.5)
+CB <- matern(D, 5, 2.5)
+```
+
+We can easily sample from $N(0, C)$. first define a *complex* `rnorm`:
+
+```{r}
+rcnorm <- function(n,...) rnorm(n,...) + 1i * rnorm(n,...)
+```
+
+A sample can then be obtained by scaling with the square root of the covariance matrix:
+
+```{r}
+u <- rcnorm(length(CB))
+dim(u) <- dim(CB)
+s <- Re(fft(fft(u)*sqrt(fft(CB)),inverse=TRUE)) / length(CB)
+```
+
+According to the previous theory, we could have obtained such a sample alternatively, by noting that `fft(u)` can be replaced by `rcnorm(length(CB), sd=sqrt(length(CB)))`.
+
+```{r}
+image(CB, main="Covariance")
+```
+
+```{r}
+image(s, main="Sample")
+```
+
+## A low-rank approximation
+
+Although parameter dependent, it may be noted that most of the eigenvalues of this Matern covariance matrix are very close to zero, especially those corresponding to high frequencies (large distance):
+
+```{r}
+plot(D, Re(fft(CB)))
+abline(v=5)
+```
+
+By cutting off distances around 5 seems like a fair approximation.
+Let's see how this would affect the covariance:
+
+```{r}
+Dmax <- 6
+lam <- fft(CB)
+lam[D>Dmax] <- 0
+CBhat <- Re(fft(lam, inverse=TRUE)) / length(CB)
+plot(as.vector(CB),as.vector(CBhat))
+abline(0,1)
+range(CB-CBhat)
+```
+
+The number of frequencies required by this approximation is
+
+```{r}
+Nfreq <- sum(D<=Dmax)
+Nfreq
+```
+
+
+## Fitting the model
+
+We assume observations are available at random locations
+
+```{r}
+loc <- sample(1:length(CB), 1000)
+```
+
+And we assume a nugget effect of $sd=1$:
+
+```{r}
+obs <- 2 * s[loc] + rnorm(length(loc), sd=1)
+```
+
+The model parameters are
+
+```{r}
+parms <- list(mu=0, phi=10, kappa=2.5, sd=1, sd_obs=1,
+              ureal=numeric(Nfreq), uimag=numeric(Nfreq)  )
+```
+
+where `ureal` and `uimag` are real- and imaginary parts of the latent frequencies.
+
+
+Let's not estimate kappa:
+
+```{r}
+map <- list(kappa=factor(NA))
+```
+
+Objective function
+
+```{r}
+f <- function(parms) {
+    getAll(parms)
+    C <- matern(D, phi, kappa)
+    i <- order(D)[1:Nfreq] ## small distance => slow frequencies
+    ans <- -sum(dnorm(c(ureal, uimag), sd=sqrt(length(C)), log=TRUE))
+    fftU <- as.complex(C*0)
+    dim(fftU) <- dim(C)
+    fftU[i] <- as.complex(ureal) + 1i*as.complex(uimag)
+    ## simulation
+    S <- Re(fft( fftU * as.complex(Re(sqrt(fft(C)))), inverse=TRUE)) / length(C)
+    REPORT(S)
+    ans <- ans - sum(dnorm(obs, sd * S[loc] + mu, sd=sd_obs, log=TRUE))
+    ans
+}
+```
+
+- Note that $C$ is not guarantied to be positive definite. We need workarounds to ensure that `sqrt(fft(C))` doesn't cause `NaN` derivatives. Given that `fft(C)` are real, but possibly negative, my hope was that the square root of for example `lambda=-3` would become `1i * sqrt(-3)` and then taking `Re()` discards this lambda. This hack doesn't do the trick...
+- Note that fft of white noise is white noise.
+- Note that random effect hessian is dense.
+
+Test eval
+
+```{r}
+f(parms)
+```
+
+We trade some speed for memory:
+
+```{r results="hide"}
+TMB::config(tmbad.sparse_hessian_compress=1)
+```
+
+Now fit the model
+
+```{r}
+obj <- MakeADFun(f,parms,random=c("ureal", "uimag"), map=map)
+obj$fn()
+obj$gr()
+system.time(opt <- nlminb(obj$par,obj$fn,obj$gr))
+```
+
+And check parameter estimates vs true values
+
+```{r}
+sdr <- sdreport(obj)
+sdr
+```
