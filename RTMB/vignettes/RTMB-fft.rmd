@@ -57,7 +57,7 @@ F(1:2)
 
 ## A quick FFT tutorial
 
-The `fft` function, available in R, is essentially a method to perform eigen decompositions ($C=F \Lambda F^H$) of matrices ($C$) of a certain *circulant* structure. The `fft` function provides *both* the eigen values of $C$ *and* matrix-vector multiplication $F v$ by an arbitrary vector $v$.
+The `fft` function, available in R, is essentially a method to perform eigen decompositions ($C=V \Lambda V^{-1}$) of matrices ($C$) of a so-called *circulant* structure. The `fft` function provides *both* the eigen values of $C$ *and* matrix-vector multiplication $F v$ by an arbitrary vector $v$.
 
 A circulant domain can be constructed in any number of dimensions, but for illustration purposes we'll consider 2D. A 2D lattice is made circulant by 'gluing' left/right sides and top/bottom sides. The circulant lattice thus have a strucure like the surface of a doughnut.
 
@@ -90,6 +90,20 @@ CB
 uniquely determines a 2D-circulant exponential covariance of dimension 25-by-25. Its 25 eigen values are given by `fft(CB)`.
 
 ### Basic properties
+
+It is convenient to define the *unitary* fft and its inverse as
+
+```{r}
+FFT  <- function(x) fft(x) / sqrt(length(x))
+iFFT <- function(x) fft(x, inverse=TRUE) / sqrt(length(x))
+```
+
+In the following we let `x` denote a complex array, `C` is a circulant matrix with *circulant base* `CB` of the same dimension as `x`.
+
+- For any complex `x` it holds that `FFT(iFFT(x)) = x`
+- The eigenvalues of a circulant matrix `C` given by its *circulent base* `CB` are `lambda=fft(CB)`.
+- This array of eigenvalues `lambda` is 
+
 
 - $C=\frac{1}{n}F \Lambda F^H$
 - In particular $FF^H=nI$
@@ -146,10 +160,11 @@ A sample can then be obtained by scaling with the square root of the covariance 
 ```{r}
 u <- rcnorm(length(CB))
 dim(u) <- dim(CB)
-s <- Re(fft(fft(u)*sqrt(fft(CB)),inverse=TRUE)) / length(CB)
+lambda <- fft(CB)
+s <- Re( FFT( sqrt(lambda) * iFFT(u) ) )
 ```
 
-According to the previous theory, we could have obtained such a sample alternatively, by noting that `fft(u)` can be replaced by `rcnorm(length(CB), sd=sqrt(length(CB)))`.
+According to the previous theory, we could have obtained such a sample alternatively, by noting that `iFFT(u)` can be replaced by `rcnorm(length(CB))`.
 
 ```{r}
 image(CB, main="Covariance")
@@ -226,12 +241,14 @@ f <- function(parms) {
     getAll(parms)
     C <- matern(D, phi, kappa)
     i <- order(D)[1:Nfreq] ## small distance => slow frequencies
-    ans <- -sum(dnorm(c(ureal, uimag), sd=sqrt(length(C)), log=TRUE))
-    fftU <- as.complex(C*0)
-    dim(fftU) <- dim(C)
-    fftU[i] <- as.complex(ureal) + 1i*as.complex(uimag)
+    ans <- -sum(dnorm(c(ureal, uimag), log=TRUE))
+    uc <- as.complex(C*0)
+    dim(uc) <- dim(C)
+    uc[i] <- as.complex(ureal) + 1i*as.complex(uimag)
     ## simulation
-    S <- Re(fft( fftU * as.complex(Re(sqrt(fft(C)))), inverse=TRUE)) / length(C)
+    lambda <- fft(C)
+    sqrt.lambda <- as.complex(Re(sqrt(lambda)))
+    S <- Re(FFT(uc * sqrt.lambda))
     REPORT(S)
     ans <- ans - sum(dnorm(obs, sd * S[loc] + mu, sd=sd_obs, log=TRUE))
     ans
