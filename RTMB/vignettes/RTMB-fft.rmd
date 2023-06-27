@@ -149,22 +149,24 @@ The circulant base is
 CB <- matern(D, 5, 2.5)
 ```
 
-We can easily sample from $N(0, C)$. first define a *complex* `rnorm`:
+We can easily sample from $N(0, C)$.
+A sample can then be obtained by scaling a standard gaussian sample with the square root of the covariance matrix:
 
-```{r}
-rcnorm <- function(n,...) rnorm(n,...) + 1i * rnorm(n,...)
-```
-
-A sample can then be obtained by scaling with the square root of the covariance matrix:
-
-```{r}
-u <- rcnorm(length(CB))
+```r
+u <- rnorm(length(CB))
 dim(u) <- dim(CB)
 lambda <- fft(CB)
 s <- Re( FFT( sqrt(lambda) * iFFT(u) ) )
 ```
 
-According to the previous theory, we could have obtained such a sample alternatively, by noting that `iFFT(u)` can be replaced by `rcnorm(length(CB))`.
+According to the previous theory, we could obtain such a sample alternatively, by noting that `iFFT(u)` can be replaced by complex white noise:
+
+```{r}
+uc <- rnorm(length(CB)) + 1i * rnorm(length(CB))
+dim(uc) <- dim(CB)
+lambda <- fft(CB)
+s <- Re( FFT( sqrt(lambda) * uc ) )
+```
 
 ```{r}
 image(CB, main="Covariance")
@@ -179,12 +181,11 @@ image(s, main="Sample")
 Although parameter dependent, it may be noted that most of the eigenvalues of this Matern covariance matrix are very close to zero, especially those corresponding to high frequencies (large distance):
 
 ```{r}
-plot(D, Re(fft(CB)))
-abline(v=5)
+plot(D, Re(lambda))
+abline(v=6)
 ```
 
-By cutting off distances around 5 seems like a fair approximation.
-Let's see how this would affect the covariance:
+Let's see how if affects the covariance to remove frequencies corresponding to distances greater than 6:
 
 ```{r}
 Dmax <- 6
@@ -196,12 +197,26 @@ abline(0,1)
 range(CB-CBhat)
 ```
 
-The number of frequencies required by this approximation is
+The number of frequencies used by this approximation is
 
 ```{r}
 Nfreq <- sum(D<=Dmax)
 Nfreq
 ```
+
+We can compare the sample `s` with a new sample `s2` based in the low-rank approximation.
+Note how we can alternatively express the approximation by setting elements of `uc` to zero:
+
+```{r}
+uc[D>Dmax] <- 0
+s2 <- Re( FFT( sqrt(lambda) * uc ) )
+```
+
+```{r}
+image(s2, main="Sample (low-rank)")
+```
+
+In conclusion we can use the relatively few `uc[D<=Dmax]` as (complex) 'random effects' to represent the Gaussian Matern field fairly accurately.
 
 
 ## Fitting the model
