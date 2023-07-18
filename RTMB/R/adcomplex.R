@@ -1,3 +1,9 @@
+################################################################################
+## This file contains:
+## - Complex number arithmetic
+## - Complex FFT
+################################################################################
+
 ##' AD complex numbers
 ##'
 ##' A limited set of complex number operations can be used when constructing AD tapes. The available methods are listed in this help page.
