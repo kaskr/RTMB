@@ -1,8 +1,8 @@
 # RTMB - R bindings for TMB
 
-## Motivation
+## Description
 
-The package `RTMB` provides a native R interface for *a subset of* `TMB` so you can avoid coding in C++.
+The package `RTMB` provides a native R interface for *a substantial subset of* `TMB` so you can avoid coding in C++.
 
 `RTMB` only affects the `TMB` function `MakeADFun` that builds the objective function. Once `MakeADFun` has been invoked, everything else is *exactly the same* and *models run as fast* as if coded in C++.
 
@@ -10,10 +10,9 @@ PROS:
 
 - Fast to change and re-run models because no compilation is needed.
 - Debugging can be performed using the normal R debugger rather than gdb.
+- Most common TMB features are supported. See [current list of working examples](./tmb_examples).
 
-CONS:
-
-- Not all features are supported. See [current list of working examples](./tmb_examples).
+More information, including vignettes and documentation, can be found on the [RTMB universe page](https://kaskr.r-universe.dev/RTMB).
 
 ## Install
 
@@ -25,7 +24,7 @@ Run from R:
 install.packages('RTMB', repos = c('https://kaskr.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
-See [documentation page](https://kaskr.r-universe.dev/RTMB). **A parallel version is available as a separate package 'RTMBp'**
+**A parallel version is available as a separate package 'RTMBp'**
 
 ### Source
 

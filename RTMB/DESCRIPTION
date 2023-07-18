@@ -2,13 +2,16 @@ Package: RTMB
 Type: Package
 Title: R Bindings for TMB
 Version: 1.0
-Date: 2023-03-08
+Date: 2023-07-18
 Author: Kasper Kristensen
 Maintainer: Kasper Kristensen <kaskr@dtu.dk>
-Description: Native R interface to a subset of 'TMB'.
+Description: Native R interface to 'TMB' (Template Model Builder) so models can be written entirely in R rather than C++. Automatic differentiation is available for a rich set of R, including linear algebra for dense and sparse matrices, complex arithmetic, fast fourier transform and many probability distributions and special functions.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.9), Matrix, methods, TMB (>= 1.9.3), MASS
 LinkingTo: Rcpp, TMB, RcppEigen
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr, rmarkdown
 Suggests: knitr, rmarkdown, igraph
+URL: https://github.com/kaskr/RTMB
+BugReports: https://github.com/kaskr/RTMB/issues
+NeedsCompilation: yes

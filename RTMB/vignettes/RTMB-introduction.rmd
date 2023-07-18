@@ -51,7 +51,7 @@ and then state a normal regression given these random coefficients:
 
 To implement the model in RTMB we have to set up the objective function and define the parameters and random effects.
 
-Parameter objects are gathered in a list that also serves as intial guess when fitting the model:
+Parameter objects are gathered in a list that also serves as initial guess when fitting the model:
 
 ```{r}
 parameters <- list(
@@ -162,7 +162,7 @@ For more details we refer to the help page `?TMB::checkConsistency`.
 
 ## Goodness-of-fit using quantile residuals
 
-Quantile residuals can be generated automatically using the `oneStepPredict` function. These residuals are conceptually superior to other methods (e.g. Pearson residuals), but much tricker to calculate. It is very important to specify an appropriate `method` (see `?TMB::oneStepPredict`) because using an inappropriate method can give wrong residuals. For the random regression model the 'fullGaussian' method is computationally exact.
+Quantile residuals can be generated automatically using the `oneStepPredict` function. These residuals are conceptually superior to other methods (e.g. Pearson residuals), but much trickier to calculate. It is very important to specify an appropriate `method` (see `?TMB::oneStepPredict`) because using an inappropriate method can give wrong residuals. For the random regression model the 'fullGaussian' method is computationally exact.
 
 ```{r}
 osa <- oneStepPredict(obj, method="fullGaussian", discrete=FALSE)
@@ -203,7 +203,7 @@ However, model implementation might not always work as smoothly. In case of erro
 
 # Probabilistic syntax
 
-The random regression model could alternatively have been written using RTMBs 'tilde operator' (`%~%`):
+The random regression model could alternatively have been written using the RTMB 'tilde operator' (`%~%`):
 
 ```{r}
 f2 <- function(parms) {
@@ -223,7 +223,7 @@ f2 <- function(parms) {
 ```
 
 This syntax is closer to other probabilistic languages (e.g. BUGS, JAGS and Stan).
-But more importantly, it prevents some very common TMB mistakes, by passing `log=TRUE` automatically and making sure the sign of the objective funtion is correct.
+But more importantly, it prevents some very common TMB mistakes, by passing `log=TRUE` automatically and making sure the sign of the objective function is correct.
 
 Otherwise, `f2` is identical to `f`, and the model object can be constructed and fitted in the same way:
 

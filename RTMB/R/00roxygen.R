@@ -7,7 +7,7 @@
 ##' and \emph{models run as fast} as if coded in C++.
 ##'
 ##' @details 'RTMB' offers a greatly simplified interface to 'TMB'. The TMB objective function can now be written entirely in R rather than C++ (\link{TMB-interface}). In addition, we highlight two new simplifications:
-##' 1. For the most cases, simulation testing can be carried *automatically* without the need to add simulation blocks (\link{Simulation}).
+##' 1. For the most cases, simulation testing can be carried out *automatically* without the need to add simulation blocks (\link{Simulation}).
 ##' 2. Also, quantile residuals can be obtained without any essential modifications to the objective function (\link{OSA-residuals}).
 ##'
 ##' The introduction vignette describes these basic features - see \code{vignette("RTMB-introduction")}.
