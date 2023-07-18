@@ -5,7 +5,7 @@
 ##' - \code{x %~% distribution(...)} is syntactic sugar for \code{.nll <- .nll - sum(distribution(x,...,log=TRUE))}
 ##' - The variable \code{.nll} is automatically initialized to \code{0} and returned on exit.
 ##'
-##' @note If the shorter name `~` is preferred, it can be locally overloaded using \code{"~" <- "%~%"}.
+##' @note If the shorter name `~` is preferred, it can be locally overloaded using \code{"~" <- RTMB::"%~%"}.
 ##' @examples
 ##' f <- function(parms) {
 ##'   getAll(parms)
