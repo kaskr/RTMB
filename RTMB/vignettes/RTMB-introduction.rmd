@@ -200,3 +200,33 @@ However, model implementation might not always work as smoothly. In case of erro
     ```
 
     and verify that it gives the same result as `f(parameters)`.
+
+# Probabilistic syntax
+
+The random regression model could alternatively have been written using RTMBs 'tilde operator' (`%~%`):
+
+```{r}
+f2 <- function(parms) {
+    getAll(ChickWeight, parms, warn=FALSE)
+    ## Optional (enables extra RTMB features)
+    weight <- OBS(weight)
+    ## Random slopes
+    a %~% dnorm(mean=mua, sd=sda)
+    ## Random intercepts
+    b %~% dnorm(mean=mub, sd=sdb)
+    ## Data
+    predWeight <- a[Chick] * Time + b[Chick]
+    weight %~% dnorm(predWeight, sd=sdeps)
+    ## Get predicted weight uncertainties
+    ADREPORT(predWeight)
+}
+```
+
+This syntax is closer to other probabilistic languages (e.g. BUGS, JAGS and Stan).
+But more importantly, it prevents some very common TMB mistakes, by passing `log=TRUE` automatically and making sure the sign of the objective funtion is correct.
+
+Otherwise, `f2` is identical to `f`, and the model object can be constructed and fitted in the same way:
+
+```{r}
+obj <- MakeADFun(f2, parameters, random=c("a", "b"))
+```
