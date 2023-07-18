@@ -1,3 +1,10 @@
+################################################################################
+## This file contains:
+## - The 'advector' and its core methods
+## - The AD tape (MakeTape)
+## - RTMB::MakeADFun
+################################################################################
+
 ##' @describeIn ADvector Construct a new advector
 advector <- function(x) {
     if (inherits(x, "advector"))
