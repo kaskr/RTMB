@@ -260,7 +260,7 @@ NULL
 ##'
 ##' or 'indirect' as in
 ##'
-##' \code{dnorm(2*u+1, log=TRUE)  ## u ~ N(-1, .25)}
+##' \code{dnorm(2*(u+1), log=TRUE)  ## u ~ N(-1, .25)}
 ##'
 ##' Indirect assignment works for a limited set of easily invertible functions - see \code{methods(class="simref")}.
 ##'

@@ -22,7 +22,7 @@ Provides a slightly simplified syntax \emph{inspired by}, but \emph{not} compati
 }
 }
 \note{
-If the shorter name \code{~} is preferred, it can be locally overloaded using \code{"~" <- "\%~\%"}.
+If the shorter name \code{~} is preferred, it can be locally overloaded using \code{"~" <- RTMB::"\%~\%"}.
 }
 \examples{
 f <- function(parms) {
