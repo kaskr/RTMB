@@ -298,3 +298,40 @@ setMethod("ifelse", signature(test="num", yes="num", no="num"),
 ##' @param Y As \link[base]{outer}
 setMethod("outer", signature(X="advector", Y="advector", FUN="missing"),
           function (X, Y) outer(X, Y, function(x, y) x * y))
+
+
+################################################################################
+
+##' @describeIn Distributions Conway-Maxwell-Poisson. Calculate density.
+dcompois <- function(x, mode, nu, log = FALSE) {
+    if (inherits(x,"osa"))    return (dGenericOSA( "dcompois" , x=x, mode=mode, nu=nu, log=log ))
+    if (inherits(x,"simref")) return (dGenericSim( "dcompois" , x=x, mode=mode, nu=nu, log=log ))
+    loglambda <- nu * log(mode)
+    ans <- x * loglambda - nu * lfactorial(x)
+    ans <- ans - compois_calc_logZ(loglambda, nu)
+    if (log) ans else exp(ans)
+}
+## internal (simref)
+rcompois <- function(n, mode, nu) {
+    loglambda <- nu * log(mode)
+    loglambda <- rep(loglambda, length.out=n)
+    mapply(distr_rcompois, loglambda, nu) ## mapply re-cycles
+}
+
+##' @describeIn Distributions Conway-Maxwell-Poisson. Calculate density parameterized via the mean.
+dcompois2 <- function(x, mean, nu, log = FALSE) {
+    if (inherits(x,"osa"))    return (dGenericOSA( "dcompois2" , x=x, mean=mean, nu=nu, log=log ))
+    if (inherits(x,"simref")) return (dGenericSim( "dcompois2" , x=x, mean=mean, nu=nu, log=log ))
+    logmean <- log(mean)
+    loglambda <- compois_calc_loglambda(logmean, nu)
+    ans <- x * loglambda - nu * lfactorial(x)
+    ans <- ans - compois_calc_logZ(loglambda, nu)
+    if (log) ans else exp(ans)
+}
+## internal (simref)
+rcompois2 <- function(n, mean, nu) {
+    logmean <- log(mean)
+    loglambda <- getValues(compois_calc_loglambda(advector(logmean), advector(nu)))
+    loglambda <- rep(loglambda, length.out=n)
+    mapply(distr_rcompois, loglambda, nu) ## mapply re-cycles
+}
