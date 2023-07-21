@@ -342,3 +342,78 @@ rcompois2 <- function(n, mean, nu) {
     loglambda <- rep(loglambda, length.out=n)
     mapply(distr_rcompois, loglambda, nu) ## mapply re-cycles
 }
+
+################################################################################
+
+##' @describeIn Distributions AD implementation of \link[stats]{pbinom}
+setMethod("pbinom",
+          signature(q = "ad", size = "ad", prob = "ad",
+                    lower.tail = "missing", log.p = "missing"),
+          function( q, size, prob ) {
+              1 - pbeta(q = prob, shape1 = q + 1, shape2 = size - q)
+          })
+##' @describeIn Distributions Default method
+setMethod("pbinom",
+          signature(q = "num", size = "num", prob = "num",
+                    lower.tail = "missing", log.p = "missing"),
+          function( q, size, prob ) {
+              stats:: pbinom ( q=q, size=size, prob=prob )
+          })
+
+################################################################################
+
+## 'dmultinom' is already in R so we use S4 method to enhance it.
+## ?dmultinom ---> 'dmultinom is currently _not vectorized_ at all'
+## First we generate the version we want for AD types (dot signifies 'default argument')
+##' @describeIn Distributions AD implementation of \link[stats]{dmultinom}
+setMethod("dmultinom", signature("ad", "ad.", "ad", "logical."),
+          function(x, size, prob, log) {
+              ## Copy/paste from stats::dmultinom and remove if/else branching
+              K <- length(prob)
+              if (length(x) != K)
+                  stop("x[] and prob[] must be equal length vectors.")
+              s <- sum(prob)
+              prob <- prob/s
+              x <- as.integer(x + 0.5)
+              if (any(x < 0))
+                  stop("'x' must be non-negative")
+              N <- sum(x)
+              if (is.null(size))
+                  size <- N
+              else if (size != N)
+                  stop("size != sum(x), i.e. one is wrong")
+              r <- lgamma(size + 1) + sum(x * log(prob) - lgamma(x + 1))
+              if (log)
+                  r
+              else exp(r)
+          })
+## This matches 'too much', so we fix by adding a specialization:
+##' @describeIn Distributions Default method
+setMethod("dmultinom", signature("num", "num.", "num", "logical."),
+          function(x, size, prob, log) {
+              stats::dmultinom(x, size, prob, log)
+          })
+## For S4 generics we add the OSA version like this:
+##' @describeIn Distributions OSA implementation
+setMethod("dmultinom", "osa", function(x, size, prob, log) {
+    prob <- prob / sum(prob)
+    ## Factorize in succesive binomials
+    perm <- order(attr(x@keep, "ord")) ## FIXME: Make extractor in osa.R ?
+    x <- x[perm]
+    prob <- prob[perm]
+    ## Binomial parameters
+    "c" <- ADoverload("c")
+    rcr <- function(x) rev(cumsum(rev(x)))
+    size <- rcr(x@x)
+    prob <- prob / rcr(prob)
+    sum(dbinom(x, size, prob, log=TRUE))
+})
+## For S4 generics we add the simref version like this:
+##' @describeIn Distributions Simulation implementation. Modifies \code{x} and returns zero.
+setMethod("dmultinom", "simref", function(x, size, prob, log) {
+    if (is.null(size))
+        stop("Please specify 'size' parameter to use with simulation")
+    nrep <- 1 ## dmultinom is not vectorized
+    x[] <- stats::rmultinom(nrep, size=size, prob=prob)
+    rep(0, nrep)
+})

@@ -104,8 +104,11 @@ dGenericOSA <- function(.Generic, x, ..., log) {
         substring(.Generic, 1, 1) <- "p"
         pfun <- match.fun(.Generic)
         F <- pfun(x, ...) ## log=FALSE lower.tail=TRUE (default)
-        ans <- ans + log(F) * keep[,2]   ## lower
-        ans <- ans + log(1-F) * keep[,3] ## upper
+        ## NOTE: Very innocent fudge factor. It holds that
+        ##   F + 1e-300 == F
+        ## for all F in [1e-183, 1]
+        ans <- ans + log(F + 1e-300) * keep[,2]   ## lower
+        ans <- ans + log((1-F) + 1e-300) * keep[,3] ## upper
     }
     if (log) ans else exp(ans)
 }
