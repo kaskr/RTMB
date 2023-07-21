@@ -87,6 +87,12 @@
 \alias{qlogis,advector,missing,missing,missing,missing-method}
 \alias{dcompois}
 \alias{dcompois2}
+\alias{pbinom,ad,ad,ad,missing,missing-method}
+\alias{pbinom,num,num,num,missing,missing-method}
+\alias{dmultinom,ad,ad.,ad,logical.-method}
+\alias{dmultinom,num,num.,num,logical.-method}
+\alias{dmultinom,osa,ANY,ANY,ANY-method}
+\alias{dmultinom,simref,ANY,ANY,ANY-method}
 \title{Distributions and special functions for which AD is implemented}
 \usage{
 \S4method{dexp}{ad,ad.,logical.}(x, rate = 1, log = FALSE)
@@ -258,6 +264,18 @@ dlgamma(x, shape, scale, log)
 dcompois(x, mode, nu, log = FALSE)
 
 dcompois2(x, mean, nu, log = FALSE)
+
+\S4method{pbinom}{ad,ad,ad,missing,missing}(q, size, prob)
+
+\S4method{pbinom}{num,num,num,missing,missing}(q, size, prob)
+
+\S4method{dmultinom}{ad,ad.,ad,logical.}(x, size = NULL, prob, log = FALSE)
+
+\S4method{dmultinom}{num,num.,num,logical.}(x, size = NULL, prob, log = FALSE)
+
+\S4method{dmultinom}{osa,ANY,ANY,ANY}(x, size = NULL, prob, log = FALSE)
+
+\S4method{dmultinom}{simref,ANY,ANY,ANY}(x, size = NULL, prob, log = FALSE)
 }
 \arguments{
 \item{x}{observation vector}
@@ -600,6 +618,18 @@ which documentation should be looked up online.
 \item \code{dcompois()}: Conway-Maxwell-Poisson. Calculate density.
 
 \item \code{dcompois2()}: Conway-Maxwell-Poisson. Calculate density parameterized via the mean.
+
+\item \code{pbinom(q = ad, size = ad, prob = ad, lower.tail = missing, log.p = missing)}: AD implementation of \link[stats]{pbinom}
+
+\item \code{pbinom(q = num, size = num, prob = num, lower.tail = missing, log.p = missing)}: Default method
+
+\item \code{dmultinom(x = ad, size = ad., prob = ad, log = logical.)}: AD implementation of \link[stats]{dmultinom}
+
+\item \code{dmultinom(x = num, size = num., prob = num, log = logical.)}: Default method
+
+\item \code{dmultinom(x = osa, size = ANY, prob = ANY, log = ANY)}: OSA implementation
+
+\item \code{dmultinom(x = simref, size = ANY, prob = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 }}
 \examples{
