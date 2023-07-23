@@ -414,8 +414,12 @@ setMethod("dmultinom", "osa", function(x, size, prob, log) {
 ## For S4 generics we add the simref version like this:
 ##' @describeIn Distributions Simulation implementation. Modifies \code{x} and returns zero.
 setMethod("dmultinom", "simref", function(x, size, prob, log) {
-    if (is.null(size))
-        stop("Please specify 'size' parameter to use with simulation")
+    if (is.null(size)) {
+        if (is.null(x$getOrig))
+            stop("Failed to determine 'size' parameter to use with simulation; please specify")
+        obs <- x$getOrig(seq_len(length(x)))
+        size <- sum(obs)
+    }
     nrep <- 1 ## dmultinom is not vectorized
     x[] <- stats::rmultinom(nrep, size=size, prob=prob)
     rep(0, nrep)
