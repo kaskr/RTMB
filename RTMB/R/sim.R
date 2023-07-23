@@ -26,6 +26,12 @@ simref <- function(n) {
         num.missing <<- num.missing - length(j)
         if (complete()) finalize(value)
     }
+    ## Optional: Handle special cases where observation is needed to
+    ## determine default parameter value (currently 'dmultinom' only)
+    orig <- NULL ## Put observation here
+    getOrig <- function(j) {
+        orig[j]
+    }
     asS4(structure(environment(), class="simref"))
 }
 ##' @describeIn Simulation Equivalent of \link[base]{dim<-}
@@ -69,6 +75,9 @@ is.na.simref <- function(x)is.na(x$value)
         NACHECK(value, j) <<- val
         ## Pass updated 'value' to parent
         parent$reverse.update( val, i[j] )
+    }
+    getOrig <- function(j) {
+        parent$getOrig(i[j])
     }
     if (all(!is.na(value)))
         return (value)
@@ -238,6 +247,7 @@ simref2 <- function(x, name) {
     s <- simref(length(x))
     dim(s) <- dim(x)
     s$name <- name
+    s$orig <- x
     s$finalize <- function(value) {
         for (e in sys.frames()) {
             ## When scanning the sys.frames we might encounter
