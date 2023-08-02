@@ -373,15 +373,9 @@ setMethod("dmultinom", signature("ad", "ad.", "ad", "logical."),
               if (length(x) != K)
                   stop("x[] and prob[] must be equal length vectors.")
               s <- sum(prob)
-              prob <- prob/s
-              x <- as.integer(x + 0.5)
-              if (any(x < 0))
-                  stop("'x' must be non-negative")
-              N <- sum(x)
+              prob <- prob / s
               if (is.null(size))
-                  size <- N
-              else if (size != N)
-                  stop("size != sum(x), i.e. one is wrong")
+                  size <- sum(x)
               r <- lgamma(size + 1) + sum(x * log(prob) - lgamma(x + 1))
               if (log)
                   r
