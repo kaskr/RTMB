@@ -7,7 +7,7 @@ Author: Kasper Kristensen
 Maintainer: Kasper Kristensen <kaskr@dtu.dk>
 Description: Native R interface to 'TMB' (Template Model Builder) so models can be written entirely in R rather than C++. Automatic differentiation is available for a rich set of R, including linear algebra for dense and sparse matrices, complex arithmetic, Fast Fourier Transform and many probability distributions and special functions.
 License: GPL (>= 2)
-Imports: Rcpp (>= 1.0.9), Matrix, methods, TMB (>= 1.9.3), MASS
+Imports: Rcpp (>= 1.0.9), Matrix, methods, TMB (>= 1.9.5), MASS
 LinkingTo: Rcpp, TMB, RcppEigen
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr, rmarkdown
