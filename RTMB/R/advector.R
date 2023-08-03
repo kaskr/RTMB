@@ -550,8 +550,13 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
             }
             ans <- func(pl)
             if (!do.osa) {
+                asnum <- function(x) {
+                    if (inherits(x, "advector"))
+                        structure(getValues(x), dim=dim(x))
+                    else x
+                }
                 ## Place OSA marked observations in obj
-                obj$env$obs <- OBS_ENV$result()
+                obj$env$obs <- lapply(OBS_ENV$result(), asnum)
             }
             if (ADreport || bias.correct) {
                 adrep <- do.call("c", lapply(ADREPORT_ENV$result(), advector) )
