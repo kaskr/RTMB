@@ -35,3 +35,8 @@ Additional supported arguments via \code{...} currently include:
 \item \code{trace} Trace the number of terms when it adaptively changes.
 }
 }
+\references{
+Grassmann, W. K. (1977). Transient solutions in Markovian queueing systems. \emph{Computers & Operations Research}, 4(1), 47--53.
+
+Sherlock, C. (2021). Direct statistical inference for finite Markov jump processes via the matrix exponential. \emph{Computational Statistics}, 36(4), 2863--2887.
+}

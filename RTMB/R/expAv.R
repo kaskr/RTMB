@@ -23,6 +23,10 @@ eigenDisc <- function(A) {
 ##' - `warn` Give warning if number of terms is truncated by `Nmax`.
 ##' - `trace` Trace the number of terms when it adaptively changes.
 ##'
+##' @references
+##' Grassmann, W. K. (1977). Transient solutions in Markovian queueing systems. \emph{Computers & Operations Research}, 4(1), 47--53.
+##'
+##' Sherlock, C. (2021). Direct statistical inference for finite Markov jump processes via the matrix exponential. \emph{Computational Statistics}, 36(4), 2863--2887.
 ##' @param A Sparse matrix (usually a generator)
 ##' @param v Vector (or matrix)
 ##' @param transpose Calculate `expm(t(A)) %*% v` ? (faster due to the way sparse matrices are stored)
