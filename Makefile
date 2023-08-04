@@ -57,6 +57,9 @@ parallel-version:
 	sed -i 's/R_init_RTMB/R_init_RTMBp/g' RTMBp/src/RcppExports.cpp
 	echo 'PKG_LIBS = $$(SHLIB_OPENMP_CXXFLAGS)' >> RTMBp/src/Makevars
 	echo 'PKG_CXXFLAGS=$$(SHLIB_OPENMP_CXXFLAGS)' >> RTMBp/src/Makevars
+	echo 'PKG_CPPFLAGS=-DTMBAD_FRAMEWORK -DTMB_EIGEN_DISABLE_WARNINGS -DTMB_SAFEBOUNDS -DEIGEN_FFTW_DEFAULT -I$$(LIB_FFTW)/include' > RTMBp/src/Makevars.win
+	echo 'PKG_LIBS = -L$$(LIB_FFTW)/lib -l fftw3 $$(SHLIB_OPENMP_CXXFLAGS)' >> RTMBp/src/Makevars.win
+	echo 'PKG_CXXFLAGS=$$(SHLIB_OPENMP_CXXFLAGS)' >> RTMBp/src/Makevars.win
 	echo '.onLoad <- function(libname, pkgname) { TMB::openmp(parallel::detectCores(), autopar=TRUE, DLL="RTMBp") }' >> RTMBp/R/zzz.R
 	git branch -D RTMBp
 	git checkout -b RTMBp
