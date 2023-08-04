@@ -392,7 +392,7 @@ setMethod("dmultinom", signature("num", "num.", "num", "logical."),
 setMethod("dmultinom", "osa", function(x, size, prob, log) {
     prob <- prob / sum(prob)
     if (is.null(size)) {
-        size <- sum(getValues(advector(x@x)))
+        size <- sum(x@x)
     }
     ## Factorize in succesive binomials
     perm <- order(attr(x@keep, "ord")) ## FIXME: Make extractor in osa.R ?
@@ -402,6 +402,7 @@ setMethod("dmultinom", "osa", function(x, size, prob, log) {
     "c" <- ADoverload("c")
     cumsum0 <- function(x) c(0, cumsum(x[-length(x)]))
     size <- size - cumsum0(x@x)
+    size <- getValues(advector(size)) ## Not variable
     prob <- prob / (1 - cumsum0(prob))
     sum(dbinom(x, size, prob, log=TRUE))
 })
