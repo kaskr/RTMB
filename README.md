@@ -12,7 +12,7 @@ PROS:
 - Debugging can be performed using the normal R debugger rather than gdb.
 - Most common TMB features are supported. See [current list of working examples](./tmb_examples).
 
-More information, including vignettes ([introduction](https://kaskr.r-universe.dev/articles/RTMB/RTMB-introduction.html) [advanced](https://kaskr.r-universe.dev/articles/RTMB/RTMB-advanced.html)) and [documentation](https://kaskr.r-universe.dev/RTMB#reference), can be found on the [RTMB universe page](https://kaskr.r-universe.dev/RTMB).
+More information, including vignettes ([introduction](https://kaskr.r-universe.dev/articles/RTMB/RTMB-introduction.html) / [advanced](https://kaskr.r-universe.dev/articles/RTMB/RTMB-advanced.html)) and [documentation](https://kaskr.r-universe.dev/RTMB#reference), can be found on the [RTMB universe page](https://kaskr.r-universe.dev/RTMB).
 
 ## Install
 
