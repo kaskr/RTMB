@@ -1,6 +1,8 @@
+## Test for NA without matching NaN !
+is.missing <- function(x) is.na(x) & !is.nan(x)
 ## Not export
 "NACHECK<-" <- function(x, j, value) {
-    if(!all(is.na(x[j]))) {
+    if(!all(is.missing(x[j]))) {
         stop("A simulation can only be assigned to once!")
     }
     x[j] <- value
@@ -79,7 +81,7 @@ is.na.simref <- function(x)is.na(x$value)
     getOrig <- function(j) {
         parent$getOrig(i[j])
     }
-    if (all(!is.na(value)))
+    if (all(!is.missing(value)))
         return (value)
     else
         asS4(structure(environment(), class="simref"))
@@ -137,15 +139,18 @@ Ops.simref <- function(e1, e2) {
     ## e2.unknown
     .Inverse2 <- c("+"="-", "-"="-", "*"="/", "/"="/")[.Generic]
     ## Known case?
-    if (is.na(.Inverse1) || is.na(.Inverse2))
-        stop("Class 'simref' does not know generic '", .Generic, "'")
-    if (.Generic %in% c("-", "/")) {
-        ## Swap args
-        inverse1 <- function(e1, e2) .Primitive(.Inverse1)(e2, e1)
-        inverse2 <- function(e1, e2) .Primitive(.Inverse2)(e2, e1)
+    if (is.na(.Inverse1) || is.na(.Inverse2)) {
+        inverse1 <- function(e1, e2) stop("Class 'simref' cannot invert generic '", .Generic, "'")
+        inverse2 <- function(e1, e2) stop("Class 'simref' cannot invert generic '", .Generic, "'")
     } else {
-        inverse1 <- match.fun(.Inverse1)
-        inverse2 <- match.fun(.Inverse2)
+        if (.Generic %in% c("-", "/")) {
+            ## Swap args
+            inverse1 <- function(e1, e2) .Primitive(.Inverse1)(e2, e1)
+            inverse2 <- function(e1, e2) .Primitive(.Inverse2)(e2, e1)
+        } else {
+            inverse1 <- match.fun(.Inverse1)
+            inverse2 <- match.fun(.Inverse2)
+        }
     }
     forward.update <- function(j) {
         if (e1.unknown) {
@@ -169,16 +174,16 @@ Ops.simref <- function(e1, e2) {
                 e1$forward.update(j[i])
                 e2$forward.update(j[i])
                 NACHECK(value, j[i]) <<- val[i]
-                if (is.na(e1$value[j[i]] && is.na(e2$value[j[i]]))) {
+                if (is.missing(e1$value[j[i]] && is.missing(e2$value[j[i]]))) {
                     expr <- deparse(substitute((x)[j], list(x=call,j=j[i])))
                     stop("Implicit simulation failed.\n",
                          "Cannot update operands of '",
                          expr,
                          "' when both are missing")
                 }
-                if (is.na(e1$value[j[i]]))
+                if (is.missing(e1$value[j[i]]))
                     e1$reverse.update(inverse1(val[i], e2$value[j[i]]), j[i])
-                if (is.na(e2$value[j[i]]))
+                if (is.missing(e2$value[j[i]]))
                     e2$reverse.update(inverse2(val[i], e1$value[j[i]]), j[i])
             }
         }
@@ -196,9 +201,11 @@ Ops.simref <- function(e1, e2) {
 ##' @describeIn Simulation Equivalent of \link[base]{Math}
 Math.simref <- function(x, ...) {
     .Inverse <- c("exp"="log", "log"="exp")[.Generic]
-    if (is.na(.Inverse))
-        stop("Class 'simref' does not know generic '", .Generic, "'")
-    inverse <- match.fun(.Inverse)
+    if (is.na(.Inverse)) {
+        inverse <- function(x) stop("Class 'simref' cannot invert generic '", .Generic, "'")
+    } else {
+        inverse <- match.fun(.Inverse)
+    }
     parent <- x
     value <- callGeneric(x$value)
     forward.update <- function(j) {
