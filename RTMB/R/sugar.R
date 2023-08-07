@@ -27,8 +27,19 @@
     x <- substitute(x)
     distr <- c(distr[1], x, distr[-1])
     distr$log <- TRUE
-    cl <- as.call(distr)
-    cl <- substitute(.nll <- .nll - sum(x), list(x=cl))
+    ## Have sum-optimized version?
+    sumdistr <- as.character(.sum_optimized_table[as.character(distr[[1]])])
+    if (is.na(sumdistr)) {
+        cl <- as.call(distr)
+        cl <- substitute(.nll <- .nll - sum(x), list(x=cl))
+    }
+    else {
+        distr[[1]] <- substitute(":::"("RTMB", x), list(x=sumdistr))
+        cl <- as.call(distr)
+        cl <- substitute(.nll <- .nll - x, list(x=cl))
+    }
     ## print(cl)
     eval.parent(cl)
 }
+
+.sum_optimized_table <- c("dnorm" = "sumdnorm")

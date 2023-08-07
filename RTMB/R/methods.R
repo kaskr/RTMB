@@ -223,6 +223,25 @@ setMethod("dnorm", "simref", function(x, mean, sd, log) {
     }
     dGenericSim(.Generic, x=x, mean=mean, sd=sd, log=log)
 })
+## Finally, we may want to add a sum-optimized version to be used with "%~%":
+any_AD_arg <- function(...) {
+    for (x in list(...)) {
+        if (inherits(x, "advector"))
+            return (TRUE)
+    }
+    FALSE
+}
+sumdnorm <- function(x, mean, sd, log) {
+    if (! any_AD_arg (x, mean, sd) ) {
+        ans <- sum(dnorm(x, mean, sd, log=FALSE))
+        return( if (log) ans else exp(ans) )
+    }
+    r <- (x - mean) / sd
+    nrep.sd <- length(r) / length(sd)
+    stopifnot(nrep.sd * length(sd) == length(r))
+    ans <- - .5 * sum(r * r) - length(x) * log(sqrt(2*pi)) - nrep.sd * sum(log(sd))
+    if (log) ans else exp(ans)
+}
 
 ##' @describeIn Distributions Minimal AD implementation of \link[stats]{plogis}
 setMethod("plogis", c("advector", "missing", "missing", "missing", "missing"),
