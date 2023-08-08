@@ -1,6 +1,6 @@
 Package: RTMB
 Type: Package
-Title: R Bindings for TMB
+Title: 'R' Bindings for 'TMB'
 Version: 1.0
 Date: 2023-08-07
 Authors@R: person("Kasper", "Kristensen", role = c("aut","cre"),
@@ -8,7 +8,7 @@ Authors@R: person("Kasper", "Kristensen", role = c("aut","cre"),
                   comment = c(ORCID="0000-0003-3425-3762"))
 Author: Kasper Kristensen [aut, cre]
 Maintainer: Kasper Kristensen <kaskr@dtu.dk>
-Description: Native R interface to 'TMB' (Template Model Builder) so models can be written entirely in R rather than C++. Automatic differentiation, to any order, is available for a rich subset of R features, including linear algebra for dense and sparse matrices, complex arithmetic, Fast Fourier Transform, probability distributions and special functions.
+Description: Native 'R' interface to 'TMB' (Template Model Builder) so models can be written entirely in 'R' rather than 'C++'. Automatic differentiation, to any order, is available for a rich subset of 'R' features, including linear algebra for dense and sparse matrices, complex arithmetic, Fast Fourier Transform, probability distributions and special functions.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.9), Matrix, methods, TMB (>= 1.9.5), MASS
 LinkingTo: Rcpp, TMB, RcppEigen
