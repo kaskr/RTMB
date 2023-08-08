@@ -39,7 +39,8 @@ showGraph <- function(F) {
     colnames(g)[colnames(g)=="Dep"] <- "Y"
     colnames(g) <- addindex(colnames(g), "sup")
     G <- graph_from_adjacency_matrix(g)
-    par(mar=c(0,0,0,0),oma=c(0,0,0,0))
+    oldpar <- par(mar=c(0,0,0,0),oma=c(0,0,0,0))
+    on.exit(par(oldpar))
     ##plot(G, vertex.size=17, layout=layout_as_tree)
     plot(G, vertex.size=23, layout=layout_as_tree)
 }
