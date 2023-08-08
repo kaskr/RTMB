@@ -93,5 +93,11 @@ obj2 <- MakeADFun(f, list(mu=0, sd=1), random="mu", silent=TRUE)
 opt2 <- nlminb(obj2$par, obj2$fn, obj2$gr)
 sdreport(obj2) ## Compare with sd(rivers)
 ## Single argument vector function with numeric 'parameters'
-obj <- MakeADFun(function(x)-sum(dnorm(x, log=TRUE)), 1:10)
+fr <- function(x) {   ## Rosenbrock Banana function
+    x1 <- x[1]
+    x2 <- x[2]
+    100 * (x2 - x1 * x1)^2 + (1 - x1)^2
+}
+obj <- MakeADFun(fr, numeric(2), silent=TRUE)
+nlminb(c(-1.2, 1), obj$fn, obj$gr, obj$he)
 }
