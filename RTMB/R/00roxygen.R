@@ -145,12 +145,10 @@ NULL
 ##' F$print()
 ##' H <- F$jacfun()$jacfun() ## Hessian tape
 ##' show(H)
-##' \dontrun{
 ##' #### Handy way to plot the graph of F
-##' if (require(igraph)) {
-##'    G <- graph_from_adjacency_matrix(F$graph())
-##'    plot(G, vertex.size=17, layout=layout_as_tree)
-##' }
+##' if (requireNamespace("igraph")) {
+##'    G <- igraph::graph_from_adjacency_matrix(F$graph())
+##'    plot(G, vertex.size=17, layout=igraph::layout_as_tree)
 ##' }
 NULL
 
