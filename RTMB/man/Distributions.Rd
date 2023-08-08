@@ -336,6 +336,9 @@ dcompois2(x, mean, nu, log = FALSE)
 
 \item{mode}{parameter}
 }
+\value{
+In autodiff contexts an object of class \code{"advector"} is returned; Otherwise a standard numeric vector.
+}
 \description{
 The functions listed in this help page are all applicable for AD types.
 Method dispatching follows a simple rule:

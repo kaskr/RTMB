@@ -38,6 +38,9 @@ unstructured(k)
 
 \item{k}{Dimension}
 }
+\value{
+Vector of densities.
+}
 \description{
 Multivariate Gaussian densities
 }

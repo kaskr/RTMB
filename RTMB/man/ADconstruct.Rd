@@ -23,6 +23,9 @@
 
 \item{dimnames}{As \link[base]{matrix}}
 }
+\value{
+Object of class \code{"advector"} with a dimension attribute.
+}
 \description{
 These base constructors have been extended to keep the AD class attribute of the data argument.
 }

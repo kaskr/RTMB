@@ -45,6 +45,9 @@ GetTape(obj, name = c("ADFun", "ADGrad", "ADHess"), warn = TRUE)
 
 \item{warn}{Give warning if \code{obj} was created using another DLL?}
 }
+\value{
+Object of class \code{"Tape"}.
+}
 \description{
 The AD tape as an R function
 }

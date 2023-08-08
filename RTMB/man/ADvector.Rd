@@ -102,6 +102,9 @@ advector(x)
 
 \item{Y}{As \link[base]{outer}}
 }
+\value{
+Object of class \code{"advector"}.
+}
 \description{
 An \code{advector} is a class used behind the scenes to replace
 normal R numeric objects during automatic differentiation. An

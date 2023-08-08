@@ -77,6 +77,9 @@
 
 \item{b}{matrix, vector or missing}
 }
+\value{
+Object of class \code{advector} with a dimension attribute for dense matrix operations; Object of class \code{adsparse} for sparse matrix operations.
+}
 \description{
 Matrices (\strong{base} package) and sparse matrices (\strong{Matrix} package) can be used inside the \code{RTMB} objective function as part of the calculations. Behind the scenes these R objects are converted to AD representations when needed. AD objects have a temporary lifetime, so you probably won't see them / need to know them. The only important thing is which \emph{methods} work for the objects.
 }

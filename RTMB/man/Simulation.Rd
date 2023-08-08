@@ -68,6 +68,9 @@ simref(n)
 
 \item{na.rm}{Ignored}
 }
+\value{
+An object with write access to store the simulation.
+}
 \description{
 An RTMB objective function can be run in 'simulation mode' where standard likelihood evaluation is replaced by corresponding random number generation. This facilitates automatic simulation under some restrictions. Simulations can be obtained directly from the model object by \code{obj$simulate()} or used indirectly via \link{checkConsistency}.
 }

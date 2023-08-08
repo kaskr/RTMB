@@ -30,6 +30,7 @@ setClass("adcomplex",
 ##' @describeIn ADcomplex Construct \code{adcomplex} vector
 ##' @param real Real part
 ##' @param imag Imaginary part
+##' @return Object of class \code{"adcomplex"}.
 adcomplex <- function(real, imag=rep(advector(0), length(real))) {
     real <- advector(real)
     dim(imag) <- dim(real)

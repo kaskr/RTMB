@@ -23,6 +23,9 @@
 
 \item{USE.NAMES}{As \link[base]{sapply}}
 }
+\value{
+Object of class \code{"advector"} with a dimension attribute.
+}
 \description{
 These \strong{base} apply methods have been modified to keep the AD class attribute (which would otherwise be lost).
 }

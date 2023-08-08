@@ -43,6 +43,7 @@ ApplyMatrixReplaceMethod <- function(method, x, ..., value) {
 }
 
 ##' @describeIn ADmatrix AD sparse matrix transpose. Re-directs to \link[Matrix]{t,CsparseMatrix-method}.
+##' @return Object of class \code{advector} with a dimension attribute for dense matrix operations; Object of class \code{adsparse} for sparse matrix operations.
 t.adsparse <- function(x) ApplyMatrixMethod(Matrix::t, x)
 ##' @describeIn ADmatrix AD sparse matrix subsetting. Re-directs to \link[Matrix]{[-methods}.
 "[.adsparse" <- function(x, ...) ApplyMatrixMethod("[", x, ...)
@@ -237,6 +238,7 @@ setMethod("qlogis", c("advector", "missing", "missing", "missing", "missing"),
 
 ##' @describeIn ADconstruct Equivalent of \link[base]{diag}
 ##' @param x As \link[base]{diag}
+##' @return Object of class \code{"advector"} with a dimension attribute.
 setMethod("diag", signature(x="advector", nrow="ANY", ncol="ANY"),
           function(x, nrow, ncol) {
               ## Diagonal extraction: base::diag works fine
@@ -264,6 +266,7 @@ setMethod("matrix", signature(data="advector"),
 ##' @param MARGIN As \link[base]{apply}
 ##' @param FUN As \link[base]{apply}
 ##' @param ... As \link[base]{apply}
+##' @return Object of class \code{"advector"} with a dimension attribute.
 setMethod("apply", signature(X="advector"),
           function (X, MARGIN, FUN, ...)  {
               ans <- callNextMethod()

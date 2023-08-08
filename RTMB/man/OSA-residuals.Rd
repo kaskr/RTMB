@@ -38,6 +38,9 @@ oneStepPredict(
 
 \item{x}{Object of class 'osa'}
 }
+\value{
+\code{data.frame} with standardized residuals; Same as \link[TMB]{oneStepPredict}.
+}
 \description{
 OSA residuals are computed using the function
 \code{oneStepPredict}. For this to work, you need to mark the

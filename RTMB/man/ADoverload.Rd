@@ -9,6 +9,9 @@ ADoverload(x = c("[<-", "c", "diag<-"))
 \arguments{
 \item{x}{Name of primitive to overload}
 }
+\value{
+Function representing the overload.
+}
 \description{
 Enable extra RTMB convenience methods
 }

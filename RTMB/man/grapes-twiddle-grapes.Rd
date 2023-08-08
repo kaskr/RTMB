@@ -11,6 +11,9 @@ x \%~\% distr
 
 \item{distr}{RHS; Distribution expression}
 }
+\value{
+The updated value of the hidden variable \code{.nll}.
+}
 \description{
 Distributional assignment operator
 }

@@ -3,6 +3,7 @@
 ##' @param observation.name Auto detected - use the default
 ##' @param data.term.indicator Auto detected - use the default
 ##' @param ... Passed to \code{TMB::}\link[TMB]{oneStepPredict} - \bold{please carefully read the documentation}, especially the \code{method} argument.
+##' @return \code{data.frame} with standardized residuals; Same as \link[TMB]{oneStepPredict}.
 oneStepPredict <- function(obj,
                            observation.name=names(obj$env$obs)[1],
                            data.term.indicator="_RTMB_keep_",

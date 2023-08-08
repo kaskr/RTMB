@@ -17,6 +17,7 @@
 ##' obj <- MakeADFun(f, p, random="x")
 ##' @param x LHS; Random effect or data for which distribution assignment applies
 ##' @param distr RHS; Distribution expression
+##' @return The updated value of the hidden variable \code{.nll}.
 "%~%" <- function(x, distr) {
     pf <- parent.frame()
     if (is.null(pf$.nll))

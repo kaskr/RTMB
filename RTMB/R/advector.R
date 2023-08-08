@@ -6,6 +6,7 @@
 ################################################################################
 
 ##' @describeIn ADvector Construct a new advector
+##' @return Object of class \code{"advector"}.
 advector <- function(x) {
     if (inherits(x, "advector"))
         return (x)
@@ -153,6 +154,7 @@ xtra <- local({
 ##' MakeTape(function(x) {y <- 1:3; y[2] <- x; y}, 1)
 ##' MakeTape(function(x) {y <- matrix(0,3,3); diag(y) <- x; y}, 1:3)
 ##' @param x Name of primitive to overload
+##' @return Function representing the overload.
 ADoverload <- function(x = c("[<-", "c", "diag<-")) {
     x <- match.arg(x)
     if (!ad_context())
@@ -269,6 +271,7 @@ print.advector <- function (x, ...)  {
 }
 ## High level version: Not everything available
 ##' @describeIn Tape Generate a 'Tape' of an R function.
+##' @return Object of class \code{"Tape"}.
 MakeTape <- function(f, x) {
     f <- match.fun(f)
     mod <- .MakeTape(f, x)

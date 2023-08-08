@@ -10,6 +10,7 @@ is.missing <- function(x) is.na(x) & !is.nan(x)
 }
 ##' @describeIn Simulation Construct \code{simref}
 ##' @param n Length
+##' @return An object with write access to store the simulation.
 simref <- function(n) {
     parent <- NULL
     value <- rep(NA, n)

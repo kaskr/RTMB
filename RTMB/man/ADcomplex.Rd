@@ -83,6 +83,9 @@ adcomplex(real, imag = rep(advector(0), length(real)))
 
 \item{inverse}{As \link[stats]{fft}}
 }
+\value{
+Object of class \code{"adcomplex"}.
+}
 \description{
 A limited set of complex number operations can be used when constructing AD tapes. The available methods are listed in this help page.
 }

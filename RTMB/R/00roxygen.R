@@ -203,6 +203,7 @@ NULL
 ##' @param log Logical; Return log density/probability?
 ##' @rdname Distributions
 ##' @name Distributions
+##' @return In autodiff contexts an object of class \code{"advector"} is returned; Otherwise a standard numeric vector.
 ##' @examples
 ##' MakeTape( function(x) pnorm(x), x=numeric(5))$jacobian(1:5)
 NULL

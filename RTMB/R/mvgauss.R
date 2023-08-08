@@ -5,6 +5,7 @@
 ##' @param mu Mean parameter vector
 ##' @param log Logical; Return log density?
 ##' @param scale Extra scale parameter - see section 'Scaling'.
+##' @return Vector of densities.
 dmvnorm <- function(x, mu=0, Sigma, log=FALSE, scale=1) {
     if (!unit(scale)) {
         return (dscale("dmvnorm", x, mu, Sigma,
