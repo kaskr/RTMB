@@ -56,6 +56,9 @@ checkConsistency(obj, fast = TRUE, ...)
 
 \item{fast}{Pass \code{observation.name} to \code{TMB} ?}
 }
+\value{
+TMB model object.
+}
 \description{
 Interface to TMB
 }

@@ -456,6 +456,7 @@ data <- NULL
 ##' @param ADreport As \link[TMB]{MakeADFun}.
 ##' @param silent As \link[TMB]{MakeADFun}.
 ##' @param ... Passed to TMB
+##' @return TMB model object.
 ##' @examples
 ##' ## Single argument vector function with numeric 'parameters'
 ##' fr <- function(x) {   ## Rosenbrock Banana function
