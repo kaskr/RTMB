@@ -452,6 +452,7 @@ data <- NULL
 ##' @param func Function taking a parameter list (or parameter vector) as input.
 ##' @param parameters Parameter list (or parameter vector) used by \code{func}.
 ##' @param random As \link[TMB]{MakeADFun}.
+##' @param profile As \link[TMB]{MakeADFun}.
 ##' @param map As \link[TMB]{MakeADFun}.
 ##' @param ADreport As \link[TMB]{MakeADFun}.
 ##' @param silent As \link[TMB]{MakeADFun}.
@@ -466,7 +467,7 @@ data <- NULL
 ##' }
 ##' obj <- MakeADFun(fr, numeric(2), silent=TRUE)
 ##' nlminb(c(-1.2, 1), obj$fn, obj$gr, obj$he)
-MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE, silent=FALSE,...) {
+MakeADFun <- function(func, parameters, random=NULL, profile=NULL, map=list(), ADreport=FALSE, silent=FALSE,...) {
     setdata <- NULL
     if (is.list(func)) {
         setdata <- attr(func, "setdata")
@@ -484,6 +485,7 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
     obj <- TMB::MakeADFun(data=list(),
                           parameters=parameters,
                           random=random,
+                          profile=profile,
                           map=map,
                           ADreport=FALSE,
                           checkParameterOrder=FALSE,
@@ -634,6 +636,7 @@ MakeADFun <- function(func, parameters, random=NULL, map=list(), ADreport=FALSE,
     attr(obj$env$data, "func") <- func
     attr(obj$env$data, "setdata") <- setdata
     obj$env$ADreport <- ADreport
+    obj$env$profile <- profile
     obj$retape()
     obj$par <- obj$env$par[obj$env$lfixed()]
     obj
