@@ -742,6 +742,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// LowRankTag
+Rcpp::ComplexVector LowRankTag(const Rcpp::ComplexVector& x);
+RcppExport SEXP _RTMB_LowRankTag(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::ComplexVector& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(LowRankTag(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP _rcpp_module_boot_mod_adfun();
 
@@ -805,6 +816,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_expATv", (DL_FUNC) &_RTMB_expATv, 4},
     {"_RTMB_fft_complex", (DL_FUNC) &_RTMB_fft_complex, 3},
     {"_RTMB_TapedEval", (DL_FUNC) &_RTMB_TapedEval, 2},
+    {"_RTMB_LowRankTag", (DL_FUNC) &_RTMB_LowRankTag, 1},
     {"_rcpp_module_boot_mod_adfun", (DL_FUNC) &_rcpp_module_boot_mod_adfun, 0},
     {NULL, NULL, 0}
 };

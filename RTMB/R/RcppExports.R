@@ -233,3 +233,7 @@ TapedEval <- function(F, i) {
     .Call(`_RTMB_TapedEval`, F, i)
 }
 
+LowRankTag <- function(x) {
+    .Call(`_RTMB_LowRankTag`, x)
+}
+

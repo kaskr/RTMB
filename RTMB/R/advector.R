@@ -710,3 +710,11 @@ getAll <- function(..., warn=TRUE) {
     }
     invisible(NULL)
 }
+
+## Not yet export (experts only!)
+Tag <- function(x) {
+    if (inherits(x, "advector"))
+        LowRankTag(x)
+    else
+        x
+}

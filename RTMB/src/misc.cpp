@@ -177,3 +177,15 @@ void newton_transform(TMBad::ADFun<>* adf, std::vector<TMBad::Index> random, SEX
   *adf = ans;
   remove_random_parameters(adf, random);
 }
+
+// Set low-rank tags
+// [[Rcpp::export]]
+Rcpp::ComplexVector LowRankTag(const Rcpp::ComplexVector &x) {
+  CHECK_INPUT(x);
+  size_t n = x.size();
+  Rcpp::ComplexVector y(n);
+  ad* X = adptr(x);
+  ad* Y = adptr(y);
+  for (size_t i=0; i<n; i++) Y[i] = newton::Tag(X[i]);
+  return as_advector(y);
+}
