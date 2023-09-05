@@ -482,15 +482,17 @@ MakeADFun <- function(func, parameters, random=NULL, profile=NULL, map=list(), A
         parameters <- structure(list(parameters), names=parnames)
     }
     ## Make empty object
-    obj <- TMB::MakeADFun(data=list(),
-                          parameters=parameters,
-                          random=random,
-                          profile=profile,
-                          map=map,
-                          ADreport=FALSE,
-                          checkParameterOrder=FALSE,
-                          silent=silent,
-                          DLL="RTMB")
+    TMBArgs <- list(data=list(),
+                    parameters=parameters,
+                    random=random,
+                    profile=profile,
+                    map=map,
+                    ADreport=FALSE,
+                    checkParameterOrder=FALSE,
+                    silent=silent,
+                    ...)
+    TMBArgs$DLL <- "RTMB" ## Override if included in ...
+    obj <- do.call(TMB::MakeADFun, TMBArgs)
     ## Handling maps (copied and modified parList)
     parList <- function (parameters, par) {
         ans <- parameters
