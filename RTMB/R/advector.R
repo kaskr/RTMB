@@ -321,6 +321,9 @@ MakeTape <- function(f, x) {
                 G <- get_graph(.pointer(mod))
                 colnames(G) <- rownames(G) <- sub("Op","",colnames(G))
                 G
+            },
+            data.frame = function() {
+                get_df(.pointer(mod))
             }
         ),
         class="Tape")
