@@ -329,6 +329,9 @@ MakeTape <- function(f, x) {
                 mod <- .copy(mod)
                 get_node(.pointer(mod), i)
                 .expose(mod)
+            },
+            par = function() {
+                mod$domainvec()
             }
         ),
         class="Tape")
