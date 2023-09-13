@@ -105,6 +105,9 @@ Rcpp::DataFrame get_df(Rcpp::XPtr<TMBad::ADFun<> > adf) {
                              (*adf).glob.values.end());
   Rcpp::NumericVector derivs((*adf).glob.derivs.begin(),
                              (*adf).glob.derivs.end());
+  if (derivs.size() == 0) {
+    derivs = Rcpp::NumericVector(values.size(), NA_REAL);
+  }
   std::vector<TMBad::Index> v2o = (*adf).glob.var2op();
   Rcpp::IntegerVector node(v2o.begin(), v2o.end());
   size_t n = (*adf).glob.opstack.size();
