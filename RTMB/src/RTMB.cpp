@@ -99,6 +99,25 @@ Rcpp::S4 get_graph(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   ans.slot("Dimnames") = Rcpp::List::create(names, names);
   return ans;
 }
+// [[Rcpp::export]]
+Rcpp::DataFrame get_df(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  Rcpp::NumericVector values((*adf).glob.values.begin(),
+                             (*adf).glob.values.end());
+  Rcpp::NumericVector derivs((*adf).glob.derivs.begin(),
+                             (*adf).glob.derivs.end());
+  std::vector<TMBad::Index> v2o = (*adf).glob.var2op();
+  Rcpp::IntegerVector node(v2o.begin(), v2o.end());
+  size_t n = (*adf).glob.opstack.size();
+  Rcpp::StringVector names(n);
+  for (size_t i=0; i<n; i++) {
+    names[i] = (*adf).glob.opstack[i]->op_name();
+  }
+  return
+    Rcpp::DataFrame::create( Rcpp::Named("Name") = names[node],
+                             Rcpp::Named("Node") = node,
+                             Rcpp::Named("Value") = values,
+                             Rcpp::Named("Deriv") = derivs );
+}
 void Copy(TMBad::ADFun<>* adf, Rcpp::XPtr<TMBad::ADFun<> > other) {
   *adf = *other;
 }
