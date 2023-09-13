@@ -42,6 +42,14 @@ int GetDomain(TMBad::ADFun<>* adf) {
 int GetRange(TMBad::ADFun<>* adf) {
   return (*adf).Range();
 }
+Rcpp::NumericVector GetDomainVec(TMBad::ADFun<>* adf) {
+  std::vector<double> ans = (*adf).DomainVec();
+  return Rcpp::NumericVector(ans.begin(), ans.end());
+}
+Rcpp::NumericVector GetRangeVec(TMBad::ADFun<>* adf) {
+  std::vector<double> ans = (*adf).RangeVec();
+  return Rcpp::NumericVector(ans.begin(), ans.end());
+}
 // Some ADFun object transformations
 void JacFun(TMBad::ADFun<>* adf) {
   (*adf) = (*adf).JacFun();
@@ -164,6 +172,8 @@ RCPP_MODULE(mod_adfun) {
   .method("jacobian", &Jacobian)
   .method("domain", &GetDomain)
   .method("range", &GetRange)
+  .method("domainvec", &GetDomainVec)
+  .method("rangevec", &GetRangeVec)
   .method("jacfun", &JacFun)
   .method("parallelize", &parallelize)
   .method("fuse", &fuse)
