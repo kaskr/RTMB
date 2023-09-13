@@ -121,6 +121,32 @@ Rcpp::DataFrame get_df(Rcpp::XPtr<TMBad::ADFun<> > adf) {
                              Rcpp::Named("Value") = values,
                              Rcpp::Named("Deriv") = derivs );
 }
+// [[Rcpp::export]]
+void get_node(Rcpp::XPtr<TMBad::ADFun<> > adf, int node) {
+  TMBad::global::operation_stack opstack;
+  (*adf).glob.subgraph_cache_ptr();
+  TMBad::Index i1 = (*adf).glob.subgraph_ptr[node].first;
+  TMBad::Index i2 = (*adf).glob.subgraph_ptr[node].second;
+  TMBad::Index n1 = (*adf).glob.opstack[node]->input_size();
+  TMBad::Index n2 = (*adf).glob.opstack[node]->output_size();
+  TMBad::Index j1 = (*adf).glob.inputs.size();
+  TMBad::Index j2 = (*adf).glob.values.size();
+  // opstack
+  opstack.push_back((*adf).glob.getOperator<TMBad::global::NullOp2>(i1, i2));
+  opstack.push_back((*adf).glob.opstack[node]->copy());
+  opstack.push_back((*adf).glob.getOperator<TMBad::global::NullOp2>(j1-i1-n1, j2-i2-n2));
+  // inv/dep index
+  std::vector<TMBad::Index> inv_index; // = (*adf).glob.opstack[node]->dependencies();
+  for (size_t i=0; i<n1; i++)
+    inv_index.push_back((*adf).glob.inputs[i1+i]);
+  std::vector<TMBad::Index> dep_index;
+  for (size_t i=0; i<n2; i++)
+    dep_index.push_back(i2+i);
+  // swap
+  std::swap((*adf).glob.opstack, opstack);
+  std::swap((*adf).glob.inv_index, inv_index);
+  std::swap((*adf).glob.dep_index, dep_index);
+}
 void Copy(TMBad::ADFun<>* adf, Rcpp::XPtr<TMBad::ADFun<> > other) {
   *adf = *other;
 }

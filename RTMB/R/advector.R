@@ -324,6 +324,11 @@ MakeTape <- function(f, x) {
             },
             data.frame = function() {
                 get_df(.pointer(mod))
+            },
+            node = function(i) {
+                mod <- .copy(mod)
+                get_node(.pointer(mod), i)
+                .expose(mod)
             }
         ),
         class="Tape")
