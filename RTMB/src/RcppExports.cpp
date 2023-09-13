@@ -22,6 +22,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_df
+Rcpp::DataFrame get_df(Rcpp::XPtr<TMBad::ADFun<> > adf);
+RcppExport SEXP _RTMB_get_df(SEXP adfSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_df(adf));
+    return rcpp_result_gen;
+END_RCPP
+}
 // set_tape_config
 Rcpp::List set_tape_config(int comparison, int atomic, int vectorize);
 RcppExport SEXP _RTMB_set_tape_config(SEXP comparisonSEXP, SEXP atomicSEXP, SEXP vectorizeSEXP) {
@@ -759,6 +770,7 @@ RcppExport SEXP _rcpp_module_boot_mod_adfun();
 static const R_CallMethodDef CallEntries[] = {
     TMB_CALLDEFS,
     {"_RTMB_get_graph", (DL_FUNC) &_RTMB_get_graph, 1},
+    {"_RTMB_get_df", (DL_FUNC) &_RTMB_get_df, 1},
     {"_RTMB_set_tape_config", (DL_FUNC) &_RTMB_set_tape_config, 3},
     {"_RTMB_compare_allow", (DL_FUNC) &_RTMB_compare_allow, 0},
     {"_RTMB_valid", (DL_FUNC) &_RTMB_valid, 1},

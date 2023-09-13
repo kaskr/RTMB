@@ -5,6 +5,10 @@ get_graph <- function(adf) {
     .Call(`_RTMB_get_graph`, adf)
 }
 
+get_df <- function(adf) {
+    .Call(`_RTMB_get_df`, adf)
+}
+
 set_tape_config <- function(comparison = 0L, atomic = 1L, vectorize = 0L) {
     .Call(`_RTMB_set_tape_config`, comparison, atomic, vectorize)
 }
