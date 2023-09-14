@@ -131,29 +131,35 @@ Rcpp::DataFrame get_df(Rcpp::XPtr<TMBad::ADFun<> > adf) {
 }
 // [[Rcpp::export]]
 void get_node(Rcpp::XPtr<TMBad::ADFun<> > adf, int node) {
-  TMBad::global::operation_stack opstack;
   (*adf).glob.subgraph_cache_ptr();
   TMBad::Index i1 = (*adf).glob.subgraph_ptr[node].first;
-  TMBad::Index i2 = (*adf).glob.subgraph_ptr[node].second;
+  //TMBad::Index i2 = (*adf).glob.subgraph_ptr[node].second;
   TMBad::Index n1 = (*adf).glob.opstack[node]->input_size();
   TMBad::Index n2 = (*adf).glob.opstack[node]->output_size();
-  TMBad::Index j1 = (*adf).glob.inputs.size();
-  TMBad::Index j2 = (*adf).glob.values.size();
-  // opstack
-  opstack.push_back((*adf).glob.getOperator<TMBad::global::NullOp2>(i1, i2));
+  //TMBad::Index j1 = (*adf).glob.inputs.size();
+  //TMBad::Index j2 = (*adf).glob.values.size();
+  // New opstack
+  TMBad::global::operation_stack opstack;
+  opstack.push_back((*adf).glob.getOperator<TMBad::global::NullOp2>(0, n1));
   opstack.push_back((*adf).glob.opstack[node]->copy());
-  opstack.push_back((*adf).glob.getOperator<TMBad::global::NullOp2>(j1-i1-n1, j2-i2-n2));
-  // inv/dep index
-  std::vector<TMBad::Index> inv_index; // = (*adf).glob.opstack[node]->dependencies();
+  // New inv index
+  std::vector<TMBad::Index> inv_index(n1);
+  for (size_t i=0; i<inv_index.size(); i++) inv_index[i] = i;
+  // New dep index
+  std::vector<TMBad::Index> dep_index(n2);
+  for (size_t i=0; i<n2; i++) dep_index[i] = n1+i;
+  // New inputs
+  std::vector<TMBad::Index> inputs = inv_index;
+  // New values
+  std::vector<TMBad::Scalar> values(n1 + n2);
   for (size_t i=0; i<n1; i++)
-    inv_index.push_back((*adf).glob.inputs[i1+i]);
-  std::vector<TMBad::Index> dep_index;
-  for (size_t i=0; i<n2; i++)
-    dep_index.push_back(i2+i);
+    values[i] = (*adf).glob.values[(*adf).glob.inputs[i1+i]];
   // swap
   std::swap((*adf).glob.opstack, opstack);
   std::swap((*adf).glob.inv_index, inv_index);
   std::swap((*adf).glob.dep_index, dep_index);
+  std::swap((*adf).glob.inputs, inputs);
+  std::swap((*adf).glob.values, values);
 }
 void Copy(TMBad::ADFun<>* adf, Rcpp::XPtr<TMBad::ADFun<> > other) {
   *adf = *other;
