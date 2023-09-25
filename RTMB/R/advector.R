@@ -431,6 +431,24 @@ GetTape <- function(obj, name = c("ADFun", "ADGrad", "ADHess"), warn=TRUE) {
             message("'getSetGlobalPtr' not found in 'RTMB'")
             stop("Please update TMB and recompile 'RTMB'")
         }
+        fwrtmb <- .Call(getFramework)
+        fwdll <- .Call("getFramework", PACKAGE=ADFun$DLL)
+        if (!identical(fwrtmb, fwdll)) {
+            info <- function(x) c(framework=x, attributes(x))
+            null2na <- function(x) if (is.null(x)) NA else x
+            df1 <- as.data.frame(info(fwrtmb))
+            names(df1) <- names(info(fwrtmb))
+            df2 <- as.data.frame(lapply(info(fwdll)[names(info(fwrtmb))], null2na ))
+            names(df2) <- names(info(fwrtmb))
+            df <- rbind(df1, df2)
+            row.names(df) <- c('RTMB', ADFun$DLL)
+            message("Note: DLL '", ADFun$DLL, "' is not binary compatible with 'RTMB'")
+            print(df)
+            message("- Compile with framework='TMBad'")
+            message("- Compile with openmp=FALSE")
+            message("- Compile with '-DTMBAD_INDEX_TYPE=uint64_t'")
+            stop()
+        }
         getSetGlobalPtr <- get("getSetGlobalPtr", getNamespace("RTMB"))
         RTMBptr <- .Call((getSetGlobalPtr), NULL)
         DLLptr <- .Call(("getSetGlobalPtr"), NULL, PACKAGE=ADFun$DLL)
