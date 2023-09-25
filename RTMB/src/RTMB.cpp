@@ -44,7 +44,20 @@ int GetRange(TMBad::ADFun<>* adf) {
 }
 // Some ADFun object transformations
 void JacFun(TMBad::ADFun<>* adf) {
+  // Get dimensions
+  TMBad::Index n = adf->Domain();
+  TMBad::Index m = adf->Range();
+  // *Transposed* jacobian
   (*adf) = (*adf).JacFun();
+  // Safety check - just in case
+  if ((*adf).glob.dep_index.size() != m * n)
+    Rcpp::stop("Invalid jacobian tape");
+  // Transpose result
+  Eigen::Map< Eigen::Array<TMBad::Index, -1, -1> >
+    Dep ((*adf).glob.dep_index.data(), n, m);
+  Eigen::Array<TMBad::Index, -1, -1> DepT = Dep.transpose();
+  DepT.resize(n, m);
+  Dep = DepT;
 }
 void parallelize(TMBad::ADFun<>* adf, int nthreads) {
   (*adf) =  (*adf).parallelize(nthreads);
