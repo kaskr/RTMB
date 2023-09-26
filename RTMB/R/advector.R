@@ -189,10 +189,12 @@ detachADoverloads <- function(enable=TRUE, ...) {
 rep.advector <- function (x, ...) {
     structure(NextMethod(), class="advector")
 }
-##' @describeIn ADvector Equivalent of \link[base]{sum} except \code{na.rm} not allowed.
-sum.advector <- function(x, ..., na.rm) {
-  if (na.rm) stop("'na.rm=TRUE' not implemented for AD sum")
-  Reduce1(x, "+") + sum(...)
+##' @describeIn ADvector Equivalent of \link[base]{sum}. \code{na.rm=TRUE} is allowed, but note that this feature assumes correct propagation of NAs via C-level arithmetic.
+sum.advector <- function(x, ..., na.rm = FALSE) {
+    if (na.rm) {
+        x <- x[!is.na(getValues(x))]
+    }
+    Reduce1(x, "+") + sum(..., na.rm = na.rm)
 }
 ##' @describeIn ADvector Equivalent of \link[base]{prod} except \code{na.rm} not allowed.
 prod.advector <- function(x, ..., na.rm) {
