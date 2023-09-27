@@ -47,7 +47,7 @@ advector(x)
 
 \method{rep}{advector}(x, ...)
 
-\method{sum}{advector}(x, ..., na.rm)
+\method{sum}{advector}(x, ..., na.rm = FALSE)
 
 \method{prod}{advector}(x, ..., na.rm)
 
@@ -141,7 +141,7 @@ re-used for AD vectors.
 
 \item \code{rep(advector)}: Equivalent of \link[base]{rep}. Makes \code{outer(x,x,...)} work.
 
-\item \code{sum(advector)}: Equivalent of \link[base]{sum} except \code{na.rm} not allowed.
+\item \code{sum(advector)}: Equivalent of \link[base]{sum}. \code{na.rm=TRUE} is allowed, but note that this feature assumes correct propagation of NAs via C-level arithmetic.
 
 \item \code{prod(advector)}: Equivalent of \link[base]{prod} except \code{na.rm} not allowed.
 
