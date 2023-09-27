@@ -431,8 +431,8 @@ GetTape <- function(obj, name = c("ADFun", "ADGrad", "ADHess"), warn=TRUE) {
             message("'getSetGlobalPtr' not found in 'RTMB'")
             stop("Please update TMB and recompile 'RTMB'")
         }
-        fwrtmb <- .Call(getFramework)
-        fwdll <- .Call("getFramework", PACKAGE=ADFun$DLL)
+        fwrtmb <- .Call((getFramework))
+        fwdll <- .Call(("getFramework"), PACKAGE=ADFun$DLL)
         if (!identical(fwrtmb, fwdll)) {
             info <- function(x) c(framework=x, attributes(x))
             null2na <- function(x) if (is.null(x)) NA else x
