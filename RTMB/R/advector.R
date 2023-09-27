@@ -323,6 +323,17 @@ MakeTape <- function(f, x) {
                 G <- get_graph(.pointer(mod))
                 colnames(G) <- rownames(G) <- sub("Op","",colnames(G))
                 G
+            },
+            data.frame = function() {
+                get_df(.pointer(mod))
+            },
+            node = function(i) {
+                mod <- .copy(mod)
+                get_node(.pointer(mod), i)
+                .expose(mod)
+            },
+            par = function() {
+                mod$domainvec()
             }
         ),
         class="Tape")

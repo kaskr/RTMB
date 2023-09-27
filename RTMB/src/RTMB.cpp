@@ -42,6 +42,14 @@ int GetDomain(TMBad::ADFun<>* adf) {
 int GetRange(TMBad::ADFun<>* adf) {
   return (*adf).Range();
 }
+Rcpp::NumericVector GetDomainVec(TMBad::ADFun<>* adf) {
+  std::vector<double> ans = (*adf).DomainVec();
+  return Rcpp::NumericVector(ans.begin(), ans.end());
+}
+Rcpp::NumericVector GetRangeVec(TMBad::ADFun<>* adf) {
+  std::vector<double> ans = (*adf).RangeVec();
+  return Rcpp::NumericVector(ans.begin(), ans.end());
+}
 // Some ADFun object transformations
 void JacFun(TMBad::ADFun<>* adf) {
   // Get dimensions
@@ -112,6 +120,72 @@ Rcpp::S4 get_graph(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   ans.slot("Dimnames") = Rcpp::List::create(names, names);
   return ans;
 }
+// [[Rcpp::export]]
+Rcpp::DataFrame get_df(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  Rcpp::NumericVector values((*adf).glob.values.begin(),
+                             (*adf).glob.values.end());
+  Rcpp::NumericVector derivs((*adf).glob.derivs.begin(),
+                             (*adf).glob.derivs.end());
+  if (derivs.size() == 0) {
+    derivs = Rcpp::NumericVector(values.size(), NA_REAL);
+  }
+  std::vector<TMBad::Index> v2o = (*adf).glob.var2op();
+  Rcpp::IntegerVector node(v2o.begin(), v2o.end());
+  size_t n = (*adf).glob.opstack.size();
+  Rcpp::StringVector names(n);
+  for (size_t i=0; i<n; i++) {
+    names[i] = (*adf).glob.opstack[i]->op_name();
+  }
+  return
+    Rcpp::DataFrame::create( Rcpp::Named("OpName") = names[node],
+                             Rcpp::Named("Node") = node,
+                             Rcpp::Named("Value") = values,
+                             Rcpp::Named("Deriv") = derivs );
+}
+// [[Rcpp::export]]
+void get_node(Rcpp::XPtr<TMBad::ADFun<> > adf, int node) {
+  if ( (node < 0) || ( (*adf).glob.opstack.size() <= (size_t) node) )
+       Rcpp::stop("'node' out of bounds");
+  (*adf).glob.subgraph_cache_ptr();
+  TMBad::Index n1 = (*adf).glob.opstack[node]->input_size();
+  TMBad::Index n2 = (*adf).glob.opstack[node]->output_size();
+  // Get node inputs
+  TMBad::Args<> args((*adf).glob.inputs);
+  args.ptr = (*adf).glob.subgraph_ptr[node];
+  TMBad::Dependencies node_inputs;
+  (*adf).glob.opstack[node]->dependencies(args, node_inputs);
+  // Check dependencies
+  if (node_inputs.I.size() != 0)
+    Rcpp::stop("'get_node' currently cannot handle interval inputs");
+  if (node_inputs.size() != n1)
+    Rcpp::stop("Node input size mismatch");
+  // Which of these node inputs are constant ?
+  (*adf).glob.dep_index = node_inputs; // Pretend node inputs are tape outputs
+  std::vector<bool> active_inputs = (*adf).activeRange();
+  // New opstack
+  TMBad::global::operation_stack opstack;
+  opstack.push_back((*adf).glob.getOperator<TMBad::global::NullOp2>(0, n1));
+  opstack.push_back((*adf).glob.opstack[node]->copy());
+  // New inv index
+  std::vector<TMBad::Index>
+    inv_index = TMBad::which<TMBad::Index>(active_inputs);
+  // New dep index
+  std::vector<TMBad::Index> dep_index(n2);
+  for (size_t i=0; i<n2; i++) dep_index[i] = n1+i;
+  // New inputs
+  std::vector<TMBad::Index> inputs(n1);
+  for (size_t i=0; i<n1; i++) inputs[i] = i;
+  // New values
+  std::vector<TMBad::Scalar> values(n1 + n2);
+  for (size_t i=0; i<n1; i++)
+    values[i] = (*adf).glob.values[node_inputs[i]];
+  // swap
+  std::swap((*adf).glob.opstack, opstack);
+  std::swap((*adf).glob.inv_index, inv_index);
+  std::swap((*adf).glob.dep_index, dep_index);
+  std::swap((*adf).glob.inputs, inputs);
+  std::swap((*adf).glob.values, values);
+}
 void Copy(TMBad::ADFun<>* adf, Rcpp::XPtr<TMBad::ADFun<> > other) {
   *adf = *other;
 }
@@ -129,6 +203,8 @@ RCPP_MODULE(mod_adfun) {
   .method("jacobian", &Jacobian)
   .method("domain", &GetDomain)
   .method("range", &GetRange)
+  .method("domainvec", &GetDomainVec)
+  .method("rangevec", &GetRangeVec)
   .method("jacfun", &JacFun)
   .method("parallelize", &parallelize)
   .method("fuse", &fuse)
