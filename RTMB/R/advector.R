@@ -286,14 +286,16 @@ MakeTape <- function(f, x) {
             dim(x) <- Dim
         x
     }
+    eval <- mod$eval ## cache
+    evalAD <- mod$evalAD ## cache
     structure(
         function(x) {
             if (is.list(x))
                 x <- do.call("c", x)
             if (inherits(x, "advector") && ad_context())
-                output(mod$evalAD(x))
+                output(evalAD(x))
             else
-                output(mod$eval(x))
+                output(eval(x))
         },
         methods = list(
             jacobian = mod$jacobian,
@@ -332,9 +334,7 @@ MakeTape <- function(f, x) {
                 get_node(.pointer(mod), i)
                 .expose(mod)
             },
-            par = function() {
-                mod$domainvec()
-            }
+            par = mod$domainvec
         ),
         class="Tape")
 }
