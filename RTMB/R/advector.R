@@ -484,6 +484,7 @@ data <- NULL
 ##' @param parameters Parameter list (or parameter vector) used by \code{func}.
 ##' @param random As \link[TMB]{MakeADFun}.
 ##' @param profile As \link[TMB]{MakeADFun}.
+##' @param integrate As \link[TMB]{MakeADFun}.
 ##' @param map As \link[TMB]{MakeADFun}.
 ##' @param ADreport As \link[TMB]{MakeADFun}.
 ##' @param silent As \link[TMB]{MakeADFun}.
@@ -498,7 +499,7 @@ data <- NULL
 ##' }
 ##' obj <- MakeADFun(fr, numeric(2), silent=TRUE)
 ##' nlminb(c(-1.2, 1), obj$fn, obj$gr, obj$he)
-MakeADFun <- function(func, parameters, random=NULL, profile=NULL, map=list(), ADreport=FALSE, silent=FALSE,...) {
+MakeADFun <- function(func, parameters, random=NULL, profile=NULL, integrate=NULL, map=list(), ADreport=FALSE, silent=FALSE,...) {
     setdata <- NULL
     if (is.list(func)) {
         setdata <- attr(func, "setdata")
@@ -521,6 +522,7 @@ MakeADFun <- function(func, parameters, random=NULL, profile=NULL, map=list(), A
                     ADreport=FALSE,
                     checkParameterOrder=FALSE,
                     silent=silent,
+                    integrate=NULL,
                     ...)
     TMBArgs$DLL <- "RTMB" ## Override if included in ...
     obj <- do.call(TMB::MakeADFun, TMBArgs)
@@ -670,6 +672,7 @@ MakeADFun <- function(func, parameters, random=NULL, profile=NULL, map=list(), A
     attr(obj$env$data, "setdata") <- setdata
     obj$env$ADreport <- ADreport
     obj$env$profile <- profile
+    obj$env$integrate <- integrate
     obj$retape()
     obj$par <- obj$env$par[obj$env$lfixed()]
     obj
