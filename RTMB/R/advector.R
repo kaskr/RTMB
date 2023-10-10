@@ -269,6 +269,7 @@ print.advector <- function (x, ...)  {
     y <- f(x)
     y <- advector(y)
     dependent(y)
+    attr(F, "Dim") <- dim(y)
     F
 }
 ## High level version: Not everything available
@@ -280,7 +281,7 @@ MakeTape <- function(f, x) {
     .expose(mod)
 }
 .expose <- function(mod) {
-    Dim <- NULL
+    Dim <- attr(mod, "Dim")
     Pattern <- NULL
     output <- function(x) {
         if (!is.null(Dim))
