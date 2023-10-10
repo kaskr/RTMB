@@ -343,6 +343,8 @@ Rcpp::ComplexVector independent(const Rcpp::ComplexVector &x) {
   Rcpp::ComplexVector ans(x.size());
   for (int i=0; i<x.size(); i++) {
     ad xad = cplx2ad(x[i]);
+    if (!xad.constant())
+      Rcpp::stop("Dependent 'advector' cannot be set as independent");
     xad.Independent();
     ans[i] = ad2cplx(xad);
   }
