@@ -309,20 +309,35 @@ SEXP SparseArith2(SEXP x,
   return z;
 }
 
-// [[Rcpp::export]]
-Rcpp::ComplexMatrix math_expm (SEXP x) {
-  matrix<ad> X;
-  if (is_adsparse(x)) {
-    X = SparseInput(x);
-  } else if (is_admatrix(x)) {
-    X = MatrixInput(x);
-  } else {
-    Rcpp::stop("expm: Expected matrix-like input");
-  }
-  if (X.rows() != X.cols())
-    Rcpp::stop("expm: Expected square matrix");
-  return MatrixOutput(expm(X));
+
+#define MATH_MATRIX_FUNCTION(MFUN)                      \
+Rcpp::ComplexMatrix math_ ## MFUN (SEXP x) {            \
+  matrix<ad> X;                                         \
+  if (is_adsparse(x)) {                                 \
+    X = SparseInput(x);                                 \
+  } else if (is_admatrix(x)) {                          \
+    X = MatrixInput(x);                                 \
+  } else {                                              \
+    Rcpp::stop( #MFUN ": Expected matrix-like input");  \
+  }                                                     \
+  if (X.rows() != X.cols())                             \
+    Rcpp::stop( #MFUN ": Expected square matrix");      \
+  return MatrixOutput(atomic::MFUN(X));                 \
 }
+
+// [[Rcpp::export]]
+Rcpp::ComplexMatrix math_expm(SEXP x);
+MATH_MATRIX_FUNCTION(expm)
+
+// [[Rcpp::export]]
+Rcpp::ComplexMatrix math_sqrtm(SEXP x);
+MATH_MATRIX_FUNCTION(sqrtm)
+
+// [[Rcpp::export]]
+Rcpp::ComplexMatrix math_absm(SEXP x);
+MATH_MATRIX_FUNCTION(absm)
+
+#undef MATH_MATRIX_FUNCTION
 
 // [[Rcpp::export]]
 Rcpp::ComplexMatrix expATv (SEXP AT,

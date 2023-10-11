@@ -281,9 +281,16 @@ MakeTape <- function(f, x) {
 }
 .expose <- function(mod) {
     Dim <- NULL
+    Pattern <- NULL
     output <- function(x) {
         if (!is.null(Dim))
             dim(x) <- Dim
+        if (!is.null(Pattern)) {
+            if (inherits(x, "advector"))
+                x <- new("adsparse", x=x, i=Pattern@i, p=Pattern@p, Dim=Pattern@Dim)
+            else
+                x <- new("dgCMatrix", x=x, i=Pattern@i, p=Pattern@p, Dim=Pattern@Dim)
+        }
         x
     }
     eval <- mod$eval ## cache
@@ -309,8 +316,11 @@ MakeTape <- function(f, x) {
                     stop("Unknown method")
             },
             print = mod$print,
-            jacfun = function() {
-                .jacfun(mod)
+            jacfun = function(sparse=FALSE) {
+                if (!sparse)
+                    .jacfun(mod)
+                else
+                    .spjacfun(mod)
             },
             atomic = function() {
                 .atomic(mod)
@@ -367,6 +377,23 @@ print.Tape <- function(x,...){
     mod$jacfun()
     ans <- .expose(mod)
     environment(ans)$Dim <- jacdim
+    ans
+}
+.spjacfun <- function(mod) {
+    ptr <- .pointer(mod)
+    jac <- SpJacFun(ptr)
+    P <- new("dgTMatrix",
+             i = jac@i,
+             j = jac@j,
+             x = as.double(seq_along(jac@i) - 1L),
+             Dim = jac@Dim )
+    P <- as(P, "CsparseMatrix") ## Permutes @x and calculates @i and @p
+    RangeProj(jac@tape, P@x) ## Permute tape output to match new pattern
+    mod <- new(adfun)
+    e <- as.environment(mod)
+    e$.pointer <- jac@tape
+    ans <- .expose(mod)
+    environment(ans)$Pattern <- new("ngCMatrix", i=P@i, p=P@p, Dim=P@Dim)
     ans
 }
 .atomic <- function(mod) {
@@ -488,6 +515,7 @@ data <- NULL
 ##' @param map As \link[TMB]{MakeADFun}.
 ##' @param ADreport As \link[TMB]{MakeADFun}.
 ##' @param silent As \link[TMB]{MakeADFun}.
+##' @param ridge.correct Experimental
 ##' @param ... Passed to TMB
 ##' @return TMB model object.
 ##' @examples
@@ -499,7 +527,7 @@ data <- NULL
 ##' }
 ##' obj <- MakeADFun(fr, numeric(2), silent=TRUE)
 ##' nlminb(c(-1.2, 1), obj$fn, obj$gr, obj$he)
-MakeADFun <- function(func, parameters, random=NULL, profile=NULL, integrate=NULL, map=list(), ADreport=FALSE, silent=FALSE,...) {
+MakeADFun <- function(func, parameters, random=NULL, profile=NULL, integrate=NULL, map=list(), ADreport=FALSE, silent=FALSE, ridge.correct=FALSE, ...) {
     setdata <- NULL
     if (is.list(func)) {
         setdata <- attr(func, "setdata")
@@ -675,6 +703,12 @@ MakeADFun <- function(func, parameters, random=NULL, profile=NULL, integrate=NUL
     obj$env$integrate <- integrate
     obj$retape()
     obj$par <- obj$env$par[obj$env$lfixed()]
+    if (ridge.correct) {
+        obj$env$ridge.correct <- ridge.correct
+        p <- ridge.correct
+        p <- if (is.numeric(p)) p else .5
+        obj$env$altHess <- altHessFun(obj, p)
+    }
     obj
 }
 

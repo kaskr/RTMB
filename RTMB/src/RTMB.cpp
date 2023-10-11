@@ -104,6 +104,49 @@ SEXP ptrTMB(TMBad::ADFun<>* pf) {
   return ans;
 }
 // [[Rcpp::export]]
+Rcpp::S4 SpJacFun(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  TMBad::Sparse<TMBad::ADFun<> > sadf = adf->SpJacFun();
+  Rcpp::S4 ans("ngTMatrix");
+  ans.slot("i") = Rcpp::IntegerVector(sadf.i.begin(), sadf.i.end());
+  ans.slot("j") = Rcpp::IntegerVector(sadf.j.begin(), sadf.j.end());
+  ans.slot("Dim") = Rcpp::IntegerVector::create(sadf.m, sadf.n);
+  TMBad::ADFun<>* pf = new TMBad::ADFun<>(sadf);
+  ans.attr("tape") = Rcpp::XPtr<TMBad::ADFun<> > (pf);
+  return ans;
+}
+// [[Rcpp::export]]
+void RangeProj(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::IntegerVector i) {
+  std::vector<TMBad::Index>& di = (*adf).glob.dep_index;
+  Rcpp::IntegerVector di_ = Rcpp::IntegerVector(di.begin(), di.end());
+  di_ = di_[i]; // Rcpp handles out-of-bound error
+  di = std::vector<TMBad::Index>(di_.begin(), di_.end());
+}
+// [[Rcpp::export]]
+Rcpp::IntegerVector find_op_by_name(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::String name) {
+  std::vector<TMBad::Index> nodes = find_op_by_name(adf->glob, name.get_cstring());
+  return Rcpp::IntegerVector(nodes.begin(), nodes.end());
+}
+// [[Rcpp::export]]
+Rcpp::IntegerVector op2var(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::IntegerVector nodes) {
+  std::vector<TMBad::Index> var =
+    adf->glob.op2var( std::vector<TMBad::Index>(nodes.begin(), nodes.end()) ) ;
+  return Rcpp::IntegerVector(var.begin(), var.end());
+}
+// [[Rcpp::export]]
+Rcpp::IntegerVector findIndex(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::String name) {
+  std::vector<TMBad::Index> nodes = find_op_by_name(adf->glob, name.get_cstring());
+  std::vector<TMBad::Index> var = adf->glob.op2var( nodes ) ;
+  return Rcpp::IntegerVector(var.begin(), var.end());
+}
+// [[Rcpp::export]]
+void setinvIndex(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::IntegerVector index) {
+  adf->glob.inv_index = std::vector<TMBad::Index>(index.begin(), index.end());
+}
+// [[Rcpp::export]]
+Rcpp::IntegerVector getinvIndex(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  return Rcpp::IntegerVector(adf->glob.inv_index.begin(), adf->glob.inv_index.end());
+}
+// [[Rcpp::export]]
 Rcpp::S4 get_graph(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   // reverse row-major == forward col-major
   TMBad::graph G = (*adf).glob.reverse_graph();
