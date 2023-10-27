@@ -1,5 +1,8 @@
 // RTMB configuration to include by TMB.h
 
+// We don't want this header - pretend already included
+#define RcppEigen_CHOLMOD_H
+
 #include <Rcpp.h>
 // Any failed internal assertion sends Rcpp::exception
 #define TMB_ABORT Rcpp::stop("TMB unexpected")
