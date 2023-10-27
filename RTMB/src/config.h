@@ -15,6 +15,9 @@
 #define TMBAD_INDEX_TYPE uint64_t
 // Enable out-of-bounds checking
 #define TMB_SAFEBOUNDS
+// Super nodal
+#define TMBAD_SUPERNODAL
+#include "cholmod.h"
 // TMB FIXME: Some occurances of ASSERT and ASSERT2
 #undef  ASSERT
 #define ASSERT(x) TMBAD_ASSERT(x)
