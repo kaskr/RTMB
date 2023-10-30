@@ -58,7 +58,7 @@ dgmrf <- function(x, mu=0, Q, log=FALSE, scale=1) {
     d <- attr(Q, "Dim")[1]
     x0 <- as.vector(x) - as.vector(mu)
     dim(x0) <- c(d, length(x0) / d)
-    anstype <- .anstype(x0, Q)
+    anstype <- .anstype(x0, Q@x)
     anstype( dgmrf0(advector(x0), as(Q, "adsparse"), log) )
 }
 
