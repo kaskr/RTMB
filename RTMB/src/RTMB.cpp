@@ -104,6 +104,17 @@ SEXP ptrTMB(TMBad::ADFun<>* pf) {
   return ans;
 }
 // [[Rcpp::export]]
+Rcpp::S4 SpJacFun(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  TMBad::Sparse<TMBad::ADFun<> > sadf = adf->SpJacFun();
+  Rcpp::S4 ans("ngTMatrix");
+  ans.slot("i") = Rcpp::IntegerVector(sadf.i.begin(), sadf.i.end());
+  ans.slot("j") = Rcpp::IntegerVector(sadf.j.begin(), sadf.j.end());
+  ans.slot("Dim") = Rcpp::IntegerVector::create(sadf.m, sadf.n);
+  TMBad::ADFun<>* pf = new TMBad::ADFun<>(sadf);
+  ans.attr("tape") = Rcpp::XPtr<TMBad::ADFun<> > (pf);
+  return ans;
+}
+// [[Rcpp::export]]
 Rcpp::S4 get_graph(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   // reverse row-major == forward col-major
   TMBad::graph G = (*adf).glob.reverse_graph();
