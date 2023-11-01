@@ -115,6 +115,13 @@ Rcpp::S4 SpJacFun(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   return ans;
 }
 // [[Rcpp::export]]
+void RangeProj(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::IntegerVector i) {
+  std::vector<TMBad::Index>& di = (*adf).glob.dep_index;
+  Rcpp::IntegerVector di_ = Rcpp::IntegerVector(di.begin(), di.end());
+  di_ = di_[i]; // Rcpp handles out-of-bound error
+  di = std::vector<TMBad::Index>(di_.begin(), di_.end());
+}
+// [[Rcpp::export]]
 Rcpp::S4 get_graph(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   // reverse row-major == forward col-major
   TMBad::graph G = (*adf).glob.reverse_graph();
