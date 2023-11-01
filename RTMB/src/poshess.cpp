@@ -131,3 +131,51 @@ Rcpp::ComplexVector PHE(Rcpp::XPtr<TMBad::ADFun<> > F,
   }
   return as_advector(y);
 }
+
+/* -------------------------------------------------------------------------- */
+/* --- POSDEF Term tag ------------------------------------------------------ */
+/* -------------------------------------------------------------------------- */
+
+namespace TMBad {
+
+template<int order=0>
+struct TermOp : global::Operator< 1 , 1 > {
+  static const bool have_eval = true;
+  static const bool add_forward_replay_copy = true;
+  static const bool dynamic = true; // Prevent tape optimizer from remapping it
+  template<class Type> Type eval(Type x0) {
+      return x0 ;
+  }
+  template<class Type> void reverse(TMBad::ReverseArgs<Type> &args) {
+    if (order == 0)
+      args.dx(0) += TermOp<1>()(args.dy(0));
+    else
+      args.dx(0) += args.dy(0);
+  }
+  const char* op_name() { return (order==0 ? "TermOp0" : "TermOp1") ; }
+  ad operator()(ad x) {
+    std::vector<ad_plain> xv(1,x);
+    return global::Complete<TermOp>()(xv)[0];
+  }
+  double operator()(double x) {
+    return x;
+  }
+  TMBad::Writer operator()(TMBad::Writer x) {
+    return x;
+  }
+};
+
+}
+
+// [[Rcpp::export]]
+Rcpp::ComplexVector Term(const Rcpp::ComplexVector x) {
+  CHECK_INPUT(x);
+  size_t n = x.size();
+  ad* X = adptr(x);
+  TMBad::TermOp<> F;
+  Rcpp::ComplexVector y(n);
+  for (size_t j=0; j < n; j++) {
+    y[j] = ad2cplx(F(X[j]));
+  }
+  return as_advector(y);
+}
