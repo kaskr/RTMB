@@ -281,9 +281,16 @@ MakeTape <- function(f, x) {
 }
 .expose <- function(mod) {
     Dim <- NULL
+    Pattern <- NULL
     output <- function(x) {
         if (!is.null(Dim))
             dim(x) <- Dim
+        if (!is.null(Pattern)) {
+            if (inherits(x, "advector"))
+                x <- new("adsparse", x=x, i=Pattern@i, p=Pattern@p, Dim=Pattern@Dim)
+            else
+                x <- new("dgCMatrix", x=x, i=Pattern@i, p=Pattern@p, Dim=Pattern@Dim)
+        }
         x
     }
     eval <- mod$eval ## cache
@@ -309,8 +316,11 @@ MakeTape <- function(f, x) {
                     stop("Unknown method")
             },
             print = mod$print,
-            jacfun = function() {
-                .jacfun(mod)
+            jacfun = function(sparse=FALSE) {
+                if (!sparse)
+                    .jacfun(mod)
+                else
+                    .spjacfun(mod)
             },
             atomic = function() {
                 .atomic(mod)
@@ -367,6 +377,21 @@ print.Tape <- function(x,...){
     mod$jacfun()
     ans <- .expose(mod)
     environment(ans)$Dim <- jacdim
+    ans
+}
+.spjacfun <- function(mod) {
+    ptr <- .pointer(mod)
+    jac <- SpJacFun(ptr)
+    P <- new("dgTMatrix", i=jac@i, j=jac@j,
+             x=seq(0, length.out=length(jac@i)),
+             Dim=jac@Dim )
+    P <- as(P, "CsparseMatrix") ## Permutes @x and calculates @i and @p
+    RangeProj(jac@tape, P@x) ## Permute tape output to match new pattern
+    mod <- new(adfun)
+    e <- as.environment(mod)
+    e$.pointer <- jac@tape
+    ans <- .expose(mod)
+    environment(ans)$Pattern <- new("ngCMatrix", i=P@i, p=P@p, Dim=P@Dim)
     ans
 }
 .atomic <- function(mod) {
