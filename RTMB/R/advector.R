@@ -382,9 +382,11 @@ print.Tape <- function(x,...){
 .spjacfun <- function(mod) {
     ptr <- .pointer(mod)
     jac <- SpJacFun(ptr)
-    P <- new("dgTMatrix", i=jac@i, j=jac@j,
-             x=seq(0, length.out=length(jac@i)),
-             Dim=jac@Dim )
+    P <- new("dgTMatrix",
+             i = jac@i,
+             j = jac@j,
+             x = as.double(seq_along(jac@i) - 1L),
+             Dim = jac@Dim )
     P <- as(P, "CsparseMatrix") ## Permutes @x and calculates @i and @p
     RangeProj(jac@tape, P@x) ## Permute tape output to match new pattern
     mod <- new(adfun)
