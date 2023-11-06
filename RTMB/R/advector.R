@@ -218,7 +218,7 @@ environment(diff_patch) <- local({unclass <- function(x)x; environment()})
 ##' @param lag As \link[base]{diff}
 ##' @param differences As \link[base]{diff}
 diff.advector <- function (x, lag = 1L, differences = 1L, ...) {
-    diff_patch(x, lag = 1L, differences = 1L, ...)
+    diff_patch(x, lag = lag, differences = differences, ...)
 }
 
 ##' @describeIn ADvector Print method
