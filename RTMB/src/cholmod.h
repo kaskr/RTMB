@@ -1,5 +1,8 @@
 // From the Matrix package
 #include <Matrix/cholmod.h>
+#ifndef SuiteSparse_long
+#define SuiteSparse_long int64_t
+#endif
 
 // Eigen's CHOLMOD support uses these
 extern "C" {
