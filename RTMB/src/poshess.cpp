@@ -138,13 +138,14 @@ Rcpp::ComplexVector PHE(Rcpp::XPtr<TMBad::ADFun<> > F,
 
 namespace TMBad {
 
-template<int order=0>
+template<int order=0, bool setZero=false>
 struct TermOp : global::Operator< 1 , 1 > {
-  static const bool have_eval = true;
-  static const bool add_forward_replay_copy = true;
   static const bool dynamic = true; // Prevent tape optimizer from remapping it
-  template<class Type> Type eval(Type x0) {
-      return x0 ;
+  template<class Type> void forward(TMBad::ForwardArgs<Type> &args) {
+    if (!setZero)
+      args.y(0) = (*this)(args.x(0));
+    else
+      args.y(0) = Type(0);
   }
   template<class Type> void reverse(TMBad::ReverseArgs<Type> &args) {
     if (order == 0)
@@ -178,4 +179,18 @@ Rcpp::ComplexVector Term(const Rcpp::ComplexVector x) {
     y[j] = ad2cplx(F(X[j]));
   }
   return as_advector(y);
+}
+
+// [[Rcpp::export]]
+void TermsZero(Rcpp::XPtr<TMBad::ADFun<> > adf, bool setZero) {
+  std::vector<TMBad::Index> nodes = find_op_by_name(adf->glob, "TermOp1");
+  for (size_t i=0; i<nodes.size(); i++) {
+    TMBad::OperatorPure* op;
+    if (setZero)
+      op = new TMBad::global::Complete<TMBad::TermOp<1, true> >();
+    else
+      op = new TMBad::global::Complete<TMBad::TermOp<1, false> >();
+    std::swap(adf->glob.opstack[nodes[i]], op);
+    op->deallocate();
+  }
 }
