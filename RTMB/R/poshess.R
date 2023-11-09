@@ -49,6 +49,8 @@ getPositiveHessian <- function(obj) {
     invnew <- integer(length(invold))
     invnew[order(invold)] <- inv_
     setinvIndex(HHptr, invnew)
+    ## Remove persistent InvOp from HH tape
+    InvPersistent(HHptr, FALSE)
     ## Helper that modifies individual columns of 'HH'
     modify <- function(jac, col) {
         ## indices into jac@i and jac@x defining current column 'col'
