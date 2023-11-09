@@ -166,6 +166,12 @@ struct TermOp : global::Operator< 1 , 1 > {
   }
 };
 
+// Replay persistent InvOp
+struct InvOp_ : global::InvOp {
+  static const bool add_forward_replay_copy = true;
+  const char* op_name() {return "InvOp_";}
+};
+
 }
 
 // [[Rcpp::export]]
@@ -192,5 +198,22 @@ void TermsZero(Rcpp::XPtr<TMBad::ADFun<> > adf, bool setZero) {
       op = new TMBad::global::Complete<TMBad::TermOp<1, false> >();
     std::swap(adf->glob.opstack[nodes[i]], op);
     op->deallocate();
+  }
+}
+
+// [[Rcpp::export]]
+void InvPersistent(Rcpp::XPtr<TMBad::ADFun<> > adf, bool setPers) {
+  //std::vector<TMBad::Index> nodes = find_op_by_name(adf->glob, "InvOp");
+  TMBad::OperatorPure* invop  = adf->glob.template getOperator<TMBad::global::InvOp>();
+  TMBad::OperatorPure* invop_ = adf->glob.template getOperator<TMBad::InvOp_>();
+  for (size_t i=0; i < adf->glob.opstack.size(); i++) {
+    // Finds 'InvOp' or 'InvOp_' (The only operators with 'op_info::independent_variable' set)
+    bool test = adf -> glob.opstack[i] -> info().test(TMBad::op_info::independent_variable);
+    if (test) {
+      if (setPers)
+        adf -> glob.opstack[i] = invop_;
+      else
+        adf -> glob.opstack[i] = invop;
+    }
   }
 }
