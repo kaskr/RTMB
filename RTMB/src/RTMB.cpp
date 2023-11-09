@@ -284,7 +284,9 @@ bool is_adsparse (SEXP x) {
   return Rf_inherits(x, "adsparse");
 }
 bool is_adscalar (SEXP x) {
-  return is_advector(x) && (Rcpp::ComplexVector(x).size() == 1);
+  return is_advector(x) &&
+    (Rcpp::ComplexVector(x).size() == 1) &&
+    !Rcpp::ComplexVector(x).hasAttribute("dim");
 }
 bool valid(const ad &x) {
   return
