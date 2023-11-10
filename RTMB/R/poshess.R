@@ -100,3 +100,20 @@ getPositiveHessian <- function(obj) {
     }
     MakeTape(newHess, H$par())
 }
+
+## Get a function to swap hessians
+## Usage:
+##    obj$env$altHess <- altHessFun(obj)
+altHessFun <- function(obj) {
+    posHess <- getPositiveHessian(obj)
+    ADHess2 <- environment(posHess)$mod$ptrTMB()
+    attr(ADHess2, "rcpp") <- environment(posHess)$mod ## 'PROTECTS' ptrTMB !
+    ADHess2$DLL <- "RTMB"
+    e <- environment(obj$env$spHess)
+    ADHess <- e$ADHess
+    attributes(ADHess2$ptr) <- attributes(ADHess$ptr)
+    function(altHess=FALSE) {
+        e$ADHess <- if (altHess) ADHess2 else ADHess
+        NULL
+    }
+}
