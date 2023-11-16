@@ -37,8 +37,8 @@ oneStepPredict <- function(obj,
 
 OBS_ENV <- reporter()
 
-##' @describeIn TMB-interface Mark the observation
-##' Mark observation to be used by either \code{oneStepPredict} or by \code{obj$simulate}.
+##' @describeIn TMB-interface
+##' Mark the observation to be used by either \code{oneStepPredict} or by \code{obj$simulate}.
 ##' If your objective function is using an observation \code{x}, you simply need
 ##' to run \code{x <- OBS(x)} \emph{inside the objective function}.
 ##' This will (1) allow \code{oneStepPredict} to change the class of \code{x} to
