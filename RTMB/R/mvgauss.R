@@ -47,7 +47,13 @@ dgmrf <- function(x, mu=0, Q, log=FALSE, scale=1) {
         return (dscale("dgmrf", x, mu, Q,
                        log=log, scale=scale, vectorize=TRUE))
     }
-
+    if (inherits(x, "simref")) {
+        if (!log) stop("'simref' is for *log* density evaluation only")
+        nr <- nrow(Q)
+        n <- length(x) / nr
+        x[] <- t(rgmrf0(n, Q) + mu)
+        return( rep(0, n) )
+    }
     if (!ad_context()) { ## Workaround: see C++ code 'gmrf0'
         F <- .MakeTape(function(...)advector(dgmrf(x,mu,Q,log)),numeric(0))
         return (F$eval(numeric(0)))
