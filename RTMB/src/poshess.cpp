@@ -44,7 +44,12 @@ struct InvOp_ : global::InvOp {
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector Term(const Rcpp::ComplexVector x) {
+SEXP Term(const SEXP x_) {
+  if (Rf_isNumeric(x_))
+    return x_;
+  if (!ad_context())
+    return x_;
+  Rcpp::ComplexVector x(x_);
   CHECK_INPUT(x);
   size_t n = x.size();
   ad* X = adptr(x);
