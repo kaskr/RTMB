@@ -4,18 +4,18 @@
 ################################################################################
 
 ## 'posfun' that works for matrices or scalars
-posfun <- function(x) {
+posfun <- function(x, p=.5) {
     if (is.matrix(x)) {
-        .5 * (RTMB:::math_absm(x) + x)
+        p * RTMB:::math_absm(x) + (1-p) * x
     } else {
-        .5 * (abs(x) + x)
+        p * abs(x) + (1-p) * x
     }
 }
 
 ## - Use RTMB:::Term to mark terms to be corrected
 ## - Automatically handle the sign
 ## - Limitation: Must have same pattern as original
-getPositiveHessian <- function(obj) {
+getPositiveHessian <- function(obj, p = .5) {
     ## Get pattern of existing hessian
     h <- obj$env$spHess(random=TRUE)
     ## Get tape of the existing hessian
@@ -65,7 +65,7 @@ getPositiveHessian <- function(obj) {
         xnz <- jac@x[ind] * signs[col]
         if (dim == length(i)) {
             ## Diagonal case (easy elementwise posfun)
-            posfun(xnz)
+            posfun(xnz, p)
         }
         else if ( (dim * dim - dim) * .5 + dim == length(i)) {
             ## Dense case (spectral posfun)
@@ -73,7 +73,7 @@ getPositiveHessian <- function(obj) {
             lt <- lower.tri(X, TRUE)
             X[lt] <- xnz
             X[!lt] <- t(X)[!lt] ## Shouldn't be needed
-            posfun(X)[lt]
+            posfun(X, p)[lt]
         }
         else stop("Can only handle 'diag' or 'dense' data terms")
     }
@@ -104,8 +104,8 @@ getPositiveHessian <- function(obj) {
 ## Get a function to swap hessians
 ## Usage:
 ##    obj$env$altHess <- altHessFun(obj)
-altHessFun <- function(obj) {
-    posHess <- getPositiveHessian(obj)
+altHessFun <- function(obj, p=.5) {
+    posHess <- getPositiveHessian(obj, p)
     ADHess2 <- environment(posHess)$mod$ptrTMB()
     attr(ADHess2, "rcpp") <- environment(posHess)$mod ## 'PROTECTS' ptrTMB !
     ADHess2$DLL <- "RTMB"

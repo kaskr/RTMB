@@ -526,7 +526,7 @@ data <- NULL
 ##' }
 ##' obj <- MakeADFun(fr, numeric(2), silent=TRUE)
 ##' nlminb(c(-1.2, 1), obj$fn, obj$gr, obj$he)
-MakeADFun <- function(func, parameters, random=NULL, profile=NULL, integrate=NULL, map=list(), ADreport=FALSE, silent=FALSE,...) {
+MakeADFun <- function(func, parameters, random=NULL, profile=NULL, integrate=NULL, map=list(), ADreport=FALSE, silent=FALSE, ridge.correct=FALSE, ...) {
     setdata <- NULL
     if (is.list(func)) {
         setdata <- attr(func, "setdata")
@@ -702,6 +702,12 @@ MakeADFun <- function(func, parameters, random=NULL, profile=NULL, integrate=NUL
     obj$env$integrate <- integrate
     obj$retape()
     obj$par <- obj$env$par[obj$env$lfixed()]
+    if (ridge.correct) {
+        obj$env$ridge.correct <- ridge.correct
+        p <- ridge.correct
+        p <- if (is.numeric(p)) p else .5
+        obj$env$altHess <- altHessFun(obj, p)
+    }
     obj
 }
 
