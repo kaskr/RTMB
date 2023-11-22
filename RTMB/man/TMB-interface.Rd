@@ -20,6 +20,7 @@ MakeADFun(
   map = list(),
   ADreport = FALSE,
   silent = FALSE,
+  ridge.correct = FALSE,
   ...
 )
 
@@ -51,6 +52,8 @@ checkConsistency(obj, fast = TRUE, ...)
 \item{ADreport}{As \link[TMB]{MakeADFun}.}
 
 \item{silent}{As \link[TMB]{MakeADFun}.}
+
+\item{ridge.correct}{Experimental}
 
 \item{...}{Passed to TMB}
 
