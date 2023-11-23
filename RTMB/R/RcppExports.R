@@ -221,6 +221,18 @@ distr_rcompois <- function(loglambda, nu) {
     .Call(`_RTMB_distr_rcompois`, loglambda, nu)
 }
 
+ip2D <- function(data, x_range, y_range, con) {
+    .Call(`_RTMB_ip2D`, data, x_range, y_range, con)
+}
+
+ip2D_eval_num <- function(ptr, x, y) {
+    .Call(`_RTMB_ip2D_eval_num`, ptr, x, y)
+}
+
+ip2D_eval_ad <- function(ptr, x, y) {
+    .Call(`_RTMB_ip2D_eval_ad`, ptr, x, y)
+}
+
 Arith2 <- function(x, y, op) {
     .Call(`_RTMB_Arith2`, x, y, op)
 }
