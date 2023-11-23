@@ -694,6 +694,46 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ip2D
+Rcpp::XPtr<tmbutils::interpol2D<double> > ip2D(Rcpp::NumericMatrix data, Rcpp::NumericVector x_range, Rcpp::NumericVector y_range, Rcpp::List con);
+RcppExport SEXP _RTMB_ip2D(SEXP dataSEXP, SEXP x_rangeSEXP, SEXP y_rangeSEXP, SEXP conSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x_range(x_rangeSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type y_range(y_rangeSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type con(conSEXP);
+    rcpp_result_gen = Rcpp::wrap(ip2D(data, x_range, y_range, con));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ip2D_eval_num
+Rcpp::NumericVector ip2D_eval_num(Rcpp::XPtr<tmbutils::interpol2D<double> > ptr, Rcpp::NumericVector x, Rcpp::NumericVector y);
+RcppExport SEXP _RTMB_ip2D_eval_num(SEXP ptrSEXP, SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<tmbutils::interpol2D<double> > >::type ptr(ptrSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(ip2D_eval_num(ptr, x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ip2D_eval_ad
+Rcpp::ComplexVector ip2D_eval_ad(Rcpp::XPtr<tmbutils::interpol2D<double> > ptr, Rcpp::ComplexVector x, Rcpp::ComplexVector y);
+RcppExport SEXP _RTMB_ip2D_eval_ad(SEXP ptrSEXP, SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<tmbutils::interpol2D<double> > >::type ptr(ptrSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(ip2D_eval_ad(ptr, x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Arith2
 Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector& x, const Rcpp::ComplexVector& y, std::string op);
 RcppExport SEXP _RTMB_Arith2(SEXP xSEXP, SEXP ySEXP, SEXP opSEXP) {
@@ -970,6 +1010,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_compois_calc_logZ", (DL_FUNC) &_RTMB_distr_compois_calc_logZ, 2},
     {"_RTMB_distr_compois_calc_loglambda", (DL_FUNC) &_RTMB_distr_compois_calc_loglambda, 2},
     {"_RTMB_distr_rcompois", (DL_FUNC) &_RTMB_distr_rcompois, 2},
+    {"_RTMB_ip2D", (DL_FUNC) &_RTMB_ip2D, 4},
+    {"_RTMB_ip2D_eval_num", (DL_FUNC) &_RTMB_ip2D_eval_num, 3},
+    {"_RTMB_ip2D_eval_ad", (DL_FUNC) &_RTMB_ip2D_eval_ad, 3},
     {"_RTMB_Arith2", (DL_FUNC) &_RTMB_Arith2, 3},
     {"_RTMB_Math1", (DL_FUNC) &_RTMB_Math1, 2},
     {"_RTMB_Reduce1", (DL_FUNC) &_RTMB_Reduce1, 2},
