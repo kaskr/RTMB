@@ -6,7 +6,7 @@
 ## 'posfun' that works for matrices or scalars
 posfun <- function(x, p=.5) {
     if (is.matrix(x)) {
-        p * RTMB:::math_absm(x) + (1-p) * x
+        p * math_absm(x) + (1-p) * x
     } else {
         p * abs(x) + (1-p) * x
     }
