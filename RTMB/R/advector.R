@@ -651,6 +651,11 @@ MakeADFun <- function(func, parameters, random=NULL, profile=NULL, integrate=NUL
         clear_all()
         on.exit(clear_all())
         rcpp <- .MakeTape(mapfunc, obj$env$par)
+        if (!ADreport) {
+            if (rcpp$range() != 1) {
+                stop("'func' must return a *scalar* (forgot to sum?)")
+            }
+        }
         if (TMB::config(DLL="RTMB")$optimize.instantly)
             rcpp$optimize()
         ans <- rcpp$ptrTMB()
