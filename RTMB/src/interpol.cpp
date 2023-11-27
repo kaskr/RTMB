@@ -55,3 +55,29 @@ ip2D_eval_ad(Rcpp::XPtr<tmbutils::interpol2D<double> > ptr,
   }
   return as_advector(z);
 }
+
+/* ======================= SPLINE ==================================== */
+
+// [[Rcpp::export]]
+Rcpp::XPtr<tmbutils::splinefun<ad> >
+splineptr(Rcpp::NumericVector x,
+          Rcpp::ComplexVector y,
+          int method=3) {
+  CHECK_INPUT(y);
+  typedef tmbutils::splinefun<ad> spline_t;
+  std::vector<ad> x_(x.begin(), x.end());
+  std::vector<ad> y_((ad*) y.begin(), (ad*) y.end());
+  spline_t* ptr = new spline_t (x_, y_, method);
+  return Rcpp::XPtr<spline_t> (ptr);
+}
+
+// [[Rcpp::export]]
+Rcpp::ComplexVector
+splineptr_eval(Rcpp::XPtr<tmbutils::splinefun<ad> > ptr,
+               Rcpp::NumericVector x) {
+  std::vector<ad> x_(x.begin(), x.end());
+  vector<ad> y = (*ptr)(x_);
+  Rcpp::ComplexVector ans( (Rcomplex*) y.data(),
+                           (Rcomplex*) y.data()+y.size());
+  return as_advector(ans);
+}
