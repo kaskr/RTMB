@@ -233,6 +233,14 @@ ip2D_eval_ad <- function(ptr, x, y) {
     .Call(`_RTMB_ip2D_eval_ad`, ptr, x, y)
 }
 
+splineptr <- function(x, y, method = 3L) {
+    .Call(`_RTMB_splineptr`, x, y, method)
+}
+
+splineptr_eval <- function(ptr, x) {
+    .Call(`_RTMB_splineptr_eval`, ptr, x)
+}
+
 Arith2 <- function(x, y, op) {
     .Call(`_RTMB_Arith2`, x, y, op)
 }

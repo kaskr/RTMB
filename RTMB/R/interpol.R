@@ -36,3 +36,18 @@ interpol2Dfun <- function(z, xlim=c(1,nrow(z)), ylim=c(1,ncol(z)), ...) {
         }
     }
 }
+
+setGeneric("splinefun")
+setMethod("splinefun", signature(x="ANY",
+                                 y="advector",
+                                 method="ANY",
+                                 ties="missing"),
+          function(x, y, method="natural") {
+              methods <- c("fmm", "periodic", "natural")
+              method <- match.arg(method, methods)
+              iMeth <- match(method, methods)
+              ptr <- splineptr(x, y, iMeth)
+              function(x) {
+                  splineptr_eval(ptr, x)
+              }
+          })

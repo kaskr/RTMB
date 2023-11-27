@@ -2,7 +2,7 @@
 // Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #include <Rcpp.h>
-#include "TMB.h"
+#include "RTMB.h"
 
 using namespace Rcpp;
 
@@ -734,6 +734,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// splineptr
+Rcpp::XPtr<tmbutils::splinefun<ad> > splineptr(Rcpp::NumericVector x, Rcpp::ComplexVector y, int method);
+RcppExport SEXP _RTMB_splineptr(SEXP xSEXP, SEXP ySEXP, SEXP methodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type method(methodSEXP);
+    rcpp_result_gen = Rcpp::wrap(splineptr(x, y, method));
+    return rcpp_result_gen;
+END_RCPP
+}
+// splineptr_eval
+Rcpp::ComplexVector splineptr_eval(Rcpp::XPtr<tmbutils::splinefun<ad> > ptr, Rcpp::NumericVector x);
+RcppExport SEXP _RTMB_splineptr_eval(SEXP ptrSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<tmbutils::splinefun<ad> > >::type ptr(ptrSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(splineptr_eval(ptr, x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Arith2
 Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector& x, const Rcpp::ComplexVector& y, std::string op);
 RcppExport SEXP _RTMB_Arith2(SEXP xSEXP, SEXP ySEXP, SEXP opSEXP) {
@@ -1013,6 +1038,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_ip2D", (DL_FUNC) &_RTMB_ip2D, 4},
     {"_RTMB_ip2D_eval_num", (DL_FUNC) &_RTMB_ip2D_eval_num, 3},
     {"_RTMB_ip2D_eval_ad", (DL_FUNC) &_RTMB_ip2D_eval_ad, 3},
+    {"_RTMB_splineptr", (DL_FUNC) &_RTMB_splineptr, 3},
+    {"_RTMB_splineptr_eval", (DL_FUNC) &_RTMB_splineptr_eval, 2},
     {"_RTMB_Arith2", (DL_FUNC) &_RTMB_Arith2, 3},
     {"_RTMB_Math1", (DL_FUNC) &_RTMB_Math1, 2},
     {"_RTMB_Reduce1", (DL_FUNC) &_RTMB_Reduce1, 2},
