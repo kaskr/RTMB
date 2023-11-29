@@ -6,7 +6,7 @@
 ##' A typical use case is when a high-resolution map needs to be accessed along a random effect trajectory.
 ##' Both 1D and 2D cases accept an 'interpolation radius' parameter (default R=2) controlling the degree of smoothness. Note, that only the value R=1 will match the data exactly, while higher radius trades accuracy for smoothness. Note also that these smoothers do not attempt to extrapolate: The returned value will be `NaN` outside the valid range (`xlim` / `ylim`).
 ##'
-##' `splinefun` mimics the corresponding `stats` function. The AD implementation (in contrast to `interpol1Dfun`) works for parameter dependent y-coordinates.
+##' `splinefun` imitates the corresponding `stats` function. The AD implementation (in contrast to `interpol1Dfun`) works for parameter dependent y-coordinates.
 ##'
 ##' @rdname Interpolation
 ##' @name Interpolation
@@ -31,7 +31,7 @@
 ##' F <- MakeTape(function(x) f(x[1],x[2]), c(.5,.5))
 ##' ## ======= splinefun
 ##' T <- MakeTape(function(x){
-##'    S <- splinefun(1:10, sin(x))
+##'    S <- splinefun(sin(x))
 ##'    S(4:6)
 ##' }, 1:10)
 NULL
@@ -67,16 +67,31 @@ setGeneric("splinefun")
 ##' @param x spline x coordinates
 ##' @param y spline y coordinates
 ##' @param method Same as for the stats version, however only the three first are available.
-setMethod("splinefun", signature(x="ANY",
-                                 y="advector",
-                                 method="ANY",
+setMethod("splinefun", signature(y="advector",
                                  ties="missing"),
-          function(x, y, method="natural") {
-              methods <- c("fmm", "periodic", "natural")
-              method <- match.arg(method, methods)
-              iMeth <- match(method, methods)
+          function(x, y, method=c("fmm", "periodic", "natural")) {
+              if (!is.numeric(x)) stop("'x' must be numeric")
+              i <- order(x)
+              x <- x[i]
+              y <- y[i]
+              method <- match.arg(method)
+              ## C code choices =>
+              ##   case 1: periodic_spline
+              ##   case 2: natural_spline
+              ##   case 3: fmm_spline
+              iMeth <- match(method, c("periodic", "natural", "fmm"))
               ptr <- splineptr(x, y, iMeth)
               function(x) {
+                  if (inherits(x, "advector"))
+                      stop("AD spline must have constant (numeric) input")
                   splineptr_eval(ptr, x)
               }
+          })
+setMethod("splinefun", signature(x="advector",
+                                 y="missing",
+                                 ties="missing"),
+          function(x, method=c("fmm", "periodic", "natural")) {
+              y <- x
+              x <- seq_along(y)
+              splinefun(x, y, method)
           })
