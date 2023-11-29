@@ -11,7 +11,7 @@ interpol1Dfun(z, xlim = c(1, length(z)), ...)
 
 interpol2Dfun(z, xlim = c(1, nrow(z)), ylim = c(1, ncol(z)), ...)
 
-\S4method{splinefun}{ANY,advector,ANY,missing}(x, y, method = "natural")
+\S4method{splinefun}{ANY,advector,ANY,missing}(x, y, method = c("fmm", "periodic", "natural"))
 }
 \arguments{
 \item{z}{Matrix to be interpolated}
@@ -41,7 +41,7 @@ Some interpolation methods are available to be used as part of 'RTMB' objective 
 A typical use case is when a high-resolution map needs to be accessed along a random effect trajectory.
 Both 1D and 2D cases accept an 'interpolation radius' parameter (default R=2) controlling the degree of smoothness. Note, that only the value R=1 will match the data exactly, while higher radius trades accuracy for smoothness. Note also that these smoothers do not attempt to extrapolate: The returned value will be \code{NaN} outside the valid range (\code{xlim} / \code{ylim}).
 
-\code{splinefun} mimics the corresponding \code{stats} function. The AD implementation (in contrast to \code{interpol1Dfun}) works for parameter dependent y-coordinates.
+\code{splinefun} imitates the corresponding \code{stats} function. The AD implementation (in contrast to \code{interpol1Dfun}) works for parameter dependent y-coordinates.
 }
 \section{Functions}{
 \itemize{
@@ -69,7 +69,7 @@ f <- interpol2Dfun(volcano, xlim=c(0,1), ylim=c(0,1))
 F <- MakeTape(function(x) f(x[1],x[2]), c(.5,.5))
 ## ======= splinefun
 T <- MakeTape(function(x){
-   S <- splinefun(1:10, sin(x))
+   S <- splinefun(sin(x))
    S(4:6)
 }, 1:10)
 }
