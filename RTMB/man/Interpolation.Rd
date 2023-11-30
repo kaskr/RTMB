@@ -5,6 +5,7 @@
 \alias{interpol1Dfun}
 \alias{interpol2Dfun}
 \alias{splinefun,ANY,advector,ANY,missing-method}
+\alias{splinefun,advector,missing,ANY,missing-method}
 \title{Interpolation}
 \usage{
 interpol1Dfun(z, xlim = c(1, length(z)), ...)
@@ -12,6 +13,8 @@ interpol1Dfun(z, xlim = c(1, length(z)), ...)
 interpol2Dfun(z, xlim = c(1, nrow(z)), ylim = c(1, ncol(z)), ...)
 
 \S4method{splinefun}{ANY,advector,ANY,missing}(x, y, method = c("fmm", "periodic", "natural"))
+
+\S4method{splinefun}{advector,missing,ANY,missing}(x, method = c("fmm", "periodic", "natural"))
 }
 \arguments{
 \item{z}{Matrix to be interpolated}
@@ -50,6 +53,8 @@ Both 1D and 2D cases accept an 'interpolation radius' parameter (default R=2) co
 \item \code{interpol2Dfun()}: Construct a kernel smoothed representation of a matrix.
 
 \item \code{splinefun(x = ANY, y = advector, method = ANY, ties = missing)}: Construct a spline function.
+
+\item \code{splinefun(x = advector, y = missing, method = ANY, ties = missing)}: Construct a spline function.
 
 }}
 \examples{

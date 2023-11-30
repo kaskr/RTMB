@@ -87,6 +87,7 @@ setMethod("splinefun", signature(y="advector",
                   splineptr_eval(ptr, x)
               }
           })
+##' @describeIn Interpolation Construct a spline function.
 setMethod("splinefun", signature(x="advector",
                                  y="missing",
                                  ties="missing"),
