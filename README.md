@@ -41,10 +41,16 @@ install.packages('RTMBp', repos = c('https://kaskr.r-universe.dev', 'https://clo
 
 ### Source
 
-NOTE: Requires at least `TMB-1.9.5`.
+NOTE: Requires at least `TMB-1.9.7`.
 
 ```r
 remotes::install_github("https://github.com/kaskr/RTMB", subdir="RTMB")
+```
+
+## Test the package
+
+```r
+tinytest::test_package("RTMB")
 ```
 
 ## Known issues
