@@ -20,6 +20,9 @@ rcpp:
 	sed -i '/include.*Rcpp/ s/$$/\n#include "RTMB.h"/' RTMB/src/RcppExports.cpp
 	sed -i '/R_useDynamicSymbols/ s/$$/\n    TMB_CCALLABLES("RTMB");/' RTMB/src/RcppExports.cpp
 
+test:
+	R -s -e "tinytest::test_package('RTMB')"
+
 test-all: linreg spatial mvrw spde sdv_multi test-sparse
 
 test-sparse:
