@@ -171,7 +171,7 @@ attachADoverloads <- function() {
 }
 detachADoverloads <- function(enable=TRUE, ...) {
     attached <- ( "AD-overloads" %in% search() )
-    if (attached)
+    if (attached && !ad_context())
         base::detach("AD-overloads")
     NULL
 }

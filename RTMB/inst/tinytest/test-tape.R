@@ -33,3 +33,16 @@ f2 <- MakeTape(function(p){
     sum(nll[!is.na(obs)])
 }, 0)
 expect_identical(f1(1.234), f2(1.234), info="NA propagation on the tape")
+
+################################################################################
+## (GH issue 17)
+################################################################################
+
+expect_silent(
+MakeTape(function(x) {
+    y <- numeric(3)
+    f <- MakeTape(sin, 1:10)
+    y[1] <- x[1] ## Error here is side-effect of previous line
+    y
+}, 1:10)
+)
