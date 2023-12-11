@@ -8,3 +8,5 @@
 #endif
 #include <TMB.hpp>
 #endif
+
+void rtmb_set_shared_pointers();
