@@ -1,0 +1,10 @@
+Package: rtmbTest2
+Type: Package
+Title: Test that a Package can extend RTMB at the C-level
+Version: 1.0
+Date: 2023-12-11
+Author: Kasper Kristensen
+Maintainer: kaskr <kaskr@dtu.dk>
+Description: Test that a package, LinkingTo RTMB, can still pass R CMD check.
+License: GPL (>= 2)
+LinkingTo: RTMB, TMB, Rcpp, RcppEigen
