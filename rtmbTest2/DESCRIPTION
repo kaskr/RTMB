@@ -7,4 +7,4 @@ Author: Kasper Kristensen
 Maintainer: kaskr <kaskr@dtu.dk>
 Description: Test that a package, LinkingTo RTMB, can still pass R CMD check.
 License: GPL (>= 2)
-LinkingTo: RTMB, TMB, Rcpp, RcppEigen
+LinkingTo: Rcpp, RcppEigen, RTMB, TMB
