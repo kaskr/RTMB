@@ -31,6 +31,7 @@ Type logspace_gamma(Type x) {
   return logspace_gamma(args)[0];
 }
 
+/* Based on examples in RTMB/src/distributions.cpp */
 #define VECTORIZE_UNARY(FUN)                    \
 size_t n = x.size();                            \
 const ad* X = adptr(x);                         \
