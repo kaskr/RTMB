@@ -26,6 +26,7 @@ Type logspace_gamma(Type x) {
 
 /* Based on examples in RTMB/src/distributions.cpp */
 #define VECTORIZE_UNARY(FUN)                    \
+CHECK_INPUT(x);                                 \
 size_t n = x.size();                            \
 const ad* X = adptr(x);                         \
 Rcpp::ComplexVector ans(n);                     \
