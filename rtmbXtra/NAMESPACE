@@ -1,2 +1,2 @@
-useDynLib(rtmbTest2, .registration=TRUE)
+useDynLib(rtmbXtra, .registration=TRUE)
 import("RTMB") ## All RTMB functions and classes
