@@ -5,3 +5,15 @@ SparseSquare <- function(x) {
     .Call(`_rtmbXtra_SparseSquare`, x)
 }
 
+logspace_gamma <- function(x) {
+    .Call(`_rtmbXtra_logspace_gamma`, x)
+}
+
+logit_invcloglog <- function(x) {
+    .Call(`_rtmbXtra_logit_invcloglog`, x)
+}
+
+logit_pnorm <- function(x) {
+    .Call(`_rtmbXtra_logit_pnorm`, x)
+}
+

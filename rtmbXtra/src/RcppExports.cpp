@@ -22,9 +22,45 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// logspace_gamma
+Rcpp::ComplexVector logspace_gamma(Rcpp::ComplexVector x);
+RcppExport SEXP _rtmbXtra_logspace_gamma(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(logspace_gamma(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// logit_invcloglog
+Rcpp::ComplexVector logit_invcloglog(Rcpp::ComplexVector x);
+RcppExport SEXP _rtmbXtra_logit_invcloglog(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(logit_invcloglog(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// logit_pnorm
+Rcpp::ComplexVector logit_pnorm(Rcpp::ComplexVector x);
+RcppExport SEXP _rtmbXtra_logit_pnorm(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(logit_pnorm(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rtmbXtra_SparseSquare", (DL_FUNC) &_rtmbXtra_SparseSquare, 1},
+    {"_rtmbXtra_logspace_gamma", (DL_FUNC) &_rtmbXtra_logspace_gamma, 1},
+    {"_rtmbXtra_logit_invcloglog", (DL_FUNC) &_rtmbXtra_logit_invcloglog, 1},
+    {"_rtmbXtra_logit_pnorm", (DL_FUNC) &_rtmbXtra_logit_pnorm, 1},
     {NULL, NULL, 0}
 };
 
