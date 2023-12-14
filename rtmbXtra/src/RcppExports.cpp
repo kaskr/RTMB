@@ -11,17 +11,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// SparseSquare
-SEXP SparseSquare(SEXP x);
-RcppExport SEXP _rtmbXtra_SparseSquare(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(SparseSquare(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // logspace_gamma
 Rcpp::ComplexVector logspace_gamma(Rcpp::ComplexVector x);
 RcppExport SEXP _rtmbXtra_logspace_gamma(SEXP xSEXP) {
@@ -57,7 +46,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rtmbXtra_SparseSquare", (DL_FUNC) &_rtmbXtra_SparseSquare, 1},
     {"_rtmbXtra_logspace_gamma", (DL_FUNC) &_rtmbXtra_logspace_gamma, 1},
     {"_rtmbXtra_logit_invcloglog", (DL_FUNC) &_rtmbXtra_logit_invcloglog, 1},
     {"_rtmbXtra_logit_pnorm", (DL_FUNC) &_rtmbXtra_logit_pnorm, 1},
