@@ -20,6 +20,15 @@ rcpp:
 	sed -i '/include.*Rcpp/ s/$$/\n#include "RTMB.h"/' RTMB/src/RcppExports.cpp
 	sed -i '/R_useDynamicSymbols/ s/$$/\n    TMB_CCALLABLES("RTMB");/' RTMB/src/RcppExports.cpp
 
+rtmb-stubs:
+	cat RTMB/src/TMB.cpp > RTMB/inst/include/RTMB_stubs.cpp
+	cat RTMB/src/RTMB.cpp >> RTMB/inst/include/RTMB_stubs.cpp
+	echo '#include "rtmb_set_shared_pointers.cpp"' >> RTMB/inst/include/RTMB_stubs.cpp
+	echo '#define TMB_SKINNY' > RTMB/inst/include/TMB.h
+	cat RTMB/src/TMB.h >> RTMB/inst/include/TMB.h
+	cp RTMB/src/config.h RTMB/inst/include
+	cp RTMB/src/RTMB.h RTMB/inst/include
+
 test:
 	R -s -e "tinytest::test_package('RTMB')"
 
