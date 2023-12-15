@@ -2,6 +2,7 @@
 // #include <Rcpp.h>
 // #include "TMB.h"
 #include "RTMB.h"
+extern tape_config_t tape_config;
 
 // [[Rcpp::export]]
 Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
