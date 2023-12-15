@@ -1,3 +1,7 @@
+/* ========================================================================== */
+/* RTMB interface (R <-> C++) */
+/* ========================================================================== */
+
 #include <Rcpp.h>
 #include "TMB.h"
 
@@ -53,4 +57,3 @@ struct tape_config_t {
   bool compare_allow   ();
   bool mvnorm_atomic   ();
 };
-extern tape_config_t tape_config;
