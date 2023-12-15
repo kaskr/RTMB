@@ -1,5 +1,5 @@
 // [[Rcpp::depends(TMB)]]
-#include "RTMB.h"
+#include <RTMB.h>
 
 namespace adaptive {
 template<class T>
