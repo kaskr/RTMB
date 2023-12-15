@@ -84,3 +84,8 @@ parallel-version:
 %.html: %.rmd
 	cd RTMB/vignettes; echo "rmarkdown::render(basename(\"$<\"))" | R --slave
 vignettes-build: RTMB/vignettes/RTMB-introduction.html RTMB/vignettes/RTMB-advanced.html
+
+rcpp-rtmbXtra:
+	echo 'Rcpp::compileAttributes("rtmbXtra", verbose=TRUE)' | R --slave
+	sed -i '/RcppExport void R_init/ s/^/void rtmb_set_shared_pointers();\n/' rtmbXtra/src/RcppExports.cpp
+	sed -i '/R_useDynamicSymbols/ s/$$/\n    rtmb_set_shared_pointers();/' rtmbXtra/src/RcppExports.cpp

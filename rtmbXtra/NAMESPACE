@@ -1,0 +1,5 @@
+useDynLib(rtmbXtra, .registration=TRUE)
+import("RTMB") ## All RTMB functions and classes
+export("logit_pnorm")
+export("logit_invcloglog")
+export("logspace_gamma")

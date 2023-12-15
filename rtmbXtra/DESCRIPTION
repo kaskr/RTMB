@@ -1,0 +1,11 @@
+Package: rtmbXtra
+Type: Package
+Title: Extra special functions to be used with 'RTMB'
+Version: 1.0
+Date: 2023-12-11
+Author: Kasper Kristensen
+Maintainer: kaskr <kaskr@dtu.dk>
+Description: It may be necessary for packages to use more 'TMB' features than what 'RTMB' provides via its R functions. This package demonstrates how to link to 'TMB' in order to compile new atomic functions, and make them available from 'R'.
+License: GPL (>= 2)
+LinkingTo: Rcpp, RcppEigen, RTMB, TMB
+Imports: RTMB
