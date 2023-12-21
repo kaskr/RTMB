@@ -11,6 +11,27 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// valid
+bool valid(Rcpp::ComplexVector x);
+RcppExport SEXP _RTMB_valid(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(valid(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ad_context
+bool ad_context();
+RcppExport SEXP _RTMB_ad_context() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(ad_context());
+    return rcpp_result_gen;
+END_RCPP
+}
 // SpJacFun
 Rcpp::S4 SpJacFun(Rcpp::XPtr<TMBad::ADFun<> > adf);
 RcppExport SEXP _RTMB_SpJacFun(SEXP adfSEXP) {
@@ -144,27 +165,6 @@ BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     rcpp_result_gen = Rcpp::wrap(compare_allow());
-    return rcpp_result_gen;
-END_RCPP
-}
-// valid
-bool valid(Rcpp::ComplexVector x);
-RcppExport SEXP _RTMB_valid(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(valid(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ad_context
-bool ad_context();
-RcppExport SEXP _RTMB_ad_context() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(ad_context());
     return rcpp_result_gen;
 END_RCPP
 }
@@ -980,6 +980,8 @@ RcppExport SEXP _rcpp_module_boot_mod_adfun();
 
 static const R_CallMethodDef CallEntries[] = {
     TMB_CALLDEFS,
+    {"_RTMB_valid", (DL_FUNC) &_RTMB_valid, 1},
+    {"_RTMB_ad_context", (DL_FUNC) &_RTMB_ad_context, 0},
     {"_RTMB_SpJacFun", (DL_FUNC) &_RTMB_SpJacFun, 1},
     {"_RTMB_RangeProj", (DL_FUNC) &_RTMB_RangeProj, 2},
     {"_RTMB_find_op_by_name", (DL_FUNC) &_RTMB_find_op_by_name, 2},
@@ -992,8 +994,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_get_node", (DL_FUNC) &_RTMB_get_node, 2},
     {"_RTMB_set_tape_config", (DL_FUNC) &_RTMB_set_tape_config, 3},
     {"_RTMB_compare_allow", (DL_FUNC) &_RTMB_compare_allow, 0},
-    {"_RTMB_valid", (DL_FUNC) &_RTMB_valid, 1},
-    {"_RTMB_ad_context", (DL_FUNC) &_RTMB_ad_context, 0},
     {"_RTMB_advec", (DL_FUNC) &_RTMB_advec, 1},
     {"_RTMB_dependent", (DL_FUNC) &_RTMB_dependent, 1},
     {"_RTMB_independent", (DL_FUNC) &_RTMB_independent, 1},
