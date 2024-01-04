@@ -277,11 +277,16 @@ setMethod("apply", signature(X="advector"),
 ##' @describeIn ADapply As \link[base]{sapply}
 ##' @param simplify As \link[base]{sapply}
 ##' @param USE.NAMES As \link[base]{sapply}
-setMethod("sapply", signature(X="advector"),
+setMethod("sapply", signature(X="ANY"),
           function (X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE) {
-              ans <- callNextMethod()
-              if (is.complex(ans))
-                  class(ans) <- "advector"
+              ans <- base::sapply(X, FUN, ..., simplify = FALSE, USE.NAMES = TRUE)
+              ## Adapted from 'base::sapply':
+              if (!isFALSE(simplify)) {
+                  cl <- class(ans[[1L]])
+                  ans <- simplify2array(ans, higher = (simplify == "array"))
+                  if (identical(cl, "advector")) ## FIXME: Test all elements
+                      class(ans) <- cl
+              }
               ans
           })
 
