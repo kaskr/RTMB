@@ -3,12 +3,12 @@
 \name{ADapply}
 \alias{ADapply}
 \alias{apply,advector-method}
-\alias{sapply,advector-method}
+\alias{sapply,ANY-method}
 \title{AD apply functions}
 \usage{
 \S4method{apply}{advector}(X, MARGIN, FUN, ..., simplify = TRUE)
 
-\S4method{sapply}{advector}(X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)
+\S4method{sapply}{ANY}(X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)
 }
 \arguments{
 \item{X}{As \link[base]{apply}}
@@ -33,7 +33,7 @@ These \strong{base} apply methods have been modified to keep the AD class attrib
 \itemize{
 \item \code{apply(advector)}: As \link[base]{apply}
 
-\item \code{sapply(advector)}: As \link[base]{sapply}
+\item \code{sapply(ANY)}: As \link[base]{sapply}
 
 }}
 \examples{
