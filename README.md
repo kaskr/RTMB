@@ -53,6 +53,8 @@ remotes::install_github("https://github.com/kaskr/RTMB", subdir="RTMB")
 tinytest::test_package("RTMB")
 ```
 
+runs the [tests](./RTMB/inst/tinytest).
+
 ## Known issues
 
 - If you get a segfault while installing the package, please re-install `Rcpp` from source and try again (see https://github.com/kaskr/RTMB/issues/5).
