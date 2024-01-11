@@ -65,6 +65,7 @@ parallel-version:
 	sed -i 's/RTMB::/RTMBp::/g' RTMBp/R/*.R
 	sed -i 's/"RTMB"/"RTMBp"/g' RTMBp/R/*.R
 	sed -i 's/library(RTMB)/library(RTMBp);TMB::openmp(1,DLL="RTMBp")/g' RTMBp/vignettes/*.rmd
+	sed -i 's/RTMB/RTMBp/g' RTMBp/inst/tinytest/*.R
 	sed -i 's/RTMB/RTMBp/g' RTMBp/DESCRIPTION
 	sed -i 's/RTMB/RTMBp/g' RTMBp/NAMESPACE
 	sed -i 's/"RTMB"/"RTMBp"/g' RTMBp/src/RcppExports.cpp
