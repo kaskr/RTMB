@@ -440,3 +440,46 @@ sdreport(obj)
 ```
 
 We note that this approach only works for non-zero observations. However, it should be easy to modify `nldens` to handle zero observations as a special case.
+
+## Complex numbers and AD
+
+RTMB tapes cannot be directly evaluated or constructed using complex numbers. However, it is possible to use intermediate calculations with complex numbers. The convertion function `as.complex` is used for that. The supported complex number operations are documented under `?ADcomplex`.
+
+An example could be an R function using the complex exponential. For it to be applicable with RTMB it must take normal real input and output:
+
+```{r}
+f <- function(x) {
+    ## Get real/imag part
+    xreal <- x[1]
+    ximag <- x[2]
+    ## Construct AD complex number
+    z <- as.complex(xreal) + 1i * as.complex(ximag)
+    ## Return real numbers
+    Mod(exp(z))
+}
+```
+
+We can tape it
+
+```{r}
+F <- MakeTape(f, numeric(2))
+F
+```
+
+and check that it gives the correct result:
+
+```{r}
+## Using R complex arithmetic
+f(1:2)
+```
+
+```{r}
+## Using the tape representation
+F(1:2)
+```
+
+We can verify that the complex operations have been translated into real operations:
+
+```{r}
+F$print()
+```
