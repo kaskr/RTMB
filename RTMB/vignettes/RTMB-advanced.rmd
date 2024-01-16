@@ -226,10 +226,47 @@ showGraph(F)
 
 In contrast to `MakeTape`, we note that `MakeADFun` automatically calls `F$simplify("optimize")` for all tapes.
 
-## Tape transformations:
-- Tape eliminate vs optimize
-- jacfun(), Laplace(), SPA option
-- atomic()
+## Sparse Jacobians
+
+We've seen how the `jacobian()` method evaluates the jacobian of a tape.
+An alternative `jacfun()` exists to return the jacobian as a new tape.
+
+For example, consider a tape of the `diff` operator:
+
+```{r}
+D <- MakeTape(diff, numeric(5))
+D
+```
+
+The jacobian tape is obtained by
+
+```{r}
+J <- D$jacfun()
+J
+```
+
+And can be evaluated as
+
+
+```{r}
+J(1:5)
+```
+
+To get the sparse jacobian do instead:
+
+```{r}
+Js <- D$jacfun(sparse=TRUE)
+Js
+```
+
+Compared to `J`, the tape `Js` only calculates the non-zero elements
+stored as a sparse matrix.
+
+```{r}
+Js(1:5)
+```
+
+Note that both `J` and `Js` can be applied to construct new tapes.
 
 ## Tape configuration
 - Understand plain vs atomic matrix multiply
