@@ -65,8 +65,26 @@ Evaluation:
 
 Transformation:
 \itemize{
-\item Jacobian function transformation 'F$jacfun()'
-\item Laplace approximation transformation 'F$laplace()'. Also allows Saddle Point Approximation (SPA).
+\item Get new tape representing the Jacobian using \code{F$jacfun()}.
+\item Get new tape representing the sparse Jacobian using \code{F$jacfun(sparse=TRUE)}.
+\item Get new tape representing the Laplace approximation using \code{F$laplace(indices)}.
+\item Get new tape representing the Saddle Point approximation using \code{F$laplace(indices,SPA=TRUE)}.
+\item Get new tape representing the optimum (minimum) wrt \code{indices} by \code{F$newton(indices)}.
+\item Get a 'shared pointer' representation of a tape using \code{F$atomic()}.
+\item Get tape of a single node by \code{F$node(index)} (mainly useful for derivative debugging).
+}
+
+Modification:
+\itemize{
+\item Simplify internal representation of a tape using \code{F$simplify()}.
+}
+
+Extract tape information:
+\itemize{
+\item Get internal parameter vector by \code{F$par()}.
+\item Get computational graph by \code{F$graph()}.
+\item Print the tape by \code{F$print()}.
+\item Get internal arrays as a \code{data.frame} by \code{F$data.frame()}.
 }
 }
 \section{Methods (by generic)}{

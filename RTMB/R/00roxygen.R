@@ -131,8 +131,22 @@ NULL
 ##' - Jacobian calculations using 'F$jacobian(x)'.
 ##'
 ##' Transformation:
-##' - Jacobian function transformation 'F$jacfun()'
-##' - Laplace approximation transformation 'F$laplace()'. Also allows Saddle Point Approximation (SPA).
+##' - Get new tape representing the Jacobian using `F$jacfun()`.
+##' - Get new tape representing the sparse Jacobian using `F$jacfun(sparse=TRUE)`.
+##' - Get new tape representing the Laplace approximation using `F$laplace(indices)`.
+##' - Get new tape representing the Saddle Point approximation using `F$laplace(indices,SPA=TRUE)`.
+##' - Get new tape representing the optimum (minimum) wrt `indices` by `F$newton(indices)`.
+##' - Get a 'shared pointer' representation of a tape using `F$atomic()`.
+##' - Get tape of a single node by `F$node(index)` (mainly useful for derivative debugging).
+##'
+##' Modification:
+##' - Simplify internal representation of a tape using `F$simplify()`.
+##'
+##' Extract tape information:
+##' - Get internal parameter vector by `F$par()`.
+##' - Get computational graph by `F$graph()`.
+##' - Print the tape by `F$print()`.
+##' - Get internal arrays as a `data.frame` by `F$data.frame()`.
 ##'
 ##' @param f R function
 ##' @param x numeric vector
