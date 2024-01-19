@@ -413,7 +413,7 @@ To approximate the (negative log) density we
 
 1. Build a tape of the *saddle point adjusted* inner problem
 2. Create new tape by integrating all parameters out using `laplace` with `SPA=TRUE`.
-3. Evaluate the new tape for the remaining (empty) parameter vector. The construct `rep(muX,0)` creates such an empty vector *of the same class as* `muX`.
+3. Evaluate the new tape for the remaining (empty) parameter vector.
 
 ```{r}
 nldens <- function(obs, muX, muN) {
@@ -426,7 +426,7 @@ nldens <- function(obs, muX, muN) {
     ## 2
     L <- F$laplace(1:length(obs), SPA=TRUE)
     ## 3
-    L(rep(muX,0))
+    L(numeric(0))
 }
 ```
 
