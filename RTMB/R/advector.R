@@ -300,10 +300,15 @@ MakeTape <- function(f, x) {
         function(x) {
             if (is.list(x))
                 x <- do.call("c", x)
-            if (inherits(x, "advector") && ad_context())
+            if (ad_context()) {
+                ## Note: Tape might contain references to an outer
+                ## context (and we have no way to know), so we must
+                ## choose AD evaluation regardless of class(x).
+                x <- advector(x)
                 output(evalAD(x))
-            else
+            } else {
                 output(eval(x))
+            }
         },
         methods = list(
             jacobian = mod$jacobian,
