@@ -179,15 +179,14 @@ dseparable <- function(...) {
             xmat <- x
             dim(xmat) <- c(nrow(x), length(x) / nrow(x))
             zero <- rep(0, nrow(x))
-            J <- MakeTape(f[[i]], zero)$jacfun()
+            T <- MakeTape(f[[i]], zero)
+            Q <- -T$jacfun()$jacfun(sparse=TRUE)(zero)
             ans <- ans + ( f[[i]](zero) + d[i] * log(sqrt(2 * pi)) ) * prod(d[-i])
-            ## FIXME: Check J linear and J(0)=0
             if (dosim) {
-                Q <- -J$jacobian(zero)
                 Lt <- chol(Q)
                 x[] <- solve(Lt, xmat)
             } else {
-                x[] <- -apply(xmat, 2, J)
+                x[] <- Q %*% xmat
             }
             x <- aperm(x, rot)
         }
