@@ -98,7 +98,12 @@ setMethod("Ops",
                   stop("non-conformable arguments")
               SparseArith2(e1, e2, .Generic)
           })
-
+setMethod("Ops",
+          signature("adsparse", "missing"),
+          function(e1, e2) {
+              e1@x[] <- callGeneric(e1@x)
+              e1
+          })
 ##' @describeIn ADmatrix AD matrix multiply
 setMethod("%*%",
           signature("anysparse", "ad"),
