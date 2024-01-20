@@ -46,3 +46,13 @@ MakeTape(function(x) {
     y
 }, 1:10)
 )
+
+################################################################################
+## (GH issue 18)
+################################################################################
+
+F <- MakeTape(function(x) {
+    G <- MakeTape(function(y) y*x, numeric(5))
+    G(1:5)
+}, numeric(5))
+expect_equal(F(1:5), (1:5)^2, info="https://github.com/kaskr/RTMB/issues/18")
