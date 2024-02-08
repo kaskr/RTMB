@@ -196,6 +196,11 @@ sum.advector <- function(x, ..., na.rm = FALSE) {
     }
     Reduce1(x, "+") + sum(..., na.rm = na.rm)
 }
+##' @describeIn ADvector Equivalent of \link[base]{mean} except no arguments beyond `x` are supported.
+mean.advector <- function(x, ...) {
+    if (length(list(...))) stop("AD mean only works for single argument")
+    sum(x) / length(x)
+}
 ##' @describeIn ADvector Equivalent of \link[base]{prod} except \code{na.rm} not allowed.
 prod.advector <- function(x, ..., na.rm) {
   if (na.rm) stop("'na.rm=TRUE' not implemented for AD prod")
