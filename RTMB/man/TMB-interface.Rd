@@ -17,6 +17,7 @@ MakeADFun(
   random = NULL,
   profile = NULL,
   integrate = NULL,
+  intern = FALSE,
   map = list(),
   ADreport = FALSE,
   silent = FALSE,
@@ -46,6 +47,8 @@ checkConsistency(obj, fast = TRUE, ...)
 \item{profile}{As \link[TMB]{MakeADFun}.}
 
 \item{integrate}{As \link[TMB]{MakeADFun}.}
+
+\item{intern}{As \link[TMB]{MakeADFun}.}
 
 \item{map}{As \link[TMB]{MakeADFun}.}
 

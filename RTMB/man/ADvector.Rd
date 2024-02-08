@@ -14,6 +14,7 @@
 \alias{[[.advector}
 \alias{rep.advector}
 \alias{sum.advector}
+\alias{mean.advector}
 \alias{prod.advector}
 \alias{is.numeric.advector}
 \alias{Complex.advector}
@@ -48,6 +49,8 @@ advector(x)
 \method{rep}{advector}(x, ...)
 
 \method{sum}{advector}(x, ..., na.rm = FALSE)
+
+\method{mean}{advector}(x, ...)
 
 \method{prod}{advector}(x, ..., na.rm)
 
@@ -142,6 +145,8 @@ re-used for AD vectors.
 \item \code{rep(advector)}: Equivalent of \link[base]{rep}. Makes \code{outer(x,x,...)} work.
 
 \item \code{sum(advector)}: Equivalent of \link[base]{sum}. \code{na.rm=TRUE} is allowed, but note that this feature assumes correct propagation of NAs via C-level arithmetic.
+
+\item \code{mean(advector)}: Equivalent of \link[base]{mean} except no arguments beyond \code{x} are supported.
 
 \item \code{prod(advector)}: Equivalent of \link[base]{prod} except \code{na.rm} not allowed.
 
