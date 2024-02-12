@@ -155,6 +155,7 @@ std::vector<TMBad::Index> zero_based_unique_index (const std::vector<TMBad::Inde
   return y;
 }
 void laplace_transform(TMBad::ADFun<>* adf, std::vector<TMBad::Index> random, SEXP config) {
+  if (random.size() == 0) return;
   random = zero_based_unique_index(random, adf->Domain());
   newton::newton_config cfg(config);
   *adf = newton::Laplace_(*adf, random, cfg);
@@ -162,6 +163,7 @@ void laplace_transform(TMBad::ADFun<>* adf, std::vector<TMBad::Index> random, SE
 }
 void newton_transform(TMBad::ADFun<>* adf, std::vector<TMBad::Index> random, SEXP config) {
   // TMB FIXME: This code is almost copy-paste from 'newton::Laplace_'. Add it 'Newton_' there.
+  if (random.size() == 0) return;
   random = zero_based_unique_index(random, adf->Domain());;
   newton::newton_config cfg(config);
   newton::slice<> S(*adf, random);
