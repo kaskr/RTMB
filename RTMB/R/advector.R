@@ -209,6 +209,12 @@ prod.advector <- function(x, ..., na.rm) {
 ## Make cov2cor() work. FIXME: Any unwanted side-effects with this?
 ##' @describeIn ADvector Makes \code{cov2cor()} work. FIXME: Any unwanted side-effects with this?
 is.numeric.advector <- function(x) TRUE
+##' @describeIn ADvector Makes \code{as.numeric()} work.
+as.double.advector <- function(x, ...) {
+    ## Clear all attributes except class and preserve S4 bit
+    attributes(x) <- attributes(x)["class"]
+    x
+}
 ##' @describeIn ADvector \link{Complex} operations are not allowed and will throw an error.
 ##' @param z Complex (not allowed)
 Complex.advector <- function(z)
