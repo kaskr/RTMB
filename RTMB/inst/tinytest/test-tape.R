@@ -56,3 +56,12 @@ F <- MakeTape(function(x) {
     G(1:5)
 }, numeric(5))
 expect_equal(F(1:5), (1:5)^2, info="https://github.com/kaskr/RTMB/issues/18")
+
+################################################################################
+## (GH issue 20)
+################################################################################
+
+F <- MakeTape(function(x) {
+    as.numeric(x)
+}, numeric(3))
+expect_equal(F(1:3), 1:3, info="https://github.com/kaskr/RTMB/issues/20")
