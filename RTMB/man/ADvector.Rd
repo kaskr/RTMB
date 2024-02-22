@@ -17,6 +17,7 @@
 \alias{mean.advector}
 \alias{prod.advector}
 \alias{is.numeric.advector}
+\alias{as.double.advector}
 \alias{Complex.advector}
 \alias{Summary.advector}
 \alias{diff.advector}
@@ -55,6 +56,8 @@ advector(x)
 \method{prod}{advector}(x, ..., na.rm)
 
 \method{is.numeric}{advector}(x)
+
+\method{as.double}{advector}(x, ...)
 
 \method{Complex}{advector}(z)
 
@@ -151,6 +154,8 @@ re-used for AD vectors.
 \item \code{prod(advector)}: Equivalent of \link[base]{prod} except \code{na.rm} not allowed.
 
 \item \code{is.numeric(advector)}: Makes \code{cov2cor()} work. FIXME: Any unwanted side-effects with this?
+
+\item \code{as.double(advector)}: Makes \code{as.numeric()} work.
 
 \item \code{Complex(advector)}: \link{Complex} operations are not allowed and will throw an error.
 
