@@ -233,6 +233,23 @@ setMethod("dnorm", "simref", function(x, mean, sd, log) {
     dGenericSim(.Generic, x=x, mean=mean, sd=sd, log=log)
 })
 
+##' @describeIn Distributions AD implementation of \link[stats]{dlnorm}.
+setMethod("dlnorm", "ANY", function (x, meanlog, sdlog, log) {
+    y <- log(x)
+    ans <- dnorm(y, meanlog, sdlog, log=TRUE) - y
+    ans <- ans[] ## if 'simref' do complete simulation
+    if (log) ans else exp(ans)
+})
+##' @describeIn Distributions OSA implementation.
+setMethod("dlnorm", "osa", function (x, meanlog, sdlog, log) {
+    dGenericOSA(.Generic, x=x, meanlog=meanlog, sdlog=sdlog, log=log)
+})
+##' @describeIn Distributions Default method.
+setMethod("dlnorm", signature("num", "num.", "num.", "logical."),
+          function(x, meanlog, sdlog, log) {
+              stats::dlnorm(x, meanlog, sdlog, log)
+          })
+
 ##' @describeIn Distributions Minimal AD implementation of \link[stats]{plogis}
 setMethod("plogis", c("advector", "missing", "missing", "missing", "missing"),
           function(q) 1 / (1 + exp(-q) ) )
