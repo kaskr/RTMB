@@ -273,6 +273,10 @@ SparseArith2 <- function(x, y, op) {
     .Call(`_RTMB_SparseArith2`, x, y, op)
 }
 
+Dense2Sparse <- function(x) {
+    .Call(`_RTMB_Dense2Sparse`, x)
+}
+
 math_expm <- function(x) {
     .Call(`_RTMB_math_expm`, x)
 }

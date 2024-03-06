@@ -859,6 +859,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Dense2Sparse
+SEXP Dense2Sparse(Rcpp::ComplexMatrix x);
+RcppExport SEXP _RTMB_Dense2Sparse(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexMatrix >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(Dense2Sparse(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // math_expm
 Rcpp::ComplexMatrix math_expm(SEXP x);
 RcppExport SEXP _RTMB_math_expm(SEXP xSEXP) {
@@ -1048,6 +1059,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_dmvnorm0", (DL_FUNC) &_RTMB_dmvnorm0, 4},
     {"_RTMB_dgmrf0", (DL_FUNC) &_RTMB_dgmrf0, 3},
     {"_RTMB_SparseArith2", (DL_FUNC) &_RTMB_SparseArith2, 3},
+    {"_RTMB_Dense2Sparse", (DL_FUNC) &_RTMB_Dense2Sparse, 1},
     {"_RTMB_math_expm", (DL_FUNC) &_RTMB_math_expm, 1},
     {"_RTMB_math_sqrtm", (DL_FUNC) &_RTMB_math_sqrtm, 1},
     {"_RTMB_math_absm", (DL_FUNC) &_RTMB_math_absm, 1},
