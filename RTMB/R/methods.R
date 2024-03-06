@@ -15,6 +15,9 @@ setAs("sparseMatrix", "adsparse",
           new("adsparse", x=advector(x@x), i=x@i, p=x@p, Dim=x@Dim)
       })
 
+setAs("advector", "sparseMatrix",
+      function(from) Dense2Sparse(as.matrix(from)) )
+
 ################################################################################
 ## Utilities to reuse methods from the Matrix package
 ################################################################################
