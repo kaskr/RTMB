@@ -269,6 +269,13 @@ setMethod("matrix", signature(data="advector"),
               ans <- callNextMethod()
               asS4(structure(ans, class="advector"))
           })
+setMethod("matrix", signature(data="num."),
+          function(data, nrow, ncol, byrow, dimnames) {
+              ans <- callNextMethod()
+              if (ad_context())
+                  ans <- advector(ans)
+              ans
+          })
 ##' @describeIn ADapply As \link[base]{apply}
 ##' @param X As \link[base]{apply}
 ##' @param MARGIN As \link[base]{apply}
