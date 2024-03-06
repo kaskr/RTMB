@@ -310,6 +310,12 @@ SEXP SparseArith2(SEXP x,
   return z;
 }
 
+// [[Rcpp::export]]
+SEXP Dense2Sparse(Rcpp::ComplexMatrix x) {
+  matrix<ad> X = MatrixInput(x);
+  Eigen::SparseMatrix<ad> Y = asSparseMatrix(X);
+  return SparseOutput(Y);
+}
 
 #define MATH_MATRIX_FUNCTION(MFUN)                      \
 Rcpp::ComplexMatrix math_ ## MFUN (SEXP x) {            \
