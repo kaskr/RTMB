@@ -55,7 +55,11 @@ Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector &x,
   else if (!op.compare("<"))  COMPARISON(CondExpLt)
   else Rf_error("'%s' not implemented", op.c_str());
 #undef CALL
-  return as_advector(z);
+  // Object determining attrib of result.
+  // FIXME: Not quite accurate - check what R src does
+  SEXP attrib_from = ( ny > nx || ny == 0 ? y : x );
+  SHALLOW_DUPLICATE_ATTRIB(z, attrib_from);
+  return z;
 }
 
 /* Math:

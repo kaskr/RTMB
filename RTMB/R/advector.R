@@ -54,20 +54,9 @@ magic <- function(x, condition = ad_context()) {
             e2 <- e1; e1 <- 0
         }
     }
-    ans <- Arith2(advector(e1),
-                  advector(e2),
-                  .Generic)
-    ## Object determining attrib of result
-    e <- if (length(e2) > length(e1) || length(e2) == 0)
-             e2
-         else
-             e1
-    a <- attributes(e)
-    if (!is.null(a)) {
-        a$class <- "advector"
-        attributes(ans) <- a
-    }
-    ans
+    Arith2(advector(e1),
+           advector(e2),
+           .Generic)
 }
 ##' @describeIn ADvector Unary operations
 "Math.advector" <- function(x, ...) {
