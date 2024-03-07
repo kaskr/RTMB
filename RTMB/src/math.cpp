@@ -132,7 +132,8 @@ Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
   else Rf_error("'%s' not implemented", op.c_str());
 #undef CALL
 #undef CUMC
-  return as_advector(y);
+  SHALLOW_DUPLICATE_ATTRIB(y, x);
+  return y;
 }
 
 // [[Rcpp::export]]

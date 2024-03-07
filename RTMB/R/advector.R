@@ -60,8 +60,7 @@ magic <- function(x, condition = ad_context()) {
 }
 ##' @describeIn ADvector Unary operations
 "Math.advector" <- function(x, ...) {
-    x[] <- Math1(x, .Generic)
-    x
+    Math1(x, .Generic)
 }
 
 ##' @describeIn ADvector Makes \code{array(x)} work.
