@@ -9,6 +9,10 @@ ad_context <- function() {
     .Call(`_RTMB_ad_context`)
 }
 
+as_advector <- function(x) {
+    .Call(`_RTMB_as_advector`, x)
+}
+
 SpJacFun <- function(adf) {
     .Call(`_RTMB_SpJacFun`, adf)
 }
