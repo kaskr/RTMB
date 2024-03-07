@@ -65,8 +65,7 @@ magic <- function(x, condition = ad_context()) {
 
 ##' @describeIn ADvector Makes \code{array(x)} work.
 as.vector.advector <- function(x, mode = "any") {
-    ## FIXME: Rcpp export 'as_advector' and use it
-    asS4(structure(NextMethod(), class="advector"))
+    as_advector(NextMethod())
 }
 
 ##' @describeIn ADvector Convert to \link{ADcomplex}. Note that dimensions are dropped for consistency with base R.
@@ -82,16 +81,16 @@ as.complex.advector <- function(x, ...) {
 
 ##' @describeIn ADvector Equivalent of \link[base]{aperm}
 aperm.advector <- function(a, perm, ...) {
-    asS4(structure(NextMethod(), class="advector"))
+    as_advector(NextMethod())
 }
 ##' @describeIn ADvector Equivalent of \link[base]{c}. However note the limitation for mixed types: If `x` is an AD type, `c(x,1)` works while `c(1,x)` does not!
 c.advector <- function(...) {
     ans <- unlist(lapply(list(...), advector))
-    asS4(structure(ans, class = "advector"))
+    as_advector(ans)
 }
 ##' @describeIn ADvector Equivalent of \link[base]{[}
 "[.advector" <- function(x, ...) {
-    asS4(structure(NextMethod(), class="advector"))
+    as_advector(NextMethod())
 }
 
 ## Extra RTMB overloads
@@ -118,7 +117,7 @@ xtra <- local({
         args <- list(...)
         if (any(unlist(lapply(args, inherits, "advector")))) {
             args <- lapply(args, advector)
-            ans <- structure(unlist(args), class="advector")
+            ans <- as_advector(unlist(args))
             return(ans)
         }
         base::"c" (...)
@@ -171,11 +170,11 @@ detachADoverloads <- function(enable=TRUE, ...) {
 }
 ##' @describeIn ADvector Equivalent of \link[base]{[[}
 "[[.advector" <- function(x, ...) {
-    asS4(structure(NextMethod(), class="advector"))
+    as_advector(NextMethod())
 }
 ##' @describeIn ADvector Equivalent of \link[base]{rep}. Makes \code{outer(x,x,...)} work.
 rep.advector <- function (x, ...) {
-    structure(NextMethod(), class="advector")
+    as_advector(NextMethod())
 }
 ##' @describeIn ADvector Equivalent of \link[base]{sum}. \code{na.rm=TRUE} is allowed, but note that this feature assumes correct propagation of NAs via C-level arithmetic.
 sum.advector <- function(x, ..., na.rm = FALSE) {
