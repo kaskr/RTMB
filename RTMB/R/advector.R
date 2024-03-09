@@ -65,7 +65,9 @@ magic <- function(x, condition = ad_context()) {
 
 ##' @describeIn ADvector Makes \code{array(x)} work.
 as.vector.advector <- function(x, mode = "any") {
-    as_advector(NextMethod())
+    ans <- NextMethod()
+    if (is.list(ans)) lapply(ans, as_advector)
+    else as_advector(ans)
 }
 
 ##' @describeIn ADvector Convert to \link{ADcomplex}. Note that dimensions are dropped for consistency with base R.
