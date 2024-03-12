@@ -302,6 +302,8 @@ SEXP SparseArith2(SEXP x,
     Eigen::SparseMatrix<ad> X = SparseInput(x);
     ConstMapMatrix          Y = MatrixInput(y);
     if (!op.compare("%*%")) z = MatrixOutput(X * Y);
+    else if (!op.compare("+")) z = MatrixOutput(X + Y);
+    else if (!op.compare("-")) z = MatrixOutput(X - Y);
     else Rf_error("'%s' not implemented", op.c_str());
   }
   // Dense OP Sparse
@@ -309,6 +311,8 @@ SEXP SparseArith2(SEXP x,
     ConstMapMatrix          X = MatrixInput(x);
     Eigen::SparseMatrix<ad> Y = SparseInput(y);
     if (!op.compare("%*%")) z = MatrixOutput(X * Y);
+    else if (!op.compare("+")) z = MatrixOutput(X + Y);
+    else if (!op.compare("-")) z = MatrixOutput(X - Y);
     else Rf_error("'%s' not implemented", op.c_str());
   }
   else Rf_error("Wrong use of 'SparseArith2'");
