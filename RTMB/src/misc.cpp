@@ -54,14 +54,23 @@ namespace TMBad {
     'R_StackCheck()' to work reliably for all threads. Don't know if
     this is worth while though.
 */
+template <bool with_derivs = false>
 struct EvalOp : global::DynamicOperator< -1 , -1 > {
   static const bool have_input_size_output_size = true;
   static const bool add_forward_replay_copy = true;
-  std::shared_ptr<Rcpp::Function> Fptr;
+  std::shared_ptr<Rcpp::Function> Fptr; // forward
+  std::shared_ptr<Rcpp::Function> Rptr; // reverse
   size_t m, n;
   Index input_size()  const { return m; }
   Index output_size() const { return n; }
-  EvalOp (Rcpp::Function F, size_t m, size_t n) : Fptr(std::make_shared<Rcpp::Function>(F)), m(m), n(n) { }
+  EvalOp (Rcpp::Function F, size_t m, size_t n) :
+    Fptr(std::make_shared<Rcpp::Function>(F)),
+    m(m),
+    n(n) {
+    if (with_derivs) {
+      Rptr = std::make_shared<Rcpp::Function>(F.attr("reverse"));
+    }
+  }
   void forward(ForwardArgs<double> &args) {
 #ifdef _OPENMP
 #pragma omp critical
@@ -99,10 +108,54 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
   template <class Type> void forward(ForwardArgs<Type> &args) {
     TMBAD_ASSERT(false);
   }
-  template <class Type> void reverse(ReverseArgs<Type> &args) {
-    // Void derivs
+  void reverse(ReverseArgs<double> &args) {
+    if (with_derivs) {
+      Rcpp::NumericVector x(m);
+      Rcpp::NumericVector y(n);
+      Rcpp::NumericVector dy(n);
+      for (size_t l=0; l<m; l++) {
+        x[l] = args.x(l);
+      }
+      for (size_t l=0; l<n; l++) {
+        y[l] = args.y(l);
+        dy[l] = args.dy(l);
+      }
+      Rcpp::NumericVector wtJ = (*Rptr)(x,y,dy);
+      if ( (size_t) wtJ.size() != m)
+        Rcpp::stop("Wrong length of 'reverse(x,y,dy)' = t(dy) %*% jacobian(x)");
+      for (size_t l=0; l<m; l++) args.dx(l) += wtJ[l];
+    }
+    // otherwise void derivs
   }
-  const char* op_name() {return "EvalOp";}
+  void reverse(ReverseArgs<ad> &args) {
+    if (with_derivs) {
+      Rcpp::ComplexVector x(m); x = as_advector(x);
+      Rcpp::ComplexVector y(n); y = as_advector(y);
+      Rcpp::ComplexVector dy(n); dy = as_advector(dy);
+      for (size_t l=0; l<m; l++) {
+        x[l] = ad2cplx(args.x(l));
+      }
+      for (size_t l=0; l<n; l++) {
+        y[l] = ad2cplx(args.y(l));
+        dy[l] = ad2cplx(args.dy(l));
+      }
+      Rcpp::ComplexVector wtJ = (*Rptr)(x,y,dy);
+      CHECK_INPUT(wtJ); // Check result from R
+      if ( (size_t) wtJ.size() != m)
+        Rcpp::stop("Wrong length of 'reverse(x,y,dy)' = t(dy) %*% jacobian(x)");
+      for (size_t l=0; l<m; l++) args.dx(l) += cplx2ad(wtJ[l]);
+    }
+  }
+  template <class Type> void reverse(ReverseArgs<Type> &args) {
+    TMBAD_ASSERT(false);
+  }
+  const char* op_name() {
+    SEXP name = Fptr -> attr("name");
+    if (name != R_NilValue)
+      return CHAR(STRING_ELT(name, 0));
+    else
+      return "EvalOp";
+  }
   void print(TMBad::global::print_config cfg) {
     Rcout << cfg.prefix;
     Rcout << "F=" << *Fptr << " ";
@@ -124,7 +177,10 @@ Rcpp::ComplexVector TapedEval(Rcpp::Function F, Rcpp::ComplexVector i) {
   size_t n = LENGTH(y_test);
   // Add to tape
   std::vector<ad> x(pi, pi + m);
-  std::vector<ad> y = TMBad::global::Complete<TMBad::EvalOp>(F, m, n) (x);
+  bool with_derivs = F.hasAttribute("reverse");
+  std::vector<ad> y = (with_derivs ?
+                       TMBad::global::Complete<TMBad::EvalOp<true > >(F, m, n) (x) :
+                       TMBad::global::Complete<TMBad::EvalOp<false> >(F, m, n) (x) );
   // Pass to R
   Rcpp::ComplexVector ans(n);
   for (size_t j=0; j < n; j++) {
