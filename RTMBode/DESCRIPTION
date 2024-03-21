@@ -1,0 +1,12 @@
+Package: RTMBode
+Type: Package
+Title: Solving ODEs with 'deSolve' and 'RTMB'.
+Version: 1.0
+Date: 2024-03-21
+Author: Kasper Kristensen
+Maintainer: kaskr <kaskr@dtu.dk>
+Description: Solve ODEs using automatic derivatives from 'RTMB'.
+License: GPL (>= 2)
+LinkingTo: Rcpp, RcppEigen
+Imports: RTMB
+Enhances: deSolve
