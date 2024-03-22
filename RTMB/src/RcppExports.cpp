@@ -244,6 +244,28 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// ptr_getx
+Rcpp::XPtr<double> ptr_getx(Rcpp::XPtr<TMBad::ADFun<> > adf);
+RcppExport SEXP _RTMB_ptr_getx(SEXP adfSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    rcpp_result_gen = Rcpp::wrap(ptr_getx(adf));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ptr_gety
+Rcpp::XPtr<double> ptr_gety(Rcpp::XPtr<TMBad::ADFun<> > adf);
+RcppExport SEXP _RTMB_ptr_gety(SEXP adfSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    rcpp_result_gen = Rcpp::wrap(ptr_gety(adf));
+    return rcpp_result_gen;
+END_RCPP
+}
 // distr_dexp
 Rcpp::ComplexVector distr_dexp(Rcpp::ComplexVector x, Rcpp::ComplexVector rate, bool give_log);
 RcppExport SEXP _RTMB_distr_dexp(SEXP xSEXP, SEXP rateSEXP, SEXP give_logSEXP) {
@@ -1023,6 +1045,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_getValues", (DL_FUNC) &_RTMB_getValues, 1},
     {"_RTMB_getVariables", (DL_FUNC) &_RTMB_getVariables, 1},
     {"_RTMB_dbgprint", (DL_FUNC) &_RTMB_dbgprint, 1},
+    {"_RTMB_ptr_getx", (DL_FUNC) &_RTMB_ptr_getx, 1},
+    {"_RTMB_ptr_gety", (DL_FUNC) &_RTMB_ptr_gety, 1},
     {"_RTMB_distr_dexp", (DL_FUNC) &_RTMB_distr_dexp, 3},
     {"_RTMB_distr_dweibull", (DL_FUNC) &_RTMB_distr_dweibull, 4},
     {"_RTMB_distr_dbinom", (DL_FUNC) &_RTMB_distr_dbinom, 4},

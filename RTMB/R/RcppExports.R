@@ -85,6 +85,14 @@ dbgprint <- function(x) {
     invisible(.Call(`_RTMB_dbgprint`, x))
 }
 
+ptr_getx <- function(adf) {
+    .Call(`_RTMB_ptr_getx`, adf)
+}
+
+ptr_gety <- function(adf) {
+    .Call(`_RTMB_ptr_gety`, adf)
+}
+
 distr_dexp <- function(x, rate, give_log) {
     .Call(`_RTMB_distr_dexp`, x, rate, give_log)
 }
