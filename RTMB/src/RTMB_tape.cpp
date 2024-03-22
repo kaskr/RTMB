@@ -375,3 +375,31 @@ void dbgprint(const Rcpp::ComplexVector &x) {
 void ptr_forward(TMBad::ADFun<>* adf) {
   adf->forward();
 }
+
+// [[Rcpp::export]]
+Rcpp::XPtr<double> ptr_getx (Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  std::vector<TMBad::Index> idx = (*adf).glob.inv_index;
+  if (idx.size() == 0) Rcpp::stop("Tape has no inputs");
+  for (size_t i=1; i<idx.size(); i++) {
+    if (idx[i] - idx[i-1] != 1)
+      Rcpp::stop("Tape has Non-consecutive inputs");
+  }
+  double* ptr = (*adf).glob.values.data() + (*adf).glob.inv_index[0];
+  Rcpp::XPtr<double> ans = Rcpp::XPtr<double> (ptr, false); // No finalizer!
+  ans.attr("size") = Rcpp::IntegerVector::create(idx.size());
+  return ans;
+}
+
+// [[Rcpp::export]]
+Rcpp::XPtr<double> ptr_gety (Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  std::vector<TMBad::Index> idx = (*adf).glob.dep_index;
+  if (idx.size() == 0) Rcpp::stop("Tape has no outputs");
+  for (size_t i=1; i<idx.size(); i++) {
+    if (idx[i] - idx[i-1] != 1)
+      Rcpp::stop("Tape has Non-consecutive outputs");
+  }
+  double* ptr = (*adf).glob.values.data() + (*adf).glob.dep_index[0];
+  Rcpp::XPtr<double> ans = Rcpp::XPtr<double> (ptr, false); // No finalizer!
+  ans.attr("size") = Rcpp::IntegerVector::create(idx.size());
+  return ans;
+}
