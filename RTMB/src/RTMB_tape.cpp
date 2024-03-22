@@ -370,3 +370,8 @@ void dbgprint(const Rcpp::ComplexVector &x) {
           << " valid=" << valid(xi) << "\n";
   }
 }
+
+// CCallable
+void ptr_forward(TMBad::ADFun<>* adf) {
+  adf->forward();
+}
