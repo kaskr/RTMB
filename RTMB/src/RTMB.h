@@ -57,3 +57,9 @@ struct tape_config_t {
   bool compare_allow   ();
   bool mvnorm_atomic   ();
 };
+
+// Tweak RcppExports
+void ptr_forward(TMBad::ADFun<>* adf);
+#define RTMB_CCALLABLES                                                 \
+  TMB_CCALLABLES("RTMB")                                                \
+  R_RegisterCCallable("RTMB", "ptr_forward", (DL_FUNC) &ptr_forward);
