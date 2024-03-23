@@ -1,4 +1,5 @@
-#include <RcppEigen.h>
+#include <Rinternals.h>
+#include <R_ext/Rdynload.h>
 
 typedef void * (*FUN_PTR)(void*);
 
@@ -32,7 +33,8 @@ static const R_CallMethodDef CallEntries[] = {
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_RTMBode(DllInfo *dll) {
+extern "C"
+void R_init_RTMBode(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }
