@@ -385,7 +385,7 @@ Rcpp::XPtr<double> ptr_getx (Rcpp::XPtr<TMBad::ADFun<> > adf) {
       Rcpp::stop("Tape has Non-consecutive inputs");
   }
   double* ans = (*adf).glob.values.data() + (*adf).glob.inv_index[0];
-  return Rcpp::XPtr<double> (ans);
+  return Rcpp::XPtr<double> (ans, false); // No finalizer!
 }
 
 // [[Rcpp::export]]
@@ -397,5 +397,5 @@ Rcpp::XPtr<double> ptr_gety (Rcpp::XPtr<TMBad::ADFun<> > adf) {
       Rcpp::stop("Tape has Non-consecutive outputs");
   }
   double* ans = (*adf).glob.values.data() + (*adf).glob.dep_index[0];
-  return Rcpp::XPtr<double> (ans);
+  return Rcpp::XPtr<double> (ans, false); // No finalizer!
 }
