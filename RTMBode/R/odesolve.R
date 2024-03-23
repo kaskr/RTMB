@@ -21,14 +21,10 @@ extape <- function() {
 }
 
 setTape <- function(F) {
-    ##domain <- environment(F)$mod$domain()
-    range <- environment(F)$mod$range()
-    x <- F$par()
-    ##y <- F(F$par())
-    y <- double(range)
-    ##ptr <- RTMB:::.pointer(environment(F)$mod)
-    ptr <- environment(F)$mod$ptrTMB()$ptr
-    .Call(set_pointers, ptr, x, y)
+    ptr <- RTMB:::.pointer(environment(F)$mod)
+    X <- RTMB:::ptr_getx(ptr)
+    Y <- RTMB:::ptr_gety(ptr)
+    .Call(set_pointers, ptr, X, Y)
 }
 
 ## State augmentation (inital state and parameter derivatives)
