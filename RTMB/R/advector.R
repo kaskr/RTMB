@@ -267,9 +267,18 @@ print.advector <- function (x, ...)  {
         x <- activate(x)
     }
     y <- f(x)
+    ## Result might be sparse matrix => Store pattern as an attribute
+    Pattern <- NULL
+    if (inherits(y, "adsparse")) {
+        Pattern <- new("ngCMatrix", i=y@i, p=y@p, Dim=y@Dim)
+        y <- y@x
+    }
     y <- advector(y)
     dependent(y)
-    attr(F, "Dim") <- dim(y)
+    if (is.null(Pattern))
+        attr(F, "Dim") <- dim(y)
+    else
+        attr(F, "Pattern") <- Pattern
     F
 }
 ## High level version: Not everything available
@@ -282,7 +291,7 @@ MakeTape <- function(f, x) {
 }
 .expose <- function(mod) {
     Dim <- attr(mod, "Dim")
-    Pattern <- NULL
+    Pattern <- attr(mod, "Pattern")
     output <- function(x) {
         if (!is.null(Dim))
             dim(x) <- Dim
