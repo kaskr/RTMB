@@ -65,3 +65,21 @@ F <- MakeTape(function(x) {
     as.numeric(x)
 }, numeric(3))
 expect_equal(F(1:3), 1:3, info="https://github.com/kaskr/RTMB/issues/20")
+
+################################################################################
+## Tape keeps attributes
+################################################################################
+
+F <- MakeTape(function(x) x * diag(2), 1) ## : R^1 -> R^4
+expect_identical(dim(F(1)), c(2L, 2L),
+                 "Tape keeps matrix output")
+F <- MakeTape(F, 1)
+expect_identical(dim(F(1)), c(2L, 2L),
+                 "Re-playing tape keeps matrix output")
+I <- Matrix::.symDiagonal(2)
+F <- MakeTape(function(x) x * I , 1)      ## : R^1 -> R^2
+expect_true(is(F(1), "sparseMatrix"),
+            "Tape keeps sparse matrix output")
+F <- MakeTape(F, 1)
+expect_true(is(F(1), "sparseMatrix"),
+            "Re-playing tape keeps sparse matrix output")
