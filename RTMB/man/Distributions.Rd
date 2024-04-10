@@ -93,6 +93,7 @@
 \alias{dmultinom,num,num.,num,logical.-method}
 \alias{dmultinom,osa,ANY,ANY,ANY-method}
 \alias{dmultinom,simref,ANY,ANY,ANY-method}
+\alias{dmultinom,ANY,ANY,ANY,ANY-method}
 \title{Distributions and special functions for which AD is implemented}
 \usage{
 \S4method{dexp}{ad,ad.,logical.}(x, rate = 1, log = FALSE)
@@ -276,6 +277,8 @@ dcompois2(x, mean, nu, log = FALSE)
 \S4method{dmultinom}{osa,ANY,ANY,ANY}(x, size = NULL, prob, log = FALSE)
 
 \S4method{dmultinom}{simref,ANY,ANY,ANY}(x, size = NULL, prob, log = FALSE)
+
+\S4method{dmultinom}{ANY,ANY,ANY,ANY}(x, size = NULL, prob, log = FALSE)
 }
 \arguments{
 \item{x}{observation vector}
@@ -633,6 +636,8 @@ which documentation should be looked up online.
 \item \code{dmultinom(x = osa, size = ANY, prob = ANY, log = ANY)}: OSA implementation
 
 \item \code{dmultinom(x = simref, size = ANY, prob = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
+
+\item \code{dmultinom(x = ANY, size = ANY, prob = ANY, log = ANY)}: Default implementation that checks for invalid usage.
 
 }}
 \examples{
