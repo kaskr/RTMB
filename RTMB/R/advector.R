@@ -794,12 +794,18 @@ getAll <- function(..., warn=TRUE) {
     nm <- names(x)
     if (is.null(nm) || any(nm==""))
         stop("'getAll' is for *named* lists only")
+    anyADvars <- FALSE ## For warn=TRUE case
     for (i in seq_along(x)) {
         if (warn) {
             if (!is.null(fr[[nm[i]]]))
                 warning("Object '", nm[i], "' already defined")
+            anyADvars <- anyADvars || inherits(x[[i]], "advector")
         }
         fr[[nm[i]]] <- x[[i]]
+    }
+    if (warn) {
+        if (ad_context() && !anyADvars)
+            warning("No active parameters found")
     }
     invisible(NULL)
 }
