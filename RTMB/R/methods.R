@@ -442,3 +442,19 @@ setMethod("dmultinom", "simref", function(x, size, prob, log) {
     x[] <- stats::rmultinom(nrep, size=size, prob=prob)
     rep(0, nrep)
 })
+## To prevent unintendend usage, we change the default method.
+InvalidMethod <- function(which=-2) {
+    fr <- sys.frame(which)
+    cl <- match.call(sys.function(which), sys.call(which), FALSE)
+    cls <- sapply(names(cl[-1]), function(nm)class(get(nm, envir=fr)))
+    cl[-1] <- cls
+    c("Unexpected combination of classes used in AD context:\n", deparse(cl))
+}
+##' @describeIn Distributions Default implementation that checks for invalid usage.
+setMethod("dmultinom", signature("ANY", "ANY", "ANY", "ANY"),
+          function (x, size, prob, log) {
+              if (ad_context()) {
+                  stop(InvalidMethod())
+              }
+              stats::dmultinom(x=x, size=size, prob=prob, log=log)
+          })
