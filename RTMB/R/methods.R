@@ -149,6 +149,14 @@ setMethod("tcrossprod", signature("advector"),
 ##' @describeIn ADmatrix AD matrix multiply
 setMethod( "crossprod", signature("advector"),
           function(x, y=NULL) {if (is.null(y)) y <- x; t(x) %*% y} )
+##' @describeIn ADmatrix AD matrix cov2cor
+setMethod( "cov2cor", signature("advector"),
+          function(V) {
+              oldval <- TapeConfig()["comparison"]
+              on.exit(TapeConfig(comparison=oldval))
+              TapeConfig(comparison="allow")
+              stats::cov2cor(V)
+          })
 ##' @describeIn ADmatrix AD matrix inversion and solve
 ##' @param a matrix
 ##' @param b matrix, vector or missing
