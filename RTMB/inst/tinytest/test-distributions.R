@@ -48,3 +48,30 @@ expect_true(length(s$x) == length(dat$x))
 chk.dpois <- checkConsistency(obj)
 expect_true(abs(summary(chk.dpois)$joint$p.value)>.05)
 expect_true(abs(summary(chk.dpois)$joint$bias)<.05)
+
+################################################################################
+## Test 3 (dseparable)
+################################################################################
+parms <- list(s=rep(1,3), u=array(0, c(3, 4, 5)))
+C1 <- diag(3)+1
+C2 <- diag(4)+2
+C3 <- diag(5)+3
+f <- function(parms) {
+    getAll(parms)
+    f1 <- function(x) dmvnorm(x, Sigma = s[1] * C1, log=TRUE)
+    f2 <- function(x) dmvnorm(x, Sigma = s[2] * C2, log=TRUE)
+    f3 <- function(x) dmvnorm(x, Sigma = s[3] * C3, log=TRUE)
+    f123 <- dseparable(f1,f2,f3)
+    -f123(u, log=TRUE)
+}
+C <- C3 %x% C2 %x% C1
+expect_equal( f(parms) , -dmvnorm(parms$u, Sigma=C, log=TRUE),
+             info="Kronecker covariance")
+obj <- MakeADFun(f, parms)
+expect_equal(as.double(obj$fn()), 102.11397226694,
+             info="Taped kronecker covariance")
+obj <- MakeADFun(f, parms, random="u")
+expect_equal(as.double(obj$fn()), 0,
+             info="Separable density integrates to one")
+expect_equal(as.double(obj$gr()), c(0,0,0),
+             info="Separable density integral independent of parameters")
