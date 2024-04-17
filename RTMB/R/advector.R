@@ -442,12 +442,15 @@ print.Tape <- function(x,...){
 ##' @param comparison Set behaviour of AD comparison (\code{">"},\code{"=="}, etc).
 ##' @param atomic Set behaviour of AD BLAS operations (notably matrix multiply).
 ##' @param vectorize Enable/disable AD vectorized 'Ops' and 'Math'.
-TapeConfig <- function(comparison = c("forbid", "tape", "allow"),
-                       atomic = c("enable", "disable"),
-                       vectorize = c("disable", "enable")) {
-    comparison <- c(forbid=0L, tape=1L, allow=2L)[match.arg(comparison)]
-    atomic <- c(enable=1L, disable=0L)[match.arg(atomic)]
-    vectorize <- c(enable=1L, disable=0L)[match.arg(vectorize)]
+TapeConfig <- function(comparison = c("NA", "forbid", "tape", "allow"),
+                       atomic = c("NA", "enable", "disable"),
+                       vectorize = c("NA", "disable", "enable")) {
+    if (missing(comparison) || !is.integer(comparison))
+        comparison <- c("NA"=-1L, forbid=0L, tape=1L, allow=2L)[match.arg(comparison)]
+    if (missing(atomic) || !is.integer(atomic))
+        atomic <- c("NA"=-1L, enable=1L, disable=0L)[match.arg(atomic)]
+    if (missing(vectorize) || !is.integer(vectorize))
+        vectorize <- c("NA"=-1L, enable=1L, disable=0L)[match.arg(vectorize)]
     ans <- unlist(set_tape_config(comparison, atomic, vectorize))
     invisible(ans)
 }

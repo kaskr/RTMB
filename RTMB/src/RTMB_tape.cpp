@@ -277,9 +277,22 @@ tape_config_t tape_config;
 
 // [[Rcpp::export]]
 Rcpp::List set_tape_config(int comparison=0, int atomic=1, int vectorize=0) {
-  tape_config.comparison = comparison;
-  tape_config.atomic = atomic;
-  tape_config.vectorize = vectorize;
+#define SET(name) if (name != -1) tape_config.name = name;
+  SET(comparison);
+  SET(atomic);
+  SET(vectorize);
+#undef SET
+  // Current settings
+#define GET(name) Rcpp::Named(#name) = tape_config.name
+  return Rcpp::List::create(
+                            GET(comparison),
+                            GET(atomic),
+                            GET(vectorize));
+#undef GET
+}
+// [[Rcpp::export]]
+Rcpp::List get_tape_config() {
+  // Current derived flags
 #define GET(name) Rcpp::Named(#name) = tape_config.name()
   return Rcpp::List::create(
                             GET(matmul_plain),
@@ -292,6 +305,7 @@ Rcpp::List set_tape_config(int comparison=0, int atomic=1, int vectorize=0) {
                             GET(compare_taped),
                             GET(compare_allow),
                             GET(mvnorm_atomic));
+#undef GET
 }
 // [[Rcpp::export]]
 bool compare_allow() { return tape_config.compare_allow(); }
