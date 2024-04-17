@@ -7,6 +7,10 @@
 ##' @param scale Extra scale parameter - see section 'Scaling'.
 ##' @return Vector of densities.
 dmvnorm <- function(x, mu=0, Sigma, log=FALSE, scale=1) {
+    if (!identical(mu, 0)) {
+        p <- length(mu)
+        if (!all(dim(Sigma) == c(p, p))) stop("incompatible arguments")
+    }
     if (!unit(scale)) {
         return (dscale("dmvnorm", x, mu, Sigma,
                        log=log, scale=scale, vectorize=TRUE))
@@ -43,6 +47,10 @@ dmvnorm <- function(x, mu=0, Sigma, log=FALSE, scale=1) {
 ##' @details The function `dgmrf()` is essentially identical to `dmvnorm()` with the only difference that `dgmrf()` is specified via the *precision* matrix (inverse covariance) assuming that this matrix is *sparse*.
 ##' @param Q Sparse precision matrix
 dgmrf <- function(x, mu=0, Q, log=FALSE, scale=1) {
+    if (!identical(mu, 0)) {
+        p <- length(mu)
+        if (!all(dim(Sigma) == c(p, p))) stop("incompatible arguments")
+    }
     if (!unit(scale)) {
         return (dscale("dgmrf", x, mu, Q,
                        log=log, scale=scale, vectorize=TRUE))
