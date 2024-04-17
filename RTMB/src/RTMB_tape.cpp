@@ -22,8 +22,10 @@ void ad_start(TMBad::ADFun<>* adf) {
 void ad_stop(TMBad::ADFun<>* adf) {
   adf->glob.ad_stop();
 }
-void ad_print(TMBad::ADFun<>* adf) {
-  adf->print();
+void ad_print(TMBad::ADFun<>* adf, int depth=0) {
+  TMBad::print_config cfg;
+  cfg.depth = depth;
+  adf->print(cfg);
 }
 // Some ADFun object evaluators
 std::vector<double> Eval(TMBad::ADFun<>* tp, const std::vector<double> &x) {

@@ -330,7 +330,7 @@ MakeTape <- function(f, x) {
                 else
                     stop("Unknown method")
             },
-            print = mod$print,
+            print = function(depth=0) mod$print(as.integer(depth)),
             jacfun = function(sparse=FALSE) {
                 if (!sparse)
                     .jacfun(mod)
