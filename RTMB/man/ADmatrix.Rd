@@ -15,6 +15,7 @@
 \alias{\%*\%,ad,ad-method}
 \alias{tcrossprod,advector,ANY-method}
 \alias{crossprod,advector,ANY-method}
+\alias{cov2cor,advector-method}
 \alias{solve,ad,ad.-method}
 \alias{solve,num,num.-method}
 \alias{solve,anysparse,ad.-method}
@@ -49,6 +50,8 @@
 \S4method{tcrossprod}{advector,ANY}(x, y = NULL)
 
 \S4method{crossprod}{advector,ANY}(x, y = NULL)
+
+\S4method{cov2cor}{advector}(V)
 
 \S4method{solve}{ad,ad.}(a, b)
 
@@ -110,6 +113,8 @@ Matrices (\strong{base} package) and sparse matrices (\strong{Matrix} package) c
 \item \code{tcrossprod(x = advector, y = ANY)}: AD matrix multiply
 
 \item \code{crossprod(x = advector, y = ANY)}: AD matrix multiply
+
+\item \code{cov2cor(advector)}: AD matrix cov2cor
 
 \item \code{solve(a = ad, b = ad.)}: AD matrix inversion and solve
 

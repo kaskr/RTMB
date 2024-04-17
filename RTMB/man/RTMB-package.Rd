@@ -28,6 +28,14 @@ The advanced vignette covers these topics - see \code{vignette("RTMB-advanced")}
 \note{
 'RTMB' relies heavily on the new AD framework 'TMBad' without which this interface would not be possible.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/kaskr/RTMB}
+  \item Report bugs at \url{https://github.com/kaskr/RTMB/issues}
+}
+
+}
 \author{
 Kasper Kristensen
 

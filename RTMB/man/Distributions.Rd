@@ -83,6 +83,9 @@
 \alias{dnorm,num,num.,num.,logical.-method}
 \alias{dnorm,osa,ANY,ANY,ANY-method}
 \alias{dnorm,simref,ANY,ANY,ANY-method}
+\alias{dlnorm,ANY,ANY,ANY,ANY-method}
+\alias{dlnorm,osa,ANY,ANY,ANY-method}
+\alias{dlnorm,num,num.,num.,logical.-method}
 \alias{plogis,advector,missing,missing,missing,missing-method}
 \alias{qlogis,advector,missing,missing,missing,missing-method}
 \alias{dcompois}
@@ -257,6 +260,12 @@ dlgamma(x, shape, scale, log)
 \S4method{dnorm}{osa,ANY,ANY,ANY}(x, mean = 0, sd = 1, log = FALSE)
 
 \S4method{dnorm}{simref,ANY,ANY,ANY}(x, mean = 0, sd = 1, log = FALSE)
+
+\S4method{dlnorm}{ANY,ANY,ANY,ANY}(x, meanlog = 0, sdlog = 1, log = FALSE)
+
+\S4method{dlnorm}{osa,ANY,ANY,ANY}(x, meanlog = 0, sdlog = 1, log = FALSE)
+
+\S4method{dlnorm}{num,num.,num.,logical.}(x, meanlog = 0, sdlog = 1, log = FALSE)
 
 \S4method{plogis}{advector,missing,missing,missing,missing}(q)
 
@@ -604,6 +613,12 @@ which documentation should be looked up online.
 \item \code{dnorm(x = osa, mean = ANY, sd = ANY, log = ANY)}: OSA implementation
 
 \item \code{dnorm(x = simref, mean = ANY, sd = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
+
+\item \code{dlnorm(x = ANY, meanlog = ANY, sdlog = ANY, log = ANY)}: AD implementation of \link[stats]{dlnorm}.
+
+\item \code{dlnorm(x = osa, meanlog = ANY, sdlog = ANY, log = ANY)}: OSA implementation.
+
+\item \code{dlnorm(x = num, meanlog = num., sdlog = num., log = logical.)}: Default method.
 
 \item \code{plogis(
   q = advector,
