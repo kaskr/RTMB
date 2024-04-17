@@ -169,6 +169,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_tape_config
+Rcpp::List get_tape_config();
+RcppExport SEXP _RTMB_get_tape_config() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(get_tape_config());
+    return rcpp_result_gen;
+END_RCPP
+}
 // compare_allow
 bool compare_allow();
 RcppExport SEXP _RTMB_compare_allow() {
@@ -1038,6 +1048,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_get_df", (DL_FUNC) &_RTMB_get_df, 1},
     {"_RTMB_get_node", (DL_FUNC) &_RTMB_get_node, 2},
     {"_RTMB_set_tape_config", (DL_FUNC) &_RTMB_set_tape_config, 3},
+    {"_RTMB_get_tape_config", (DL_FUNC) &_RTMB_get_tape_config, 0},
     {"_RTMB_compare_allow", (DL_FUNC) &_RTMB_compare_allow, 0},
     {"_RTMB_advec", (DL_FUNC) &_RTMB_advec, 1},
     {"_RTMB_dependent", (DL_FUNC) &_RTMB_dependent, 1},

@@ -57,6 +57,10 @@ set_tape_config <- function(comparison = 0L, atomic = 1L, vectorize = 0L) {
     .Call(`_RTMB_set_tape_config`, comparison, atomic, vectorize)
 }
 
+get_tape_config <- function() {
+    .Call(`_RTMB_get_tape_config`)
+}
+
 compare_allow <- function() {
     .Call(`_RTMB_compare_allow`)
 }
