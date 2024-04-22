@@ -129,6 +129,10 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
   }
   void reverse(ReverseArgs<ad> &args) {
     if (with_derivs) {
+      // Exceptionally we add Rcpp try/catch blocks here to prevent
+      // crash when called from TMB::MakeADFun (which does not use
+      // Rcpp)
+      BEGIN_RCPP
       Rcpp::ComplexVector x(m); x = as_advector(x);
       Rcpp::ComplexVector y(n); y = as_advector(y);
       Rcpp::ComplexVector dy(n); dy = as_advector(dy);
@@ -139,11 +143,15 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
         y[l] = ad2cplx(args.y(l));
         dy[l] = ad2cplx(args.dy(l));
       }
-      Rcpp::ComplexVector wtJ = (*Rptr)(x,y,dy);
+      Rcpp::ComplexVector wtJ = (*Rptr)(x, y, dy); // User code could throw !
       CHECK_INPUT(wtJ); // Check result from R
       if ( (size_t) wtJ.size() != m)
-        Rcpp::stop("Wrong length of 'reverse(x,y,dy)' = t(dy) %*% jacobian(x)");
+        Rcpp::stop("'%s': Length of derivative (%u) not as expected (%u)",
+                   op_name(),
+                   (size_t) wtJ.size(),
+                   (size_t) m);
       for (size_t l=0; l<m; l++) args.dx(l) += cplx2ad(wtJ[l]);
+      VOID_END_RCPP
     }
   }
   template <class Type> void reverse(ReverseArgs<Type> &args) {
