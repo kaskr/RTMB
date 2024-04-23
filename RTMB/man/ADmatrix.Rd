@@ -76,6 +76,8 @@
 
 \item{y}{matrix (sparse or dense)}
 
+\item{V}{Covariance matrix}
+
 \item{a}{matrix}
 
 \item{b}{matrix, vector or missing}

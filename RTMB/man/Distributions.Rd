@@ -346,6 +346,10 @@ dcompois2(x, mean, nu, log = FALSE)
 
 \item{log_var_minus_mu}{parameter}
 
+\item{meanlog}{Parameter; Mean on log scale.}
+
+\item{sdlog}{Parameter; SD on log scale.}
+
 \item{mode}{parameter}
 }
 \value{

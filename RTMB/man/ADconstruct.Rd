@@ -4,11 +4,14 @@
 \alias{ADconstruct}
 \alias{diag,advector,ANY,ANY-method}
 \alias{matrix,advector-method}
+\alias{matrix,num.-method}
 \title{AD aware numeric constructors}
 \usage{
 \S4method{diag}{advector,ANY,ANY}(x, nrow, ncol)
 
 \S4method{matrix}{advector}(data = NA, nrow = 1, ncol = 1, byrow = FALSE, dimnames = NULL)
+
+\S4method{matrix}{num.}(data = NA, nrow = 1, ncol = 1, byrow = FALSE, dimnames = NULL)
 }
 \arguments{
 \item{x}{As \link[base]{diag}}
@@ -34,6 +37,8 @@ These base constructors have been extended to keep the AD class attribute of the
 \item \code{diag(x = advector, nrow = ANY, ncol = ANY)}: Equivalent of \link[base]{diag}
 
 \item \code{matrix(advector)}: Equivalent of \link[base]{matrix}
+
+\item \code{matrix(num.)}: Equivalent of \link[base]{matrix}
 
 }}
 \examples{
