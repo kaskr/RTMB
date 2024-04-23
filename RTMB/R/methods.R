@@ -150,6 +150,7 @@ setMethod("tcrossprod", signature("advector"),
 setMethod( "crossprod", signature("advector"),
           function(x, y=NULL) {if (is.null(y)) y <- x; t(x) %*% y} )
 ##' @describeIn ADmatrix AD matrix cov2cor
+##' @param V Covariance matrix
 setMethod( "cov2cor", signature("advector"),
           function(V) {
               oldval <- TapeConfig()["comparison"]
@@ -242,6 +243,8 @@ setMethod("dnorm", "simref", function(x, mean, sd, log) {
 })
 
 ##' @describeIn Distributions AD implementation of \link[stats]{dlnorm}.
+##' @param meanlog Parameter; Mean on log scale.
+##' @param sdlog Parameter; SD on log scale.
 setMethod("dlnorm", "ANY", function (x, meanlog, sdlog, log) {
     y <- log(x)
     ans <- dnorm(y, meanlog, sdlog, log=TRUE) - y
@@ -294,6 +297,7 @@ setMethod("matrix", signature(data="advector"),
               ans <- callNextMethod()
               asS4(structure(ans, class="advector"))
           })
+##' @describeIn ADconstruct Equivalent of \link[base]{matrix}
 setMethod("matrix", signature(data="num."),
           function(data, nrow, ncol, byrow, dimnames) {
               ans <- callNextMethod()
