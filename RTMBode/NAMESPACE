@@ -1,0 +1,3 @@
+useDynLib(RTMBode, .registration=TRUE)
+import("RTMB") ## All RTMB functions and classes
+export("ode")

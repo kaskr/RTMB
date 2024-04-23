@@ -1,0 +1,11 @@
+Package: RTMBode
+Type: Package
+Title: Solving ODEs with 'deSolve' and 'RTMB'.
+Version: 1.0
+Date: 2024-03-21
+Author: Kasper Kristensen
+Maintainer: kaskr <kaskr@dtu.dk>
+Description: Solve ODEs as part of 'RTMB' objective functions with algorithmic derivatives to any order. ODE adjoint code is obtained via 'RTMB' using automatic variable augmentation of the system equation.
+License: GPL (>= 2)
+Imports: RTMB, deSolve
+Roxygen: list(markdown = TRUE)
