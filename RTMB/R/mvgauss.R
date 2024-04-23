@@ -49,7 +49,7 @@ dmvnorm <- function(x, mu=0, Sigma, log=FALSE, scale=1) {
 dgmrf <- function(x, mu=0, Q, log=FALSE, scale=1) {
     if (!identical(mu, 0)) {
         p <- length(mu)
-        if (!all(dim(Sigma) == c(p, p))) stop("incompatible arguments")
+        if (!all(dim(Q) == c(p, p))) stop("incompatible arguments")
     }
     if (!unit(scale)) {
         return (dscale("dgmrf", x, mu, Q,
