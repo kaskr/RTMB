@@ -68,7 +68,7 @@ parallel-version:
 	sed -i 's/RTMB/RTMBp/g' RTMBp/inst/tinytest/*.R
 	sed -i 's/RTMB/RTMBp/g' RTMBp/DESCRIPTION
 	sed -i 's/RTMB/RTMBp/g' RTMBp/NAMESPACE
-	sed -i 's/"RTMB"/"RTMBp"/g' RTMBp/src/RcppExports.cpp
+	sed -i 's/"RTMB"/"RTMBp"/g' RTMBp/src/RTMB.h
 	sed -i 's/R_init_RTMB/R_init_RTMBp/g' RTMBp/src/RcppExports.cpp
 	echo 'SystemRequirements: GNU make' >> RTMBp/DESCRIPTION
 	echo 'PKG_LIBS+=$$(SHLIB_OPENMP_CXXFLAGS)' >> RTMBp/src/Makevars
