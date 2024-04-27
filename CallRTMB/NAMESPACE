@@ -1,0 +1,2 @@
+useDynLib(CallRTMB, .registration=TRUE)
+import("RTMB") ## All RTMB functions and classes
