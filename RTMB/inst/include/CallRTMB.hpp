@@ -64,6 +64,11 @@ void RTMB_exception_cleanup() {
     delete glob;
   }
 }
+// Throw exception on illegal parallelization
+void RTMB_check_valid_parallelization() {
+    if (config.nthreads > 1 && config.autopar == 0)
+      Rcpp::stop("Calling R from TMB with parallization requires 'autopar=TRUE'");
+}
 
 template <class Type>
 struct CallRTMB_ { };
@@ -110,8 +115,7 @@ struct CallRTMB : CallRTMB_<Type> {
   BEGIN_RCPP                                                    \
   RTMB_pointerSwap();                                           \
   try {                                                         \
-    if (config.nthreads > 1)                                    \
-      Rcpp::stop("Calling R from TMB requires nthreads=1");     \
+    RTMB_check_valid_parallelization();                         \
     ans = Base::rtmb_res(F(__VA_ARGS__));                       \
   }                                                             \
   catch (...) {                                                 \
