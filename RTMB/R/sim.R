@@ -290,21 +290,13 @@ unsetdata <- function(obj) {
     NULL
 }
 
+checkConsistency_patch <- TMB_patch(TMB::checkConsistency,
+                                    data = list(), ## checkConsistency passes data here...
+                                    func = as.name("data") ## And we redirect it here
+                                    )
 ##' @describeIn TMB-interface Interface to \link[TMB]{checkConsistency}.
 ##' @param fast Pass `observation.name` to `TMB` ?
 checkConsistency <- function(obj, fast=TRUE, ...) {
-    ## ######
-    checkConsistency_patch <- TMB::checkConsistency
-    tmb_envir <- environment(checkConsistency_patch)
-    env <- local({
-        MakeADFun <- RTMB::MakeADFun
-        formals(MakeADFun)$data <- list() ## checkConsistency passes data here...
-        formals(MakeADFun)$func <- as.name("data") ## And we redirect it here
-        environment()
-    })
-    parent.env(env) <- tmb_envir
-    environment(checkConsistency_patch) <- env
-    ## ######
     args <- list(obj, ...)
     if (fast) {
         supported <- "observation.name" %in% names(formals(checkConsistency_patch))

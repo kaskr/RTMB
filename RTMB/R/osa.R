@@ -1,3 +1,8 @@
+oneStepPredict_patch <- TMB_patch(TMB::oneStepPredict,
+                                  data = list(), ## Dummy
+                                  observation.name = list(), ## Dummy
+                                  data.term.indicator = list(), ## Dummy
+                                  func = as.name("data"))
 ##' @describeIn OSA-residuals Calculate the residuals. See documentation of \code{TMB::}\link[TMB]{oneStepPredict}.
 ##' @param obj TMB model object (output from \code{MakeADFun})
 ##' @param observation.name Auto detected - use the default
@@ -17,18 +22,6 @@ oneStepPredict <- function(obj,
         obj$env$data[[observation.name]] <- NULL
         obj$env$observation.name <- NULL
     })
-    oneStepPredict_patch <- TMB::oneStepPredict
-    tmb_envir <- environment(oneStepPredict_patch)
-    env <- local({
-        MakeADFun <- RTMB::MakeADFun
-        formals(MakeADFun)$data <- list() ## Dummy
-        formals(MakeADFun)$observation.name <- list() ## Dummy
-        formals(MakeADFun)$data.term.indicator <- list() ## Dummy
-        formals(MakeADFun)$func <- as.name("data")
-        environment()
-    })
-    parent.env(env) <- tmb_envir
-    environment(oneStepPredict_patch) <- env
     oneStepPredict_patch(obj,
                          observation.name=observation.name,
                          data.term.indicator=data.term.indicator,

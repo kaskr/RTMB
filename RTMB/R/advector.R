@@ -738,14 +738,26 @@ MakeADFun <- function(func, parameters, random=NULL, profile=NULL, integrate=NUL
     obj
 }
 
+## 'Patch' a TMB function by overloading 'TMB::MakeADFun' with
+## 'RTMB::MakeADFun', possibly accounting for TMB/RTMB argument
+## differences.
+## FIXME (?): The current patching takes place in RTMB namespace at
+## RTMB install time. It follows, that changes to TMB
+## (e.g. TMB::sdreport, TMB::oneStepPredict, ...) require
+## re-installation of RTMB to take place ! We could alternatively
+## apply the patches from inside the '.onLoad' function.
+TMB_patch <- function(fun, ...) {
+    environment(fun) <- new.env( parent = environment(fun) )
+    environment(fun)$MakeADFun <- MakeADFun ## RTMB::MakeADFun
+    dotargs <- list(...)
+    formals(environment(fun)$MakeADFun)[names(dotargs)] <- dotargs
+    fun
+}
+
+sdreport_patch <- TMB_patch(TMB::sdreport)
 ##' @describeIn TMB-interface Interface to \link[TMB]{sdreport}.
 ##' @param obj TMB model object (output from \link{MakeADFun})
 sdreport <- function(obj, ...) {
-    sdreport_patch <- TMB::sdreport
-    tmb_envir <- environment(sdreport_patch)
-    env <- local({ MakeADFun <- RTMB::MakeADFun; environment() })
-    parent.env(env) <- tmb_envir
-    environment(sdreport_patch) <- env
     sdreport_patch(obj, ...)
 }
 
