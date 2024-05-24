@@ -132,6 +132,12 @@ ODEadjoint <- function(F, ...) {
 
 func2tape <- function(func, y, parms) {
     nstate <- length(y)
+    if (is.list(parms)) {
+        skeleton <- as.relistable(parms)
+        parms <- unlist(skeleton)
+    } else {
+        skeleton <- NULL
+    }
     x <- numeric(1 + nstate + length(parms))
     names(x) <- c("t", names(y), names(parms))
     MakeTape(function(typ) {
@@ -139,6 +145,9 @@ func2tape <- function(func, y, parms) {
         yp <- typ[-1]
         y <- yp[seq_len(nstate)]
         p <- yp[-seq_len(nstate)]
+        if (!is.null(skeleton)) {
+            p <- relist(p, skeleton)
+        }
         func(t, y, p)[[1]]
     }, x)
 }
@@ -199,6 +208,8 @@ ode <- function (y, times, func, parms, method=NULL, ...) {
              func
          else
              func2tape(func, y, parms)
+    "c" <- ADoverload("c")
+    while (is.list(parms)) parms <- do.call("c", parms)
     ad.case <- inherits(y, "advector") || inherits(parms, "advector")
     if (!ad.case) {
         setTape(F, parms)
@@ -210,7 +221,6 @@ ode <- function (y, times, func, parms, method=NULL, ...) {
                      dllname = "RTMBode",
                      ...)
     } else {
-        "c" <- ADoverload("c")
         F <- addInfo(F, times=times)
         F <- ODEadjoint(F, method=method, ...) ## Attach adjoint code
         x <- c(y, parms)
