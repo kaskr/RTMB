@@ -33,12 +33,6 @@ install.packages('RTMB')
 install.packages('RTMB', repos = c('https://kaskr.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
-### Experimental parallel version available as a separate package 'RTMBp'
-
-```r
-install.packages('RTMBp', repos = c('https://kaskr.r-universe.dev', 'https://cloud.r-project.org'))
-```
-
 ### Source
 
 NOTE: Requires at least `TMB-1.9.7`.
@@ -58,3 +52,19 @@ runs the [tests](./RTMB/inst/tinytest).
 ## Known issues
 
 - If you get a segfault while installing the package, please re-install `Rcpp` from source and try again (see https://github.com/kaskr/RTMB/issues/5).
+
+## Other packages
+
+### Experimental parallel version available as a separate package 'RTMBp'
+
+```r
+install.packages('RTMBp', repos = c('https://kaskr.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+### Experimental package to solve ODEs
+
+```r
+install.packages('RTMBode', repos = c('https://kaskr.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+[documentation](https://kaskr.r-universe.dev/RTMBode#reference)
