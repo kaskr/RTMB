@@ -224,6 +224,15 @@ ode <- function (y, times, func, parms, method=NULL, ...) {
                      dllname = "RTMBode",
                      ...)
     } else {
+        active <- RTMB:::getVariables(parms)
+        if (!all(active)) {
+            x <- RTMB:::getValues(c(t=0, y, parms))
+            a <- c(rep(TRUE, length(y) + 1), active)
+            xa <- x[a]
+            F <- MakeTape(function(xa) { x <- RTMB::advector(x); x[a] <- xa; F(x) } , xa )
+            parms <- parms[active]
+        }
+        F$simplify()
         F <- addInfo(F, times=times)
         F <- ODEadjoint(F, method=method, ...) ## Attach adjoint code
         x <- c(y, parms)
