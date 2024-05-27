@@ -148,7 +148,8 @@ func2tape <- function(func, y, parms) {
         if (!is.null(skeleton)) {
             p <- relist(p, skeleton)
         }
-        func(t, y, p)[[1]]
+        ans <- func(t, y, p)
+        if (is.list(ans)) ans[[1]] else ans
     }, x)
 }
 
