@@ -204,6 +204,8 @@ func2tape <- function(func, y, parms) {
 ##' ## as.list(sdr, "Est")
 ##' ## as.list(sdr, "Std")
 ode <- function (y, times, func, parms, method=NULL, ...) {
+    if (is.null(names(y)))
+        names(y) <- seq_along(y)
     F <- if (inherits(func, "Tape"))
              func
          else
