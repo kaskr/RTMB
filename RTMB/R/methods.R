@@ -187,10 +187,16 @@ setMethod("solve",
           })
 ##' @describeIn ADmatrix AD matrix (or array) colsums
 setMethod("colSums", signature(x="advector"),
-          function(x) { apply(x, seq_len(length(dim(x)))[-1L], sum) } )
+          function(x, na.rm, dims) {
+              if (dims != 1L) stop("AD version requires dims=1")
+              apply(x, seq_len(length(dim(x)))[-1L], sum, na.rm=na.rm)
+          } )
 ##' @describeIn ADmatrix AD matrix (or array) rowsums
 setMethod("rowSums", signature("advector"),
-          function(x) { apply(x, 1L, sum) } )
+          function(x, na.rm, dims) {
+              if (dims != 1L) stop("AD version requires dims=1")
+              apply(x, 1L, sum, na.rm=na.rm)
+          } )
 ##' @describeIn ADmatrix AD matrix column bind
 ##' @param ... As \link[base]{cbind}
 cbind.advector <- function (...) {
