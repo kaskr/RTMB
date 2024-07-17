@@ -108,7 +108,11 @@ unsplit <- function(z) {
 }
 resplit <- function(x) {
     dim(x) <- c(2, length(x)/2)
-    adcomplex(x[1,], x[2,])
+    if (inherits(x, "advector")) {
+        adcomplex(real=x[1,], imag=x[2,])
+    } else {
+        complex(real=x[1,], imag=x[2,])
+    }
 }
 ##' @describeIn ADcomplex Fast Fourier Transform equivalent to \link[stats]{fft}. Notably this is the **multivariate** transform when `x` is an array.
 ##' @param inverse As \link[stats]{fft}
