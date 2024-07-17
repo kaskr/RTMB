@@ -9,6 +9,7 @@
 ##' @param f R function representing the function value.
 ##' @param df R function representing the reverse mode derivative.
 ##' @param name Internal name of this atomic.
+##' @param complex Logical; Assume complex and \link{adcomplex} types for all arguments?
 ##' @examples
 ##' ############################################################################
 ##' ## Lambert W-function defined by W(y*exp(y))=y
@@ -48,9 +49,13 @@
 ##' @rdname ADjoint
 ##' @name ADjoint
 ##' @return A function that allows for numeric and taped evaluation.
-ADjoint <- function(f, df, name=NULL) {
+ADjoint <- function(f, df, name=NULL, complex=FALSE) {
     if (is.null(name)) {
         name <- substring(deparse(substitute(f))[1], 1, 7)
+    }
+    if (complex) {
+        f <- cplxify1(f)
+        df <- cplxify3(df)
     }
     F <- function(x) {
         f(x)
@@ -58,8 +63,25 @@ ADjoint <- function(f, df, name=NULL) {
     attr(F, "reverse") <- df
     attr(F, "name") <- name
     function(x) {
-        if (ad_context())
-            TapedEval(F, x)
-        else f(x)
+        if (complex)
+            x <- unsplit(x)
+        ans <-
+            if (ad_context())
+                TapedEval(F, x)
+            else f(x)
+        if (complex)
+            ans <- resplit(ans)
+        ans
     }
+}
+## Helpers
+cplxify1 <- function(f) {
+    f ## Lazy eval
+    function(x) unsplit(f(resplit(x)))
+}
+cplxify3 <- function(df) {
+    df ## Lazy eval
+    function(x, y, dy) unsplit(Conj(df(resplit(x),
+                                       resplit(y),
+                                       Conj(resplit(dy)))))
 }
