@@ -134,3 +134,57 @@ setMethod("fft", "advector",
           function(z, inverse) {
               fft(adcomplex(z), inverse)
           })
+
+#####################################
+
+##' @describeIn ADcomplex As \link[base]{rep}
+rep.adcomplex <- function(x,...)
+    adcomplex(rep(Re(x),...),
+              rep(Im(x),...))
+
+##' @describeIn ADcomplex Apply for each of real/imag
+as.vector.adcomplex <- function(x, mode="any")
+    adcomplex(as.vector(Re(x), mode),
+              as.vector(Im(x), mode))
+
+##' @describeIn ADcomplex Apply for real
+is.matrix.adcomplex <- function(x) is.matrix(Re(x))
+
+##' @describeIn ADcomplex Apply for each of real/imag
+as.matrix.adcomplex <- function(x) adcomplex(as.matrix(Re(x)),
+                                             as.matrix(Im(x)))
+
+##' @describeIn ADcomplex Complex matrix multiply
+setMethod("%*%", "adcomplex", function(x, y) {
+    adcomplex(Re(x)%*%Re(y) - Im(x)%*%Im(y),
+              Re(x)%*%Im(y) + Im(x)%*%Re(y))
+})
+
+##' @describeIn ADcomplex Complex matrix inversion and solve
+setMethod("solve", "adcomplex", function(a, b) {
+    A <- Re(a); B <- Im(a)
+    Ainv <- solve(A)
+    Y1 <- solve(A + B %*% Ainv %*% B)
+    Y2 <- -Ainv %*% B %*% Y1
+    ans <- adcomplex(Y1, Y2)
+    if (!missing(b)) {
+        ## b <- as.matrix(b)
+        ans <- ans %*% b
+    }
+    ans
+})
+
+##' @describeIn ADcomplex Apply for each of real/imag
+setMethod("colSums", "adcomplex",
+          function(x) adcomplex(colSums(Re(x)),
+                                colSums(Im(x))))
+
+##' @describeIn ADcomplex Apply for each of real/imag
+setMethod("rowSums", "adcomplex",
+          function(x) adcomplex(rowSums(Re(x)),
+                                rowSums(Im(x))))
+
+##' @describeIn ADcomplex Apply for each of real/imag
+setMethod("diag", "adcomplex",
+          function(x) adcomplex(diag(Re(x)),
+                                diag(Im(x))))
