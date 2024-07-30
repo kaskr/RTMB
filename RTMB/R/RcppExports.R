@@ -257,6 +257,10 @@ splineptr_eval <- function(ptr, x) {
     .Call(`_RTMB_splineptr_eval`, ptr, x)
 }
 
+sytrisol <- function(L, W) {
+    .Call(`_RTMB_sytrisol`, L, W)
+}
+
 Arith2 <- function(x, y, op) {
     .Call(`_RTMB_Arith2`, x, y, op)
 }

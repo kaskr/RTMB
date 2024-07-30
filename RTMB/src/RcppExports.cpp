@@ -802,6 +802,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sytrisol
+Rcpp::NumericMatrix sytrisol(Rcpp::NumericMatrix L, Rcpp::NumericMatrix W);
+RcppExport SEXP _RTMB_sytrisol(SEXP LSEXP, SEXP WSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type L(LSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type W(WSEXP);
+    rcpp_result_gen = Rcpp::wrap(sytrisol(L, W));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Arith2
 Rcpp::ComplexVector Arith2(const Rcpp::ComplexVector& x, const Rcpp::ComplexVector& y, std::string op);
 RcppExport SEXP _RTMB_Arith2(SEXP xSEXP, SEXP ySEXP, SEXP opSEXP) {
@@ -1098,6 +1110,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_ip2D_eval_ad", (DL_FUNC) &_RTMB_ip2D_eval_ad, 3},
     {"_RTMB_splineptr", (DL_FUNC) &_RTMB_splineptr, 3},
     {"_RTMB_splineptr_eval", (DL_FUNC) &_RTMB_splineptr_eval, 2},
+    {"_RTMB_sytrisol", (DL_FUNC) &_RTMB_sytrisol, 2},
     {"_RTMB_Arith2", (DL_FUNC) &_RTMB_Arith2, 3},
     {"_RTMB_Math1", (DL_FUNC) &_RTMB_Math1, 2},
     {"_RTMB_Reduce1", (DL_FUNC) &_RTMB_Reduce1, 2},
