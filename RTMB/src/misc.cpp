@@ -60,13 +60,16 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
   static const bool add_forward_replay_copy = true;
   std::shared_ptr<Rcpp::Function> Fptr; // forward
   std::shared_ptr<Rcpp::Function> Rptr; // reverse
+  Rcpp::RObject dimx, dimy;
   size_t m, n;
   Index input_size()  const { return m; }
   Index output_size() const { return n; }
-  EvalOp (Rcpp::Function F, size_t m, size_t n) :
+  EvalOp (Rcpp::Function F, Rcpp::RObject xtest, Rcpp::RObject ytest) :
     Fptr(std::make_shared<Rcpp::Function>(F)),
-    m(m),
-    n(n) {
+    dimx(xtest.attr("dim")),
+    dimy(ytest.attr("dim")),
+    m(LENGTH(xtest)),
+    n(LENGTH(ytest)) {
     if (with_derivs) {
       Rptr = std::make_shared<Rcpp::Function>(F.attr("reverse"));
     }
@@ -80,6 +83,8 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
       R.begin();
       Rcpp::NumericVector i(m);
       for (size_t l=0; l<m; l++) i[l] = args.x(l);
+      if (!dimx.isNULL())
+        i.attr("dim") = dimx;
       SEXP y = (*Fptr)(i);
       // FIXME: Any Rcpp way of handling arbitrary output? For now doing PROTECT/UNPROTECT manually...
       PROTECT(y);
@@ -113,6 +118,12 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
       Rcpp::NumericVector x(m);
       Rcpp::NumericVector y(n);
       Rcpp::NumericVector dy(n);
+      if (!dimx.isNULL())
+        x.attr("dim") = dimx;
+      if (!dimy.isNULL()) {
+        y.attr("dim") = dimy;
+        dy.attr("dim") = dimy;
+      }
       for (size_t l=0; l<m; l++) {
         x[l] = args.x(l);
       }
@@ -136,6 +147,12 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
       Rcpp::ComplexVector x(m); x = as_advector(x);
       Rcpp::ComplexVector y(n); y = as_advector(y);
       Rcpp::ComplexVector dy(n); dy = as_advector(dy);
+      if (!dimx.isNULL())
+        x.attr("dim") = dimx;
+      if (!dimy.isNULL()) {
+        y.attr("dim") = dimy;
+        dy.attr("dim") = dimy;
+      }
       for (size_t l=0; l<m; l++) {
         x[l] = ad2cplx(args.x(l));
       }
@@ -181,14 +198,15 @@ Rcpp::ComplexVector TapedEval(Rcpp::Function F, Rcpp::ComplexVector i) {
   // Test eval to get n
   Rcpp::NumericVector i_test(m);
   for (size_t l=0; l<m; l++) i_test[l] = pi[l].Value();
+  i_test.attr("dim") = i.attr("dim");
   Rcpp::NumericVector y_test = F(i_test);
   size_t n = LENGTH(y_test);
   // Add to tape
   std::vector<ad> x(pi, pi + m);
   bool with_derivs = F.hasAttribute("reverse");
   std::vector<ad> y = (with_derivs ?
-                       TMBad::global::Complete<TMBad::EvalOp<true > >(F, m, n) (x) :
-                       TMBad::global::Complete<TMBad::EvalOp<false> >(F, m, n) (x) );
+                       TMBad::global::Complete<TMBad::EvalOp<true > >(F, i, y_test) (x) :
+                       TMBad::global::Complete<TMBad::EvalOp<false> >(F, i, y_test) (x) );
   // Pass to R
   Rcpp::ComplexVector ans(n);
   for (size_t j=0; j < n; j++) {
