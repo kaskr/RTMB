@@ -4,7 +4,7 @@
 \alias{ADjoint}
 \title{AD adjoint code from R}
 \usage{
-ADjoint(f, df, name = NULL)
+ADjoint(f, df, name = NULL, complex = FALSE)
 }
 \arguments{
 \item{f}{R function representing the function value.}
@@ -12,6 +12,8 @@ ADjoint(f, df, name = NULL)
 \item{df}{R function representing the reverse mode derivative.}
 
 \item{name}{Internal name of this atomic.}
+
+\item{complex}{Logical; Assume complex and \link{adcomplex} types for all arguments?}
 }
 \value{
 A function that allows for numeric and taped evaluation.

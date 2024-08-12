@@ -22,6 +22,15 @@
 \alias{sqrt.adcomplex}
 \alias{fft,adcomplex-method}
 \alias{fft,advector-method}
+\alias{rep.adcomplex}
+\alias{as.vector.adcomplex}
+\alias{is.matrix.adcomplex}
+\alias{as.matrix.adcomplex}
+\alias{\%*\%,adcomplex,ANY-method}
+\alias{solve,adcomplex,ANY-method}
+\alias{colSums,adcomplex-method}
+\alias{rowSums,adcomplex-method}
+\alias{diag,adcomplex,ANY,ANY-method}
 \title{AD complex numbers}
 \usage{
 adcomplex(real, imag = rep(advector(0), length(real)))
@@ -63,6 +72,24 @@ adcomplex(real, imag = rep(advector(0), length(real)))
 \S4method{fft}{adcomplex}(z, inverse = FALSE)
 
 \S4method{fft}{advector}(z, inverse = FALSE)
+
+\method{rep}{adcomplex}(x, ...)
+
+\method{as.vector}{adcomplex}(x, mode = "any")
+
+\method{is.matrix}{adcomplex}(x)
+
+\method{as.matrix}{adcomplex}(x)
+
+\S4method{\%*\%}{adcomplex,ANY}(x, y)
+
+\S4method{solve}{adcomplex,ANY}(a, b)
+
+\S4method{colSums}{adcomplex}(x)
+
+\S4method{rowSums}{adcomplex}(x)
+
+\S4method{diag}{adcomplex,ANY,ANY}(x)
 }
 \arguments{
 \item{real}{Real part}
@@ -130,6 +157,24 @@ A limited set of complex number operations can be used when constructing AD tape
 \item \code{fft(adcomplex)}: Fast Fourier Transform equivalent to \link[stats]{fft}. Notably this is the \strong{multivariate} transform when \code{x} is an array.
 
 \item \code{fft(advector)}: If real input is supplied it is first converted to complex.
+
+\item \code{rep(adcomplex)}: As \link[base]{rep}
+
+\item \code{as.vector(adcomplex)}: Apply for each of real/imag
+
+\item \code{is.matrix(adcomplex)}: Apply for real
+
+\item \code{as.matrix(adcomplex)}: Apply for each of real/imag
+
+\item \code{x \%*\% y}: Complex matrix multiply
+
+\item \code{solve(a = adcomplex, b = ANY)}: Complex matrix inversion and solve
+
+\item \code{colSums(adcomplex)}: Apply for each of real/imag
+
+\item \code{rowSums(adcomplex)}: Apply for each of real/imag
+
+\item \code{diag(x = adcomplex, nrow = ANY, ncol = ANY)}: Apply for each of real/imag
 
 }}
 \examples{
