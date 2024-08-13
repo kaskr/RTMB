@@ -143,6 +143,7 @@ rep.adcomplex <- function(x,...)
               rep(Im(x),...))
 
 ##' @describeIn ADcomplex Apply for each of real/imag
+##' @param mode As \link[base]{as.vector}
 as.vector.adcomplex <- function(x, mode="any")
     adcomplex(as.vector(Re(x), mode),
               as.vector(Im(x), mode))
@@ -161,6 +162,8 @@ setMethod("%*%", "adcomplex", function(x, y) {
 })
 
 ##' @describeIn ADcomplex Complex matrix inversion and solve
+##' @param a matrix
+##' @param b matrix, vector or missing
 setMethod("solve", "adcomplex", function(a, b) {
     A <- Re(a); B <- Im(a)
     Ainv <- solve(A)

@@ -186,6 +186,8 @@ setMethod("solve",
               stop("Sparse AD solve is not yet implemented")
           })
 ##' @describeIn ADmatrix AD matrix (or array) colsums
+##' @param na.rm Logical; Remove NAs while taping.
+##' @param dims Same as \link[base]{colSums} and \link[base]{rowSums}.
 setMethod("colSums", signature(x="advector"),
           function(x, na.rm, dims) {
               if (dims != 1L) stop("AD version requires dims=1")
