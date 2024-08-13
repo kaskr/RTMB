@@ -105,6 +105,10 @@
 \item{a}{matrix}
 
 \item{b}{matrix, vector or missing}
+
+\item{na.rm}{Logical; Remove NAs while taping.}
+
+\item{dims}{Same as \link[base]{colSums} and \link[base]{rowSums}.}
 }
 \value{
 List (vectors/values) with \code{adcomplex} components.

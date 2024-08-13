@@ -109,6 +109,12 @@ adcomplex(real, imag = rep(advector(0), length(real)))
 \item{y}{An object of class \code{'adcomplex'}}
 
 \item{inverse}{As \link[stats]{fft}}
+
+\item{mode}{As \link[base]{as.vector}}
+
+\item{a}{matrix}
+
+\item{b}{matrix, vector or missing}
 }
 \value{
 Object of class \code{"adcomplex"}.
