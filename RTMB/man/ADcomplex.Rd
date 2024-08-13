@@ -79,7 +79,7 @@ adcomplex(real, imag = rep(advector(0), length(real)))
 
 \method{is.matrix}{adcomplex}(x)
 
-\method{as.matrix}{adcomplex}(x)
+\method{as.matrix}{adcomplex}(x, ...)
 
 \S4method{\%*\%}{adcomplex,ANY}(x, y)
 

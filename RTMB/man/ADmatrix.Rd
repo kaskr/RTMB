@@ -29,7 +29,7 @@
 \alias{rbind.advector}
 \title{AD matrix methods (sparse and dense)}
 \usage{
-\method{chol}{advector}(x)
+\method{chol}{advector}(x, ...)
 
 \S4method{eigen}{adcomplex}(x, symmetric, only.values = FALSE, EISPACK = FALSE)
 
@@ -82,6 +82,8 @@
 \arguments{
 \item{x}{matrix (sparse or dense)}
 
+\item{...}{As \link[base]{cbind}}
+
 \item{symmetric}{Logical; Is input matrix symmetric (Hermitian) ?}
 
 \item{only.values}{Ignored}
@@ -93,8 +95,6 @@
 \item{nv}{Ignored}
 
 \item{LINPACK}{Ignored}
-
-\item{...}{As \link[base]{cbind}}
 
 \item{value}{Replacement value}
 
