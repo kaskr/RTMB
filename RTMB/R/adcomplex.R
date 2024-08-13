@@ -111,7 +111,7 @@ resplit <- function(x) {
     if (inherits(x, "advector")) {
         adcomplex(real=x[1,], imag=x[2,])
     } else {
-        complex(real=x[1,], imag=x[2,])
+        complex(real=x[1,], imaginary=x[2,])
     }
 }
 ##' @describeIn ADcomplex Fast Fourier Transform equivalent to \link[stats]{fft}. Notably this is the **multivariate** transform when `x` is an array.
@@ -151,8 +151,8 @@ as.vector.adcomplex <- function(x, mode="any")
 is.matrix.adcomplex <- function(x) is.matrix(Re(x))
 
 ##' @describeIn ADcomplex Apply for each of real/imag
-as.matrix.adcomplex <- function(x) adcomplex(as.matrix(Re(x)),
-                                             as.matrix(Im(x)))
+as.matrix.adcomplex <- function(x, ...) adcomplex(as.matrix(Re(x)),
+                                                  as.matrix(Im(x)))
 
 ##' @describeIn ADcomplex Complex matrix multiply
 setMethod("%*%", "adcomplex", function(x, y) {

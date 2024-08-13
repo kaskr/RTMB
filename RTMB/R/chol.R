@@ -23,6 +23,6 @@ lchol <- ADjoint(
     name = "lchol")
 
 ##' @describeIn ADmatrix AD matrix cholesky
-chol.advector <- function(x) {
+chol.advector <- function(x, ...) {
     t(lchol(t(x)))
 }
