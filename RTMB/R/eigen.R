@@ -102,3 +102,22 @@ setMethod("eigen", "advector",
                   eigen(x, symmetric, only.values, EISPACK)
               }
           })
+
+##' @describeIn ADmatrix AD svd decomposition for real matrices.
+##' @param nu Ignored
+##' @param nv Ignored
+##' @param LINPACK Ignored
+setMethod("svd", "advector",
+          function (x, nu, nv, LINPACK = FALSE) {
+              if (!missing(nu)) stop("'nu' argument not implemented")
+              if (!missing(nv)) stop("'nv' argument not implemented")
+              trans <- (nrow(x) > ncol(x))
+              if (trans) x <- t(x)
+              e <- eigen(x%*%t(x), symmetric=TRUE)
+              u <- e$vec
+              d <- sqrt(e$val)
+              v <- t((1/d)*(t(u)%*%x))
+              ans <- list(d=d, u=u, v=v)
+              if (trans) ans[2:3] <- ans[3:2]
+              ans
+          })
