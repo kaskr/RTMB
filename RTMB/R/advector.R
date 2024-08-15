@@ -755,7 +755,19 @@ TMB_patch <- function(fun, ...) {
     fun
 }
 
+## Text substitution in function body (without changing environment)
+bodysub <- function(fun, pattern, replacement, ...) {
+    body(fun) <- parse(text=gsub(pattern,
+                                 replacement,
+                                 deparse(body(fun)),
+                                 ...))[[1]]
+    fun
+}
 sdreport_patch <- TMB_patch(TMB::sdreport)
+sdreport_patch <- bodysub(sdreport_patch,
+                          "\\(.Call\\(.*have_tmb_symbolic.*\\)\\)",
+                          "(FALSE)")
+
 ##' @describeIn TMB-interface Interface to \link[TMB]{sdreport}.
 ##' @param obj TMB model object (output from \link{MakeADFun})
 sdreport <- function(obj, ...) {
