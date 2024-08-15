@@ -572,6 +572,7 @@ MakeADFun <- function(func, parameters, random=NULL, profile=NULL, integrate=NUL
                     integrate=NULL,
                     intern=FALSE,
                     ...)
+    TMBArgs[duplicated(names(TMBArgs))] <- NULL
     TMBArgs$DLL <- "RTMB" ## Override if included in ...
     obj <- do.call(TMB::MakeADFun, TMBArgs)
     ## Handling maps (copied and modified parList)
