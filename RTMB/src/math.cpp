@@ -136,6 +136,21 @@ Rcpp::ComplexVector Math1(const Rcpp::ComplexVector &x, std::string op) {
   return y;
 }
 
+// atan2 is not in any group !
+// [[Rcpp::export]]
+Rcpp::ComplexVector math_atan2 (Rcpp::ComplexVector y, Rcpp::ComplexVector x) {
+  int n1=y.size();
+  int n2=x.size();
+  int nmax = std::max({n1, n2});
+  int nmin = std::min({n1, n2});
+  int n = (nmin == 0 ? 0 : nmax);
+  Rcpp::ComplexVector ans(n);
+  const ad* X1 = adptr(y); const ad* X2 = adptr(x);
+  ad* Y = adptr(ans);
+  for (int i=0; i<n; i++) Y[i] = TMBad::atan2(X1[i % n1], X2[i % n2]);
+  return as_advector(ans);
+}
+
 // [[Rcpp::export]]
 Rcpp::ComplexVector Reduce1(const Rcpp::ComplexVector &x, std::string op) {
   CHECK_INPUT(x);
