@@ -99,6 +99,10 @@ exp.adcomplex <- function(x) {
     adcomplex(s*cos(Im(x)), s*sin(Im(x)))
 }
 ##' @describeIn ADcomplex As \link[base]{complex}
+log.adcomplex <- function(x) {
+    adcomplex(log(Mod(x)), Arg(x))
+}
+##' @describeIn ADcomplex As \link[base]{complex}
 sqrt.adcomplex <- function(x) {
     M <- Mod(x)
     s <- sign(Im(x))
