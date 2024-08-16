@@ -21,25 +21,39 @@ advector <- function(x) {
     }
     ans
 }
-## Make this object AD interpretable if an AD context is active
-## NOTE: Should be needed rarely!
-## - Intended for objects that prevent simple S3 method dispatch
-## - By defatult does *nothing* if *not* in an active AD context
-## - To see what the 'magic' object would look like pass condition=TRUE
-## Example 1: Starting out with a sparse matrix requires a little magic
-## D <- Matrix::.symDiagonal(10)
-## magic(D, TRUE) ## advector with attributes
-magic <- function(x, condition = ad_context()) {
-    if (!condition) return (x)
-    if (is(x, "advector")) return (x)
-    if (is(x, "sparseMatrix")) {
+##' Convert R object to AD.
+##'
+##' Signify that this object should be given an AD interpretation if evaluated in an active AD context. Otherwise, keep object as is.
+##' @details \code{AD} is a generic constructor, converting plain R structures to RTMB objects if in an autodiff context. Otherwise, it does nothing (and adds virtually no computational overhead).
+##'
+##' @param x Object to be converted.
+##' @param force Logical; Force AD conversion even if no AD context? (for debugging)
+##' @examples
+##' ## numeric object to AD
+##' AD(numeric(4), force=TRUE)
+##' ## complex object to AD
+##' AD(complex(4), force=TRUE)
+##' ## Convert sparse matrices (Matrix package) to AD representation
+##' F <- MakeTape(function(x) {
+##'   M <- AD(Matrix::Matrix(0,4,4))
+##'   M[1,] <- x
+##'   D <- AD(Matrix::Diagonal(4))
+##'   D@x[] <- x
+##'   M + D
+##' }, 0)
+##' F(2)
+AD <- function(x, force = FALSE) {
+    if (!force && !ad_context()) return (x)
+    if (inherits(x, "advector")) return (x)
+    if (inherits(x, "anysparse")) {
         x <- as(x, "adsparse")
-        return (x)
-    } else if (is.numeric(x)) {
+    } else if (is.double(x) || is.integer(x) || is.logical(x)) {
         x <- advector(x)
-        return (x)
+    } else if (is.complex(x)) {
+        x <- adcomplex(advector(Re(x)), advector(Im(x)))
     } else
-        stop("'magic' does not know this object")
+        stop("'AD' does not know this object")
+    x
 }
 .Compare <- getGroupMembers("Compare")
 ##' @describeIn ADvector Binary operations
