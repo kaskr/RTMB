@@ -839,6 +839,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// math_atan2
+Rcpp::ComplexVector math_atan2(Rcpp::ComplexVector y, Rcpp::ComplexVector x);
+RcppExport SEXP _RTMB_math_atan2(SEXP ySEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(math_atan2(y, x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Reduce1
 Rcpp::ComplexVector Reduce1(const Rcpp::ComplexVector& x, std::string op);
 RcppExport SEXP _RTMB_Reduce1(SEXP xSEXP, SEXP opSEXP) {
@@ -1113,6 +1125,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_sytrisol", (DL_FUNC) &_RTMB_sytrisol, 2},
     {"_RTMB_Arith2", (DL_FUNC) &_RTMB_Arith2, 3},
     {"_RTMB_Math1", (DL_FUNC) &_RTMB_Math1, 2},
+    {"_RTMB_math_atan2", (DL_FUNC) &_RTMB_math_atan2, 2},
     {"_RTMB_Reduce1", (DL_FUNC) &_RTMB_Reduce1, 2},
     {"_RTMB_matmul", (DL_FUNC) &_RTMB_matmul, 2},
     {"_RTMB_matinv", (DL_FUNC) &_RTMB_matinv, 1},

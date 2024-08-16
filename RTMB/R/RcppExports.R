@@ -269,6 +269,10 @@ Math1 <- function(x, op) {
     .Call(`_RTMB_Math1`, x, op)
 }
 
+math_atan2 <- function(y, x) {
+    .Call(`_RTMB_math_atan2`, y, x)
+}
+
 Reduce1 <- function(x, op) {
     .Call(`_RTMB_Reduce1`, x, op)
 }
