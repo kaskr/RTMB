@@ -38,22 +38,19 @@ eigen_symmetric <- function(x) {
     cbind(e$val, e$vec)
 }
 eigen_symmetric_adj <- function(x, y, dy) {
-    n <- sqrt(length(x))
     D <- y[,1]
     U <- y[,-1, drop=FALSE]
     dD <- dy[,1]
     dU <- dy[,-1, drop=FALSE]
-    Delta <- 1 / outer(D, D, "-")
+    Diff <- outer(D, D, "-")
+    Delta <- sign(Diff) / (abs(Diff) + 1e-300)
     diag(Delta) <- 0
-    ## Eigen value reverse update
-    M1 <- U %*% diag(dD) %*% t(U)
-    ## Eigen vector reverse update
-    M2 <- U %*% ( (t(dU) %*% U ) * Delta ) %*% t(U)
-    ## Total update
-    M <- M1 + M2
-    ## correction for lower triangle repr. of symmetric matrix
-    M <- M+t(M); diag(M) <- diag(M)*.5; M[upper.tri(M)] <- 0
-    M
+    S <- (t(dU) %*% U) * Delta + diag(dD)
+    S <- S + t(S)
+    S <- U %*% S %*% t(U)
+    diag(S) <- diag(S) * 0.5
+    S[upper.tri(S)] <- 0
+    S
 }
 
 ## - General complex
