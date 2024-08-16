@@ -304,6 +304,7 @@ SEXP SparseArith2(SEXP x,
     if (!op.compare("%*%")) z = MatrixOutput(X * Y);
     else if (!op.compare("+")) z = MatrixOutput(X + Y);
     else if (!op.compare("-")) z = MatrixOutput(X - Y);
+    else if (!op.compare("*")) z = SparseOutput(X.cwiseProduct(Y));
     else Rf_error("'%s' not implemented", op.c_str());
   }
   // Dense OP Sparse
@@ -313,6 +314,7 @@ SEXP SparseArith2(SEXP x,
     if (!op.compare("%*%")) z = MatrixOutput(X * Y);
     else if (!op.compare("+")) z = MatrixOutput(X + Y);
     else if (!op.compare("-")) z = MatrixOutput(X - Y);
+    else if (!op.compare("*")) z = SparseOutput(Y.cwiseProduct(X));
     else Rf_error("'%s' not implemented", op.c_str());
   }
   else Rf_error("Wrong use of 'SparseArith2'");
