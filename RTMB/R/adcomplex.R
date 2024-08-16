@@ -76,6 +76,8 @@ Conj.adcomplex <- function(z) adcomplex(Re(z), -Im(z))
 ##' @describeIn ADcomplex As \link[base]{complex}
 Mod.adcomplex <- function(z) sqrt(Re(z)*Re(z)+Im(z)*Im(z))
 ##' @describeIn ADcomplex As \link[base]{complex}
+Arg.adcomplex <- function(z) math_atan2(Im(z), Re(z))
+##' @describeIn ADcomplex As \link[base]{complex}
 "+.adcomplex" <- function(x, y) {
     adcomplex(Re(x)+Re(y), Im(x)+Im(y))
 }
