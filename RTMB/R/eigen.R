@@ -71,6 +71,8 @@ eigen_symmetric_atomic <- ADjoint(eigen_symmetric,
 ##' @param EISPACK Ignored
 setMethod("eigen", "adcomplex",
           function (x, symmetric, only.values, EISPACK) {
+              if (missing(symmetric))
+                  stop("RTMB does not auto detect argument 'symmetric'. Please specify")
               x <- as.matrix(x)
               if (symmetric) {
                   U <- upper.tri(x)
@@ -90,6 +92,8 @@ setMethod("eigen", "adcomplex",
 ##' @return List (vectors/values) with \code{advector} components in symmetric case and \code{adcomplex} components otherwise.
 setMethod("eigen", "advector",
           function (x, symmetric, only.values, EISPACK) {
+              if (missing(symmetric))
+                  stop("RTMB does not auto detect argument 'symmetric'. Please specify")
               if (symmetric) {
                   y <- eigen_symmetric_atomic(x)
                   structure(list(values=y[,1],
