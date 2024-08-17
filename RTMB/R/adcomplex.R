@@ -99,7 +99,8 @@ exp.adcomplex <- function(x) {
     adcomplex(s*cos(Im(x)), s*sin(Im(x)))
 }
 ##' @describeIn ADcomplex As \link[base]{complex}
-log.adcomplex <- function(x) {
+log.adcomplex <- function(x, base) {
+    if (!missing(base)) stop("Argument 'base' not implemented")
     adcomplex(log(Mod(x)), Arg(x))
 }
 ##' @describeIn ADcomplex As \link[base]{complex}
