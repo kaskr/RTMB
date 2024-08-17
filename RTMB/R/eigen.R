@@ -8,6 +8,7 @@ eigen_rescaled <- function(X) {
     V <- e[["vectors"]]
     ## Select locally unique version by scaling with a complex sign
     s <- colSums(V)
+    s[s == 0i] <- 1
     s <- Mod(s) / s
     V <- V %*% diag(s)
     ## Rescale to get t(V)%*%V=I
@@ -25,7 +26,8 @@ eigen_rescaled_adj <- function(X, Y, dY) {
     V <- Y[j]; dV <- dY[j]
     dim(V) <- dim(dV) <- c(n,n)
     Vinv <- solve(V)
-    Delta <- 1 / t( outer(D, D, "-") )
+    Diff <- t(outer(D, D, "-"))
+    Delta <- Conj(Diff) / (Diff * Conj(Diff) + 1e-300)
     diag(Delta) <- 0
     a <- colSums(dV * V)
     dX_ <- diag(dD) + Delta * ( (t(V) %*% dV) - t( a * (t(V) %*% V) ) )
