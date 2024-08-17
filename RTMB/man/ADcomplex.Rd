@@ -71,7 +71,7 @@ adcomplex(real, imag = rep(advector(0), length(real)))
 
 \method{exp}{adcomplex}(x)
 
-\method{log}{adcomplex}(x)
+\method{log}{adcomplex}(x, base)
 
 \method{sqrt}{adcomplex}(x)
 
