@@ -14,11 +14,13 @@
 \alias{length.adcomplex}
 \alias{Conj.adcomplex}
 \alias{Mod.adcomplex}
+\alias{Arg.adcomplex}
 \alias{+.adcomplex}
 \alias{-.adcomplex}
 \alias{*.adcomplex}
 \alias{/.adcomplex}
 \alias{exp.adcomplex}
+\alias{log.adcomplex}
 \alias{sqrt.adcomplex}
 \alias{fft,adcomplex-method}
 \alias{fft,advector-method}
@@ -57,6 +59,8 @@ adcomplex(real, imag = rep(advector(0), length(real)))
 
 \method{Mod}{adcomplex}(z)
 
+\method{Arg}{adcomplex}(z)
+
 \method{+}{adcomplex}(x, y)
 
 \method{-}{adcomplex}(x, y)
@@ -66,6 +70,8 @@ adcomplex(real, imag = rep(advector(0), length(real)))
 \method{/}{adcomplex}(x, y)
 
 \method{exp}{adcomplex}(x)
+
+\method{log}{adcomplex}(x)
 
 \method{sqrt}{adcomplex}(x)
 
@@ -148,6 +154,8 @@ A limited set of complex number operations can be used when constructing AD tape
 
 \item \code{Mod(adcomplex)}: As \link[base]{complex}
 
+\item \code{Arg(adcomplex)}: As \link[base]{complex}
+
 \item \code{ + }: As \link[base]{complex}
 
 \item \code{ - }: As \link[base]{complex}
@@ -157,6 +165,8 @@ A limited set of complex number operations can be used when constructing AD tape
 \item \code{ / }: As \link[base]{complex}
 
 \item \code{exp(adcomplex)}: As \link[base]{complex}
+
+\item \code{log(adcomplex)}: As \link[base]{complex}
 
 \item \code{sqrt(adcomplex)}: As \link[base]{complex}
 
