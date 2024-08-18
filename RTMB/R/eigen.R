@@ -1,8 +1,6 @@
 ## Eigen function - general case
 eigen_rescaled <- function(X) {
     X[] <- as.complex(X)
-    n <- sqrt(length(X))
-    dim(X) <- c(n,n)
     e <- eigen(X, symmetric=FALSE)
     D <- e[["values"]]
     V <- e[["vectors"]]
@@ -16,15 +14,13 @@ eigen_rescaled <- function(X) {
     s <- 1 / s ##s <- Mod(s) / s
     V <- V %*% diag(s)
     ## output
-    c(D, V)
+    cbind(D, V)
 }
 eigen_rescaled_adj <- function(X, Y, dY) {
-    n <- sqrt(length(X))
-    i <- 1:n ## altrep
-    j <- (n+1):(n+n*n) ## altrep
-    D <- Y[i]; dD <- dY[i]
-    V <- Y[j]; dV <- dY[j]
-    dim(V) <- dim(dV) <- c(n,n)
+    D <- Y[,1]
+    V <- Y[,-1, drop=FALSE]
+    dD <- dY[,1]
+    dV <- dY[,-1, drop=FALSE]
     Vinv <- solve(V)
     Diff <- t(outer(D, D, "-"))
     Delta <- Conj(Diff) / (Diff * Conj(Diff) + 1e-300)
