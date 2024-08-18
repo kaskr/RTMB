@@ -110,16 +110,27 @@ sqrt.adcomplex <- function(x) {
     adcomplex(sqrt(.5*(Re(x)+M)), s * sqrt(.5*(-Re(x)+M)))
 }
 unsplit <- function(z) {
+    d <- dim(z)
     dim(z) <- NULL
-    as.vector(t(cbind(Re(z), Im(z))))
+    ans <- as.vector(t(cbind(Re(z), Im(z))))
+    if (!is.null(d)) {
+        dim(ans) <- c(2L ,d)
+    }
+    ans
 }
 resplit <- function(x) {
+    d <- dim(x)
     dim(x) <- c(2, length(x)/2)
-    if (inherits(x, "advector")) {
-        adcomplex(real=x[1,], imag=x[2,])
-    } else {
-        complex(real=x[1,], imaginary=x[2,])
+    ans <- if (inherits(x, "advector")) {
+               adcomplex(real=x[1,], imag=x[2,])
+           } else {
+               complex(real=x[1,], imaginary=x[2,])
+           }
+    if (!is.null(d)) {
+        if (d[1] != 2L) stop("Unexpected dimension")
+        dim(ans) <- d[-1]
     }
+    ans
 }
 ##' @describeIn ADcomplex Fast Fourier Transform equivalent to \link[stats]{fft}. Notably this is the **multivariate** transform when `x` is an array.
 ##' @param inverse As \link[stats]{fft}
