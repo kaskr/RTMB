@@ -1,3 +1,10 @@
+## Needed by eigen
+solve_complex <- function(x) solve(x+0i)
+solve_complex_adj <- function(x, y, dy) -t(y) %*% dy %*% t(y)
+solve_complex_atomic <- ADjoint(solve_complex,
+                                solve_complex_adj,
+                                complex=TRUE)
+
 ## Eigen function - general case
 eigen_rescaled <- function(X) {
     X[] <- as.complex(X)

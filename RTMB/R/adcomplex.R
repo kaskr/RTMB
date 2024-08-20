@@ -183,13 +183,10 @@ setMethod("%*%", "adcomplex", function(x, y) {
 ##' @param a matrix
 ##' @param b matrix, vector or missing
 setMethod("solve", "adcomplex", function(a, b) {
-    A <- Re(a); B <- Im(a)
-    Ainv <- solve(A)
-    Y1 <- solve(A + B %*% Ainv %*% B)
-    Y2 <- -Ainv %*% B %*% Y1
-    ans <- adcomplex(Y1, Y2)
+    a <- as.matrix(a)
+    ans <- solve_complex_atomic(a)
     if (!missing(b)) {
-        ## b <- as.matrix(b)
+        b <- as.matrix(b)
         ans <- ans %*% b
     }
     ans
