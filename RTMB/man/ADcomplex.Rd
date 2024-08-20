@@ -33,6 +33,8 @@
 \alias{colSums,adcomplex-method}
 \alias{rowSums,adcomplex-method}
 \alias{diag,adcomplex,ANY,ANY-method}
+\alias{Ops,advector,adcomplex-method}
+\alias{Ops,adcomplex,advector-method}
 \title{AD complex numbers}
 \usage{
 adcomplex(real, imag = rep(advector(0), length(real)))
@@ -96,6 +98,10 @@ adcomplex(real, imag = rep(advector(0), length(real)))
 \S4method{rowSums}{adcomplex}(x)
 
 \S4method{diag}{adcomplex,ANY,ANY}(x)
+
+\S4method{Ops}{advector,adcomplex}(e1, e2)
+
+\S4method{Ops}{adcomplex,advector}(e1, e2)
 }
 \arguments{
 \item{real}{Real part}
@@ -191,6 +197,10 @@ A limited set of complex number operations can be used when constructing AD tape
 \item \code{rowSums(adcomplex)}: Apply for each of real/imag
 
 \item \code{diag(x = adcomplex, nrow = ANY, ncol = ANY)}: Apply for each of real/imag
+
+\item \code{Ops(e1 = advector, e2 = adcomplex)}: Mixed real/complex arithmetic
+
+\item \code{Ops(e1 = adcomplex, e2 = advector)}: Mixed real/complex arithmetic
 
 }}
 \examples{
