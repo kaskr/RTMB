@@ -76,13 +76,12 @@ setMethod("eigen", "adcomplex",
                   U <- upper.tri(x)
                   x[U] <- Conj(t(x)[U])
               }
-              n <- nrow(x)              
               y <- eigen_rescaled_atomic(x)
-              D <- y[1:n]
-              V <- y[(n+1):(n+n*n)]
-              dim(V) <- c(n,n)
+              D <- y[,1]
+              V <- y[,-1,drop=FALSE]
               lngt <- sqrt(colSums(Re(V * Conj(V))))
-              V <- V * adcomplex(rep(lngt, each=n))
+              scale <- 1 / lngt
+              V <- V * rep(scale, each=nrow(V))
               structure(list(values=D, vectors=V), class="eigen")
           })
 
