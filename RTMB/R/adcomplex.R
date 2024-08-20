@@ -209,3 +209,11 @@ setMethod("rowSums", "adcomplex",
 setMethod("diag", "adcomplex",
           function(x) adcomplex(diag(Re(x)),
                                 diag(Im(x))))
+
+##' @describeIn ADcomplex Mixed real/complex arithmetic
+setMethod("Ops", c("advector", "adcomplex"),
+          function(e1, e2) callGeneric(adcomplex(e1), e2))
+
+##' @describeIn ADcomplex Mixed real/complex arithmetic
+setMethod("Ops", c("adcomplex", "advector"),
+          function(e1, e2) callGeneric(e1, adcomplex(e2)))
