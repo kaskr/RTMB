@@ -192,10 +192,14 @@ detachADoverloads <- function(enable=TRUE, ...) {
 rep.advector <- function (x, ...) {
     as_advector(NextMethod())
 }
+##' @describeIn ADvector Equivalent of \link[base]{is.na}. Check NA status of an `advector`. NAs can only occur directly (as constants) or indirectly as the result of an operation with NA operands. For a tape built with non-NA parameters the NA status of any expression is constant and can therefore safely be used as part of the calculations. (assuming correct propagation of NAs via C-level arithmetic).
+is.na.advector <- function(x) {
+    is.na(getValues(x))
+}
 ##' @describeIn ADvector Equivalent of \link[base]{sum}. \code{na.rm=TRUE} is allowed, but note that this feature assumes correct propagation of NAs via C-level arithmetic.
 sum.advector <- function(x, ..., na.rm = FALSE) {
     if (na.rm) {
-        x <- x[!is.na(getValues(x))]
+        x <- x[!is.na(x)]
     }
     Reduce1(x, "+") + sum(..., na.rm = na.rm)
 }
