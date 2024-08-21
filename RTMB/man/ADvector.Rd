@@ -177,7 +177,7 @@ re-used for AD vectors.
 
 \item \code{as.double(advector)}: Makes \code{as.numeric()} work.
 
-\item \code{Complex(advector)}: \link{Complex} operations are not allowed and will throw an error.
+\item \code{Complex(advector)}: \link{Complex} operations are redirected to \link{adcomplex}.
 
 \item \code{Summary(advector)}: Non differentiable \link{Summary} operations (e.g. \code{min} \code{max}) are not allowed and will throw an error.
 
