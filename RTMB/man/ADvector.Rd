@@ -13,6 +13,7 @@
 \alias{[<-.advector}
 \alias{[[.advector}
 \alias{rep.advector}
+\alias{is.na.advector}
 \alias{sum.advector}
 \alias{mean.advector}
 \alias{prod.advector}
@@ -48,6 +49,8 @@ advector(x)
 \method{[[}{advector}(x, ...)
 
 \method{rep}{advector}(x, ...)
+
+\method{is.na}{advector}(x)
 
 \method{sum}{advector}(x, ..., na.rm = FALSE)
 
@@ -146,6 +149,8 @@ re-used for AD vectors.
 \item \code{[[}: Equivalent of \link[base]{[[}
 
 \item \code{rep(advector)}: Equivalent of \link[base]{rep}. Makes \code{outer(x,x,...)} work.
+
+\item \code{is.na(advector)}: Equivalent of \link[base]{is.na}. Check NA status of an \code{advector}. NAs can only occur directly (as constants) or indirectly as the result of an operation with NA operands. For a tape built with non-NA parameters the NA status of any expression is constant and can therefore safely be used as part of the calculations. (assuming correct propagation of NAs via C-level arithmetic).
 
 \item \code{sum(advector)}: Equivalent of \link[base]{sum}. \code{na.rm=TRUE} is allowed, but note that this feature assumes correct propagation of NAs via C-level arithmetic.
 
