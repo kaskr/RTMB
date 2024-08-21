@@ -361,6 +361,9 @@ Rcpp::NumericVector getValues(const Rcpp::ComplexVector &x) {
   for (int i=0; i<x.size(); i++) {
     ans[i] = cplx2ad((x)[i]).Value() ;
   }
+  SHALLOW_DUPLICATE_ATTRIB(ans, x);
+  ans = Rf_asS4(ans, FALSE, FALSE);
+  ans.attr("class") = R_NilValue;
   return ans;
 }
 
@@ -371,6 +374,9 @@ Rcpp::LogicalVector getVariables(const Rcpp::ComplexVector &x) {
   for (int i=0; i<x.size(); i++) {
     ans[i] = !cplx2ad((x)[i]).constant() ;
   }
+  SHALLOW_DUPLICATE_ATTRIB(ans, x);
+  ans = Rf_asS4(ans, FALSE, FALSE);
+  ans.attr("class") = R_NilValue;
   return ans;
 }
 
