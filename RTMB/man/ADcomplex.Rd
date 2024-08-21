@@ -120,6 +120,8 @@ adcomplex(real, imag = rep(advector(0), length(real)))
 
 \item{y}{An object of class \code{'adcomplex'}}
 
+\item{base}{Not implemented}
+
 \item{inverse}{As \link[stats]{fft}}
 
 \item{mode}{As \link[base]{as.vector}}
@@ -127,6 +129,10 @@ adcomplex(real, imag = rep(advector(0), length(real)))
 \item{a}{matrix}
 
 \item{b}{matrix, vector or missing}
+
+\item{e1}{Left operand}
+
+\item{e2}{Right operand}
 }
 \value{
 Object of class \code{"adcomplex"}.
