@@ -192,6 +192,24 @@ detachADoverloads <- function(enable=TRUE, ...) {
 rep.advector <- function (x, ...) {
     as_advector(NextMethod())
 }
+##' @describeIn ADvector Equivalent of \link[base]{is.nan}. Check NaN status of a *constant* `advector` expression. If not constant throw an error.
+is.nan.advector <- function(x) {
+    if (any(getVariables(x)))
+        stop("Can only determine NaN status of constant expressions")
+    is.nan(getValues(x))
+}
+##' @describeIn ADvector Equivalent of \link[base]{is.finite}. Check finite status of a *constant* `advector` expression. If not constant throw an error.
+is.finite.advector <- function(x) {
+    if (any(getVariables(x)))
+        stop("Can only determine finite status of constant expressions")
+    is.finite(getValues(x))
+}
+##' @describeIn ADvector Equivalent of \link[base]{is.infinite}. Check infinity status of a *constant* `advector` expression. If not constant throw an error.
+is.infinite.advector <- function(x) {
+    if (any(getVariables(x)))
+        stop("Can only determine infinity status of constant expressions")
+    is.infinite(getValues(x))
+}
 ##' @describeIn ADvector Equivalent of \link[base]{is.na}. Check NA status of an `advector`. NAs can only occur directly (as constants) or indirectly as the result of an operation with NA operands. For a tape built with non-NA parameters the NA status of any expression is constant and can therefore safely be used as part of the calculations. (assuming correct propagation of NAs via C-level arithmetic).
 is.na.advector <- function(x) {
     is.na(getValues(x))
