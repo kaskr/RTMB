@@ -240,10 +240,11 @@ as.double.advector <- function(x, ...) {
     attributes(x) <- attributes(x)["class"]
     x
 }
-##' @describeIn ADvector \link{Complex} operations are not allowed and will throw an error.
+##' @describeIn ADvector \link{Complex} operations are redirected to \link{adcomplex}.
 ##' @param z Complex (not allowed)
-Complex.advector <- function(z)
-    stop("'advector' does not allow complex operations")
+Complex.advector <- function(z) {
+    callGeneric(adcomplex(z))
+}
 ##' @describeIn ADvector Non differentiable \link{Summary} operations (e.g. \code{min} \code{max}) are not allowed and will throw an error.
 Summary.advector <- function(..., na.rm = FALSE)
     stop("'advector' does not allow operation ", sQuote(.Generic))
