@@ -99,6 +99,7 @@ exp.adcomplex <- function(x) {
     adcomplex(s*cos(Im(x)), s*sin(Im(x)))
 }
 ##' @describeIn ADcomplex As \link[base]{complex}
+##' @param base Not implemented
 log.adcomplex <- function(x, base) {
     if (!missing(base)) stop("Argument 'base' not implemented")
     adcomplex(log(Mod(x)), Arg(x))
@@ -208,6 +209,8 @@ setMethod("diag", "adcomplex",
                                 diag(Im(x))))
 
 ##' @describeIn ADcomplex Mixed real/complex arithmetic
+##' @param e1 Left operand
+##' @param e2 Right operand
 setMethod("Ops", c("advector", "adcomplex"),
           function(e1, e2) callGeneric(adcomplex(e1), e2))
 
