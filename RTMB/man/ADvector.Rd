@@ -13,6 +13,9 @@
 \alias{[<-.advector}
 \alias{[[.advector}
 \alias{rep.advector}
+\alias{is.nan.advector}
+\alias{is.finite.advector}
+\alias{is.infinite.advector}
 \alias{is.na.advector}
 \alias{sum.advector}
 \alias{mean.advector}
@@ -49,6 +52,12 @@ advector(x)
 \method{[[}{advector}(x, ...)
 
 \method{rep}{advector}(x, ...)
+
+\method{is.nan}{advector}(x)
+
+\method{is.finite}{advector}(x)
+
+\method{is.infinite}{advector}(x)
 
 \method{is.na}{advector}(x)
 
@@ -149,6 +158,12 @@ re-used for AD vectors.
 \item \code{[[}: Equivalent of \link[base]{[[}
 
 \item \code{rep(advector)}: Equivalent of \link[base]{rep}. Makes \code{outer(x,x,...)} work.
+
+\item \code{is.nan(advector)}: Equivalent of \link[base]{is.nan}. Check NaN status of a \emph{constant} \code{advector} expression. If not constant throw an error.
+
+\item \code{is.finite(advector)}: Equivalent of \link[base]{is.finite}. Check finite status of a \emph{constant} \code{advector} expression. If not constant throw an error.
+
+\item \code{is.infinite(advector)}: Equivalent of \link[base]{is.infinite}. Check infinity status of a \emph{constant} \code{advector} expression. If not constant throw an error.
 
 \item \code{is.na(advector)}: Equivalent of \link[base]{is.na}. Check NA status of an \code{advector}. NAs can only occur directly (as constants) or indirectly as the result of an operation with NA operands. For a tape built with non-NA parameters the NA status of any expression is constant and can therefore safely be used as part of the calculations. (assuming correct propagation of NAs via C-level arithmetic).
 
