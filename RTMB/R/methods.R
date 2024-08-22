@@ -144,11 +144,11 @@ setMethod("%*%",
               matmul(advector(x), advector(y))
           })
 ##' @describeIn ADmatrix AD matrix multiply
-setMethod("tcrossprod", signature("advector"),
-          function(x, y=NULL) {if (is.null(y)) y <- x; x %*% t(y)} )
+setMethod("tcrossprod", signature("ad", "ad."),
+          function(x, y) {if (is.null(y)) y <- x; x %*% t(y)} )
 ##' @describeIn ADmatrix AD matrix multiply
-setMethod( "crossprod", signature("advector"),
-          function(x, y=NULL) {if (is.null(y)) y <- x; t(x) %*% y} )
+setMethod( "crossprod", signature("ad", "ad."),
+          function(x, y) {if (is.null(y)) y <- x; t(x) %*% y} )
 ##' @describeIn ADmatrix AD matrix cov2cor
 ##' @param V Covariance matrix
 setMethod( "cov2cor", signature("advector"),
