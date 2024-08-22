@@ -28,7 +28,6 @@
 \alias{print.advector}
 \alias{ifelse,num,ad,ad-method}
 \alias{ifelse,num,num,num-method}
-\alias{outer,advector,advector,missing-method}
 \title{The AD vector and its methods}
 \usage{
 advector(x)
@@ -82,8 +81,6 @@ advector(x)
 \S4method{ifelse}{num,ad,ad}(test, yes, no)
 
 \S4method{ifelse}{num,num,num}(test, yes, no)
-
-\S4method{outer}{advector,advector,missing}(X, Y)
 }
 \arguments{
 \item{x}{numeric or advector}
@@ -115,10 +112,6 @@ advector(x)
 \item{yes}{\code{advector}}
 
 \item{no}{\code{advector}}
-
-\item{X}{As \link[base]{outer}}
-
-\item{Y}{As \link[base]{outer}}
 }
 \value{
 Object of class \code{"advector"}.
@@ -188,8 +181,6 @@ re-used for AD vectors.
 \item \code{ifelse(test = num, yes = ad, no = ad)}: Equivalent of \link[base]{ifelse}
 
 \item \code{ifelse(test = num, yes = num, no = num)}: Default method
-
-\item \code{outer(X = advector, Y = advector, FUN = missing)}: Equivalent of \link[base]{outer}
 
 }}
 \examples{
