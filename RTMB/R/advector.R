@@ -74,7 +74,7 @@ AD <- function(x, force = FALSE) {
 }
 ##' @describeIn ADvector Unary operations
 "Math.advector" <- function(x, ...) {
-    Math1(x, .Generic)
+    Math1(x, .Generic, ...)
 }
 
 ##' @describeIn ADvector Makes \code{array(x)} work.
