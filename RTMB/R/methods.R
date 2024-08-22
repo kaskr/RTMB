@@ -360,13 +360,6 @@ setMethod("ifelse", signature(test="num", yes="num", no="num"),
               base::ifelse(test, yes, no)
           })
 
-##' @describeIn ADvector Equivalent of \link[base]{outer}
-##' @param X As \link[base]{outer}
-##' @param Y As \link[base]{outer}
-setMethod("outer", signature(X="advector", Y="advector", FUN="missing"),
-          function (X, Y) outer(X, Y, function(x, y) x * y))
-
-
 ################################################################################
 
 ##' @describeIn Distributions Conway-Maxwell-Poisson. Calculate density.
