@@ -82,6 +82,7 @@ setMethod("eigen", "adcomplex",
               if (symmetric) {
                   U <- upper.tri(x)
                   x[U] <- Conj(t(x)[U])
+                  diag(x) <- Re(diag(x))
               }
               y <- eigen_rescaled_atomic(x)
               D <- y[,1]
