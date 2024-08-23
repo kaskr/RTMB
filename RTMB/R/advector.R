@@ -194,19 +194,19 @@ rep.advector <- function (x, ...) {
 }
 ##' @describeIn ADvector Equivalent of \link[base]{is.nan}. Check NaN status of a *constant* `advector` expression. If not constant throw an error.
 is.nan.advector <- function(x) {
-    if (any(getVariables(x)))
+    if (!compare_allow() && any(getVariables(x)))
         stop("Can only determine NaN status of constant expressions")
     is.nan(getValues(x))
 }
 ##' @describeIn ADvector Equivalent of \link[base]{is.finite}. Check finite status of a *constant* `advector` expression. If not constant throw an error.
 is.finite.advector <- function(x) {
-    if (any(getVariables(x)))
+    if (!compare_allow() && any(getVariables(x)))
         stop("Can only determine finite status of constant expressions")
     is.finite(getValues(x))
 }
 ##' @describeIn ADvector Equivalent of \link[base]{is.infinite}. Check infinity status of a *constant* `advector` expression. If not constant throw an error.
 is.infinite.advector <- function(x) {
-    if (any(getVariables(x)))
+    if (!compare_allow() && any(getVariables(x)))
         stop("Can only determine infinity status of constant expressions")
     is.infinite(getValues(x))
 }
