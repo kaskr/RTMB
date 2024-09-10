@@ -139,8 +139,11 @@ setMethod("%*%",
 setMethod("%*%",
           signature("ad", "ad"),
           function(x, y) {
-              x <- as.matrix(x)
               y <- as.matrix(y)
+              ## Promotion of a vector to a 1-row matrix
+              if (is.null(dim(x)) && length(x) == nrow(y))
+                  x <- t(x)
+              x <- as.matrix(x)
               matmul(advector(x), advector(y))
           })
 ##' @describeIn ADmatrix AD matrix multiply
