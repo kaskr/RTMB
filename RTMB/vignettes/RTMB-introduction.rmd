@@ -230,3 +230,41 @@ Otherwise, `f2` is identical to `f`, and the model object can be constructed and
 ```{r}
 obj <- MakeADFun(f2, parameters, random=c("a", "b"))
 ```
+
+# Using an explicit data argument
+
+A common cause of confusion is that the RTMB version of `MakeADFun` does not have a `data` argument. What if we want to change the data?
+This can be handled in R using *closures*. Start by adding an explicit data argument to the objective function:
+
+```{r}
+f3 <- function(parms, data) {
+    getAll(data, parms, warn=FALSE)
+    ## Optional (enables extra RTMB features)
+    weight <- OBS(weight)
+    ## Random slopes
+    a %~% dnorm(mean=mua, sd=sda)
+    ## Random intercepts
+    b %~% dnorm(mean=mub, sd=sdb)
+    ## Data
+    predWeight <- a[Chick] * Time + b[Chick]
+    weight %~% dnorm(predWeight, sd=sdeps)
+    ## Get predicted weight uncertainties
+    ADREPORT(predWeight)
+}
+```
+
+A general function to combine this objective with a *specific* data set is:
+
+```{r}
+cmb <- function(f, d) function(p) f(p, d)
+```
+
+We can now easily create model objects using different datasets:
+
+```{r}
+## Using the original ChickWeight
+obj <- MakeADFun(cmb(f3, ChickWeight), parameters, random=c("a", "b"))
+## Using a new dataset
+ChickWeightNew <- transform(ChickWeight, weight=log(weight))
+obj <- MakeADFun(cmb(f3, ChickWeightNew), parameters, random=c("a", "b"))
+```
