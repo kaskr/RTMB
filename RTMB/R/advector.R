@@ -562,6 +562,8 @@ observation.name <- NULL
 data.term.indicator <- NULL
 data <- NULL
 ##' @describeIn TMB-interface Interface to \link[TMB]{MakeADFun}.
+##' @details \link{MakeADFun} builds a TMB model object mostly compatible with the \pkg{TMB} package and with an almost identical interface.
+##' The main difference in \pkg{RTMB} is that the objective function **and** the data is now given via a single argument \code{func}. Because \code{func} can be a *closure*, there is no need for an explicit data argument to \link{MakeADFun} (see examples).
 ##' @param func Function taking a parameter list (or parameter vector) as input.
 ##' @param parameters Parameter list (or parameter vector) used by \code{func}.
 ##' @param random As \link[TMB]{MakeADFun}.

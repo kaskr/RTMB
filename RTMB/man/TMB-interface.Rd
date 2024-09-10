@@ -74,6 +74,10 @@ TMB model object.
 \description{
 Interface to TMB
 }
+\details{
+\link{MakeADFun} builds a TMB model object mostly compatible with the \pkg{TMB} package and with an almost identical interface.
+The main difference in \pkg{RTMB} is that the objective function \strong{and} the data is now given via a single argument \code{func}. Because \code{func} can be a \emph{closure}, there is no need for an explicit data argument to \link{MakeADFun} (see examples).
+}
 \section{Functions}{
 \itemize{
 \item \code{MakeADFun()}: Interface to \link[TMB]{MakeADFun}.
@@ -97,13 +101,18 @@ This will (1) allow \code{oneStepPredict} to change the class of \code{x} to
 
 }}
 \examples{
+## Objective with data from the user workspace
 data(rivers)
 f <- function(p) { -sum(dnorm(rivers, p$mu, p$sd, log=TRUE)) }
 obj <- MakeADFun(f, list(mu=0, sd=1), silent=TRUE)
 opt <- nlminb(obj$par, obj$fn, obj$gr)
 sdreport(obj)
+## Same objective with an explicit data argument
+f <- function(p, data) { -sum(dnorm(data, p$mu, p$sd, log=TRUE)) }
+cmb <- function(f, d) function(p) f(p, d) ## Helper to make closure
+obj <- MakeADFun(cmb(f, rivers), list(mu=0, sd=1), silent=TRUE)
 ## 'REML trick'
-obj2 <- MakeADFun(f, list(mu=0, sd=1), random="mu", silent=TRUE)
+obj2 <- MakeADFun(cmb(f, rivers), list(mu=0, sd=1), random="mu", silent=TRUE)
 opt2 <- nlminb(obj2$par, obj2$fn, obj2$gr)
 sdreport(obj2) ## Compare with sd(rivers)
 ## Single argument vector function with numeric 'parameters'

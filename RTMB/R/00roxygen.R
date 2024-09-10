@@ -32,13 +32,18 @@ NULL
 ##' @rdname TMB-interface
 ##' @name TMB-interface
 ##' @examples
+##' ## Objective with data from the user workspace
 ##' data(rivers)
 ##' f <- function(p) { -sum(dnorm(rivers, p$mu, p$sd, log=TRUE)) }
 ##' obj <- MakeADFun(f, list(mu=0, sd=1), silent=TRUE)
 ##' opt <- nlminb(obj$par, obj$fn, obj$gr)
 ##' sdreport(obj)
+##' ## Same objective with an explicit data argument
+##' f <- function(p, data) { -sum(dnorm(data, p$mu, p$sd, log=TRUE)) }
+##' cmb <- function(f, d) function(p) f(p, d) ## Helper to make closure
+##' obj <- MakeADFun(cmb(f, rivers), list(mu=0, sd=1), silent=TRUE)
 ##' ## 'REML trick'
-##' obj2 <- MakeADFun(f, list(mu=0, sd=1), random="mu", silent=TRUE)
+##' obj2 <- MakeADFun(cmb(f, rivers), list(mu=0, sd=1), random="mu", silent=TRUE)
 ##' opt2 <- nlminb(obj2$par, obj2$fn, obj2$gr)
 ##' sdreport(obj2) ## Compare with sd(rivers)
 NULL
