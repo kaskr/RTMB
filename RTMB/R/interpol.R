@@ -27,7 +27,13 @@
 ##' plot(Vectorize(F3), 1, 10)
 ##' title("3rd derivative")
 ##' ## ======= interpol2D
-##' f <- interpol2Dfun(volcano, xlim=c(0,1), ylim=c(0,1))
+##' ## R=1 => exact match of observations
+##' f <- interpol2Dfun(volcano, xlim=c(0,1), ylim=c(0,1), R=1)
+##' f(0,0) == volcano[1,1]   ## Top-left corner
+##' f(1,1) == volcano[87,61] ## Bottom-right corner
+##' ## R=2 => trades accuracy for smoothness
+##' f <- interpol2Dfun(volcano, xlim=c(0,1), ylim=c(0,1), R=2)
+##' f(0,0) - volcano[1,1]    ## Error Top-left corner
 ##' F <- MakeTape(function(x) f(x[1],x[2]), c(.5,.5))
 ##' ## ======= splinefun
 ##' T <- MakeTape(function(x){
