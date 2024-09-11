@@ -18,3 +18,4 @@ Suggests: knitr, rmarkdown, igraph, tinytest, numDeriv
 URL: https://github.com/kaskr/RTMB
 BugReports: https://github.com/kaskr/RTMB/issues
 NeedsCompilation: yes
+Encoding: UTF-8

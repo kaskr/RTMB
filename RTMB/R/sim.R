@@ -87,7 +87,6 @@ is.na.simref <- function(x)is.na(x$value)
     else
         asS4(structure(environment(), class="simref"))
 }
-##' @describeIn Simulation
 setMethod("show", "simref", function(object) {
     cat("class='simref'\n")
     print(object$value)

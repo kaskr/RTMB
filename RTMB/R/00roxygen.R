@@ -21,7 +21,6 @@
 ##' @rdname RTMB-package
 ##' @name RTMB-package
 ##' @aliases RTMB-package RTMB
-##' @docType package
 ##' @author Kasper Kristensen
 ##'
 ##' Maintainer: <kaskr@@dtu.dk>
