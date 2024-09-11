@@ -2,8 +2,10 @@
 ##'
 ##' Writing custom AD adjoint derivatives from R
 ##'
-##' @details Reverse mode derivatives (adjoint code) can be implemented from R using the function `ADjoint`. It takes as input a function of a single argument `f(x)` representing the function value, and another function of *three* arguments `df(x, y, dy)` representing the adjoint derivative wrt `x` defined as `d/dx sum( f(x) * dy )`. Both `y` and `dy` have the same length as `f(x)`. The argument `y` can be assumed equal to `f(x)` to avoid recalculation during the reverse pass. It should be assumed that all arguments `x`, `y`, `dy` are vectors without any attributes. In case of matrix functions, the argument dimensions therefore have to be recovered from the lengths (see `logdet` example).
+##' @details Reverse mode derivatives (adjoint code) can be implemented from R using the function `ADjoint`. It takes as input a function of a single argument `f(x)` representing the function value, and another function of *three* arguments `df(x, y, dy)` representing the adjoint derivative wrt `x` defined as `d/dx sum( f(x) * dy )`. Both `y` and `dy` have the same length as `f(x)`. The argument `y` can be assumed equal to `f(x)` to avoid recalculation during the reverse pass. It should be assumed that all arguments `x`, `y`, `dy` are vectors without any attributes *except* for dimensions, which are stored on first evaluation. The latter is convenient when implementing matrix functions (see `logdet` example).
 ##' Higher order derivatives automatically work provided that `df` is composed by functions that `RTMB` already knows how to differentiate.
+##' @section Complex case:
+##' The argument \code{complex=TRUE} specifies that the functions `f` and `df` are complex differentiable (holomorphic) and that arguments `x`, `y` and `dy` should be assumed complex (or \link{adcomplex}). Recall that complex differentiability is a strong condition excluding many continuous functions e.g. `Re`, `Im`, `Conj` (see example).
 ##' @note `ADjoint` may be useful when you need a special atomic function which is not yet available in `RTMB`, or just to experiment with reverse mode derivatives.
 ##' However, the approach may cause a *significant overhead* compared to native `RTMB` derivatives. In addition, the approach is *not thread safe*, i.e. calling R functions cannot be done in parallel using OpenMP.
 ##' @param f R function representing the function value.
@@ -36,16 +38,23 @@
 ##' ############################################################################
 ##' ## Log determinant
 ##' logdet <- ADjoint(
-##'    function(x) {
-##'        dim(x) <- rep(sqrt(length(x)), 2)
-##'        determinant(x, log=TRUE)$modulus
-##'    },
-##'    function(x, y, dy) {
-##'        dim(x) <- rep(sqrt(length(x)), 2)
-##'        t(solve(x)) * dy
-##'    },
+##'    function(x) determinant(x, log=TRUE)$modulus,
+##'    function(x, y, dy) t(solve(x)) * dy,
 ##'    name = "logdet")
-##' MakeTape(logdet, diag(2))
+##' (F <- MakeTape(logdet, diag(2)))
+##' ## Test derivatives
+##' ## Compare with numDeriv::hessian(F, matrix(1:4,2))
+##' F$jacfun()$jacobian(matrix(1:4,2)) ## Hessian
+##' ############################################################################
+##' ## Holomorphic extension of 'solve'
+##' matinv <- ADjoint(
+##'    solve,
+##'    function(x,y,dy) -t(y) %*% dy %*% t(y),
+##'    complex=TRUE)
+##' (F <- MakeTape(function(x) Im(matinv(x+AD(1i))), diag(2)))
+##' ## Test derivatives
+##' ## Compare with numDeriv::jacobian(F, matrix(1:4,2))
+##' F$jacobian(matrix(1:4,2))
 ##' @rdname ADjoint
 ##' @name ADjoint
 ##' @return A function that allows for numeric and taped evaluation.

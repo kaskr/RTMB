@@ -22,13 +22,18 @@ A function that allows for numeric and taped evaluation.
 Writing custom AD adjoint derivatives from R
 }
 \details{
-Reverse mode derivatives (adjoint code) can be implemented from R using the function \code{ADjoint}. It takes as input a function of a single argument \code{f(x)} representing the function value, and another function of \emph{three} arguments \code{df(x, y, dy)} representing the adjoint derivative wrt \code{x} defined as \verb{d/dx sum( f(x) * dy )}. Both \code{y} and \code{dy} have the same length as \code{f(x)}. The argument \code{y} can be assumed equal to \code{f(x)} to avoid recalculation during the reverse pass. It should be assumed that all arguments \code{x}, \code{y}, \code{dy} are vectors without any attributes. In case of matrix functions, the argument dimensions therefore have to be recovered from the lengths (see \code{logdet} example).
+Reverse mode derivatives (adjoint code) can be implemented from R using the function \code{ADjoint}. It takes as input a function of a single argument \code{f(x)} representing the function value, and another function of \emph{three} arguments \code{df(x, y, dy)} representing the adjoint derivative wrt \code{x} defined as \verb{d/dx sum( f(x) * dy )}. Both \code{y} and \code{dy} have the same length as \code{f(x)}. The argument \code{y} can be assumed equal to \code{f(x)} to avoid recalculation during the reverse pass. It should be assumed that all arguments \code{x}, \code{y}, \code{dy} are vectors without any attributes \emph{except} for dimensions, which are stored on first evaluation. The latter is convenient when implementing matrix functions (see \code{logdet} example).
 Higher order derivatives automatically work provided that \code{df} is composed by functions that \code{RTMB} already knows how to differentiate.
 }
 \note{
 \code{ADjoint} may be useful when you need a special atomic function which is not yet available in \code{RTMB}, or just to experiment with reverse mode derivatives.
 However, the approach may cause a \emph{significant overhead} compared to native \code{RTMB} derivatives. In addition, the approach is \emph{not thread safe}, i.e. calling R functions cannot be done in parallel using OpenMP.
 }
+\section{Complex case}{
+
+The argument \code{complex=TRUE} specifies that the functions \code{f} and \code{df} are complex differentiable (holomorphic) and that arguments \code{x}, \code{y} and \code{dy} should be assumed complex (or \link{adcomplex}). Recall that complex differentiability is a strong condition excluding many continuous functions e.g. \code{Re}, \code{Im}, \code{Conj} (see example).
+}
+
 \examples{
 ############################################################################
 ## Lambert W-function defined by W(y*exp(y))=y
@@ -55,14 +60,21 @@ F$jacfun()$jacobian(1:3) ## hessian
 ############################################################################
 ## Log determinant
 logdet <- ADjoint(
-   function(x) {
-       dim(x) <- rep(sqrt(length(x)), 2)
-       determinant(x, log=TRUE)$modulus
-   },
-   function(x, y, dy) {
-       dim(x) <- rep(sqrt(length(x)), 2)
-       t(solve(x)) * dy
-   },
+   function(x) determinant(x, log=TRUE)$modulus,
+   function(x, y, dy) t(solve(x)) * dy,
    name = "logdet")
-MakeTape(logdet, diag(2))
+(F <- MakeTape(logdet, diag(2)))
+## Test derivatives
+## Compare with numDeriv::hessian(F, matrix(1:4,2))
+F$jacfun()$jacobian(matrix(1:4,2)) ## Hessian
+############################################################################
+## Holomorphic extension of 'solve'
+matinv <- ADjoint(
+   solve,
+   function(x,y,dy) -t(y) \%*\% dy \%*\% t(y),
+   complex=TRUE)
+(F <- MakeTape(function(x) Im(matinv(x+AD(1i))), diag(2)))
+## Test derivatives
+## Compare with numDeriv::jacobian(F, matrix(1:4,2))
+F$jacobian(matrix(1:4,2))
 }
