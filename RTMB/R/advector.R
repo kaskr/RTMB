@@ -21,11 +21,18 @@ advector <- function(x) {
     }
     ans
 }
-##' Convert R object to AD.
+##' Convert R object to AD
 ##'
 ##' Signify that this object should be given an AD interpretation if evaluated in an active AD context. Otherwise, keep object as is.
 ##' @details \code{AD} is a generic constructor, converting plain R structures to RTMB objects if in an autodiff context. Otherwise, it does nothing (and adds virtually no computational overhead).
 ##'
+##' \code{AD} knows the following R objects:
+##'
+##' - Numeric objects from \pkg{base}, such as `numeric()`, `matrix()`, `array()`, are converted to class \link{advector} with other attributes kept intact.
+##' - Complex objects from \pkg{base}, such as `complex()`, are converted to class \link{adcomplex}.
+##' - Sparse matrices from \pkg{Matrix}, such as `Matrix()`, `Diagonal()`, are converted to `adsparse` which is essentially a `dgCMatrix` with \link{advector} x-slot.
+##'
+##' \code{AD} provides a reliable way to avoid problems with method dispatch when mixing operand types. For instance, sub assigning `x[i] <- y` may be problematic when `x` is numeric and `y` is `advector`. A prior statement `x <- AD(x)` solves potential method dispatch issues and can therefore be used as a reliable alternative to \link{ADoverload}.
 ##' @param x Object to be converted.
 ##' @param force Logical; Force AD conversion even if no AD context? (for debugging)
 ##' @examples
