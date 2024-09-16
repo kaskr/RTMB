@@ -30,7 +30,7 @@ advector <- function(x) {
 ##'
 ##' - Numeric objects from \pkg{base}, such as `numeric()`, `matrix()`, `array()`, are converted to class \link{advector} with other attributes kept intact.
 ##' - Complex objects from \pkg{base}, such as `complex()`, are converted to class \link{adcomplex}.
-##' - Sparse matrices from \pkg{Matrix}, such as `Matrix()`, `Diagonal()`, are converted to `adsparse` which is essentially a `dgCMatrix` with \link{advector} x-slot.
+##' - Sparse matrices from \pkg{Matrix}, such as `Matrix()`, `Diagonal()`, are converted to \link{adsparse}.
 ##'
 ##' \code{AD} provides a reliable way to avoid problems with method dispatch when mixing operand types. For instance, sub assigning `x[i] <- y` may be problematic when `x` is numeric and `y` is `advector`. A prior statement `x <- AD(x)` solves potential method dispatch issues and can therefore be used as a reliable alternative to \link{ADoverload}.
 ##' @param x Object to be converted.

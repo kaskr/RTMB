@@ -21,7 +21,7 @@ Signify that this object should be given an AD interpretation if evaluated in an
 \itemize{
 \item Numeric objects from \pkg{base}, such as \code{numeric()}, \code{matrix()}, \code{array()}, are converted to class \link{advector} with other attributes kept intact.
 \item Complex objects from \pkg{base}, such as \code{complex()}, are converted to class \link{adcomplex}.
-\item Sparse matrices from \pkg{Matrix}, such as \code{Matrix()}, \code{Diagonal()}, are converted to \code{adsparse} which is essentially a \code{dgCMatrix} with \link{advector} x-slot.
+\item Sparse matrices from \pkg{Matrix}, such as \code{Matrix()}, \code{Diagonal()}, are converted to \link{adsparse}.
 }
 
 \code{AD} provides a reliable way to avoid problems with method dispatch when mixing operand types. For instance, sub assigning \code{x[i] <- y} may be problematic when \code{x} is numeric and \code{y} is \code{advector}. A prior statement \code{x <- AD(x)} solves potential method dispatch issues and can therefore be used as a reliable alternative to \link{ADoverload}.
