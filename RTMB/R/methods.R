@@ -337,7 +337,7 @@ setMethod("sapply", signature(X="ANY"),
               ans <- base::sapply(X, FUN, ..., simplify = FALSE, USE.NAMES = TRUE)
               ## Adapted from 'base::sapply':
               if (!isFALSE(simplify)) {
-                  cl <- class(ans[[1L]])
+                  cl <- if (length(ans)) class(ans[[1L]]) else NULL
                   ans <- simplify2array(ans, higher = (simplify == "array"))
                   if (identical(cl, "advector")) ## FIXME: Test all elements
                       class(ans) <- cl
