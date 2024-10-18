@@ -125,6 +125,7 @@ ODEadjoint <- function(F, ...) {
     reverse <- function(x, y, w) {
         if (is.null(Df))
             Df <<- ODEadjoint(augment(F), ...)
+        dim(w) <- NULL
         t(w) %*% matrix(Df(x), nrow=length(y))
     }
     RTMB::ADjoint(f, reverse, "ODE")
