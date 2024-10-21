@@ -545,6 +545,22 @@ function( x, nu ) {
 base:: besselY ( x=x, nu=nu )
 }
 )
+##' @describeIn Distributions AD implementation of \link[base]{lbeta}
+setMethod("lbeta",
+signature(a = "ad", b = "ad"),
+function( a, b ) {
+a <-  advector ( a )
+b <-  advector ( b )
+distr_lbeta ( a, b )
+}
+)
+##' @describeIn Distributions Default method
+setMethod("lbeta",
+signature(a = "num", b = "num"),
+function( a, b ) {
+base:: lbeta ( a=a, b=b )
+}
+)
 ##' @describeIn Distributions AD implementation
 dbinom_robust <- function( x, size, logit_p, log ) {
 if (inherits(x,"osa")) return (dGenericOSA( "dbinom_robust" , x=x, size=size, logit_p=logit_p, log=log ))
@@ -588,16 +604,6 @@ log <-  as.logical ( log )
 distr_dtweedie ( x, mu, phi, p, log )
 }
 ##' @describeIn Distributions AD implementation
-dnbinom2 <- function( x, mu, var, log ) {
-if (inherits(x,"osa")) return (dGenericOSA( "dnbinom2" , x=x, mu=mu, var=var, log=log ))
-if (inherits(x,"simref")) return (dGenericSim( "dnbinom2" , x=x, mu=mu, var=var, log=log ))
-x <-  advector ( x )
-mu <-  advector ( mu )
-var <-  advector ( var )
-log <-  as.logical ( log )
-distr_dnbinom2 ( x, mu, var, log )
-}
-##' @describeIn Distributions AD implementation
 dnbinom_robust <- function( x, log_mu, log_var_minus_mu, log ) {
 if (inherits(x,"osa")) return (dGenericOSA( "dnbinom_robust" , x=x, log_mu=log_mu, log_var_minus_mu=log_var_minus_mu, log=log ))
 if (inherits(x,"simref")) return (dGenericSim( "dnbinom_robust" , x=x, log_mu=log_mu, log_var_minus_mu=log_var_minus_mu, log=log ))
@@ -606,6 +612,16 @@ log_mu <-  advector ( log_mu )
 log_var_minus_mu <-  advector ( log_var_minus_mu )
 log <-  as.logical ( log )
 distr_dnbinom_robust ( x, log_mu, log_var_minus_mu, log )
+}
+##' @describeIn Distributions AD implementation
+dnbinom2 <- function( x, mu, var, log ) {
+if (inherits(x,"osa")) return (dGenericOSA( "dnbinom2" , x=x, mu=mu, var=var, log=log ))
+if (inherits(x,"simref")) return (dGenericSim( "dnbinom2" , x=x, mu=mu, var=var, log=log ))
+x <-  advector ( x )
+mu <-  advector ( mu )
+var <-  advector ( var )
+log <-  as.logical ( log )
+distr_dnbinom2 ( x, mu, var, log )
 }
 ##' @describeIn Distributions AD implementation
 dlgamma <- function( x, shape, scale, log ) {

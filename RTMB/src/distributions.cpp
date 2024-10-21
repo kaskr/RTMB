@@ -181,21 +181,6 @@ for (int i=0; i<n; i++) Y[i] = dnbinom(X1[i % n1], X2[i % n2], X3[i % n3], give_
 return as_advector(ans);
 }
 // [[Rcpp::export]]
-Rcpp::ComplexVector distr_dnbinom2 ( Rcpp::ComplexVector x, Rcpp::ComplexVector mu, Rcpp::ComplexVector var, bool give_log )
-{
-int n1=x.size();
-int n2=mu.size();
-int n3=var.size();
-int nmax = std::max({n1, n2, n3});
-int nmin = std::min({n1, n2, n3});
-int n = (nmin == 0 ? 0 : nmax);
-Rcpp::ComplexVector ans(n);
-const ad* X1 = adptr(x); const ad* X2 = adptr(mu); const ad* X3 = adptr(var);
-ad* Y = adptr(ans);
-for (int i=0; i<n; i++) Y[i] = dnbinom2(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
-return as_advector(ans);
-}
-// [[Rcpp::export]]
 Rcpp::ComplexVector distr_dnbinom_robust ( Rcpp::ComplexVector x, Rcpp::ComplexVector log_mu, Rcpp::ComplexVector log_var_minus_mu, bool give_log )
 {
 int n1=x.size();
@@ -208,6 +193,21 @@ Rcpp::ComplexVector ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(log_mu); const ad* X3 = adptr(log_var_minus_mu);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dnbinom_robust(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
+return as_advector(ans);
+}
+// [[Rcpp::export]]
+Rcpp::ComplexVector distr_dnbinom2 ( Rcpp::ComplexVector x, Rcpp::ComplexVector mu, Rcpp::ComplexVector var, bool give_log )
+{
+int n1=x.size();
+int n2=mu.size();
+int n3=var.size();
+int nmax = std::max({n1, n2, n3});
+int nmin = std::min({n1, n2, n3});
+int n = (nmin == 0 ? 0 : nmax);
+Rcpp::ComplexVector ans(n);
+const ad* X1 = adptr(x); const ad* X2 = adptr(mu); const ad* X3 = adptr(var);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = dnbinom2(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
 return as_advector(ans);
 }
 // [[Rcpp::export]]
@@ -498,6 +498,20 @@ Rcpp::ComplexVector ans(n);
 const ad* X1 = adptr(logmean); const ad* X2 = adptr(nu);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = compois_calc_loglambda(X1[i % n1], X2[i % n2]);
+return as_advector(ans);
+}
+// [[Rcpp::export]]
+Rcpp::ComplexVector distr_lbeta ( Rcpp::ComplexVector a, Rcpp::ComplexVector b )
+{
+int n1=a.size();
+int n2=b.size();
+int nmax = std::max({n1, n2});
+int nmin = std::min({n1, n2});
+int n = (nmin == 0 ? 0 : nmax);
+Rcpp::ComplexVector ans(n);
+const ad* X1 = adptr(a); const ad* X2 = adptr(b);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = lbeta(X1[i % n1], X2[i % n2]);
 return as_advector(ans);
 }
 // [[Rcpp::export]]
