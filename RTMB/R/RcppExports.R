@@ -145,12 +145,12 @@ distr_dnbinom <- function(x, size, prob, give_log) {
     .Call(`_RTMB_distr_dnbinom`, x, size, prob, give_log)
 }
 
-distr_dnbinom2 <- function(x, mu, var, give_log) {
-    .Call(`_RTMB_distr_dnbinom2`, x, mu, var, give_log)
-}
-
 distr_dnbinom_robust <- function(x, log_mu, log_var_minus_mu, give_log) {
     .Call(`_RTMB_distr_dnbinom_robust`, x, log_mu, log_var_minus_mu, give_log)
+}
+
+distr_dnbinom2 <- function(x, mu, var, give_log) {
+    .Call(`_RTMB_distr_dnbinom2`, x, mu, var, give_log)
 }
 
 distr_dpois <- function(x, lambda, give_log) {
@@ -231,6 +231,10 @@ distr_compois_calc_logZ <- function(loglambda, nu) {
 
 distr_compois_calc_loglambda <- function(logmean, nu) {
     .Call(`_RTMB_distr_compois_calc_loglambda`, logmean, nu)
+}
+
+distr_lbeta <- function(a, b) {
+    .Call(`_RTMB_distr_lbeta`, a, b)
 }
 
 distr_rcompois <- function(loglambda, nu) {
