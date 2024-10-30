@@ -12,8 +12,8 @@ dmvnorm <- function(x, mu=0, Sigma, log=FALSE, scale=1) {
         if (!all(dim(Sigma) == c(p, p))) stop("incompatible arguments")
     }
     if (!unit(scale)) {
-        return (dscale("dmvnorm", x, mu, Sigma,
-                       log=log, scale=scale, vectorize=TRUE))
+        return (dscale("dmvnorm", x, mu=0, Sigma,
+                       log=log, center=mu, scale=scale, vectorize=TRUE))
     }
     if (inherits(x, "simref")) {
         if (!log) stop("'simref' is for *log* density evaluation only")
@@ -52,8 +52,8 @@ dgmrf <- function(x, mu=0, Q, log=FALSE, scale=1) {
         if (!all(dim(Q) == c(p, p))) stop("incompatible arguments")
     }
     if (!unit(scale)) {
-        return (dscale("dgmrf", x, mu, Q,
-                       log=log, scale=scale, vectorize=TRUE))
+        return (dscale("dgmrf", x, mu=0, Q,
+                       log=log, center=mu, scale=scale, vectorize=TRUE))
     }
     if (inherits(x, "simref")) {
         if (!log) stop("'simref' is for *log* density evaluation only")
@@ -209,7 +209,7 @@ dseparable <- function(...) {
     dsep
 }
 
-## Utility to scale a density:
+## Utility to scale a *zero-centered* density:
 dscale <- function(f, x, ...,
                    log=FALSE, center=0, scale, vectorize=FALSE) {
     f <- match.fun(f)
