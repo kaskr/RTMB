@@ -132,11 +132,11 @@ getRmethod <- function(i) {
     ## Simple case: Not stats - create new simpel function
     if (!stats) {
         def <- c(
-            paste(name,"<- function(", df$signature[i],") {"),
+            paste(name,"<- function(", sub("log$","log=FALSE", df$signature[i]),") {"),
             paste('if (inherits(x,"osa")) return (dGenericOSA(',string(name),',',dblargs(df$signature[i]),'))')[is_density],
             paste('if (inherits(x,"simref")) return (dGenericSim(',string(name),',',dblargs(df$signature[i]),'))')[is_density],
-            paste(a1, "<- ",cast,"(",a1,")"),
-            paste(newname(name),"(",df$signature[i],")"), "}")
+            paste('dGenericEval(',string(name),',',dblargs(df$signature[i]),')'),
+            "}")
         meth <- c(
             "##' @describeIn Distributions AD implementation"[export],
             def)

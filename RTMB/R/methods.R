@@ -365,6 +365,20 @@ setMethod("ifelse", signature(test="num", yes="num", no="num"),
 
 ################################################################################
 
+dGenericEval <- function(.Generic, ..., log) {
+    dfun <- match.fun(paste("distr", .Generic, sep="_"))
+    args <- list(...)
+    anyAD <- any(unlist(lapply(args, inherits, "advector")))
+    args <- lapply(args, advector)
+    if (!missing(log))
+        args$give_log <- as.logical(log)
+    ans <- do.call(dfun, args)
+    if (anyAD)
+        ans
+    else
+        getValues(ans)
+}
+
 ##' @describeIn Distributions Conway-Maxwell-Poisson. Calculate density.
 dcompois <- function(x, mode, nu, log = FALSE) {
     if (inherits(x,"osa"))    return (dGenericOSA( "dcompois" , x=x, mode=mode, nu=nu, log=log ))
