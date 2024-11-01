@@ -388,3 +388,24 @@ ADrep expATv (SEXP AT,
   }
   return MatrixOutput(ans);
 }
+
+// [[Rcpp::export]]
+ADrep SparseSolve(Rcpp::RObject s, ADrep x) {
+  typedef Eigen::SparseLU<Eigen::SparseMatrix<ad>, Eigen::COLAMDOrdering<int> >
+    SparseLU_t;
+  SparseLU_t* solver;
+  // Cache factorization as Matrix package does
+  if (!Rcpp::RObject(s).hasAttribute("SparseLU")) {
+    Eigen::SparseMatrix<ad> S = SparseInput(s);
+    solver = new SparseLU_t;
+    (*solver).compute(S);
+    SEXP ptr = Rcpp::XPtr<SparseLU_t>(solver);
+    Rcpp::RObject(s).attr("SparseLU") = ptr;
+  } else {
+    SEXP ptr = Rcpp::RObject(s).attr("SparseLU");
+    solver = Rcpp::XPtr<SparseLU_t> (ptr);
+  }
+  ConstMapMatrix X = MatrixInput(x);
+  matrix<ad> ans = (*solver).solve(X);
+  return MatrixOutput(ans);
+}

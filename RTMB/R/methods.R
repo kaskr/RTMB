@@ -180,13 +180,18 @@ setMethod("solve", signature("num", "num."),
           function(a, b) {
               base::solve(a, b)
           })
-##' @describeIn ADmatrix Sparse AD matrix solve (not yet implemented)
+##' @describeIn ADmatrix Sparse AD matrix solve
 ##' @param a matrix
 ##' @param b matrix, vector or missing
 setMethod("solve",
           signature("anysparse", "ad."),
           function(a, b) {
-              stop("Sparse AD solve is not yet implemented")
+              a <- as(a, "adsparse")
+              if (missing(b))
+                  b <- diag(nrow(a))
+              ans <- SparseSolve(a, advector(as.matrix(b)))
+              dim(ans) <- dim(b)
+              ans
           })
 ##' @describeIn ADmatrix AD matrix (or array) colsums
 ##' @param na.rm Logical; Remove NAs while taping.
