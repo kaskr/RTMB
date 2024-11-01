@@ -80,8 +80,7 @@ struct FFTOp : global::DynamicOperator< -1 , -1 > {
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector fft_complex(const Rcpp::ComplexVector &x, std::vector<size_t> dim, bool inverse=false) {
-  CHECK_INPUT(x);
+ADrep fft_complex(ADrep x, std::vector<size_t> dim, bool inverse=false) {
   size_t n = x.size();
   // Check dim
   if (TMBad::prod_int(dim) * 2 != n)
@@ -95,9 +94,6 @@ Rcpp::ComplexVector fft_complex(const Rcpp::ComplexVector &x, std::vector<size_t
   else
     Y_ = TMBad::global::Complete<TMBad::FFTOp<false> >(n, dim) (X_);
   // Pass to R
-  Rcpp::ComplexVector y(n);
-  for (size_t j=0; j < n; j++) {
-    y[j] = ad2cplx(Y_[j]);
-  }
-  return as_advector(y);
+  ADrep y(Y_.data(), Y_.data() + Y_.size());
+  return y;
 }

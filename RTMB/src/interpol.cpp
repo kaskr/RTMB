@@ -35,25 +35,23 @@ ip2D_eval_num(Rcpp::XPtr<tmbutils::interpol2D<double> > ptr,
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector
+ADrep
 ip2D_eval_ad(Rcpp::XPtr<tmbutils::interpol2D<double> > ptr,
-             Rcpp::ComplexVector x,
-             Rcpp::ComplexVector y) {
+             ADrep x,
+             ADrep y) {
   if (!ad_context())
     Rcpp::stop("'ip2D_eval_ad' requires an active tape");
-  CHECK_INPUT(x);
-  CHECK_INPUT(y);
   size_t nx = x.size();
   size_t ny = y.size();
   size_t n = std::max(nx, ny);
-  Rcpp::ComplexVector z(n);
+  ADrep z(n);
+  ad* X = adptr(x);
+  ad* Y = adptr(y);
+  ad* Z = adptr(z);
   for (size_t i=0; i<n; i++) {
-    ad xi = cplx2ad(x[i % nx]);
-    ad yi = cplx2ad(y[i % ny]);
-    ad zi = (*ptr) (xi, yi);
-    z[i] = ad2cplx(zi);
+    Z[i] = (*ptr) (X[i % nx], Y[i % ny]);
   }
-  return as_advector(z);
+  return z;
 }
 
 /* ======================= SPLINE ==================================== */
@@ -61,23 +59,20 @@ ip2D_eval_ad(Rcpp::XPtr<tmbutils::interpol2D<double> > ptr,
 // [[Rcpp::export]]
 Rcpp::XPtr<tmbutils::splinefun<ad> >
 splineptr(Rcpp::NumericVector x,
-          Rcpp::ComplexVector y,
+          ADrep y,
           int method=3) {
-  CHECK_INPUT(y);
   typedef tmbutils::splinefun<ad> spline_t;
   std::vector<ad> x_(x.begin(), x.end());
-  std::vector<ad> y_((ad*) y.begin(), (ad*) y.end());
+  std::vector<ad> y_(y.adptr(), y.adptr() + y.size());
   spline_t* ptr = new spline_t (x_, y_, method);
   return Rcpp::XPtr<spline_t> (ptr);
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector
+ADrep
 splineptr_eval(Rcpp::XPtr<tmbutils::splinefun<ad> > ptr,
                Rcpp::NumericVector x) {
   std::vector<ad> x_(x.begin(), x.end());
   vector<ad> y = (*ptr)(x_);
-  Rcpp::ComplexVector ans( (Rcomplex*) y.data(),
-                           (Rcomplex*) y.data()+y.size());
-  return as_advector(ans);
+  return ADrep( y.data(), y.data()+y.size() );
 }

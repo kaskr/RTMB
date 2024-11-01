@@ -61,17 +61,17 @@ codegen <- function(i) {
     Xk <- paste0("X", adind)
     c(
     "// [[Rcpp::export]]",
-    paste("Rcpp::ComplexVector", newname(fun),"(",paste(c(paste("Rcpp::ComplexVector", adargs ), paste("bool", tail(args,  1))  [type=="d"] ) , collapse=", "),")"),
+    paste("ADrep", newname(fun),"(",paste(c(paste("ADrep", adargs ), paste("bool", tail(args,  1))  [type=="d"] ) , collapse=", "),")"),
     "{",
     paste0("int ", nk ,"=", adargs, ".size();"),
     paste0("int nmax = std::max({",paste(nk, collapse=", "),"});"),
     paste0("int nmin = std::min({",paste(nk, collapse=", "),"});"),
     "int n = (nmin == 0 ? 0 : nmax);",
-    "Rcpp::ComplexVector ans(n);",
+    "ADrep ans(n);",
     paste0("const ad* ", Xk, " = adptr(", adargs ,");", collapse=" "),
     "ad* Y = adptr(ans);",
     paste0("for (int i=0; i<n; i++) Y[i] = ",fun, "(",  paste0(Xk, "[i % ", nk, "]", collapse=", "), ", give_log"[type=="d"] ,");"),
-    "return as_advector(ans);",
+    "return ans;",
     "}")
 }
 

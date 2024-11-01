@@ -49,16 +49,16 @@ SEXP Term(const SEXP x_) {
     return x_;
   if (!ad_context())
     return x_;
-  Rcpp::ComplexVector x(x_);
-  CHECK_INPUT(x);
+  ADrep x(x_);
   size_t n = x.size();
   ad* X = adptr(x);
   TMBad::TermOp<> F;
-  Rcpp::ComplexVector y(n);
+  ADrep y(n);
+  ad* Y = adptr(y);
   for (size_t j=0; j < n; j++) {
-    y[j] = ad2cplx(F(X[j]));
+    Y[j] = F(X[j]);
   }
-  return as_advector(y);
+  return y;
 }
 
 // [[Rcpp::export]]

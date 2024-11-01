@@ -32,7 +32,7 @@ std::vector<double> Eval(TMBad::ADFun<>* tp, const std::vector<double> &x) {
   std::vector<double> y = (*tp)(x);
   return y;
 }
-Rcpp::ComplexVector EvalAD(TMBad::ADFun<>* tp, const Rcpp::ComplexVector &x);
+ADrep EvalAD(TMBad::ADFun<>* tp, ADrep x);
 Rcpp::NumericMatrix Jacobian(TMBad::ADFun<>* tp, const std::vector<double> &x) {
   std::vector<double> y = tp->Jacobian(x);
   Rcpp::NumericMatrix Jt(x.size(), y.size() / x.size(), y.begin());
@@ -310,56 +310,49 @@ Rcpp::List get_tape_config() {
 // [[Rcpp::export]]
 bool compare_allow() { return tape_config.compare_allow(); }
 
-Rcpp::ComplexVector EvalAD(TMBad::ADFun<>* tp, const Rcpp::ComplexVector &x) {
-  CHECK_INPUT(x);
-  std::vector<ad> x_( (ad*) x.begin(), (ad*) x.end());
+ADrep EvalAD(TMBad::ADFun<>* tp, ADrep x) {
+  std::vector<ad> x_( x.adptr(), x.adptr() + x.size() );
   std::vector<ad> y_ = (*tp)(x_);
-  Rcpp::ComplexVector y( (Rcomplex*) (y_.data()), (Rcomplex*) (y_.data() + y_.size()) );
-  return as_advector(y);
+  return ADrep ( y_.data(), y_.data() + y_.size() );
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector advec(const Rcpp::NumericVector &x) {
-  Rcpp::ComplexVector ans(x.size());
-  for (int i=0; i<x.size(); i++) ans[i] = ad2cplx(ad(x[i]));
-  return as_advector(ans);
+Rcpp::RObject advec(const Rcpp::NumericVector &x) {
+  ADrep ans(x.size());
+  ad* pans = ans.adptr();
+  for (int i=0; i<x.size(); i++) pans[i] = ad(x[i]);
+  return ans;
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector dependent(const Rcpp::ComplexVector &x) {
-  CHECK_INPUT(x);
+ADrep dependent(ADrep x) {
   if (TMBad::get_glob() == NULL)
     Rcpp::stop("No active AD context");
-  Rcpp::ComplexVector ans(x.size());
-  for (int i=0; i<x.size(); i++) {
-    ad xad = cplx2ad(x[i]);
-    xad.Dependent();
-    ans[i] = ad2cplx(xad);
+  ad* X = adptr(x);
+  for (size_t i=0; i<x.size(); i++) {
+    X[i].Dependent();
   }
-  return as_advector(ans);
+  return x;
 }
 // [[Rcpp::export]]
-Rcpp::ComplexVector independent(const Rcpp::ComplexVector &x) {
-  CHECK_INPUT(x);
+ADrep independent(ADrep x) {
   if (TMBad::get_glob() == NULL)
     Rcpp::stop("No active AD context");
-  Rcpp::ComplexVector ans(x.size());
-  for (int i=0; i<x.size(); i++) {
-    ad xad = cplx2ad(x[i]);
-    if (!xad.constant())
+  ad* X = adptr(x);
+  for (size_t i=0; i<x.size(); i++) {
+    if (!X[i].constant())
       Rcpp::stop("Dependent 'advector' cannot be set as independent");
-    xad.Independent();
-    ans[i] = ad2cplx(xad);
+    X[i].Independent();
   }
-  return as_advector(ans);
+  return x;
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector getValues(const Rcpp::ComplexVector &x) {
-  CHECK_INPUT(x);
+Rcpp::NumericVector getValues(ADrep x) {
   Rcpp::NumericVector ans(x.size());
-  for (int i=0; i<x.size(); i++) {
-    ans[i] = cplx2ad((x)[i]).Value() ;
+  ad* X = adptr(x);
+  for (size_t i=0; i<x.size(); i++) {
+    ans[i] = X[i].Value();
   }
   SHALLOW_DUPLICATE_ATTRIB(ans, x);
   ans = Rf_asS4(ans, FALSE, FALSE);
@@ -368,11 +361,11 @@ Rcpp::NumericVector getValues(const Rcpp::ComplexVector &x) {
 }
 
 // [[Rcpp::export]]
-Rcpp::LogicalVector getVariables(const Rcpp::ComplexVector &x) {
-  CHECK_INPUT(x);
+Rcpp::LogicalVector getVariables(ADrep x) {
   Rcpp::LogicalVector ans(x.size());
-  for (int i=0; i<x.size(); i++) {
-    ans[i] = !cplx2ad((x)[i]).constant() ;
+  ad* X = adptr(x);
+  for (size_t i=0; i<x.size(); i++) {
+    ans[i] = !X[i].constant();
   }
   SHALLOW_DUPLICATE_ATTRIB(ans, x);
   ans = Rf_asS4(ans, FALSE, FALSE);
@@ -381,7 +374,7 @@ Rcpp::LogicalVector getVariables(const Rcpp::ComplexVector &x) {
 }
 
 // [[Rcpp::export]]
-void dbgprint(const Rcpp::ComplexVector &x) {
+void dbgprint(Rcpp::ComplexVector x) {
   if (!is_advector(x)) Rcpp::stop("'x' must be advector");
   for (int i=0; i<x.size(); i++) {
     ad xi = cplx2ad((x)[i]) ;

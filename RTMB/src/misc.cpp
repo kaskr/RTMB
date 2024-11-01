@@ -144,9 +144,9 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
       // crash when called from TMB::MakeADFun (which does not use
       // Rcpp)
       BEGIN_RCPP
-      Rcpp::ComplexVector x(m); x = as_advector(x);
-      Rcpp::ComplexVector y(n); y = as_advector(y);
-      Rcpp::ComplexVector dy(n); dy = as_advector(dy);
+      ADrep x(m); ad* px = adptr(x);
+      ADrep y(n); ad* py = adptr(y);
+      ADrep dy(n); ad* pdy = adptr(dy);
       if (!dimx.isNULL())
         x.attr("dim") = dimx;
       if (!dimy.isNULL()) {
@@ -154,20 +154,20 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
         dy.attr("dim") = dimy;
       }
       for (size_t l=0; l<m; l++) {
-        x[l] = ad2cplx(args.x(l));
+        px[l] = args.x(l);
       }
       for (size_t l=0; l<n; l++) {
-        y[l] = ad2cplx(args.y(l));
-        dy[l] = ad2cplx(args.dy(l));
+        py[l] = args.y(l);
+        pdy[l] = args.dy(l);
       }
-      Rcpp::ComplexVector wtJ = (*Rptr)(x, y, dy); // User code could throw !
-      CHECK_INPUT(wtJ); // Check result from R
+      ADrep wtJ = Rcpp::RObject((*Rptr)(x, y, dy)); // User code could throw !
+      ad* pwtJ = adptr(wtJ);
       if ( (size_t) wtJ.size() != m)
         Rcpp::stop("'%s': Length of derivative (%u) not as expected (%u)",
                    op_name(),
                    (size_t) wtJ.size(),
                    (size_t) m);
-      for (size_t l=0; l<m; l++) args.dx(l) += cplx2ad(wtJ[l]);
+      for (size_t l=0; l<m; l++) args.dx(l) += pwtJ[l];
       VOID_END_RCPP
     }
   }
@@ -190,9 +190,8 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector TapedEval(Rcpp::Function F, Rcpp::ComplexVector i) {
+ADrep TapedEval(Rcpp::Function F, ADrep i) {
   if (!ad_context()) Rcpp::stop("TapedSubset requires an active ad context");
-  CHECK_INPUT(i);
   size_t m = i.size();
   ad* pi = adptr(i);
   // Test eval to get n
@@ -208,12 +207,11 @@ Rcpp::ComplexVector TapedEval(Rcpp::Function F, Rcpp::ComplexVector i) {
                        TMBad::global::Complete<TMBad::EvalOp<true > >(F, i, y_test) (x) :
                        TMBad::global::Complete<TMBad::EvalOp<false> >(F, i, y_test) (x) );
   // Pass to R
-  Rcpp::ComplexVector ans(n);
-  for (size_t j=0; j < n; j++) {
-    ans[j] = ad2cplx(y[j]);
-  }
+  if (n != y.size()) Rcpp::stop("Unexpected length of function output");
+  ADrep ans(y.data(), y.data() + y.size());
   DUPLICATE_ATTRIB(ans, y_test);
-  return as_advector(ans);
+  ans.setclass(); // Restore class destroyed by previous line
+  return ans;
 }
 
 /* Interface to some computational graph transforms which are also available from TMB*/
@@ -264,12 +262,11 @@ void newton_transform(TMBad::ADFun<>* adf, std::vector<TMBad::Index> random, SEX
 
 // Set low-rank tags
 // [[Rcpp::export]]
-Rcpp::ComplexVector LowRankTag(const Rcpp::ComplexVector &x) {
-  CHECK_INPUT(x);
+ADrep LowRankTag(ADrep x) {
   size_t n = x.size();
-  Rcpp::ComplexVector y(n);
+  ADrep y(n);
   ad* X = adptr(x);
   ad* Y = adptr(y);
   for (size_t i=0; i<n; i++) Y[i] = newton::Tag(X[i]);
-  return as_advector(y);
+  return y;
 }
