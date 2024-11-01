@@ -317,6 +317,10 @@ expATv <- function(AT, v, N, cfg) {
     .Call(`_RTMB_expATv`, AT, v, N, cfg)
 }
 
+SparseSolve <- function(s, x) {
+    .Call(`_RTMB_SparseSolve`, s, x)
+}
+
 fft_complex <- function(x, dim, inverse = FALSE) {
     .Call(`_RTMB_fft_complex`, x, dim, inverse)
 }

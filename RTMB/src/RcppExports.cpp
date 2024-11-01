@@ -984,6 +984,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// SparseSolve
+ADrep SparseSolve(Rcpp::RObject s, ADrep x);
+RcppExport SEXP _RTMB_SparseSolve(SEXP sSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type s(sSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(SparseSolve(s, x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fft_complex
 ADrep fft_complex(ADrep x, std::vector<size_t> dim, bool inverse);
 RcppExport SEXP _RTMB_fft_complex(SEXP xSEXP, SEXP dimSEXP, SEXP inverseSEXP) {
@@ -1137,6 +1149,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_math_sqrtm", (DL_FUNC) &_RTMB_math_sqrtm, 1},
     {"_RTMB_math_absm", (DL_FUNC) &_RTMB_math_absm, 1},
     {"_RTMB_expATv", (DL_FUNC) &_RTMB_expATv, 4},
+    {"_RTMB_SparseSolve", (DL_FUNC) &_RTMB_SparseSolve, 2},
     {"_RTMB_fft_complex", (DL_FUNC) &_RTMB_fft_complex, 3},
     {"_RTMB_TapedEval", (DL_FUNC) &_RTMB_TapedEval, 2},
     {"_RTMB_LowRankTag", (DL_FUNC) &_RTMB_LowRankTag, 1},
