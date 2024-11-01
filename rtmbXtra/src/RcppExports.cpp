@@ -3,6 +3,7 @@
 
 #include <RcppEigen.h>
 #include <Rcpp.h>
+#include "RTMB.h"
 
 using namespace Rcpp;
 
@@ -12,34 +13,34 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // logspace_gamma
-Rcpp::ComplexVector logspace_gamma(Rcpp::ComplexVector x);
+ADrep logspace_gamma(ADrep x);
 RcppExport SEXP _rtmbXtra_logspace_gamma(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(logspace_gamma(x));
     return rcpp_result_gen;
 END_RCPP
 }
 // logit_invcloglog
-Rcpp::ComplexVector logit_invcloglog(Rcpp::ComplexVector x);
+ADrep logit_invcloglog(ADrep x);
 RcppExport SEXP _rtmbXtra_logit_invcloglog(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(logit_invcloglog(x));
     return rcpp_result_gen;
 END_RCPP
 }
 // logit_pnorm
-Rcpp::ComplexVector logit_pnorm(Rcpp::ComplexVector x);
+ADrep logit_pnorm(ADrep x);
 RcppExport SEXP _rtmbXtra_logit_pnorm(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::ComplexVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(logit_pnorm(x));
     return rcpp_result_gen;
 END_RCPP

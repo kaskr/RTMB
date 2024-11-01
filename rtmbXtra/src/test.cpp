@@ -26,19 +26,18 @@ Type logspace_gamma(Type x) {
 
 /* Based on examples in RTMB/src/distributions.cpp */
 #define VECTORIZE_UNARY(FUN)                    \
-CHECK_INPUT(x);                                 \
 size_t n = x.size();                            \
 const ad* X = adptr(x);                         \
-Rcpp::ComplexVector ans(n);                     \
+ADrep ans(n);                                   \
 ad* Y = adptr(ans);                             \
 for (size_t i=0; i < n; i++) {                  \
   Y[i] = FUN(X[i]);                             \
- }                                              \
-return as_advector(ans);
+}                                               \
+return ans;
 
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector logspace_gamma(Rcpp::ComplexVector x) {
+ADrep logspace_gamma(ADrep x) {
   VECTORIZE_UNARY(logspace_gamma);
 }
 
@@ -72,7 +71,7 @@ Type logit_invcloglog(Type x) {
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector logit_invcloglog(Rcpp::ComplexVector x) {
+ADrep logit_invcloglog(ADrep x) {
   VECTORIZE_UNARY(logit_invcloglog);
 }
 
@@ -113,6 +112,6 @@ Type logit_pnorm(Type x) {
 }
 
 // [[Rcpp::export]]
-Rcpp::ComplexVector logit_pnorm(Rcpp::ComplexVector x) {
+ADrep logit_pnorm(ADrep x) {
   VECTORIZE_UNARY(logit_pnorm);
 }
