@@ -444,20 +444,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// distr_dnbinom2
-ADrep distr_dnbinom2(ADrep x, ADrep mu, ADrep var, bool give_log);
-RcppExport SEXP _RTMB_distr_dnbinom2(SEXP xSEXP, SEXP muSEXP, SEXP varSEXP, SEXP give_logSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type mu(muSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type var(varSEXP);
-    Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_dnbinom2(x, mu, var, give_log));
-    return rcpp_result_gen;
-END_RCPP
-}
 // distr_dnbinom_robust
 ADrep distr_dnbinom_robust(ADrep x, ADrep log_mu, ADrep log_var_minus_mu, bool give_log);
 RcppExport SEXP _RTMB_distr_dnbinom_robust(SEXP xSEXP, SEXP log_muSEXP, SEXP log_var_minus_muSEXP, SEXP give_logSEXP) {
@@ -469,6 +455,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< ADrep >::type log_var_minus_mu(log_var_minus_muSEXP);
     Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
     rcpp_result_gen = Rcpp::wrap(distr_dnbinom_robust(x, log_mu, log_var_minus_mu, give_log));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_dnbinom2
+ADrep distr_dnbinom2(ADrep x, ADrep mu, ADrep var, bool give_log);
+RcppExport SEXP _RTMB_distr_dnbinom2(SEXP xSEXP, SEXP muSEXP, SEXP varSEXP, SEXP give_logSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type var(varSEXP);
+    Rcpp::traits::input_parameter< bool >::type give_log(give_logSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_dnbinom2(x, mu, var, give_log));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -722,6 +722,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< ADrep >::type logmean(logmeanSEXP);
     Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
     rcpp_result_gen = Rcpp::wrap(distr_compois_calc_loglambda(logmean, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_lbeta
+ADrep distr_lbeta(ADrep a, ADrep b);
+RcppExport SEXP _RTMB_distr_lbeta(SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type a(aSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_lbeta(a, b));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1106,8 +1118,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_dSHASHo", (DL_FUNC) &_RTMB_distr_dSHASHo, 6},
     {"_RTMB_distr_dtweedie", (DL_FUNC) &_RTMB_distr_dtweedie, 5},
     {"_RTMB_distr_dnbinom", (DL_FUNC) &_RTMB_distr_dnbinom, 4},
-    {"_RTMB_distr_dnbinom2", (DL_FUNC) &_RTMB_distr_dnbinom2, 4},
     {"_RTMB_distr_dnbinom_robust", (DL_FUNC) &_RTMB_distr_dnbinom_robust, 4},
+    {"_RTMB_distr_dnbinom2", (DL_FUNC) &_RTMB_distr_dnbinom2, 4},
     {"_RTMB_distr_dpois", (DL_FUNC) &_RTMB_distr_dpois, 3},
     {"_RTMB_distr_dgamma", (DL_FUNC) &_RTMB_distr_dgamma, 4},
     {"_RTMB_distr_dlgamma", (DL_FUNC) &_RTMB_distr_dlgamma, 4},
@@ -1128,6 +1140,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_besselY", (DL_FUNC) &_RTMB_distr_besselY, 2},
     {"_RTMB_distr_compois_calc_logZ", (DL_FUNC) &_RTMB_distr_compois_calc_logZ, 2},
     {"_RTMB_distr_compois_calc_loglambda", (DL_FUNC) &_RTMB_distr_compois_calc_loglambda, 2},
+    {"_RTMB_distr_lbeta", (DL_FUNC) &_RTMB_distr_lbeta, 2},
     {"_RTMB_distr_rcompois", (DL_FUNC) &_RTMB_distr_rcompois, 2},
     {"_RTMB_ip2D", (DL_FUNC) &_RTMB_ip2D, 4},
     {"_RTMB_ip2D_eval_num", (DL_FUNC) &_RTMB_ip2D_eval_num, 3},
