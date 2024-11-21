@@ -1,4 +1,7 @@
 #define TMB_SKINNY
+// TMB already included => skip!
+#ifndef TMB_OBJECTIVE_PTR
+
 #include "config.h"
 #ifndef TMB_H
 #define TMB_H
@@ -34,4 +37,6 @@
 #define TMB_EXTERN extern
 #endif
 #include <TMB.hpp>
+#endif
+
 #endif

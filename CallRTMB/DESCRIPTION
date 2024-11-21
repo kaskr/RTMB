@@ -1,0 +1,11 @@
+Package: CallRTMB
+Type: Package
+Title: Test that a normal TMB template can call RTMB
+Version: 1.0
+Date: 2024-11-21
+Author: Kasper Kristensen
+Maintainer: kaskr <kaskr@dtu.dk>
+Description: Test that a normal TMB template can call RTMB. Works even when the TMB model is compiled with parallelization.
+License: GPL (>= 2)
+Imports: RTMB
+LinkingTo: RTMB, TMB, Rcpp, RcppEigen
