@@ -545,6 +545,22 @@ function( x, nu ) {
 base:: besselY ( x=x, nu=nu )
 }
 )
+##' @describeIn Distributions AD implementation of \link[base]{lbeta}
+setMethod("lbeta",
+signature(a = "ad", b = "ad"),
+function( a, b ) {
+a <-  advector ( a )
+b <-  advector ( b )
+distr_lbeta ( a, b )
+}
+)
+##' @describeIn Distributions Default method
+setMethod("lbeta",
+signature(a = "num", b = "num"),
+function( a, b ) {
+base:: lbeta ( a=a, b=b )
+}
+)
 ##' @describeIn Distributions AD implementation
 dbinom_robust <- function( x, size, logit_p, log=FALSE ) {
 if (inherits(x,"osa")) return (dGenericOSA( "dbinom_robust" , x=x, size=size, logit_p=logit_p, log=log ))

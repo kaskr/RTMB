@@ -181,21 +181,6 @@ for (int i=0; i<n; i++) Y[i] = dnbinom(X1[i % n1], X2[i % n2], X3[i % n3], give_
 return ans;
 }
 // [[Rcpp::export]]
-ADrep distr_dnbinom2 ( ADrep x, ADrep mu, ADrep var, bool give_log )
-{
-int n1=x.size();
-int n2=mu.size();
-int n3=var.size();
-int nmax = std::max({n1, n2, n3});
-int nmin = std::min({n1, n2, n3});
-int n = (nmin == 0 ? 0 : nmax);
-ADrep ans(n);
-const ad* X1 = adptr(x); const ad* X2 = adptr(mu); const ad* X3 = adptr(var);
-ad* Y = adptr(ans);
-for (int i=0; i<n; i++) Y[i] = dnbinom2(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
-return ans;
-}
-// [[Rcpp::export]]
 ADrep distr_dnbinom_robust ( ADrep x, ADrep log_mu, ADrep log_var_minus_mu, bool give_log )
 {
 int n1=x.size();
@@ -208,6 +193,21 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(log_mu); const ad* X3 = adptr(log_var_minus_mu);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dnbinom_robust(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
+return ans;
+}
+// [[Rcpp::export]]
+ADrep distr_dnbinom2 ( ADrep x, ADrep mu, ADrep var, bool give_log )
+{
+int n1=x.size();
+int n2=mu.size();
+int n3=var.size();
+int nmax = std::max({n1, n2, n3});
+int nmin = std::min({n1, n2, n3});
+int n = (nmin == 0 ? 0 : nmax);
+ADrep ans(n);
+const ad* X1 = adptr(x); const ad* X2 = adptr(mu); const ad* X3 = adptr(var);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = dnbinom2(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
 return ans;
 }
 // [[Rcpp::export]]
@@ -498,6 +498,20 @@ ADrep ans(n);
 const ad* X1 = adptr(logmean); const ad* X2 = adptr(nu);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = compois_calc_loglambda(X1[i % n1], X2[i % n2]);
+return ans;
+}
+// [[Rcpp::export]]
+ADrep distr_lbeta ( ADrep a, ADrep b )
+{
+int n1=a.size();
+int n2=b.size();
+int nmax = std::max({n1, n2});
+int nmin = std::min({n1, n2});
+int n = (nmin == 0 ? 0 : nmax);
+ADrep ans(n);
+const ad* X1 = adptr(a); const ad* X2 = adptr(b);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = lbeta(X1[i % n1], X2[i % n2]);
 return ans;
 }
 // [[Rcpp::export]]
