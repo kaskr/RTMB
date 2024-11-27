@@ -207,6 +207,20 @@ setMethod("rowSums", signature("advector"),
               if (dims != 1L) stop("AD version requires dims=1")
               apply(x, 1L, sum, na.rm=na.rm)
           } )
+##' @describeIn ADmatrix AD sparse matrix colsums
+setMethod("colSums", signature(x="adsparse"),
+          function(x, na.rm, dims) {
+              if (dims != 1L) stop("AD version requires dims=1")
+              if (na.rm) x@x[is.na(x@x)] <- 0
+              drop( t(rep(1, nrow(x))) %*% x )
+          } )
+##' @describeIn ADmatrix AD sparse matrix rowsums
+setMethod("rowSums", signature("adsparse"),
+          function(x, na.rm, dims) {
+              if (dims != 1L) stop("AD version requires dims=1")
+              if (na.rm) x@x[is.na(x@x)] <- 0
+              drop( x %*% rep(1, ncol(x)) )
+          } )
 ##' @describeIn ADmatrix AD matrix column bind
 ##' @param ... As \link[base]{cbind}
 cbind.advector <- function (...) {
