@@ -20,6 +20,8 @@
 \alias{sum.advector}
 \alias{mean.advector}
 \alias{prod.advector}
+\alias{min.advector}
+\alias{max.advector}
 \alias{is.numeric.advector}
 \alias{as.double.advector}
 \alias{Complex.advector}
@@ -64,7 +66,11 @@ advector(x)
 
 \method{mean}{advector}(x, ...)
 
-\method{prod}{advector}(x, ..., na.rm)
+\method{prod}{advector}(x, ..., na.rm = FALSE)
+
+\method{min}{advector}(..., na.rm = FALSE)
+
+\method{max}{advector}(..., na.rm = FALSE)
 
 \method{is.numeric}{advector}(x)
 
@@ -164,7 +170,11 @@ re-used for AD vectors.
 
 \item \code{mean(advector)}: Equivalent of \link[base]{mean} except no arguments beyond \code{x} are supported.
 
-\item \code{prod(advector)}: Equivalent of \link[base]{prod} except \code{na.rm} not allowed.
+\item \code{prod(advector)}: Equivalent of \link[base]{prod}.
+
+\item \code{min(advector)}: Equivalent of \link[base]{min}.
+
+\item \code{max(advector)}: Equivalent of \link[base]{min}.
 
 \item \code{is.numeric(advector)}: Makes \code{cov2cor()} work. FIXME: Any unwanted side-effects with this?
 
@@ -172,7 +182,7 @@ re-used for AD vectors.
 
 \item \code{Complex(advector)}: \link{Complex} operations are redirected to \link{adcomplex}.
 
-\item \code{Summary(advector)}: Non differentiable \link{Summary} operations (e.g. \code{min} \code{max}) are not allowed and will throw an error.
+\item \code{Summary(advector)}: Unimplemented \link{Summary} operations (currently \code{all} \code{any} \code{range}) will throw an error.
 
 \item \code{diff(advector)}: Equivalent of \link[base]{diff}
 
