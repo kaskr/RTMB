@@ -233,11 +233,14 @@ mean.advector <- function(x, ...) {
     if (length(list(...))) stop("AD mean only works for single argument")
     sum(x) / length(x)
 }
-##' @describeIn ADvector Equivalent of \link[base]{prod} except \code{na.rm} not allowed.
-prod.advector <- function(x, ..., na.rm) {
-  if (na.rm) stop("'na.rm=TRUE' not implemented for AD prod")
-  Reduce1(x, "*") * prod(...)
+##' @describeIn ADvector Equivalent of \link[base]{prod}.
+prod.advector <- function(x, ..., na.rm = FALSE) {
+    if (na.rm) {
+        x <- x[!is.na(x)]
+    }
+    Reduce1(x, "*") * prod(..., na.rm = na.rm)
 }
+
 ## Make cov2cor() work. FIXME: Any unwanted side-effects with this?
 ##' @describeIn ADvector Makes \code{cov2cor()} work. FIXME: Any unwanted side-effects with this?
 is.numeric.advector <- function(x) TRUE
