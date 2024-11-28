@@ -240,6 +240,24 @@ prod.advector <- function(x, ..., na.rm = FALSE) {
     }
     Reduce1(x, "*") * prod(..., na.rm = na.rm)
 }
+##' @describeIn ADvector Equivalent of \link[base]{min}.
+min.advector <- function(..., na.rm = FALSE) {
+    x <- c(...)
+    if (na.rm) {
+        x <- x[!is.na(x)]
+    }
+    if (length(x) == 0) return (advector(Inf))
+    Reduce1(x, "min")
+}
+##' @describeIn ADvector Equivalent of \link[base]{min}.
+max.advector <- function(..., na.rm = FALSE) {
+    x <- c(...)
+    if (na.rm) {
+        x <- x[!is.na(x)]
+    }
+    if (length(x) == 0) return (advector(-Inf))
+    Reduce1(x, "max")
+}
 
 ## Make cov2cor() work. FIXME: Any unwanted side-effects with this?
 ##' @describeIn ADvector Makes \code{cov2cor()} work. FIXME: Any unwanted side-effects with this?
@@ -255,7 +273,7 @@ as.double.advector <- function(x, ...) {
 Complex.advector <- function(z) {
     callGeneric(adcomplex(z))
 }
-##' @describeIn ADvector Non differentiable \link{Summary} operations (e.g. \code{min} \code{max}) are not allowed and will throw an error.
+##' @describeIn ADvector Unimplemented \link{Summary} operations (currently \code{all} \code{any} \code{range}) will throw an error.
 Summary.advector <- function(..., na.rm = FALSE)
     stop("'advector' does not allow operation ", sQuote(.Generic))
 ## If an overload has issues we can patch it:

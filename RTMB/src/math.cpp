@@ -155,6 +155,7 @@ ADrep Reduce1(ADrep x, std::string op) {
   ad& ans = y.adptr()[0];
   ad* X = adptr(x);
 #define REDUCE(OP) for (size_t i=0; i<n; i++) ans = ans OP X[i];
+#define REDUCE2(OP) for (size_t i=1; i<n; i++) ans = OP(ans, X[i]);
   if (!op.compare("+")) {
     if ( !tape_config.sum_vectorize() ) {
       ans = 0.; REDUCE(+);
@@ -163,9 +164,16 @@ ADrep Reduce1(ADrep x, std::string op) {
     }
   } else if (!op.compare("*")) {
     ans = 1.; REDUCE(*);
+  } else if (!op.compare("min")) {
+    if (n == 0) Rcpp::stop("Length must be positive");
+    ans = X[0]; REDUCE2(TMBad::min);
+  } else if (!op.compare("max")) {
+    if (n == 0) Rcpp::stop("Length must be positive");
+    ans = X[0]; REDUCE2(TMBad::max);
   }
   else Rf_error("'%s' not implemented", op.c_str());
 #undef REDUCE
+#undef REDUCE2
   return y;
 }
 
