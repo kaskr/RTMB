@@ -34,6 +34,12 @@ eigenDisc <- function(A) {
 ##' @param tol Accuracy if A is a generator matrix and v a probability vector.
 ##' @param ... Extra configuration parameters
 ##' @return Vector (or matrix)
+##' @examples
+##' set.seed(1); A <- Matrix::rsparsematrix(5, 5, .5)
+##' expAv(A, 1:5) ## Matrix::expm(A) %*% 1:5
+##' F <- MakeTape(function(x) expAv(A*x, 1:5), 1)
+##' F(1)
+##' F(2) ## More terms needed => trigger retaping
 expAv <- function(A, v, transpose=FALSE, uniformization=TRUE, tol=1e-8, ...) {
     cfg <- list(Nmax=100, warn=FALSE, trace=TRUE)
     dotargs <- list(...)
@@ -60,13 +66,13 @@ expAv <- function(A, v, transpose=FALSE, uniformization=TRUE, tol=1e-8, ...) {
         if (!transpose) A <- t(A)
         ans <- expATv(A, v, N, cfg) ## A transposed internally
     } else {
-        if (transpose) A <- t(A)
+        if (transpose) A <- Matrix::t(A)
         ans <- term <- v
-        for (n in 1:N) {
+        for (n in seq_len(N)) {
             term = A %*% term / n
             ans <- ans + term
         }
     }
     if (uniformization) ans <- exp(disc["C"]) * ans
-    ans
+    drop(as.matrix(ans))
 }
