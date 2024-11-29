@@ -35,6 +35,13 @@ Additional supported arguments via \code{...} currently include:
 \item \code{trace} Trace the number of terms when it adaptively changes.
 }
 }
+\examples{
+set.seed(1); A <- Matrix::rsparsematrix(5, 5, .5)
+expAv(A, 1:5) ## Matrix::expm(A) \%*\% 1:5
+F <- MakeTape(function(x) expAv(A*x, 1:5), 1)
+F(1)
+F(2) ## More terms needed => trigger retaping
+}
 \references{
 Grassmann, W. K. (1977). Transient solutions in Markovian queueing systems. \emph{Computers & Operations Research}, 4(1), 47--53.
 
