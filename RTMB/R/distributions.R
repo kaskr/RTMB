@@ -593,3 +593,11 @@ dGenericEval( "compois_calc_logZ" , loglambda=loglambda, nu=nu )
 compois_calc_loglambda <- function( logmean, nu ) {
 dGenericEval( "compois_calc_loglambda" , logmean=logmean, nu=nu )
 }
+##' @describeIn Distributions AD implementation
+logspace_add <- function( logx, logy ) {
+dGenericEval( "logspace_add" , logx=logx, logy=logy )
+}
+##' @describeIn Distributions AD implementation
+logspace_sub <- function( logx, logy ) {
+dGenericEval( "logspace_sub" , logx=logx, logy=logy )
+}
