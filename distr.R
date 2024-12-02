@@ -8,6 +8,9 @@ b <- grep("^VECTORIZE.*\\(bessel", tmb, value=TRUE)
 cp <- grep("^VECTORIZE.*\\(compois", tmb, value=TRUE)
 dp <- c(d,p,q,b,cp)
 dp <- sub("VECTORIZE(.)_(.*)\\((.*)\\)", "\\3 \\1 \\2", dp)
+## Manually add
+more <- c("logspace_add 2 tt", "logspace_sub 2 tt")
+dp <- c(dp, more)
 df <- as.data.frame(t(do.call(cbind, sapply(dp, strsplit, " "))), stringsAsFactors=FALSE)
 names(df) <- c("name","npar","code")
 df <- subset(df,name!="pow") ## bogus
