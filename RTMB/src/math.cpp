@@ -368,7 +368,7 @@ MATH_MATRIX_FUNCTION(absm)
 #undef MATH_MATRIX_FUNCTION
 
 // [[Rcpp::export]]
-ADrep expATv (SEXP AT,
+ADrep expATv (Rcpp::RObject AT,
               ADrep v,
               ADrep N,
               Rcpp::List cfg) {
