@@ -375,7 +375,6 @@ ADrep expATv (Rcpp::RObject AT,
   if (!is_adsparse(AT)) Rcpp::stop("Expecting adsparse 'AT'");
   if (!is_adscalar(N)) Rcpp::stop("Expecting adscalar 'N'");
   // Inputs
-  Eigen::SparseMatrix<ad> AT_ = SparseInput(AT);
   matrix<ad> v_ = MatrixInput(v);
   ad N_ = ScalarInput(N);
   // Configuration parameters
@@ -386,12 +385,23 @@ ADrep expATv (Rcpp::RObject AT,
   SET_CONFIG(trace);
   SET_CONFIG(warn);
 #undef SET_CONFIG
+  // Cache functor
+  typedef sparse_matrix_exponential::expm_series<ad> expm_t;
+  expm_t* F;
+  if (!Rcpp::RObject(AT).hasAttribute("SparseMatrixExponential")) {
+    Eigen::SparseMatrix<ad> AT_ = SparseInput(AT);
+    F = new expm_t (AT_, N_, cfg_);
+    SEXP ptr = Rcpp::XPtr<expm_t>(F);
+    AT.attr("SparseMatrixExponential") = ptr;
+  } else {
+    SEXP ptr = AT.attr("SparseMatrixExponential");
+    F = Rcpp::XPtr<expm_t> (ptr);
+  }
   // Evaluate
   matrix<ad> ans(v_.rows(), v_.cols());
-  sparse_matrix_exponential::expm_series<ad> F(AT_, N_, cfg_);
   for (int j=0; j<ans.cols(); j++) {
     vector<ad> vec = v_.col(j).array();
-    vector<ad> out = F(vec);
+    vector<ad> out = (*F)(vec);
     ans.col(j).array() = out;
   }
   return MatrixOutput(ans);
