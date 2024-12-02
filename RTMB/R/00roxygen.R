@@ -217,6 +217,8 @@ NULL
 ##' @param sd parameter
 ##' @param scale parameter
 ##' @param log Logical; Return log density/probability?
+##' @param logx Log-space input
+##' @param logy Log-space input
 ##' @rdname Distributions
 ##' @name Distributions
 ##' @return In autodiff contexts an object of class \code{"advector"} is returned; Otherwise a standard numeric vector.

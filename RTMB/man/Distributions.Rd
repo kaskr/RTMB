@@ -79,6 +79,8 @@
 \alias{dnbinom_robust}
 \alias{dnbinom2}
 \alias{dlgamma}
+\alias{logspace_add}
+\alias{logspace_sub}
 \alias{dnorm,ad,ad.,ad.,logical.-method}
 \alias{dnorm,num,num.,num.,logical.-method}
 \alias{dnorm,osa,ANY,ANY,ANY-method}
@@ -253,6 +255,10 @@ dnbinom2(x, mu, var, log = FALSE)
 
 dlgamma(x, shape, scale, log = FALSE)
 
+logspace_add(logx, logy)
+
+logspace_sub(logx, logy)
+
 \S4method{dnorm}{ad,ad.,ad.,logical.}(x, mean = 0, sd = 1, log = FALSE)
 
 \S4method{dnorm}{num,num.,num.,logical.}(x, mean = 0, sd = 1, log = FALSE)
@@ -345,6 +351,10 @@ dcompois2(x, mean, nu, log = FALSE)
 \item{log_var_minus_mu}{parameter}
 
 \item{var}{parameter}
+
+\item{logx}{Log-space input}
+
+\item{logy}{Log-space input}
 
 \item{meanlog}{Parameter; Mean on log scale.}
 
@@ -609,6 +619,10 @@ which documentation should be looked up online.
 \item \code{dnbinom2()}: AD implementation
 
 \item \code{dlgamma()}: AD implementation
+
+\item \code{logspace_add()}: AD implementation
+
+\item \code{logspace_sub()}: AD implementation
 
 \item \code{dnorm(x = ad, mean = ad., sd = ad., log = logical.)}: AD implementation of \link[stats]{dnorm}
 
