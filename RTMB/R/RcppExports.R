@@ -321,8 +321,8 @@ math_absm <- function(x) {
     .Call(`_RTMB_math_absm`, x)
 }
 
-expATv <- function(AT, v, N, cfg) {
-    .Call(`_RTMB_expATv`, AT, v, N, cfg)
+expATv <- function(AT, v, N, cfg, orig) {
+    .Call(`_RTMB_expATv`, AT, v, N, cfg, orig)
 }
 
 SparseSolve <- function(s, x) {

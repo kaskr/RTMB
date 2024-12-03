@@ -995,8 +995,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // expATv
-ADrep expATv(Rcpp::RObject AT, ADrep v, ADrep N, Rcpp::List cfg);
-RcppExport SEXP _RTMB_expATv(SEXP ATSEXP, SEXP vSEXP, SEXP NSEXP, SEXP cfgSEXP) {
+ADrep expATv(Rcpp::RObject AT, ADrep v, ADrep N, Rcpp::List cfg, Rcpp::RObject orig);
+RcppExport SEXP _RTMB_expATv(SEXP ATSEXP, SEXP vSEXP, SEXP NSEXP, SEXP cfgSEXP, SEXP origSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1004,7 +1004,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< ADrep >::type v(vSEXP);
     Rcpp::traits::input_parameter< ADrep >::type N(NSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type cfg(cfgSEXP);
-    rcpp_result_gen = Rcpp::wrap(expATv(AT, v, N, cfg));
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type orig(origSEXP);
+    rcpp_result_gen = Rcpp::wrap(expATv(AT, v, N, cfg, orig));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1174,7 +1175,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_math_expm", (DL_FUNC) &_RTMB_math_expm, 1},
     {"_RTMB_math_sqrtm", (DL_FUNC) &_RTMB_math_sqrtm, 1},
     {"_RTMB_math_absm", (DL_FUNC) &_RTMB_math_absm, 1},
-    {"_RTMB_expATv", (DL_FUNC) &_RTMB_expATv, 4},
+    {"_RTMB_expATv", (DL_FUNC) &_RTMB_expATv, 5},
     {"_RTMB_SparseSolve", (DL_FUNC) &_RTMB_SparseSolve, 2},
     {"_RTMB_fft_complex", (DL_FUNC) &_RTMB_fft_complex, 3},
     {"_RTMB_TapedEval", (DL_FUNC) &_RTMB_TapedEval, 2},
