@@ -371,7 +371,8 @@ MATH_MATRIX_FUNCTION(absm)
 ADrep expATv (Rcpp::RObject AT,
               ADrep v,
               ADrep N,
-              Rcpp::List cfg) {
+              Rcpp::List cfg,
+              Rcpp::RObject orig) {
   if (!is_adsparse(AT)) Rcpp::stop("Expecting adsparse 'AT'");
   if (!is_adscalar(N)) Rcpp::stop("Expecting adscalar 'N'");
   // Inputs
@@ -388,13 +389,13 @@ ADrep expATv (Rcpp::RObject AT,
   // Cache functor
   typedef sparse_matrix_exponential::expm_series<ad> expm_t;
   expm_t* F;
-  if (!Rcpp::RObject(AT).hasAttribute("SparseMatrixExponential")) {
+  if (!orig.hasAttribute("SparseMatrixExponential")) {
     Eigen::SparseMatrix<ad> AT_ = SparseInput(AT);
     F = new expm_t (AT_, N_, cfg_);
     SEXP ptr = Rcpp::XPtr<expm_t>(F);
-    AT.attr("SparseMatrixExponential") = ptr;
+    orig.attr("SparseMatrixExponential") = ptr;
   } else {
-    SEXP ptr = AT.attr("SparseMatrixExponential");
+    SEXP ptr = orig.attr("SparseMatrixExponential");
     F = Rcpp::XPtr<expm_t> (ptr);
   }
   // Evaluate

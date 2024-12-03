@@ -45,6 +45,7 @@ expAv <- function(A, v, transpose=FALSE, uniformization=TRUE, tol=1e-8, ...) {
     dotargs <- list(...)
     cfg[names(dotargs)] <- dotargs
     if (ad_context()) A <- as(A, "adsparse")
+    orig <- A ## Set cache on 'orig' of class 'adsparse'
     N <- cfg$Nmax ## Default
     if (uniformization) {
         ## Template of A
@@ -64,7 +65,7 @@ expAv <- function(A, v, transpose=FALSE, uniformization=TRUE, tol=1e-8, ...) {
         v <- advector(v)
         N <- advector(N)
         if (!transpose) A <- t(A)
-        ans <- expATv(A, v, N, cfg) ## A transposed internally
+        ans <- expATv(A, v, N, cfg, orig) ## A transposed internally
     } else {
         if (transpose) A <- Matrix::t(A)
         ans <- term <- v
