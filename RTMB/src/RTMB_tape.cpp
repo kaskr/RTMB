@@ -83,8 +83,62 @@ void optimize(TMBad::ADFun<>* adf) {
 void eliminate(TMBad::ADFun<>* adf) {
   (*adf).eliminate();
 }
+// 'atomic_transform' helpers
+// Pack single argument
+std::vector<ad> pack1(std::vector<ad> x) {
+  TMBad::ad_segment xs(x.data(), x.size());
+  TMBad::ad_segment xp = TMBad::pack(xs);
+  return TMBad::concat(std::vector<TMBad::ad_segment>(1, xp));
+}
+// unpack single argument
+std::vector<ad> unpack1(std::vector<ad> x) {
+  TMBad::ad_segment xs(x.data(), x.size());
+  TMBad::ad_segment x0 = TMBad::unpack(xs);
+  return TMBad::concat(std::vector<TMBad::ad_segment>({x0}));
+}
+// unpack two arguments
+std::vector<ad> unpack2(std::vector<ad> x) {
+  TMBad::ad_segment x0 = TMBad::unpack(x, 0);
+  TMBad::ad_segment x1 = TMBad::unpack(x, 1);
+  return TMBad::concat(std::vector<TMBad::ad_segment>({x0, x1}));
+}
+// Pack inputs/outputs of a tape
+struct PackedTape {
+  TMBad::ADFun<>* adf;
+  PackedTape(TMBad::ADFun<>* adf) : adf(adf) { }
+  std::vector<ad> operator() (const std::vector<ad> &x) {
+    return pack1((*adf)(unpack2(x)));
+  }
+};
 void atomic_transform(TMBad::ADFun<>* adf) {
-  *adf = (*adf).atomic();
+  if (!ad_context()) {
+    *adf = (*adf).atomic();
+    return;
+  }
+  TMBad::ADFun<> F;
+  std::vector<double> xd = (*adf).DomainVec();
+  // resolve refs and pack them
+  std::vector<ad> outer_vars = (*adf).resolve_refs();
+  TMBad::forceContiguous(outer_vars);
+  // Start new context
+  F.glob.ad_start();
+  std::vector<ad> xad(xd.begin(), xd.end());
+  TMBad::Independent(xad);
+  // Copy outer vars to new context (adds RefOps)
+  for (size_t i=0; i<outer_vars.size(); i++)
+    outer_vars[i] = outer_vars[i].copy();
+  // pack inner params
+  std::vector<ad> xad_pack = pack1(xad);
+  std::vector<ad> outer_vars_pack = pack1(outer_vars);
+  xad_pack.insert(xad_pack.end(), outer_vars_pack.begin(), outer_vars_pack.end());
+  TMBad::ADFun<> Tape(PackedTape(adf), xad_pack);
+  typedef TMBad::standard_derivative_table< TMBad::ADFun<>, /*packed*/ true > DTab;
+  TMBad::global::Complete<TMBad::AtomOp<DTab> > Fatom(Tape);
+  std::vector<ad> yp = Fatom(xad_pack);
+  std::vector<ad> y = unpack1(yp);
+  TMBad::Dependent(y);
+  F.glob.ad_stop();
+  *adf = F;
 }
 // Defined in misc.cpp
 void laplace_transform(TMBad::ADFun<>* adf, std::vector<TMBad::Index> random, SEXP config);
