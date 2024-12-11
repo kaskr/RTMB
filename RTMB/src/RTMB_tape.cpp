@@ -115,10 +115,17 @@ void atomic_transform(TMBad::ADFun<>* adf) {
     *adf = (*adf).atomic();
     return;
   }
+  // No inner vars?
+  if ( (*adf).Domain() == 0 ) return;
   TMBad::ADFun<> F;
   std::vector<double> xd = (*adf).DomainVec();
-  // resolve refs and pack them
+  // resolve refs
   std::vector<ad> outer_vars = (*adf).resolve_refs();
+  // No outer vars?
+  if (outer_vars.size() == 0) {
+    *adf = (*adf).atomic();
+    return;
+  }
   TMBad::forceContiguous(outer_vars);
   // Start new context
   F.glob.ad_start();
