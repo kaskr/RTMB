@@ -3,18 +3,96 @@
 
 namespace TMBad {
 
-typedef standard_derivative_table< ADFun<>, /*packed*/ true > RTMB_DTab;
-
+/* Copy-pasted from TMBad, then renamed and tweaked */
 template<class DerivativeTable>
-struct RTMB_AtomOp : AtomOp<DerivativeTable> {
-  typedef AtomOp<DerivativeTable> Base;
-  INHERIT_CTOR(RTMB_AtomOp, Base)
+struct RTMB_AtomOp : global::DynamicOperator< -1, -1> {
+  static const bool have_input_size_output_size = true;
+  static const bool add_forward_replay_copy = true;
 
-  template<class Type>
-  void forward(ForwardArgs<Type>& args) { Base::forward(args); }
-  template<class Type>
-  void reverse(ReverseArgs<Type>& args) { Base::reverse(args); }
-    
+  // derivatives table
+  TMBAD_SHARED_PTR<DerivativeTable> dtab;
+
+  // Order of this instance
+  int order;
+
+  // CTOR from derivative table ctor
+  template<class T1>
+  RTMB_AtomOp(const T1 &F) :
+    dtab(std::make_shared<DerivativeTable>(F)),
+    order(0) { }
+  template<class T1, class T2>
+  RTMB_AtomOp(const T1 &F, const T2 &x) :
+    dtab(std::make_shared<DerivativeTable>(F, x)),
+    order(0) { }
+  template<class T1, class T2, class T3>
+  RTMB_AtomOp(const T1 &F, const T2 &x, const T3 &t) :
+    dtab(std::make_shared<DerivativeTable>(F, x, t)),
+    order(0) { }
+
+  Index input_size()  const {  return (*dtab)[order].Domain(); }
+  Index output_size() const {  return (*dtab)[order].Range(); }
+
+  void forward(ForwardArgs<Scalar> &args) {
+    // Conditionally retape
+    (*dtab).retape(args);
+    // Make sure order is available
+    (*dtab).requireOrder(order);
+    // Number of inputs / outputs for this order
+    size_t n = input_size();
+    size_t m = output_size();
+    // Get vector of inputs
+    auto x = args.x_segment(0, n);
+    // Eval
+    args.y_segment(0, m) = (*dtab)[order](x);
+  }
+
+  void reverse(ReverseArgs<Scalar> &args) {
+    // Number of inputs / outputs for this order
+    size_t n = input_size();
+    size_t m = output_size();
+    // Get vector of inputs
+    auto x = args.x_segment(0, n);
+    auto w = args.dy_segment(0, m);
+    // Eval
+    args.dx_segment(0, n) += (*dtab)[order].Jacobian(x, w);
+  }
+
+  void reverse(ReverseArgs<global::Replay> &args) {
+    // Number of inputs / outputs for this order
+    size_t n = input_size();
+    size_t m = output_size();
+    // Concatenation (x, dy)
+    std::vector<global::Replay> x = args.x_segment(0, n);
+    if (DerivativeTable::packed) x = repack(x);
+    std::vector<global::Replay> w = args.dy_segment(0, m);
+    std::vector<global::Replay> xw;
+    xw.insert(xw.end(), x.begin(), x.end());
+    xw.insert(xw.end(), w.begin(), w.end());
+    // Eval
+    (*dtab).requireOrder(order + 1);
+    RTMB_AtomOp cpy(*this);
+    cpy.order++;
+    args.dx_segment(0, n) += global::Complete<RTMB_AtomOp>(cpy)(xw);
+  }
+
+  // Not yet implemented
+  // void forward(ForwardArgs<Writer> &args) { ASSERT(false); }
+  template<class T>
+  void forward(ForwardArgs<T> &args) { ASSERT(false); }
+  void reverse(ReverseArgs<Writer> &args) { ASSERT(false); }
+
+  const char* op_name() { return "AtomOp"; }
+
+  void print(global::print_config cfg) {
+    std::cout << cfg.prefix;
+    std::cout << "order=" << order << " ";
+    std::cout << "(*dtab).size()=" << (*dtab).size() << " ";
+    std::cout << "dtab=" << &(*dtab) << "\n";
+    (*dtab)[order].print(cfg);
+  }
+
+  // ------------ Tweaks
+
   // Boolean. Use defaults with optimization tweak for packed case
   static const bool have_forward_mark_reverse_mark = true;
   void forward(ForwardArgs<bool>& args) {
@@ -22,12 +100,12 @@ struct RTMB_AtomOp : AtomOp<DerivativeTable> {
   }
   void reverse(ReverseArgs<bool>& args) {
     if (DerivativeTable::packed) {
-      for (size_t i=0; i<Base::output_size(); i++) std::cout << args.y(i);
+      for (size_t i=0; i<output_size(); i++) std::cout << args.y(i);
       std::cout << "\n";
     }
     args.mark_dense(*this);
   }
-  // TMBad FIXME: Ideally, shouldn't have to add this member...
+  // TMBad FIXME: Ideally shouldn't have to add this...
   static const bool have_dependencies = true;
   void dependencies(Args<> &args, Dependencies &dep) const {
     // 'dep' is empty on input and contains the result on output
