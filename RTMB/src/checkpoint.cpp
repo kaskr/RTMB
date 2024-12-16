@@ -3,6 +3,51 @@
 
 namespace TMBad {
 
+struct RTMB_ADFun : ADFun<> {
+  typedef ADFun<> Base;
+  RTMB_ADFun(const Base &F) : Base(F) {}
+  std::vector<bool> signature;
+  bool finalized() {
+    return signature.size() == 0;
+  }
+  void reverse_mark (ReverseArgs<bool>& args) {
+    if (signature.size() == 0)
+      signature.resize(Base::Range(), false);
+    for (size_t i=0; i < Base::Range(); i++) {
+      signature[i] = signature[i] || args.y(i);
+    }
+  }
+  // After a full reverse dependency analysis we know which output
+  // components are used, and we can eliminate redundant outputs.
+  void finalize() {
+    if (finalized()) return;
+    for (size_t i=0; i < Base::Range(); i++) {
+      // Remap unused dependent variables to arbitrary var
+      if (!signature[i]) Base::glob.dep_index[i] = 0;
+    }
+    Base::glob.eliminate();
+    signature.resize(0);
+  }
+};
+
+/* Copy-pasted from TMBad, then renamed and tweaked */
+template<class ADFun, bool packed_ = false>
+struct RTMB_standard_derivative_table : std::vector< ADFun > {
+  static const bool packed = packed_;
+  /** \brief Add derivatives up to this order. */
+  void requireOrder(size_t n) {
+    while ( (*this).size() <= n) {
+      (*this).push_back((*this).back().WgtJacFun());
+    }
+    (*this).back().finalize();
+  }
+  /** \brief Retaping this derivative table has no effect. */
+  void retape(ForwardArgs<Scalar> &args) { }
+  /** \brief Set zero order function of this derivative table. */
+  RTMB_standard_derivative_table(const ADFun &F) :
+    std::vector<ADFun>(1, F) { }
+};
+
 /* Copy-pasted from TMBad, then renamed and tweaked */
 template<class DerivativeTable>
 struct RTMB_AtomOp : global::DynamicOperator< -1, -1> {
@@ -100,8 +145,7 @@ struct RTMB_AtomOp : global::DynamicOperator< -1, -1> {
   }
   void reverse(ReverseArgs<bool>& args) {
     if (DerivativeTable::packed) {
-      for (size_t i=0; i<output_size(); i++) std::cout << args.y(i);
-      std::cout << "\n";
+      (*dtab)[order].reverse_mark(args);
     }
     args.mark_dense(*this);
   }
@@ -167,7 +211,8 @@ void rtmb_atomic_transform(TMBad::ADFun<>* adf) {
   std::vector<ad> outer_vars_pack = pack1(outer_vars);
   xad_pack.insert(xad_pack.end(), outer_vars_pack.begin(), outer_vars_pack.end());
   TMBad::ADFun<> Tape(PackedTape(adf), xad_pack);
-  typedef TMBad::standard_derivative_table< TMBad::ADFun<>, /*packed*/ true > DTab;
+  //typedef TMBad::standard_derivative_table< TMBad::ADFun<>, /*packed*/ true > DTab;
+  typedef TMBad::RTMB_standard_derivative_table< TMBad::RTMB_ADFun, /*packed*/ true > DTab;
   TMBad::global::Complete<TMBad::RTMB_AtomOp<DTab> > Fatom(Tape);
   std::vector<ad> yp = Fatom(xad_pack);
   std::vector<ad> y = unpack1(yp);
