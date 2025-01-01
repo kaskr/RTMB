@@ -11,6 +11,7 @@
 \alias{t.adsparse}
 \alias{[.adsparse}
 \alias{[<-.adsparse}
+\alias{as.matrix.adsparse}
 \alias{diag,adsparse,missing,missing-method}
 \alias{expm,advector-method}
 \alias{expm,adsparse-method}
@@ -48,6 +49,8 @@
 \method{[}{adsparse}(x, ...)
 
 \method{[}{adsparse}(x, ...) <- value
+
+\method{as.matrix}{adsparse}(x, ...)
 
 \S4method{diag}{adsparse,missing,missing}(x)
 
@@ -149,6 +152,8 @@ Matrices (\strong{base} package) and sparse matrices (\strong{Matrix} package) c
 \item \code{[}: AD sparse matrix subsetting. Re-directs to \link[Matrix]{[-methods}.
 
 \item \code{`[`(adsparse) <- value}: AD sparse matrix subset assignment. Re-directs to \link[Matrix]{[<--methods}.
+
+\item \code{as.matrix(adsparse)}: Convert AD sparse to dense matrix.
 
 \item \code{diag(x = adsparse, nrow = missing, ncol = missing)}: AD sparse matrix diagonal extract. Re-directs to \link[Matrix]{diag,CsparseMatrix-method}.
 
