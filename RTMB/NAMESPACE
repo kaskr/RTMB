@@ -63,6 +63,7 @@ S3method(Summary, simref)
 S3method(t, adsparse)
 S3method("[", adsparse)
 S3method("[<-", adsparse)
+S3method("as.matrix", adsparse)
 
 ## ===============================================
 ## Generate full export table:

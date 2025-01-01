@@ -56,6 +56,10 @@ t.adsparse <- function(x) ApplyMatrixMethod(Matrix::t, x)
     x <- ApplyMatrixReplaceMethod("[<-", x, ..., value=value)
     x
 }
+##' @describeIn ADmatrix Convert AD sparse to dense matrix.
+as.matrix.adsparse <- function(x, ...) {
+    x + matrix(0, nrow(x), ncol(x))
+}
 ##' @describeIn ADmatrix AD sparse matrix diagonal extract. Re-directs to \link[Matrix]{diag,CsparseMatrix-method}.
 setMethod("diag", c("adsparse", "missing", "missing"), function(x) ApplyMatrixMethod("diag", x) )
 
