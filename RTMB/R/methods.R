@@ -191,10 +191,13 @@ setMethod("solve",
           signature("anysparse", "ad."),
           function(a, b) {
               a <- as(a, "adsparse")
-              if (missing(b))
+              missing.b <- missing(b)
+              if (missing.b)
                   b <- diag(nrow(a))
               ans <- SparseSolve(a, advector(as.matrix(b)))
               dim(ans) <- dim(b)
+              if (missing.b)
+                  ans <- as(ans, "sparseMatrix")
               ans
           })
 ##' @describeIn ADmatrix AD matrix (or array) colsums
