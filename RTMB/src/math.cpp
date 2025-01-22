@@ -101,6 +101,9 @@ ADrep Math1(ADrep x, std::string op) {
   if (!op.compare("abs")) CALL(fabs);
   else if (!op.compare("sign")) CALL(sign);
   else if (!op.compare("sqrt")) VCALL(sqrt)
+  else if (!op.compare("floor")) CALL(floor);
+  else if (!op.compare("ceiling")) CALL(ceil);
+  else if (!op.compare("trunc")) CALL(trunc);
   else if (!op.compare("exp")) VCALL(exp)
   else if (!op.compare("log")) VCALL(log)
   else if (!op.compare("expm1")) VCALL(expm1)
