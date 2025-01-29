@@ -39,6 +39,9 @@ ad* ADrep::adptr() {
 size_t ADrep::size() { return unwrap(*this).size(); }
 size_t ADrep::nrow() { return unwrap_matrix(*this).nrow(); }
 size_t ADrep::ncol() { return unwrap_matrix(*this).ncol(); }
+ADrep::operator vector<ad>() {
+  return Eigen::Map<Eigen::Array<ad, -1, 1> > ((*this).adptr(), (*this).size());
+}
 
 
 Rcomplex ad2cplx(const ad &x) {

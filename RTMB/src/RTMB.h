@@ -31,6 +31,8 @@ struct ADrep : Rcpp::RObject {
   // Dimension *if* a matrix
   size_t nrow();
   size_t ncol();
+  // TMB vector compatibility
+  operator vector<ad>();
 };
 
 // AD scalar conversions ( Rcomplex <-> ad )
