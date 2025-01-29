@@ -19,6 +19,7 @@ struct ADrep : Rcpp::RObject {
   ADrep ();
   // Input and check validity
   ADrep (Rcpp::RObject x);
+  ADrep (SEXP x);
   // Output vector
   ADrep (size_t n);
   ADrep (const ad* begin, const ad* end);
@@ -33,6 +34,7 @@ struct ADrep : Rcpp::RObject {
   size_t ncol();
   // TMB vector compatibility
   operator vector<ad>();
+  ADrep (const vector<ad> &x);
 };
 
 // AD scalar conversions ( Rcomplex <-> ad )

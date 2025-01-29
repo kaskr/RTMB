@@ -16,6 +16,7 @@ ADrep::ADrep () {}
 ADrep::ADrep (Rcpp::RObject x) : Rcpp::RObject(x) {
   CHECK_INPUT(*this);
 }
+ADrep::ADrep (SEXP x) : ADrep(Rcpp::RObject(x)) { }
 // Output
 ADrep::ADrep (size_t n) {
   Base::operator=( Rcpp::ComplexVector(n) );
@@ -42,6 +43,7 @@ size_t ADrep::ncol() { return unwrap_matrix(*this).ncol(); }
 ADrep::operator vector<ad>() {
   return Eigen::Map<Eigen::Array<ad, -1, 1> > ((*this).adptr(), (*this).size());
 }
+ADrep::ADrep (const vector<ad> &x) : ADrep(x.data(), x.data() + x.size()) { }
 
 
 Rcomplex ad2cplx(const ad &x) {
