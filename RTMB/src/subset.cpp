@@ -14,3 +14,15 @@ ADrep findInterval(ADrep x,
   vector<ad> ans = atomic::findInterval<ad>(x, i);
   return ADrep(ans.data(), ans.data() + ans.size());
 }
+
+// [[Rcpp::export]]
+ADrep order(ADrep x) {
+  vector<ad> ans = atomic::order<ad>(x);
+  return ADrep(ans.data(), ans.data() + ans.size());
+}
+
+// [[Rcpp::export]]
+ADrep sort(ADrep x) {
+  vector<ad> ans = atomic::sort<ad>(x);
+  return ADrep(ans.data(), ans.data() + ans.size());
+}
