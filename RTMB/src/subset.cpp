@@ -4,25 +4,21 @@
 // [[Rcpp::export]]
 ADrep subset(ADrep x,
              ADrep i) {
-  vector<ad> ans = atomic::subset<ad>(x, i);
-  return ADrep(ans.data(), ans.data() + ans.size());
+  return atomic::subset<ad>(x, i);
 }
 
 // [[Rcpp::export]]
 ADrep findInterval(ADrep x,
                    ADrep i) {
-  vector<ad> ans = atomic::findInterval<ad>(x, i);
-  return ADrep(ans.data(), ans.data() + ans.size());
+  return atomic::findInterval<ad>(x, i);
 }
 
 // [[Rcpp::export]]
 ADrep order(ADrep x) {
-  vector<ad> ans = atomic::order<ad>(x);
-  return ADrep(ans.data(), ans.data() + ans.size());
+  return atomic::order<ad>(x);
 }
 
 // [[Rcpp::export]]
 ADrep sort(ADrep x) {
-  vector<ad> ans = atomic::sort<ad>(x);
-  return ADrep(ans.data(), ans.data() + ans.size());
+  return atomic::sort<ad>(x);
 }
