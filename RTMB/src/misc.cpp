@@ -75,6 +75,7 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
     }
   }
   void forward(ForwardArgs<double> &args) {
+    BEGIN_RCPP
 #ifdef _OPENMP
 #pragma omp critical
     {
@@ -109,6 +110,7 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
 #ifdef _OPENMP
     }
 #endif
+    VOID_END_RCPP
   }
   template <class Type> void forward(ForwardArgs<Type> &args) {
     TMBAD_ASSERT(false);
