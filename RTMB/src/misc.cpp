@@ -86,12 +86,9 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
       for (size_t l=0; l<m; l++) i[l] = args.x(l);
       if (!dimx.isNULL())
         i.attr("dim") = dimx;
-      SEXP y = (*Fptr)(i);
-      // FIXME: Any Rcpp way of handling arbitrary output? For now doing PROTECT/UNPROTECT manually...
-      PROTECT(y);
+      Rcpp::RObject y = (*Fptr)(i);
       if ((size_t) LENGTH(y) != n) {
         R.end();
-	UNPROTECT(1); // y
         Rcpp::stop("Wrong output length");
       }
       if (Rf_isReal(y)) {
@@ -102,11 +99,9 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
         for (size_t i=0; i<n; i++) { args.y(i) = py[i]; }
       } else {
         R.end();
-	UNPROTECT(1); // y
         Rcpp::stop("EvalOp: Function must return 'real' or 'integer'");
       }
       R.end();
-      UNPROTECT(1); // y
 #ifdef _OPENMP
     }
 #endif
