@@ -45,6 +45,9 @@ ADrep Arith2(ADrep x,
   else if (!op.compare("^")) {
     for (size_t i=0; i<n; i++) Z[i] = pow(X[i % nx] , Y[i % ny]);
   }
+  else if (!op.compare("%%")) {
+    for (size_t i=0; i<n; i++) Z[i] = atomic::fmod(X[i % nx] , Y[i % ny]);
+  }
   else if (!op.compare("==")) COMPARISON(CondExpEq)
   else if (!op.compare("!=")) COMPARISON(CondExpNe)
   else if (!op.compare(">=")) COMPARISON(CondExpGe)
