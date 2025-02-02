@@ -802,12 +802,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // splineptr
-Rcpp::XPtr<tmbutils::splinefun<ad> > splineptr(Rcpp::NumericVector x, ADrep y, int method);
+Rcpp::XPtr<tmbutils::splinefun<ad> > splineptr(ADrep x, ADrep y, int method);
 RcppExport SEXP _RTMB_splineptr(SEXP xSEXP, SEXP ySEXP, SEXP methodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
     Rcpp::traits::input_parameter< ADrep >::type y(ySEXP);
     Rcpp::traits::input_parameter< int >::type method(methodSEXP);
     rcpp_result_gen = Rcpp::wrap(splineptr(x, y, method));
@@ -815,13 +815,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // splineptr_eval
-ADrep splineptr_eval(Rcpp::XPtr<tmbutils::splinefun<ad> > ptr, Rcpp::NumericVector x);
+ADrep splineptr_eval(Rcpp::XPtr<tmbutils::splinefun<ad> > ptr, ADrep x);
 RcppExport SEXP _RTMB_splineptr_eval(SEXP ptrSEXP, SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<tmbutils::splinefun<ad> > >::type ptr(ptrSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(splineptr_eval(ptr, x));
     return rcpp_result_gen;
 END_RCPP
@@ -1089,6 +1089,52 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// subset_ad
+ADrep subset_ad(ADrep x, ADrep i);
+RcppExport SEXP _RTMB_subset_ad(SEXP xSEXP, SEXP iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type i(iSEXP);
+    rcpp_result_gen = Rcpp::wrap(subset_ad(x, i));
+    return rcpp_result_gen;
+END_RCPP
+}
+// findInterval_ad
+ADrep findInterval_ad(ADrep x, ADrep i);
+RcppExport SEXP _RTMB_findInterval_ad(SEXP xSEXP, SEXP iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type i(iSEXP);
+    rcpp_result_gen = Rcpp::wrap(findInterval_ad(x, i));
+    return rcpp_result_gen;
+END_RCPP
+}
+// order_ad
+ADrep order_ad(ADrep x);
+RcppExport SEXP _RTMB_order_ad(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(order_ad(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sort_ad
+ADrep sort_ad(ADrep x);
+RcppExport SEXP _RTMB_sort_ad(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(sort_ad(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP _rcpp_module_boot_mod_adfun();
 
@@ -1182,6 +1228,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_Term", (DL_FUNC) &_RTMB_Term, 1},
     {"_RTMB_TermsZero", (DL_FUNC) &_RTMB_TermsZero, 2},
     {"_RTMB_InvPersistent", (DL_FUNC) &_RTMB_InvPersistent, 2},
+    {"_RTMB_subset_ad", (DL_FUNC) &_RTMB_subset_ad, 2},
+    {"_RTMB_findInterval_ad", (DL_FUNC) &_RTMB_findInterval_ad, 2},
+    {"_RTMB_order_ad", (DL_FUNC) &_RTMB_order_ad, 1},
+    {"_RTMB_sort_ad", (DL_FUNC) &_RTMB_sort_ad, 1},
     {"_rcpp_module_boot_mod_adfun", (DL_FUNC) &_rcpp_module_boot_mod_adfun, 0},
     {NULL, NULL, 0}
 };
