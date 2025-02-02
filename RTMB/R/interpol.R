@@ -73,13 +73,12 @@ setGeneric("splinefun")
 ##' @param x spline x coordinates
 ##' @param y spline y coordinates
 ##' @param method Same as for the stats version, however only the three first are available.
-setMethod("splinefun", signature(y="advector",
+setMethod("splinefun", signature(x="ad",
+                                 y="ad",
                                  ties="missing"),
           function(x, y, method=c("fmm", "periodic", "natural")) {
-              if (!is.numeric(x)) stop("'x' must be numeric")
-              i <- order(x)
-              x <- x[i]
-              y <- y[i]
+              x <- advector(x)
+              y <- advector(y)
               method <- match.arg(method)
               ## C code choices =>
               ##   case 1: periodic_spline
@@ -88,8 +87,7 @@ setMethod("splinefun", signature(y="advector",
               iMeth <- match(method, c("periodic", "natural", "fmm"))
               ptr <- splineptr(x, y, iMeth)
               function(x) {
-                  if (inherits(x, "advector"))
-                      stop("AD spline must have constant (numeric) input")
+                  x <- advector(x)
                   splineptr_eval(ptr, x)
               }
           })
