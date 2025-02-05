@@ -77,18 +77,34 @@ setMethod("splinefun", signature(x="ad",
                                  y="ad",
                                  ties="missing"),
           function(x, y, method=c("fmm", "periodic", "natural")) {
+              method <- match.arg(method)
+              if (!inherits(x, "advector") &&
+                  !inherits(x, "advector") &&
+                  !ad_context()) {
+                  return (callNextMethod(x, y, method=method))
+              }
               x <- advector(x)
               y <- advector(y)
-              method <- match.arg(method)
               ## C code choices =>
               ##   case 1: periodic_spline
               ##   case 2: natural_spline
               ##   case 3: fmm_spline
               iMeth <- match(method, c("periodic", "natural", "fmm"))
               ptr <- splineptr(x, y, iMeth)
-              function(x) {
+              S <- function(x) {
                   x <- advector(x)
                   splineptr_eval(ptr, x)
+              }
+              function(x, deriv=0L) {
+                  if (deriv > 0) {
+                      S <- MakeTape(S, numeric(length(x)))
+                      for (i in seq_len(deriv)) {
+                          S <- MakeTape(function(x) sum(S(x)), S$par())
+                          S <- S$jacfun()
+                          S$simplify()
+                      }
+                  }
+                  S(x)
               }
           })
 ##' @describeIn Interpolation Construct a spline function.
