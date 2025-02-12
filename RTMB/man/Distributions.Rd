@@ -99,6 +99,10 @@
 \alias{dmultinom,osa,ANY,ANY,ANY-method}
 \alias{dmultinom,simref,ANY,ANY,ANY-method}
 \alias{dmultinom,ANY,ANY,ANY,ANY-method}
+\alias{dcauchy,ad,ad.,ad.,logical.-method}
+\alias{dcauchy,num,num.,num.,logical.-method}
+\alias{dcauchy,osa,ANY,ANY,ANY-method}
+\alias{dcauchy,simref,ANY,ANY,ANY-method}
 \title{Distributions and special functions for which AD is implemented}
 \usage{
 \S4method{dexp}{ad,ad.,logical.}(x, rate = 1, log = FALSE)
@@ -294,6 +298,14 @@ dcompois2(x, mean, nu, log = FALSE)
 \S4method{dmultinom}{simref,ANY,ANY,ANY}(x, size = NULL, prob, log = FALSE)
 
 \S4method{dmultinom}{ANY,ANY,ANY,ANY}(x, size = NULL, prob, log = FALSE)
+
+\S4method{dcauchy}{ad,ad.,ad.,logical.}(x, location = 0, scale = 1, log = FALSE)
+
+\S4method{dcauchy}{num,num.,num.,logical.}(x, location = 0, scale = 1, log = FALSE)
+
+\S4method{dcauchy}{osa,ANY,ANY,ANY}(x, location = 0, scale = 1, log = FALSE)
+
+\S4method{dcauchy}{simref,ANY,ANY,ANY}(x, location = 0, scale = 1, log = FALSE)
 }
 \arguments{
 \item{x}{observation vector}
@@ -671,6 +683,14 @@ which documentation should be looked up online.
 \item \code{dmultinom(x = simref, size = ANY, prob = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 \item \code{dmultinom(x = ANY, size = ANY, prob = ANY, log = ANY)}: Default implementation that checks for invalid usage.
+
+\item \code{dcauchy(x = ad, location = ad., scale = ad., log = logical.)}: AD implementation of \link[stats]{dcauchy}
+
+\item \code{dcauchy(x = num, location = num., scale = num., log = logical.)}: Default method
+
+\item \code{dcauchy(x = osa, location = ANY, scale = ANY, log = ANY)}: OSA implementation
+
+\item \code{dcauchy(x = simref, location = ANY, scale = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 }}
 \examples{
