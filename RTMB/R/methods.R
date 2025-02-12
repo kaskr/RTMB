@@ -531,3 +531,38 @@ setMethod("dmultinom", signature("ANY", "ANY", "ANY", "ANY"),
               }
               stats::dmultinom(x=x, size=size, prob=prob, log=log)
           })
+
+################################################################################
+
+## dcauchy: Follow pattern of S4 dnorm
+##' @describeIn Distributions AD implementation of \link[stats]{dcauchy}
+setMethod("dcauchy",
+          signature("ad", "ad.", "ad.", "logical."),
+          function(x, location, scale, log) {
+              r <- (x - location) / scale
+              ans <- -log(pi) - log(scale) - log1p(r * r)
+              if (log) ans else exp(ans)
+          })
+##' @describeIn Distributions Default method
+setMethod("dcauchy",
+          signature("num", "num.", "num.", "logical."),
+          function(x, location, scale, log) {
+              stats::dcauchy(x, location, scale, log)
+          })
+##' @describeIn Distributions OSA implementation
+setMethod("dcauchy", "osa", function(x, location, scale, log) {
+    dGenericOSA("dcauchy", x=x, location=location, scale=scale, log=log)
+})
+##' @describeIn Distributions Simulation implementation. Modifies \code{x} and returns zero.
+setMethod("dcauchy", "simref", function(x, location, scale, log) {
+    ## works when x, location or scale are simref
+    if (inherits(location, "simref")) {
+        x <- x - location
+        location <- 0
+    }
+    if (inherits(scale, "simref")) {
+        x <- x / scale
+        scale <- 1
+    }
+    dGenericSim("dcauchy", x=x, location=location, scale=scale, log=log)
+})
