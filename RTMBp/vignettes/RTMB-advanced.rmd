@@ -1,0 +1,485 @@
+---
+title: "Details behind the AD Tape"
+author: "Kasper Kristensen"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Details behind the AD Tape}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE, message=FALSE}
+##library(knitr)
+knitr::opts_chunk$set(fig.align='center')
+library(RTMBp);TMB::openmp(1,DLL="RTMBp")
+set.seed(1)
+formals(MakeADFun)$silent <- TRUE
+## Utilites for graph visulization
+library(igraph)
+## To tweak the vertex names
+iformat <- function(n, to=c("superscript", "subscript")) {
+    to <- match.arg(to)
+    digits <- strsplit(as.character(n),"")[[1]]
+    if (to=="superscript")
+        x <- paste0("0x", c("2070", "00B9", "00B2", "00B3", paste0("207",4:9)))
+    else
+        x <- paste0("208", 0:9)
+    names(x) <- 0:9
+    intToUtf8(x[digits])
+}
+addindex <- function(x, to) {
+    paste0(x, sapply(seq_along(x), iformat, to))
+}
+showGraph <- function(F) {
+    g <- F$graph()
+    colnames(g)[colnames(g)=="Inv"] <- "X"
+    colnames(g)[colnames(g)=="Dep"] <- "Y"
+    colnames(g) <- addindex(colnames(g), "sup")
+    G <- graph_from_adjacency_matrix(g)
+    oldpar <- par(mar=c(0,0,0,0),oma=c(0,0,0,0))
+    on.exit(par(oldpar))
+    ##plot(G, vertex.size=17, layout=layout_as_tree)
+    plot(G, vertex.size=23, layout=layout_as_tree)
+}
+```
+
+# The AD Tape
+
+## MakeADFun vs MakeTape
+
+- `MakeADFun` is the *high level* version. It actually creates several internal tapes gathered in a 'model object' often referred to as 'obj'.
+- `MakeTape` is the *low level* version. It creates *a single tape*.
+
+There are things you can do with the tape that you can't do with 'obj':
+
+- Tapes can be reused to create new tapes.
+- Tapes can be nested, i.e. an inner tape can refer to variables in an outer tape's scope.
+- Derivatives of tapes can be calculated at any time whether in *evaluation mode* or in *taping mode*.
+
+To understand these concepts let's look at some examples.
+
+## Creating our first tape
+
+A simple R function such as
+
+```{r}
+f <- function(x) exp( x[1] + 1.23 * x[2] )
+```
+
+is turned into a 'tape' using
+
+
+```{r}
+F <- MakeTape(f, numeric(2))
+F
+```
+
+A number of methods are available for the tape.
+
+```{r}
+F$methods()
+```
+
+These methods are part of the tape object and documented under `?Tape`.
+We can print the tape using the `print` method:
+
+```{r}
+F$print()
+```
+
+This is the internal tape representation of the function. At first sight it looks a bit like a data frame. The first column ('OpName') holds the tape operators and the second column ('Node') the operator index. Each operator calculates an output variable which sits in the 'value' column. Each value has a derivative ('deriv' column) which is not yet allocated ('NA'). In addition, each value has an 'index'. The final column holds the inputs to each node. For example, node number 3 (multiplication) has inputs '1' and '2' referring to the 'index' / 'value' column.
+
+The tape can be evaluated as a normal R function. This sets the independent values ('InvOp') to the inputs and triggers a *forward operator loop* effectively updating the entire value array:
+
+```{r}
+F(3:4)
+```
+
+To see how the internal structures have been updated, we print the tape again:
+
+
+```{r}
+F$print()
+```
+
+Note how the *function output* or *dependent variable* ('DepOp') is located at the end of the value array.
+
+## Evaluating derivatives
+
+Derivatives are calculated using the `jacobian()` method. This method seeds the derivative of the dependent variable to one, and triggers a *reverse operator loop* effectively updating the entire 'deriv' array:
+
+```{r}
+F$jacobian(3:4)
+```
+
+Again, we print the tape to see the effect on the internal representation:
+
+```{r}
+F$print()
+```
+
+Note how the derivatives are located at the beginning of the 'deriv' array.
+
+## The operator graph
+
+The *operator graph* is defined by connecting operators $i$ and $j$ ( $i \rightarrow j$ ) if some output of operator $i$ is input to operator $j$.
+Its adjacency matrix is obtained using the `graph()` method:
+
+```{r}
+F$graph()
+```
+
+It is conveniently visualized using the **igraph** package:
+
+```{r, fig.cap="Operator graph of test function"}
+showGraph(F)
+```
+
+## Reusing tapes
+
+The tape $F$ can be reused to create new tapes. Consider for example a new tape $G$ which evaluates $F$ twice:
+
+```{r}
+G <- MakeTape(function(x) c( F(x) , F(x) ), numeric(2))
+```
+
+Compare this with the graph of $F$: Clearly every node (except inputs) have been doubled.
+
+```{r, fig.cap="Operator graph of test function evaluated twice"}
+showGraph(G)
+```
+
+## Atomic functions
+
+When applying the same function many times it is sometimes beneficial to collapse its nodes into a single 'super node' rather than replaying all individual operators over and over. In our example we could turn $F$ into such a 'super node' using the `atomic()` method:
+
+```{r}
+F <- F$atomic()
+```
+
+Now, construct $G$ again and see what it looks like:
+
+```{r, fig.cap="Operator graph of *atomic* test function evaluated twice"}
+G <- MakeTape(function(x) c( F(x) , F(x) ), numeric(2))
+showGraph(G)
+```
+
+Internally, these atomic operators are shared pointers to a single instance of the actual tape of $F$. Therefore, auto-generated atomic functions generally reduce memory. But there are disadvantages, so they should normally only be used in case of memory issues.
+
+## Tape simplification
+
+It often happens that a tape has redundant operations.
+For example, consider the tape
+
+```{r}
+F <- MakeTape(function(x) {
+    y1 <- sin(x[1] + x[2])
+    y2 <- sin(x[1] + x[2])
+    y3 <- cos(x[1] + x[2])
+    y1+y2
+}, numeric(2))
+```
+
+This tape representation is not optimal because
+
+- It calculates an intermediate value `y3` which doesn't affect the output.
+- The two expressions `y1` and `y2` are identical, so `y2` could have just copied `y1`.
+
+We visualize the graph of the inefficient tape and note that it contains two `sin` operators and one `cos` operator:
+
+```{r, fig.cap="Tape of function"}
+showGraph(F)
+```
+
+Two methods are available to simplify the tape
+
+- `F$simplify("eliminate")` : Eliminates operations that do not affect the output.
+- `F$simplify("optimize")` : In addition to `eliminate` also remaps expressions that have already been computed.
+
+By running
+
+```{r}
+F$simplify("eliminate")
+```
+
+the tape is modified in-place, and no longer contains the `cos` operator:
+
+
+```{r, fig.cap="Tape of function after eliminate"}
+showGraph(F)
+```
+
+The full optimization
+
+```{r}
+F$simplify("optimize")
+```
+
+also removes the redundant `sin` expression which has already been calculated.:
+
+```{r, fig.cap="Tape of function after optimize"}
+showGraph(F)
+```
+
+In contrast to `MakeTape`, we note that `MakeADFun` automatically calls `F$simplify("optimize")` for all tapes.
+
+## Sparse Jacobians
+
+We've seen how the `jacobian()` method evaluates the jacobian of a tape.
+An alternative `jacfun()` exists to return the jacobian as a new tape.
+
+For example, consider a tape of the `diff` operator:
+
+```{r}
+D <- MakeTape(diff, numeric(5))
+D
+```
+
+The jacobian tape is obtained by
+
+```{r}
+J <- D$jacfun()
+J
+```
+
+And can be evaluated as
+
+
+```{r}
+J(1:5)
+```
+
+To get the sparse jacobian do instead:
+
+```{r}
+Js <- D$jacfun(sparse=TRUE)
+Js
+```
+
+Compared to `J`, the tape `Js` only calculates the non-zero elements
+stored as a sparse matrix.
+
+```{r}
+Js(1:5)
+```
+
+Note that both `J` and `Js` can be applied to construct new tapes.
+
+## Tape configuration
+- Understand plain vs atomic matrix multiply
+
+Consider the following test function that multiplies a matrix by it self:
+
+$$
+f(x)=
+\begin{pmatrix}
+  x_{1} & x_{3} \\
+  x_{2} & x_{4} \\
+\end{pmatrix}
+^2
+=
+\begin{pmatrix}
+  x_{1}x_{1} + x_{3}x_{2} & x_{1}x_{3} + x_{3}x_{4} \\
+  x_{2}x_{1} + x_{4}x_{2} & x_{2}x_{3} + x_{4}x_{4} \\
+\end{pmatrix}
+$$
+
+The corresponding function coded in R is
+
+```{r}
+f <- function(X) X %*% X
+```
+
+and we will examine how it is represented as a tape. First, we disable atomic matrix multiply. This gives a representation corresponding exactly to the above formula:
+
+
+```{r, fig.cap="Plain matrix multiply: Expands all operations"}
+TapeConfig(atomic="disable")
+F <- MakeTape(f, matrix(0, 2, 2))
+showGraph(F)
+```
+
+This is only possible to show for very small matrices. The representation grows very fast (cubic) in the dimension of the input.
+By default the 'atomic' flag is set to true.
+
+```{r, fig.cap="Atomic matrix multiply: Collapses to a single operation. The constants are the matrix dimensions which are represented as additional inputs."}
+TapeConfig(atomic="enable")
+F <- MakeTape(f, matrix(0, 2, 2))
+showGraph(F)
+```
+
+PROS/CONS: Atomic matrix multiply is faster and takes up much less space. However, sparsity of the jacobian is lost for the atomic version (all outputs depend and all inputs). There are elements of the jacobian that will always be zero. This can only be seen from the plain representation.
+
+TODO:
+
+- Understand AD comparision
+- Understand vectorized ops
+
+## Nested tapes
+
+- Using tapes as part of the objective function
+- Using derivatives in the objective function
+
+In the folowing example we construct a tape $F$. *While* $F$ is being constructed, a new tape $G$ is created which accesses a temporary variable $a$ in the scope of $F$.
+
+```{r}
+F <- MakeTape(function(x) {
+    a <- sin(x)
+    G <- MakeTape(function(y) {
+        a * y
+    }, numeric(1))
+    DG <- G$jacfun()
+    DG(x * x)
+}, numeric(1))
+```
+
+Implicitly, $a$ becomes a *variable* within $G$ without us having to pass it explicitly as a function argument. This greatly simplifies things when all we care about is the derivatives of $G$ with respect to $y$ (not $a$).
+
+## Laplace approximation
+
+One of the tape methods is called 'laplace'. It is used to transform the tape to a new tape for which a set of variables has been integrated out by the Laplace approximation. The first argument to the method are indices determining this set of variables.
+
+If, for example, we want to integrate $x_2$ out of $\exp(-x_1^2-x_2^2)$, and return the negative log of the result, we construct the tape
+
+```{r}
+## Negative log of the integrand
+f <- MakeTape(function(x)x[1]^2+x[2]^2, numeric(2))
+show(f)
+```
+
+and integrate the 2nd variable out using
+
+```{r}
+## Integrate x[2] out and return the negative log of the result
+F <- f$laplace(2)
+show(F)
+```
+
+We finally check that the result makes sense:
+
+```{r}
+F(3)
+-log(integrate(function(x2)exp(-3^2-x2^2), -Inf, Inf)$value)
+```
+
+## Newton solver
+
+An intermediate calulation of `laplace` is to minimize the negative log integrand. A tape of this intermediate calulation can be obtained by
+
+```{r}
+## minimize wrt. x[2] and return optimum as function of x[1]
+S <- f$newton(2)
+show(S)
+```
+
+The solution is as expected
+
+```{r}
+S(3)
+```
+
+## Saddle point approximation
+
+We'll now discuss the `SPA` argument to `laplace()`.
+
+Consider a sample of 100 replicates from the *double Poisson distribution* with parameters $\mu_X$ and $\mu_N$.
+
+```{r}
+rdblpois <- function(n, muX=5, muN=10) {
+    replicate(n, sum(rpois(rpois(1, muN), muX)))
+}
+set.seed(1)
+x <- rdblpois(100)
+```
+
+We want to estimate the two unknown parameters (`muX=5; muN=10`), but the density is not available on closed form. However, we do have access to the *cumulant generating function* (CGF).
+
+The CGF for the Poisson distribution is
+
+```{r}
+Kpois <- function(t, mu) mu * (exp(t) - 1)
+```
+
+and using the convolution property we can get the moment generating function of the double poisson distribution:
+
+```{r}
+Kpois2 <- function(s, muX, muN) Kpois(Kpois(s, muX), muN)
+```
+
+To approximate the (negative log) density we
+
+1. Build a tape of the *saddle point adjusted* inner problem
+2. Create new tape by integrating all parameters out using `laplace` with `SPA=TRUE`.
+3. Evaluate the new tape for the remaining (empty) parameter vector.
+
+```{r}
+nldens <- function(obs, muX, muN) {
+    ## 1
+    F <- MakeTape(function(s) {
+        K <- Kpois2(s, muX, muN)  ## CGF
+        K <- K - s * obs          ## SPA adjustment
+        sum(K)
+    }, rep(1, length(obs)))
+    ## 2
+    L <- F$laplace(1:length(obs), SPA=TRUE)
+    ## 3
+    L(numeric(0))
+}
+```
+
+Note how the inner tape refers to parameters in an outer context as demonstated in a previous section.
+We can now use this density to estimate the parameters:
+
+```{r}
+obj <- MakeADFun(function(p) nldens(x, p$muX, p$muN), list(muX=1, muN=1), silent=TRUE)
+opt <- nlminb(obj$par, obj$fn, obj$gr)
+sdreport(obj)
+```
+
+We note that this approach only works for non-zero observations. However, it should be easy to modify `nldens` to handle zero observations as a special case.
+
+## Complex numbers and AD
+
+RTMB tapes cannot be directly evaluated or constructed using complex numbers. However, it is possible to use intermediate calculations with complex numbers. The convertion function `as.complex` is used for that. The supported complex number operations are documented under `?ADcomplex`.
+
+An example could be an R function using the complex exponential. For it to be applicable with RTMB it must take normal real input and output:
+
+```{r}
+f <- function(x) {
+    ## Get real/imag part
+    xreal <- x[1]
+    ximag <- x[2]
+    ## Construct AD complex number
+    z <- as.complex(xreal) + 1i * as.complex(ximag)
+    ## Return real numbers
+    Mod(exp(z))
+}
+```
+
+We can tape it
+
+```{r}
+F <- MakeTape(f, numeric(2))
+F
+```
+
+and check that it gives the correct result:
+
+```{r}
+## Using R complex arithmetic
+f(1:2)
+```
+
+```{r}
+## Using the tape representation
+F(1:2)
+```
+
+We can verify that the complex operations have been translated into real operations:
+
+```{r}
+F$print()
+```
