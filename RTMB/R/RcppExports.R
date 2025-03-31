@@ -353,3 +353,19 @@ InvPersistent <- function(adf, setPers) {
     invisible(.Call(`_RTMB_InvPersistent`, adf, setPers))
 }
 
+subset_ad <- function(x, i) {
+    .Call(`_RTMB_subset_ad`, x, i)
+}
+
+findInterval_ad <- function(x, i) {
+    .Call(`_RTMB_findInterval_ad`, x, i)
+}
+
+order_ad <- function(x) {
+    .Call(`_RTMB_order_ad`, x)
+}
+
+sort_ad <- function(x) {
+    .Call(`_RTMB_sort_ad`, x)
+}
+
