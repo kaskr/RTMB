@@ -18,5 +18,12 @@ T3 <- MakeTape(function(x)splinefun(sin(c(x,x[1])), method="periodic")(xnew), nu
 
 expect_equal(f1(xnew), T1(x), info="fmm")
 expect_equal(f2(xnew), T2(x), info="natural")
-## Wait until fixed in TMB:
-## expect_equal(f3(xnew), T3(x), info="periodic")
+expect_equal(f3(xnew), T3(x), info="periodic")
+
+################################################################################
+## Test constant spline with parameter dependent input
+################################################################################
+
+s <- splinefun(sin(1:10))
+T <- MakeTape(s, 0)
+expect_equal(Vectorize(T)(xnew), s(xnew), info="constant spline")
