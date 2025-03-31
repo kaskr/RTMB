@@ -68,33 +68,65 @@ interpol2Dfun <- function(z, xlim=c(1,nrow(z)), ylim=c(1,ncol(z)), ...) {
     }
 }
 
+## Modified stats::splinefun to handle the fixed spline case with possibly AD input.
+splinefun_stats <- function(x., y., method) {
+    s_stats <- stats::splinefun(x., y., method)
+    s_tmb <- NULL
+    function(x, deriv = 0L) {
+        if (!inherits(x, "advector")) {
+            s_stats(x, deriv)
+        } else {
+            if (is.null(s_tmb)) {
+                s_tmb <- splinefun(advector(x.),
+                                   advector(y.),
+                                   method)
+            }
+            s_tmb(x, deriv)
+        }
+    }
+}
+
 setGeneric("splinefun")
 ##' @describeIn Interpolation Construct a spline function.
 ##' @param x spline x coordinates
 ##' @param y spline y coordinates
 ##' @param method Same as for the stats version, however only the three first are available.
-setMethod("splinefun", signature(y="advector",
+setMethod("splinefun", signature(x="ad",
+                                 y="ad",
                                  ties="missing"),
           function(x, y, method=c("fmm", "periodic", "natural")) {
-              if (!is.numeric(x)) stop("'x' must be numeric")
-              i <- order(x)
-              x <- x[i]
-              y <- y[i]
               method <- match.arg(method)
+              if (!inherits(x, "advector") &&
+                  !inherits(y, "advector") &&
+                  !ad_context()) {
+                  return (splinefun_stats(x, y, method=method))
+              }
+              x <- advector(x)
+              y <- advector(y)
               ## C code choices =>
               ##   case 1: periodic_spline
               ##   case 2: natural_spline
               ##   case 3: fmm_spline
               iMeth <- match(method, c("periodic", "natural", "fmm"))
               ptr <- splineptr(x, y, iMeth)
-              function(x) {
-                  if (inherits(x, "advector"))
-                      stop("AD spline must have constant (numeric) input")
+              S <- function(x) {
+                  x <- advector(x)
                   splineptr_eval(ptr, x)
+              }
+              function(x, deriv=0L) {
+                  if (deriv > 0) {
+                      S <- MakeTape(S, numeric(length(x)))
+                      for (i in seq_len(deriv)) {
+                          S <- MakeTape(function(x) sum(S(x)), S$par())
+                          S <- S$jacfun()
+                          S$simplify()
+                      }
+                  }
+                  S(x)
               }
           })
 ##' @describeIn Interpolation Construct a spline function.
-setMethod("splinefun", signature(x="advector",
+setMethod("splinefun", signature(x="ad",
                                  y="missing",
                                  ties="missing"),
           function(x, method=c("fmm", "periodic", "natural")) {
