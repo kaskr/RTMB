@@ -79,7 +79,7 @@ setMethod("splinefun", signature(x="ad",
           function(x, y, method=c("fmm", "periodic", "natural")) {
               method <- match.arg(method)
               if (!inherits(x, "advector") &&
-                  !inherits(x, "advector") &&
+                  !inherits(y, "advector") &&
                   !ad_context()) {
                   return (callNextMethod(x, y, method=method))
               }
