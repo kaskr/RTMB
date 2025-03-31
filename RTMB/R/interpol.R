@@ -68,6 +68,24 @@ interpol2Dfun <- function(z, xlim=c(1,nrow(z)), ylim=c(1,ncol(z)), ...) {
     }
 }
 
+## Modified stats::splinefun to handle the fixed spline case with possibly AD input.
+splinefun_stats <- function(x., y., method) {
+    s_stats <- stats::splinefun(x., y., method)
+    s_tmb <- NULL
+    function(x, deriv = 0L) {
+        if (!inherits(x, "advector")) {
+            s_stats(x, deriv)
+        } else {
+            if (is.null(s_tmb)) {
+                s_tmb <- splinefun(advector(x.),
+                                   advector(y.),
+                                   method)
+            }
+            s_tmb(x, deriv)
+        }
+    }
+}
+
 setGeneric("splinefun")
 ##' @describeIn Interpolation Construct a spline function.
 ##' @param x spline x coordinates
@@ -81,7 +99,7 @@ setMethod("splinefun", signature(x="ad",
               if (!inherits(x, "advector") &&
                   !inherits(y, "advector") &&
                   !ad_context()) {
-                  return (callNextMethod(x, y, method=method))
+                  return (splinefun_stats(x, y, method=method))
               }
               x <- advector(x)
               y <- advector(y)
