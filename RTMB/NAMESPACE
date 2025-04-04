@@ -269,3 +269,9 @@ S3method("rep", adcomplex)
 S3method("as.vector", adcomplex)
 S3method("is.matrix", adcomplex)
 S3method("as.matrix", adcomplex)
+
+## Discrete
+export("sort")
+## Masks
+## export("order")
+export("findInterval")

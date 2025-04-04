@@ -566,3 +566,21 @@ setMethod("dcauchy", "simref", function(x, location, scale, log) {
     }
     dGenericSim("dcauchy", x=x, location=location, scale=scale, log=log)
 })
+
+################################################################################
+## Discrete AD methods
+################################################################################
+
+##' @describeIn ADvector Taped sorting of an AD vector
+##' @examples MakeTape(sort, numeric(3))
+setMethod("sort", "advector", function(x) sort_ad(x))
+## setGeneric("order", signature = "...")
+## setMethod("order", c("advector"), function(...) order_ad(...) + 1)
+##' @describeIn ADvector Taped subsetting of an AD vector
+##' @examples MakeTape(function(x) AD(rivers)[x], 1:3)
+##' @param i Variable indices for taped subset
+setMethod("[", c("advector", "advector"), function(x, i) subset_ad(x, i-1))
+##' @describeIn ADvector Taped interval finding of an AD vector
+##' MakeTape(function(x) findInterval(x, AD(0:10)), 1:3)
+##' @param vec Sorted vector defining the intervals to lookup
+setMethod("findInterval", c("advector", "advector"), function(x, vec) findInterval_ad(x, vec) + 1)
