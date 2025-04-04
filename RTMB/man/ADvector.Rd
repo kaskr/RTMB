@@ -30,6 +30,9 @@
 \alias{print.advector}
 \alias{ifelse,num,ad,ad-method}
 \alias{ifelse,num,num,num-method}
+\alias{sort,advector-method}
+\alias{[,advector,advector,ANY,ANY-method}
+\alias{findInterval,advector,advector-method}
 \title{The AD vector and its methods}
 \usage{
 advector(x)
@@ -87,6 +90,12 @@ advector(x)
 \S4method{ifelse}{num,ad,ad}(test, yes, no)
 
 \S4method{ifelse}{num,num,num}(test, yes, no)
+
+\S4method{sort}{advector}(x)
+
+\S4method{[}{advector,advector,ANY,ANY}(x, i)
+
+\S4method{findInterval}{advector,advector}(x, vec)
 }
 \arguments{
 \item{x}{numeric or advector}
@@ -118,6 +127,10 @@ advector(x)
 \item{yes}{\code{advector}}
 
 \item{no}{\code{advector}}
+
+\item{i}{Variable indices for taped subset}
+
+\item{vec}{Sorted vector defining the intervals to lookup}
 }
 \value{
 Object of class \code{"advector"}.
@@ -192,10 +205,19 @@ re-used for AD vectors.
 
 \item \code{ifelse(test = num, yes = num, no = num)}: Default method
 
+\item \code{sort(advector)}: Taped sorting of an AD vector
+
+\item \code{x[i}: Taped subsetting of an AD vector
+
+\item \code{findInterval(x = advector, vec = advector)}: Taped interval finding of an AD vector
+MakeTape(function(x) findInterval(x, AD(0:10)), 1:3)
+
 }}
 \examples{
 x <- advector(1:9)
 a <- array(x, c(3,3))  ## as an array
 outer(x, x, "+") ## Implicit via 'rep'
 rev(x)           ## Implicit via '['
+MakeTape(sort, numeric(3))
+MakeTape(function(x) AD(rivers)[x], 1:3)
 }
