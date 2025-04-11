@@ -24,6 +24,12 @@ This vignette demonstrates basic features of `RTMB` by implementing a *random re
 
 # Random regression
 
+## Loading the package
+
+```{r}
+library(RTMB)
+```
+
 ## Getting the data
 
 We'll take as starting point the built-in data set 'ChickWeight':
