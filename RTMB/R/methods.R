@@ -111,6 +111,9 @@ setMethod("Ops",
               e1@x[] <- callGeneric(e1@x)
               e1
           })
+setMethod("kronecker",
+          signature("adsparse", "anysparse", "missing", "missing"),
+          function(X, Y) SparseArith2(X, as(Y, "adsparse"), "%x%") )
 ##' @describeIn ADmatrix AD matrix multiply
 setMethod("%*%",
           signature("anysparse", "ad"),

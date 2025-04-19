@@ -296,6 +296,7 @@ Rcpp::RObject SparseArith2(Rcpp::RObject x,
     if (!op.compare("+"))      z = SparseOutput(X + Y);
     else if (!op.compare("-")) z = SparseOutput(X - Y);
     else if (!op.compare("%*%")) z = SparseOutput(X * Y);
+    else if (!op.compare("%x%")) z = SparseOutput(tmbutils::kronecker(X, Y));
     else Rf_error("'%s' not implemented", op.c_str());
   }
   // scalar OP Sparse
