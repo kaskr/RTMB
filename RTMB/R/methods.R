@@ -114,6 +114,9 @@ setMethod("Ops",
 setMethod("kronecker",
           signature("adsparse", "anysparse", "missing", "missing"),
           function(X, Y) SparseArith2(X, as(Y, "adsparse"), "%x%") )
+setMethod("kronecker",
+          signature("anysparse", "adsparse", "missing", "missing"),
+          function(X, Y) SparseArith2(as(X, "adsparse"), Y, "%x%") )
 ##' @describeIn ADmatrix AD matrix multiply
 setMethod("%*%",
           signature("anysparse", "ad"),
