@@ -223,7 +223,8 @@ dscale <- function(f, x, ...,
                     stop("'x' must be a matrix")
                 nc <- ncol(x)
                 if (length(scale) != nc)
-                    stop("Vector 'scale' must be compatible with *rows* of 'x'")
+                    stop(sprintf("Length of 'scale' vector (%d) must be either 'ncol(x)' (%d) or 'length(x)' (%d) ",
+                                 length(scale), nc, length(x)))
                 scale <- matrix(scale, nrow(x), ncol(x), byrow=TRUE)
             } else {
                 ## length(scale) == length(x)
