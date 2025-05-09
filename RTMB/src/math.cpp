@@ -11,7 +11,7 @@ ADrep Arith2(ADrep x,
   size_t nx = x.size(), ny = y.size();
   size_t n = (std::min(nx, ny) > 0 ? std::max(nx, ny) : 0);
   bool do_vectorize =
-    tape_config.ops_vectorize() && (nx==1 || nx==n) && (ny==1 || ny==n);
+    tape_config.ops_vectorize() && (nx==1 || nx==n) && (ny==1 || ny==n) && (n > 1);
   ADrep z(n);
   ad* X = adptr(x);
   ad* Y = adptr(y);
@@ -87,7 +87,7 @@ ad rtmb_gamma(ad x) { return exp(lgamma(x)); }
 ADrep Math1(ADrep x, std::string op) {
   size_t n = x.size();
   bool do_vectorize =
-    tape_config.math_vectorize() && n>1;
+    tape_config.math_vectorize() && (n > 1);
   ADrep y(n);
   ad* X = adptr(x); // FIXME: TMBad::ad_segment(const *)
   ad* Y = adptr(y);
