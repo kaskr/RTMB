@@ -507,17 +507,39 @@ print.Tape <- function(x,...){
 ##' @param comparison Set behaviour of AD comparison (\code{">"},\code{"=="}, etc).
 ##' @param atomic Set behaviour of AD BLAS operations (notably matrix multiply).
 ##' @param vectorize Enable/disable AD vectorized 'Ops' and 'Math'.
-TapeConfig <- function(comparison = c("NA", "forbid", "tape", "allow"),
+TapeConfig <- function(...,
+                       comparison = c("NA", "forbid", "tape", "allow"),
                        atomic = c("NA", "enable", "disable"),
                        vectorize = c("NA", "disable", "enable")) {
-    if (missing(comparison) || !is.integer(comparison))
-        comparison <- c("NA"=-1L, forbid=0L, tape=1L, allow=2L)[match.arg(comparison)]
-    if (missing(atomic) || !is.integer(atomic))
-        atomic <- c("NA"=-1L, enable=1L, disable=0L)[match.arg(atomic)]
-    if (missing(vectorize) || !is.integer(vectorize))
-        vectorize <- c("NA"=-1L, enable=1L, disable=0L)[match.arg(vectorize)]
-    ans <- unlist(set_tape_config(comparison, atomic, vectorize))
-    invisible(ans)
+    dotargs <- list(...)
+    if (length(dotargs) && is.list(dotargs[[1]])) {
+        if (length(dotargs) != 1)
+            stop("List argument must be the *only* argument")
+        if (!(missing(comparison) && missing(atomic) && missing(vectorize)))
+            stop("List argument must be the *only* argument")
+        return (do.call(set_tape_config, dotargs[[1]]))
+    }
+    args <- set_tape_config() ## Current settings
+    ## Set comparison
+    comparison <- match.arg(comparison)
+    comparison <- c("NA"="NA", "forbid"="forbid", "tape"="taped", "allow"="allow")[comparison]
+    args$compare <- comparison
+    atomic <- match.arg(atomic)
+    ## Set atomic
+    atomic <- match.arg(atomic)
+    atomic <- c("NA"="NA", "disable"="plain", "enable"="atomic")[atomic]
+    args$matmul <- atomic
+    args$mvnorm <- atomic
+    ## Set vectorize
+    vectorize <- match.arg(vectorize)
+    vectorize <- c("NA"="NA", "disable"="plain", "enable"="vectorize")[vectorize]
+    args$ops <- vectorize
+    args$math <- vectorize
+    args$sum <- vectorize
+    ## Set other flags
+    args[names(dotargs)] <- dotargs
+    ## return
+    invisible(do.call(set_tape_config, args))
 }
 
 ##' @describeIn Tape Move a chunk of data from R to the tape by evaluating a normal R function (replaces TMB functionality 'DATA_UPDATE').
