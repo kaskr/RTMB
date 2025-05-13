@@ -1,5 +1,5 @@
 library(RTMB)
-TapeConfig(vectorize="enable") ## Optional (speeds up this model)
+TapeConfig(matmul="compact") ## Optional (speeds up this model)
 library(Matrix) ## expm
 
 ## Simulate SDE
