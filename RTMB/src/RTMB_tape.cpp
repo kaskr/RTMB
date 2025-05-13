@@ -262,49 +262,60 @@ RCPP_MODULE(mod_adfun) {
   ;
 }
 
-tape_config_t::tape_config_t() : comparison(0), atomic(1), vectorize(0) {}
-bool tape_config_t::matmul_plain() { return (atomic == 0); }
-bool tape_config_t::matmul_atomic   () { return (atomic == 1) && vectorize==0; }
-bool tape_config_t::matmul_TMBad    () { return (atomic == 1) && vectorize==1; }
-bool tape_config_t::ops_vectorize   () { return vectorize == 1; }
-bool tape_config_t::math_vectorize  () { return vectorize == 1; }
-bool tape_config_t::sum_vectorize   () { return vectorize == 1; }
-bool tape_config_t::compare_forbid  () { return comparison == 0; }
-bool tape_config_t::compare_taped   () { return comparison == 1; }
-bool tape_config_t::compare_allow   () { return comparison == 2; }
-bool tape_config_t::mvnorm_atomic   () { return (atomic == 1); }
+void method_flag::set(std::string flag) {
+  size_t i = 0;
+  for (; i < flags.size(); i++) {
+    if (!flag.compare(flags[i])) break;
+  }
+  if (i == flags.size()) {
+    Rcpp::stop("Invalid selection '%s'", flag);
+  }
+  selected = i;
+}
+std::string method_flag::get() {
+  return flags[selected];
+}
+bool method_flag::test(std::string flag) {
+  return !flag.compare(flags[selected]);
+}
+
+tape_config_t::tape_config_t() {}
+bool tape_config_t::matmul_plain    () { return matmul.test("plain"); }
+bool tape_config_t::matmul_atomic   () { return matmul.test("atomic"); }
+bool tape_config_t::matmul_TMBad    () { return matmul.test("compact"); }
+bool tape_config_t::ops_vectorize   () { return ops.test ("vectorize"); }
+bool tape_config_t::math_vectorize  () { return math.test("vectorize"); }
+bool tape_config_t::sum_vectorize   () { return sum.test ("vectorize"); }
+bool tape_config_t::compare_forbid  () { return compare.test("forbid"); }
+bool tape_config_t::compare_taped   () { return compare.test("taped"); }
+bool tape_config_t::compare_allow   () { return compare.test("allow"); }
+bool tape_config_t::mvnorm_atomic   () { return mvnorm.test("atomic"); }
 tape_config_t tape_config;
 
 // [[Rcpp::export]]
-Rcpp::List set_tape_config(int comparison=0, int atomic=1, int vectorize=0) {
-#define SET(name) if (name != -1) tape_config.name = name;
-  SET(comparison);
-  SET(atomic);
-  SET(vectorize);
+Rcpp::List set_tape_config(std::string matmul = "NA",
+                           std::string ops = "NA",
+                           std::string math = "NA",
+                           std::string sum = "NA",
+                           std::string mvnorm = "NA",
+                           std::string compare = "NA") {
+#define SET(name) if (name.compare("NA")) tape_config.name.set(name);
+  SET(matmul);
+  SET(ops);
+  SET(math);
+  SET(sum);
+  SET(mvnorm);
+  SET(compare)
 #undef SET
   // Current settings
-#define GET(name) Rcpp::Named(#name) = tape_config.name
+#define GET(name) Rcpp::Named(#name) = tape_config.name.get()
   return Rcpp::List::create(
-                            GET(comparison),
-                            GET(atomic),
-                            GET(vectorize));
-#undef GET
-}
-// [[Rcpp::export]]
-Rcpp::List get_tape_config() {
-  // Current derived flags
-#define GET(name) Rcpp::Named(#name) = tape_config.name()
-  return Rcpp::List::create(
-                            GET(matmul_plain),
-                            GET(matmul_atomic),
-                            GET(matmul_TMBad),
-                            GET(ops_vectorize),
-                            GET(math_vectorize),
-                            GET(sum_vectorize),
-                            GET(compare_forbid),
-                            GET(compare_taped),
-                            GET(compare_allow),
-                            GET(mvnorm_atomic));
+                            GET(matmul),
+                            GET(ops),
+                            GET(math),
+                            GET(sum),
+                            GET(mvnorm),
+                            GET(compare));
 #undef GET
 }
 // [[Rcpp::export]]

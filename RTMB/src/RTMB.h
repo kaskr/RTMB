@@ -67,11 +67,25 @@ if (!is_advector(x))                                                    \
  if (!valid(x))                                                         \
   Rcpp::stop("'" #x "' is not a valid 'advector' (constructed using illegal operation?)" );
 
+struct method_flag {
+  const std::vector<std::string> flags;
+  size_t selected;
+  void set (std::string flag);
+  std::string get();
+  bool test(std::string flag);
+};
+
 // Global Tape Configuration
 struct tape_config_t {
-  int comparison; // Safe=0 / Taped=1 / Unsafe=2
-  int atomic;     // No atomic=0 / Use atomic=1
-  int vectorize;  // No vectorize =0 / Use vectorize=1
+  /* int comparison; // Safe=0 / Taped=1 / Unsafe=2 */
+  /* int atomic;     // No atomic=0 / Use atomic=1 */
+  /* int vectorize;  // No vectorize =0 / Use vectorize=1 */
+  method_flag matmul  = { {"plain", "atomic", "compact"}, 1 /* default */};
+  method_flag ops     = { {"plain", "vectorize"}, 0 /* default */};
+  method_flag math    = { {"plain", "vectorize"}, 0 /* default */};
+  method_flag sum     = { {"plain", "vectorize"}, 0 /* default */};
+  method_flag mvnorm  = { {"plain", "atomic"}, 1 /* default */};
+  method_flag compare = { {"forbid", "taped", "allow"}, 0 /* default */};
   tape_config_t();
   bool matmul_plain    ();
   bool matmul_atomic   ();
