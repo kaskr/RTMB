@@ -166,8 +166,8 @@ setMethod( "crossprod", signature("ad", "ad."),
 ##' @param V Covariance matrix
 setMethod( "cov2cor", signature("advector"),
           function(V) {
-              oldval <- TapeConfig()["comparison"]
-              on.exit(TapeConfig(comparison=oldval))
+              oldval <- TapeConfig()
+              on.exit(TapeConfig(oldval))
               TapeConfig(comparison="allow")
               stats::cov2cor(V)
           })
