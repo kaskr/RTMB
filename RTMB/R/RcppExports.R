@@ -53,12 +53,8 @@ get_node <- function(adf, node) {
     invisible(.Call(`_RTMB_get_node`, adf, node))
 }
 
-set_tape_config <- function(comparison = 0L, atomic = 1L, vectorize = 0L) {
-    .Call(`_RTMB_set_tape_config`, comparison, atomic, vectorize)
-}
-
-get_tape_config <- function() {
-    .Call(`_RTMB_get_tape_config`)
+set_tape_config <- function(matmul = "NA", ops = "NA", math = "NA", sum = "NA", mvnorm = "NA", compare = "NA") {
+    .Call(`_RTMB_set_tape_config`, matmul, ops, math, sum, mvnorm, compare)
 }
 
 compare_allow <- function() {

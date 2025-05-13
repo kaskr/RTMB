@@ -157,25 +157,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // set_tape_config
-Rcpp::List set_tape_config(int comparison, int atomic, int vectorize);
-RcppExport SEXP _RTMB_set_tape_config(SEXP comparisonSEXP, SEXP atomicSEXP, SEXP vectorizeSEXP) {
+Rcpp::List set_tape_config(std::string matmul, std::string ops, std::string math, std::string sum, std::string mvnorm, std::string compare);
+RcppExport SEXP _RTMB_set_tape_config(SEXP matmulSEXP, SEXP opsSEXP, SEXP mathSEXP, SEXP sumSEXP, SEXP mvnormSEXP, SEXP compareSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type comparison(comparisonSEXP);
-    Rcpp::traits::input_parameter< int >::type atomic(atomicSEXP);
-    Rcpp::traits::input_parameter< int >::type vectorize(vectorizeSEXP);
-    rcpp_result_gen = Rcpp::wrap(set_tape_config(comparison, atomic, vectorize));
-    return rcpp_result_gen;
-END_RCPP
-}
-// get_tape_config
-Rcpp::List get_tape_config();
-RcppExport SEXP _RTMB_get_tape_config() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(get_tape_config());
+    Rcpp::traits::input_parameter< std::string >::type matmul(matmulSEXP);
+    Rcpp::traits::input_parameter< std::string >::type ops(opsSEXP);
+    Rcpp::traits::input_parameter< std::string >::type math(mathSEXP);
+    Rcpp::traits::input_parameter< std::string >::type sum(sumSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mvnorm(mvnormSEXP);
+    Rcpp::traits::input_parameter< std::string >::type compare(compareSEXP);
+    rcpp_result_gen = Rcpp::wrap(set_tape_config(matmul, ops, math, sum, mvnorm, compare));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1153,8 +1146,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_get_graph", (DL_FUNC) &_RTMB_get_graph, 1},
     {"_RTMB_get_df", (DL_FUNC) &_RTMB_get_df, 1},
     {"_RTMB_get_node", (DL_FUNC) &_RTMB_get_node, 2},
-    {"_RTMB_set_tape_config", (DL_FUNC) &_RTMB_set_tape_config, 3},
-    {"_RTMB_get_tape_config", (DL_FUNC) &_RTMB_get_tape_config, 0},
+    {"_RTMB_set_tape_config", (DL_FUNC) &_RTMB_set_tape_config, 6},
     {"_RTMB_compare_allow", (DL_FUNC) &_RTMB_compare_allow, 0},
     {"_RTMB_advec", (DL_FUNC) &_RTMB_advec, 1},
     {"_RTMB_dependent", (DL_FUNC) &_RTMB_dependent, 1},
