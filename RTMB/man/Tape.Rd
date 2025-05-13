@@ -17,6 +17,7 @@ MakeTape(f, x)
 \method{print}{Tape}(x, ...)
 
 TapeConfig(
+  ...,
   comparison = c("NA", "forbid", "tape", "allow"),
   atomic = c("NA", "enable", "disable"),
   vectorize = c("NA", "disable", "enable")
