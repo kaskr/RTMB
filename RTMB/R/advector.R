@@ -424,6 +424,9 @@ MakeTape <- function(f, x) {
                 get_node(.pointer(mod), i)
                 .expose(mod)
             },
+            timer = function(rep=1L) {
+                .timer(.pointer(mod), rep)
+            },
             par = mod$domainvec
         ),
         class="Tape")
@@ -495,6 +498,7 @@ print.Tape <- function(x,...){
     mod$newton(random, cfg)
     .expose(mod)
 }
+.timer <- timer
 ##' @describeIn Tape Global configuration parameters of the tape (experts only!)
 ##' \bold{comparison} By default, AD comparison gives an error
 ##' (\code{comparison="forbid"}).

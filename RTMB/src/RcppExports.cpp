@@ -145,6 +145,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// timer
+Rcpp::NumericVector timer(Rcpp::XPtr<TMBad::ADFun<> > adf, int rep);
+RcppExport SEXP _RTMB_timer(SEXP adfSEXP, SEXP repSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    Rcpp::traits::input_parameter< int >::type rep(repSEXP);
+    rcpp_result_gen = Rcpp::wrap(timer(adf, rep));
+    return rcpp_result_gen;
+END_RCPP
+}
 // get_node
 void get_node(Rcpp::XPtr<TMBad::ADFun<> > adf, int node);
 RcppExport SEXP _RTMB_get_node(SEXP adfSEXP, SEXP nodeSEXP) {
@@ -1145,6 +1157,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_getinvIndex", (DL_FUNC) &_RTMB_getinvIndex, 1},
     {"_RTMB_get_graph", (DL_FUNC) &_RTMB_get_graph, 1},
     {"_RTMB_get_df", (DL_FUNC) &_RTMB_get_df, 1},
+    {"_RTMB_timer", (DL_FUNC) &_RTMB_timer, 2},
     {"_RTMB_get_node", (DL_FUNC) &_RTMB_get_node, 2},
     {"_RTMB_set_tape_config", (DL_FUNC) &_RTMB_set_tape_config, 6},
     {"_RTMB_compare_allow", (DL_FUNC) &_RTMB_compare_allow, 0},
