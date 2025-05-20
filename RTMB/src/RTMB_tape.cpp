@@ -207,7 +207,9 @@ Rcpp::NumericVector timer(Rcpp::XPtr<TMBad::ADFun<> > adf, int rep=1) {
     const auto finish{std::chrono::steady_clock::now()};
     const std::chrono::duration<double> elapsed_seconds{finish - start};
     ans[i] = elapsed_seconds.count();
+    names[i] = op->op_name();
   }
+  ans.attr("names") = names;
   return ans;
 }
 // [[Rcpp::export]]
