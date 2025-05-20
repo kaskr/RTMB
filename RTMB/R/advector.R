@@ -424,8 +424,10 @@ MakeTape <- function(f, x) {
                 get_node(.pointer(mod), i)
                 .expose(mod)
             },
-            timer = function(rep=1L) {
-                .timer(.pointer(mod), rep)
+            timer = function(rep=1L, table=TRUE) {
+                ans <- .timer(.pointer(mod), rep)
+                if (table) ans <- xtabs(ans ~ names(ans))
+                ans
             },
             par = mod$domainvec
         ),
