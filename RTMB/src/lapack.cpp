@@ -3,8 +3,10 @@
 #define USE_FC_LEN_T
 #include <R.h>
 #include <Rversion.h>
+#ifndef EIGEN_USE_BLAS
 #include <R_ext/BLAS.h>
 #include <R_ext/Lapack.h>
+#endif
 #ifndef FCONE
 # define FCONE
 #endif
