@@ -424,6 +424,23 @@ MakeTape <- function(f, x) {
                 get_node(.pointer(mod), i)
                 .expose(mod)
             },
+            timer = function(rep=100L, table=TRUE, inner=FALSE) {
+                ans <- .timer(.pointer(mod), rep) / rep
+                if (table) {
+                    tab1 <- as.matrix(xtabs(ans ~ names(ans)))
+                    colnames(tab1) <- "elapsed"
+                    if (inner) {
+                        i <- which(diff(names(ans)=="InvOp")==1)
+                        if (length(i) != 1)
+                            stop("Failed to locate inner updates")
+                        ans[1:i] <- 0
+                        tab2 <- as.matrix(xtabs(ans ~ names(ans)))
+                        colnames(tab2) <- "inner"
+                    } else tab2 <- NULL
+                    ans <- cbind(tab1, tab2)
+                }
+                ans
+            },
             par = mod$domainvec
         ),
         class="Tape")
@@ -495,6 +512,7 @@ print.Tape <- function(x,...){
     mod$newton(random, cfg)
     .expose(mod)
 }
+.timer <- timer
 ##' @describeIn Tape Global configuration parameters of the tape (experts only!)
 ##' \bold{comparison} By default, AD comparison gives an error
 ##' (\code{comparison="forbid"}).

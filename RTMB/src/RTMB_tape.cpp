@@ -1,4 +1,5 @@
 #include "RTMB.h"
+#include <chrono>
 
 // Dummy
 template<class Type>
@@ -186,6 +187,30 @@ Rcpp::DataFrame get_df(Rcpp::XPtr<TMBad::ADFun<> > adf) {
                              Rcpp::Named("Node") = node,
                              Rcpp::Named("Value") = values,
                              Rcpp::Named("Deriv") = derivs );
+}
+// [[Rcpp::export]]
+Rcpp::NumericVector timer(Rcpp::XPtr<TMBad::ADFun<> > adf, int rep=1) {
+  adf->glob.subgraph_cache_ptr();
+  size_t n = (*adf).glob.opstack.size();
+  Rcpp::NumericVector ans(n);
+  Rcpp::StringVector names(n);
+  for (size_t i=0; i<n; i++) {
+    TMBad::OperatorPure* op = (*adf).glob.opstack[i];
+    TMBad::ForwardArgs args((*adf).glob.inputs, (*adf).glob.values);
+    args.ptr = (*adf).glob.subgraph_ptr[i];
+    // Start timer
+    const auto start{std::chrono::steady_clock::now()};
+    for (int j = 0; j<rep; j++) {
+      op->forward(args);
+    }
+    // Stop timer
+    const auto finish{std::chrono::steady_clock::now()};
+    const std::chrono::duration<double> elapsed_seconds{finish - start};
+    ans[i] = elapsed_seconds.count();
+    names[i] = op->op_name();
+  }
+  ans.attr("names") = names;
+  return ans;
 }
 // [[Rcpp::export]]
 void get_node(Rcpp::XPtr<TMBad::ADFun<> > adf, int node) {

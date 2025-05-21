@@ -49,6 +49,10 @@ get_df <- function(adf) {
     .Call(`_RTMB_get_df`, adf)
 }
 
+timer <- function(adf, rep = 1L) {
+    .Call(`_RTMB_timer`, adf, rep)
+}
+
 get_node <- function(adf, node) {
     invisible(.Call(`_RTMB_get_node`, adf, node))
 }
