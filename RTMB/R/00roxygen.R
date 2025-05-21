@@ -151,6 +151,7 @@ NULL
 ##' - Get computational graph by `F$graph()`.
 ##' - Print the tape by `F$print()`.
 ##' - Get internal arrays as a `data.frame` by `F$data.frame()`.
+##' - Find out where the tape spends its time by `F$timer()`.
 ##'
 ##' @param f R function
 ##' @param x numeric vector

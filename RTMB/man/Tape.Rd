@@ -86,6 +86,7 @@ Extract tape information:
 \item Get computational graph by \code{F$graph()}.
 \item Print the tape by \code{F$print()}.
 \item Get internal arrays as a \code{data.frame} by \code{F$data.frame()}.
+\item Find out where the tape spends its time by \code{F$timer()}.
 }
 }
 \section{Methods (by generic)}{
