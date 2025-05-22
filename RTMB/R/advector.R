@@ -627,6 +627,13 @@ GetTape <- function(obj, name = c("ADFun", "ADGrad", "ADHess"), warn=TRUE) {
     }
     ans <- new(adfun)
     ans$copy(ADFun$ptr)
+    if (name == "ADHess") {
+        ## Set pattern (lower triangle only)
+        attr(ans, "Pattern") <- new("ngCMatrix",
+                                    i=env$Hrandom@i,
+                                    p=env$Hrandom@p,
+                                    Dim=env$Hrandom@Dim)
+    }
     .expose(ans)
 }
 
