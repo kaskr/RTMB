@@ -332,6 +332,11 @@ print.advector <- function (x, ...)  {
         x <- activate(x)
     }
     y <- f(x)
+    ## Return value must be real
+    if (inherits(y, "adcomplex")) {
+        stop("Return value 'adcomplex' not allowed. ",
+             "Please use extractors Re(.), Im(.), Mod(.)")
+    }
     ## Result might be sparse matrix => Store pattern as an attribute
     Pattern <- NULL
     if (inherits(y, "adsparse")) {
