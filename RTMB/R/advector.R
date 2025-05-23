@@ -578,10 +578,16 @@ TapeConfig <- function(...,
 ##' F(1)
 ##' F(2)
 DataEval <- function(f, x) {
-    if (ad_context())
+    if (ad_context()) {
+        if (missing(x))
+            x <- advector(numeric(0))
         TapedEval(f, x)
-    else
-        f(x)
+    } else {
+        if (missing(x))
+            f()
+        else
+            f(x)
+    }
 }
 
 ##' @describeIn Tape Extract tapes from a model object created by `MakeADFun`.
