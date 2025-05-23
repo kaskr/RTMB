@@ -256,7 +256,18 @@ void newton_transform(TMBad::ADFun<>* adf, std::vector<TMBad::Index> random, SEX
   *adf = ans;
   remove_random_parameters(adf, random);
 }
-
+// [[Rcpp::export]]
+void reorder_transform(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::IntegerVector last) {
+  std::vector<TMBad::Index> ord(last.begin(), last.end());
+  ord = zero_based_unique_index(ord, adf->Domain());
+  adf->reorder(ord);
+}
+// [[Rcpp::export]]
+void set_tail_transform(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::IntegerVector last) {
+  std::vector<TMBad::Index> ord(last.begin(), last.end());
+  ord = zero_based_unique_index(ord, adf->Domain());
+  adf->set_tail(ord);
+}
 // Set low-rank tags
 // [[Rcpp::export]]
 ADrep LowRankTag(ADrep x) {
