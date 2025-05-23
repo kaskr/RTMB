@@ -341,6 +341,14 @@ TapedEval <- function(F, i) {
     .Call(`_RTMB_TapedEval`, F, i)
 }
 
+reorder_transform <- function(adf, last) {
+    invisible(.Call(`_RTMB_reorder_transform`, adf, last))
+}
+
+set_tail_transform <- function(adf, last) {
+    invisible(.Call(`_RTMB_set_tail_transform`, adf, last))
+}
+
 LowRankTag <- function(x) {
     .Call(`_RTMB_LowRankTag`, x)
 }

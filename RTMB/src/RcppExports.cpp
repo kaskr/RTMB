@@ -1060,6 +1060,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// reorder_transform
+void reorder_transform(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::IntegerVector last);
+RcppExport SEXP _RTMB_reorder_transform(SEXP adfSEXP, SEXP lastSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type last(lastSEXP);
+    reorder_transform(adf, last);
+    return R_NilValue;
+END_RCPP
+}
+// set_tail_transform
+void set_tail_transform(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::IntegerVector last);
+RcppExport SEXP _RTMB_set_tail_transform(SEXP adfSEXP, SEXP lastSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type last(lastSEXP);
+    set_tail_transform(adf, last);
+    return R_NilValue;
+END_RCPP
+}
 // LowRankTag
 ADrep LowRankTag(ADrep x);
 RcppExport SEXP _RTMB_LowRankTag(SEXP xSEXP) {
@@ -1240,6 +1262,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_SparseSolve", (DL_FUNC) &_RTMB_SparseSolve, 2},
     {"_RTMB_fft_complex", (DL_FUNC) &_RTMB_fft_complex, 3},
     {"_RTMB_TapedEval", (DL_FUNC) &_RTMB_TapedEval, 2},
+    {"_RTMB_reorder_transform", (DL_FUNC) &_RTMB_reorder_transform, 2},
+    {"_RTMB_set_tail_transform", (DL_FUNC) &_RTMB_set_tail_transform, 2},
     {"_RTMB_LowRankTag", (DL_FUNC) &_RTMB_LowRankTag, 1},
     {"_RTMB_Term", (DL_FUNC) &_RTMB_Term, 1},
     {"_RTMB_TermsZero", (DL_FUNC) &_RTMB_TermsZero, 2},
