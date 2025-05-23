@@ -424,6 +424,9 @@ MakeTape <- function(f, x) {
             data.frame = function() {
                 get_df(.pointer(mod))
             },
+            force.update = function() {
+                force_update(.pointer(mod))
+            },
             node = function(i) {
                 mod <- .copy(mod)
                 get_node(.pointer(mod), i)
@@ -814,6 +817,19 @@ MakeADFun <- function(func, parameters, random=NULL, profile=NULL, integrate=NUL
     obj$env$data.term.indicator <- data.term.indicator
     if (length(observation.name) && !is.null(data[[observation.name]]))
         obj$env$data[[observation.name]] <- data[[observation.name]]
+    ## Send 'force update signal' to all known tapes
+    obj$force.update <- function() {
+        fu <- function(x) if (!is.null(x)) force_update(x)
+        fu(obj$env$ADFun$ptr)
+        fu(obj$env$ADGrad$ptr)
+        fu(environment(obj$env$spHess)$ADHess$ptr)
+        ## ridge.correct=TRUE uses a 4th tape (altHess)
+        if (!is.null(obj$env$altHess)) {
+            obj$env$altHess(TRUE)
+            fu(environment(obj$env$spHess)$ADHess$ptr)
+            obj$env$altHess(FALSE)
+        }
+    }
     ## Simulate
     obj$simulate <- function(par=obj$env$last.par,...) {
         clear_all()
