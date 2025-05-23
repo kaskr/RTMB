@@ -427,6 +427,9 @@ MakeTape <- function(f, x) {
             force.update = function() {
                 force_update(.pointer(mod))
             },
+            reorder = function(last = seq_len(mod$domain())) {
+                reorder_transform(.pointer(mod), last)
+            },
             node = function(i) {
                 mod <- .copy(mod)
                 get_node(.pointer(mod), i)
