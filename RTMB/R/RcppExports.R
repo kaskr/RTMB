@@ -13,6 +13,10 @@ as_advector <- function(x) {
     .Call(`_RTMB_as_advector`, x)
 }
 
+force_update <- function(adf) {
+    invisible(.Call(`_RTMB_force_update`, adf))
+}
+
 SpJacFun <- function(adf) {
     .Call(`_RTMB_SpJacFun`, adf)
 }

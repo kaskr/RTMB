@@ -43,6 +43,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// force_update
+void force_update(Rcpp::XPtr<TMBad::ADFun<> > adf);
+RcppExport SEXP _RTMB_force_update(SEXP adfSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    force_update(adf);
+    return R_NilValue;
+END_RCPP
+}
 // SpJacFun
 Rcpp::S4 SpJacFun(Rcpp::XPtr<TMBad::ADFun<> > adf);
 RcppExport SEXP _RTMB_SpJacFun(SEXP adfSEXP) {
@@ -1148,6 +1158,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_valid", (DL_FUNC) &_RTMB_valid, 1},
     {"_RTMB_ad_context", (DL_FUNC) &_RTMB_ad_context, 0},
     {"_RTMB_as_advector", (DL_FUNC) &_RTMB_as_advector, 1},
+    {"_RTMB_force_update", (DL_FUNC) &_RTMB_force_update, 1},
     {"_RTMB_SpJacFun", (DL_FUNC) &_RTMB_SpJacFun, 1},
     {"_RTMB_RangeProj", (DL_FUNC) &_RTMB_RangeProj, 2},
     {"_RTMB_find_op_by_name", (DL_FUNC) &_RTMB_find_op_by_name, 2},
