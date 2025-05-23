@@ -86,7 +86,8 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
       for (size_t l=0; l<m; l++) i[l] = args.x(l);
       if (!dimx.isNULL())
         i.attr("dim") = dimx;
-      Rcpp::RObject y = (*Fptr)(i);
+      Rcpp::RObject y;
+      if (m>0) y = (*Fptr)(i); else y = (*Fptr)();
       if ((size_t) LENGTH(y) != n) {
         R.end();
         Rcpp::stop("Wrong output length");
@@ -195,7 +196,8 @@ ADrep TapedEval(Rcpp::Function F, ADrep i) {
   Rcpp::NumericVector i_test(m);
   for (size_t l=0; l<m; l++) i_test[l] = pi[l].Value();
   i_test.attr("dim") = i.attr("dim");
-  Rcpp::NumericVector y_test = F(i_test);
+  Rcpp::NumericVector y_test;
+  if (m>0) y_test = F(i_test); else y_test = F();
   size_t n = LENGTH(y_test);
   // Add to tape
   std::vector<ad> x(pi, pi + m);
