@@ -107,6 +107,10 @@ SEXP ptrTMB(TMBad::ADFun<>* pf) {
   return ans;
 }
 // [[Rcpp::export]]
+void force_update(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  adf->force_update();
+}
+// [[Rcpp::export]]
 Rcpp::S4 SpJacFun(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   TMBad::Sparse<TMBad::ADFun<> > sadf = adf->SpJacFun();
   Rcpp::S4 ans("ngTMatrix");
