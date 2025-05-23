@@ -62,6 +62,7 @@ Evaluation:
 \item Normal function evaluation 'F(x)' for numeric input.
 \item AD evaluation 'F(x)' as part of other tapes.
 \item Jacobian calculations using 'F$jacobian(x)'.
+\item Signal that the next forward pass should drop lazy evaluation and update the entire tape \code{F$force.update()}.
 }
 
 Transformation:

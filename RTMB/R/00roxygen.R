@@ -133,6 +133,7 @@ NULL
 ##' - Normal function evaluation 'F(x)' for numeric input.
 ##' - AD evaluation 'F(x)' as part of other tapes.
 ##' - Jacobian calculations using 'F$jacobian(x)'.
+##' - Signal that the next forward pass should drop lazy evaluation and update the entire tape `F$force.update()`.
 ##'
 ##' Transformation:
 ##' - Get new tape representing the Jacobian using `F$jacfun()`.
