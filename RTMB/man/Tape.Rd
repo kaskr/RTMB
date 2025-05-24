@@ -74,6 +74,7 @@ Transformation:
 \item Get new tape representing the optimum (minimum) wrt \code{indices} by \code{F$newton(indices)}.
 \item Get a 'shared pointer' representation of a tape using \code{F$atomic()}.
 \item Get tape of a single node by \code{F$node(index)} (mainly useful for derivative debugging).
+\item Reorder tape so selected inputs (indices) and its forward dependencies come as late as possible by \code{F$reorder(indices)}.
 }
 
 Modification:
@@ -131,4 +132,18 @@ if (requireNamespace("igraph")) {
 F <- MakeTape(function(i) DataEval( function(i) rivers[i] , i), 1 )
 F(1)
 F(2)
+## DATA_UPDATE example
+## - Pay attention to lazy evaluation!
+## - Use 'force.update()'
+mydat <- 1:4
+fetch <- function() { print("Getting 'mydat'"); .GlobalEnv$mydat }
+F <- MakeTape( function(x) x * sum(DataEval(fetch)), 1 )
+F$reorder() ## Re-order tape for faster execution
+F(1) ## No data update
+F(2) ## No data update
+mydat <- 5:8
+F(1) ## Still no data update !
+F$force.update() ## Signal that data has changed
+F(1) ## data update
+F(2) ## No data update
 }

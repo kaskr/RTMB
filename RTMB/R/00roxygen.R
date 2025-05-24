@@ -143,6 +143,7 @@ NULL
 ##' - Get new tape representing the optimum (minimum) wrt `indices` by `F$newton(indices)`.
 ##' - Get a 'shared pointer' representation of a tape using `F$atomic()`.
 ##' - Get tape of a single node by `F$node(index)` (mainly useful for derivative debugging).
+##' - Reorder tape so selected inputs (indices) and its forward dependencies come as late as possible by `F$reorder(indices)`.
 ##'
 ##' Modification:
 ##' - Simplify internal representation of a tape using `F$simplify()`.
