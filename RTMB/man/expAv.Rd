@@ -4,7 +4,15 @@
 \alias{expAv}
 \title{Matrix exponential of sparse matrix multiplied by a vector.}
 \usage{
-expAv(A, v, transpose = FALSE, uniformization = TRUE, tol = 1e-08, ...)
+expAv(
+  A,
+  v,
+  transpose = FALSE,
+  uniformization = TRUE,
+  tol = 1e-08,
+  ...,
+  cache = A
+)
 }
 \arguments{
 \item{A}{Sparse matrix (usually a generator)}
@@ -18,6 +26,8 @@ expAv(A, v, transpose = FALSE, uniformization = TRUE, tol = 1e-08, ...)
 \item{tol}{Accuracy if A is a generator matrix and v a probability vector.}
 
 \item{...}{Extra configuration parameters}
+
+\item{cache}{Re-use internal AD calculations by setting an attribute on this object (\code{A} by default - use NULL to disable caching).}
 }
 \value{
 Vector (or matrix)

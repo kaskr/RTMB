@@ -32,6 +32,7 @@
 \alias{rowSums,adsparse-method}
 \alias{cbind.advector}
 \alias{rbind.advector}
+\alias{Math,adsparse-method}
 \title{AD matrix methods (sparse and dense)}
 \usage{
 \method{chol}{advector}(x, ...)
@@ -91,6 +92,8 @@
 \method{cbind}{advector}(...)
 
 \method{rbind}{advector}(...)
+
+\S4method{Math}{adsparse}(x)
 }
 \arguments{
 \item{x}{matrix (sparse or dense)}
@@ -194,6 +197,8 @@ Matrices (\strong{base} package) and sparse matrices (\strong{Matrix} package) c
 \item \code{cbind(advector)}: AD matrix column bind
 
 \item \code{rbind(advector)}: AD matrix row bind
+
+\item \code{Math(adsparse)}: AD sparse matrix 'Math group' works for functions that preserve sparsity.
 
 }}
 \examples{
