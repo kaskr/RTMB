@@ -375,10 +375,11 @@ MATH_MATRIX_FUNCTION(absm)
 #undef MATH_MATRIX_FUNCTION
 
 // [[Rcpp::export]]
-ADrep expATv (SEXP AT,
+ADrep expATv (Rcpp::RObject AT,
               ADrep v,
               ADrep N,
-              Rcpp::List cfg) {
+              Rcpp::List cfg,
+              Rcpp::RObject cache) {
   if (!is_adsparse(AT)) Rcpp::stop("Expecting adsparse 'AT'");
   if (!is_adscalar(N)) Rcpp::stop("Expecting adscalar 'N'");
   // Inputs
@@ -393,12 +394,26 @@ ADrep expATv (SEXP AT,
   SET_CONFIG(trace);
   SET_CONFIG(warn);
 #undef SET_CONFIG
+  // Set or get cached 'expm_series' object
+  typedef sparse_matrix_exponential::expm_series<ad> expm_t;
+  expm_t* F;
+  if (!cache.hasAttribute("expm_series")) {
+    F = new expm_t(AT_, N_, cfg_);
+    SEXP ptr = Rcpp::XPtr<expm_t>(F);
+    if (!Rf_isNull(cache))
+      cache.attr("expm_series") = ptr;
+  } else {
+    SEXP ptr = cache.attr("expm_series");
+    F = Rcpp::XPtr<expm_t> (ptr);
+    F->update(AT_);
+    F->N = N_;
+    F->cfg = cfg_;
+  }
   // Evaluate
   matrix<ad> ans(v_.rows(), v_.cols());
-  sparse_matrix_exponential::expm_series<ad> F(AT_, N_, cfg_);
   for (int j=0; j<ans.cols(); j++) {
     vector<ad> vec = v_.col(j).array();
-    vector<ad> out = F(vec);
+    vector<ad> out = (*F)(vec);
     ans.col(j).array() = out;
   }
   return MatrixOutput(ans);

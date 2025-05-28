@@ -33,6 +33,7 @@ eigenDisc <- function(A) {
 ##' @param uniformization Use uniformization method?
 ##' @param tol Accuracy if A is a generator matrix and v a probability vector.
 ##' @param ... Extra configuration parameters
+##' @param cache Re-use internal AD calculations by setting an attribute on this object (`A` by default - use NULL to disable caching).
 ##' @return Vector (or matrix)
 ##' @examples
 ##' set.seed(1); A <- Matrix::rsparsematrix(5, 5, .5)
@@ -40,7 +41,8 @@ eigenDisc <- function(A) {
 ##' F <- MakeTape(function(x) expAv(A*x, 1:5), 1)
 ##' F(1)
 ##' F(2) ## More terms needed => trigger retaping
-expAv <- function(A, v, transpose=FALSE, uniformization=TRUE, tol=1e-8, ...) {
+expAv <- function(A, v, transpose=FALSE, uniformization=TRUE, tol=1e-8, ..., cache=A) {
+    force(cache)
     cfg <- list(Nmax=100, warn=FALSE, trace=TRUE)
     dotargs <- list(...)
     cfg[names(dotargs)] <- dotargs
@@ -64,7 +66,7 @@ expAv <- function(A, v, transpose=FALSE, uniformization=TRUE, tol=1e-8, ...) {
         v <- advector(v)
         N <- advector(N)
         if (!transpose) A <- t(A)
-        ans <- expATv(A, v, N, cfg) ## A transposed internally
+        ans <- expATv(A, v, N, cfg, cache) ## A transposed internally
     } else {
         if (transpose) A <- Matrix::t(A)
         ans <- term <- v
