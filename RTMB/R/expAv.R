@@ -49,14 +49,7 @@ expAv <- function(A, v, transpose=FALSE, uniformization=TRUE, tol=1e-8, ..., cac
     if (ad_context()) A <- as(A, "adsparse")
     N <- cfg$Nmax ## Default
     if (uniformization) {
-        ## Template of A
-        .A <- new("dgCMatrix",
-                  x=numeric(length(A@x)),
-                  i=A@i,
-                  p=A@p,
-                  Dim=A@Dim
-                  )
-        disc <- DataEval(function(x){.A@x[] <- x; eigenDisc(.A)}, A@x)
+        disc <- eigenDisc(A)
         diag(A) <- diag(A) - disc["C"]
         getN <- function(rho) qpois(tol, rho, lower.tail=FALSE)
         N <- DataEval( getN, disc["R"] )
