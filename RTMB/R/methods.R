@@ -249,6 +249,15 @@ rbind.advector <- function (...) {
     class(ans) <- "advector"
     asS4(ans)
 }
+##' @describeIn ADmatrix AD sparse matrix 'Math group' works for functions that preserve sparsity.
+setMethod("Math", c(x = "adsparse"),
+          function(x) {
+              g <- get(.Generic, mode = "function")
+              if(startsWith(.Generic, "cum") || !identical(g(0), 0))
+                  stop(paste0("Unsupported operation: ", .Generic, "(adsparse)"))
+              x@x <- g(x@x)
+              x
+          })
 
 ## Show general idea which is automated in 'distributions.R'
 ## First we generate the version we want for AD types (dot signifies 'default argument')
