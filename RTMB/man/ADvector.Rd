@@ -138,7 +138,7 @@ Object of class \code{"advector"}.
 \description{
 An \code{advector} is a class used behind the scenes to replace
 normal R numeric objects during automatic differentiation. An
-\code{advector} has a 'temporary lifetime' and therefore you do not
+\code{advector} has a temporary lifetime and therefore you do not
 \emph{see} / \emph{need to know} it as a normal user.
 }
 \details{

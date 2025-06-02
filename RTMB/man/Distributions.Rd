@@ -375,7 +375,7 @@ dcompois2(x, mean, nu, log = FALSE)
 \item{mode}{parameter}
 }
 \value{
-In autodiff contexts an object of class \code{"advector"} is returned; Otherwise a standard numeric vector.
+In autodiff contexts an object of class \code{"advector"} is returned; otherwise a standard numeric vector.
 }
 \description{
 The functions listed in this help page are all applicable for AD types.
@@ -390,7 +390,7 @@ Argument recycling follows the R standard (although wihout any warnings).
 Specific documentation of the functions and arguments should be looked up elsewhere:
 \itemize{
 \item All S4 methods behave as the corresponding functions in the
-\bold{stats} package. However, some arguements may not be
+\bold{stats} package. However, some arguments may not be
 implemented in the AD case (e.g. \code{lower-tail}).
 \item Other funtions behave as the corresponding TMB versions for
 which documentation should be looked up online.
