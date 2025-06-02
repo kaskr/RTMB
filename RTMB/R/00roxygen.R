@@ -1,22 +1,22 @@
-##' RTMB: R bindings for 'TMB'
+##' RTMB: R bindings for TMB
 ##'
-##' The package 'RTMB' provides a native R interface for *a subset of*
-##' 'TMB' so you can avoid coding in C++.  'RTMB' only affects the
-##' 'TMB' function 'MakeADFun' that builds the objective function. Once
-##' 'MakeADFun' has been invoked, everything else is \emph{exactly the same}
+##' The RTMB package provides a native R interface for *a subset of*
+##' TMB so you can avoid coding in C++.  RTMB only affects the
+##' TMB function `MakeADFun` that builds the objective function. Once
+##' `MakeADFun` has been invoked, everything else is \emph{exactly the same}
 ##' and \emph{models run as fast} as if coded in C++.
 ##'
-##' @details 'RTMB' offers a greatly simplified interface to 'TMB'. The TMB objective function can now be written entirely in R rather than C++ (\link{TMB-interface}). In addition, we highlight two new simplifications:
-##' 1. For the most cases, simulation testing can be carried out *automatically* without the need to add simulation blocks (\link{Simulation}).
-##' 2. Also, quantile residuals can be obtained without any essential modifications to the objective function (\link{OSA-residuals}).
+##' @details RTMB offers a greatly simplified interface to TMB. The TMB objective function can now be written entirely in R rather than C++ (\link{TMB-interface}). In addition, we highlight two new simplifications:
+##' 1. For most cases, simulation testing can be carried out *automatically* without the need to add simulation blocks (\link{Simulation}).
+##' 2. Quantile residuals can be obtained without any essential modifications to the objective function (\link{OSA-residuals}).
 ##'
 ##' The introduction vignette describes these basic features - see \code{vignette("RTMB-introduction")}.
 ##'
-##' In addition to the usual \link{MakeADFun} interface, 'RTMB' offers a lower level interface to the AD machinery (`MakeTape`). \link{MakeTape} replaces the functionality you would normally get in 'TMB' using C++ functors, such as calculating derivatives inside the objective function.
+##' In addition to the usual \link{MakeADFun} interface, RTMB offers a lower level interface to the AD machinery (`MakeTape`). \code{\link{MakeTape}} replaces the functionality you would normally get in TMB using C++ functors, such as calculating derivatives inside the objective function.
 ##'
 ##' The advanced vignette covers these topics - see \code{vignette("RTMB-advanced")}.
 ##'
-##' @note 'RTMB' relies heavily on the new AD framework 'TMBad' without which this interface would not be possible.
+##' @note RTMB relies heavily on the new AD framework 'TMBad' without which this interface would not be possible.
 ##'
 ##' @rdname RTMB-package
 ##' @name RTMB-package
@@ -51,9 +51,10 @@ NULL
 ##'
 ##' An \code{advector} is a class used behind the scenes to replace
 ##' normal R numeric objects during automatic differentiation. An
-##' \code{advector} has a 'temporary lifetime' and therefore you do not
+##' \code{advector} has a temporary lifetime and therefore you do not
 ##' \emph{see} / \emph{need to know} it as a normal user.
 ##'
+##' @details
 ##' An AD vector (class='advector') is an atomic R vector of 'codes'
 ##' that are internally interpretable as 'AD scalars'. A substantial
 ##' part of R's existing S3 matrix and array functionality can be
@@ -185,7 +186,7 @@ NULL
 ##'
 ##' Specific documentation of the functions and arguments should be looked up elsewhere:
 ##' - All S4 methods behave as the corresponding functions in the
-##'   \bold{stats} package. However, some arguements may not be
+##'   \bold{stats} package. However, some arguments may not be
 ##'   implemented in the AD case (e.g. \code{lower-tail}).
 ##' - Other funtions behave as the corresponding TMB versions for
 ##'   which documentation should be looked up online.
@@ -224,7 +225,7 @@ NULL
 ##' @param logy Log-space input
 ##' @rdname Distributions
 ##' @name Distributions
-##' @return In autodiff contexts an object of class \code{"advector"} is returned; Otherwise a standard numeric vector.
+##' @return In autodiff contexts an object of class \code{"advector"} is returned; otherwise a standard numeric vector.
 ##' @examples
 ##' MakeTape( function(x) pnorm(x), x=numeric(5))$jacobian(1:5)
 NULL
