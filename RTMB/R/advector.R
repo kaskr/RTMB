@@ -249,7 +249,7 @@ min.advector <- function(..., na.rm = FALSE) {
     if (length(x) == 0) return (advector(Inf))
     Reduce1(x, "min")
 }
-##' @describeIn ADvector Equivalent of \link[base]{min}.
+##' @describeIn ADvector Equivalent of \link[base]{max}.
 max.advector <- function(..., na.rm = FALSE) {
     x <- c(...)
     if (na.rm) {
