@@ -187,7 +187,7 @@ re-used for AD vectors.
 
 \item \code{min(advector)}: Equivalent of \link[base]{min}.
 
-\item \code{max(advector)}: Equivalent of \link[base]{min}.
+\item \code{max(advector)}: Equivalent of \link[base]{max}.
 
 \item \code{is.numeric(advector)}: Makes \code{cov2cor()} work. FIXME: Any unwanted side-effects with this?
 
