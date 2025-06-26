@@ -14,14 +14,17 @@ eigenDisc <- function(A) {
 ##' Matrix exponential of sparse matrix multiplied by a vector.
 ##'
 ##' Calculates `expm(A) %*% v` using plain series summation. The number of terms is determined adaptively when `uniformization=TRUE`.
-##' The uniformization method essentially pushes the spectrum of the operator inside a zero centered disc, within which a uniform error bound is available.
+##' The uniformization method essentially pushes the spectrum of the operator inside a zero centered disc, within which a tight uniform error bound is available. This effectively reduces the number of terms needed to calculate the series to a given accuracy.
 ##' If `A` is a generator matrix (i.e. `expm(A)` is a probability matrix) and if `v` is a probability vector, then the relative error of the result is bounded by `tol`.
+##' However, note that series summation may be unstable depending on the spectral radius of A. If you get `NaN` values, consider setting `rescale_freq=1` for better stability (see details).
 ##'
 ##' Additional supported arguments via `...` currently include:
 ##'
-##' - `Nmax` Use no more than this number of terms even if the spcified accuracy cannot be met.
-##' - `warn` Give warning if number of terms is truncated by `Nmax`.
-##' - `trace` Trace the number of terms when it adaptively changes.
+##' - `Nmax` Integer (`100` by default). Use no more than this number of terms even if the specified accuracy cannot be met.
+##' - `warn` Logical (`FALSE` by default). Give warning if number of terms is truncated by `Nmax` (autodiff code only).
+##' - `trace` Logical (`TRUE` by default). Trace the number of terms when it adaptively changes (autodiff code only).
+##' - `rescale_freq` Integer (`50` by default) controlling how often to rescale for numerical stability. Set to a lower value for more frequent rescaling at the cost of longer computation time. The default value should suffice for a generator matrix of spectral radius up to at least `1e6` (`.Machine$double.xmax^(1/50)`).
+##' - `rescale` Logical; Set to `FALSE` to disable rescaling for higher speed. All other values are ignored.
 ##'
 ##' @references
 ##' Grassmann, W. K. (1977). Transient solutions in Markovian queueing systems. \emph{Computers & Operations Research}, 4(1), 47--53.
@@ -43,31 +46,47 @@ eigenDisc <- function(A) {
 ##' F(2) ## More terms needed => trigger retaping
 expAv <- function(A, v, transpose=FALSE, uniformization=TRUE, tol=1e-8, ..., cache=A) {
     force(cache)
-    cfg <- list(Nmax=100, warn=FALSE, trace=TRUE)
+    cfg <- list(Nmax=100, warn=FALSE, trace=TRUE, rescale_freq=50)
     dotargs <- list(...)
     cfg[names(dotargs)] <- dotargs
+    if (isFALSE(cfg[["rescale"]]))
+      cfg[["rescale_freq"]] <- cfg[["Nmax"]] ## never rescale
     if (ad_context()) A <- as(A, "adsparse")
     N <- cfg$Nmax ## Default
+    C <- 0 ## Default
     if (uniformization) {
         disc <- eigenDisc(A)
         diag(A) <- diag(A) - disc["C"]
         getN <- function(rho) qpois(tol, rho, lower.tail=FALSE)
         N <- DataEval( getN, disc["R"] )
+        C <- disc["C"]
     }
     v <- as.matrix(v)
     if (ad_context()) {
         v <- advector(v)
         N <- advector(N)
+        C <- advector(C)
         if (!transpose) A <- t(A)
-        ans <- expATv(A, v, N, cfg, cache) ## A transposed internally
+        ans <- expATv(A, v, N, C, cfg, cache) ## A transposed internally
     } else {
         if (transpose) A <- Matrix::t(A)
         ans <- term <- v
-        for (n in seq_len(N)) {
-            term = A %*% term / n
-            ans <- ans + term
+        log_scale <- 0
+        if (N > cfg[["Nmax"]]) {
+          N <- cfg[["Nmax"]]
+          warning(sprintf("Number of terms reduced to 'Nmax' (%d) - result might be inaccurate", cfg[["Nmax"]]))
         }
+        for (n in seq_len(N)) {
+            term <- A %*% term / n
+            ans <- ans + term
+            if (!(n %% cfg[["rescale_freq"]])) {
+              s <- sum(abs(ans))
+              term <- term / s
+              ans <- ans / s
+              log_scale <- log_scale + log(s)
+            }
+        }
+        ans <- exp(C + log_scale) * ans
     }
-    if (uniformization) ans <- exp(disc["C"]) * ans
     drop(as.matrix(ans))
 }
