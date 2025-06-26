@@ -776,6 +776,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// expATv
+ADrep expATv(Rcpp::RObject AT, ADrep v, ADrep N, ADrep C, Rcpp::List cfg, Rcpp::RObject cache);
+RcppExport SEXP _RTMB_expATv(SEXP ATSEXP, SEXP vSEXP, SEXP NSEXP, SEXP CSEXP, SEXP cfgSEXP, SEXP cacheSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type AT(ATSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type v(vSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type N(NSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type C(CSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type cfg(cfgSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type cache(cacheSEXP);
+    rcpp_result_gen = Rcpp::wrap(expATv(AT, v, N, C, cfg, cache));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ip2D
 Rcpp::XPtr<tmbutils::interpol2D<double> > ip2D(Rcpp::NumericMatrix data, Rcpp::NumericVector x_range, Rcpp::NumericVector y_range, Rcpp::List con);
 RcppExport SEXP _RTMB_ip2D(SEXP dataSEXP, SEXP x_rangeSEXP, SEXP y_rangeSEXP, SEXP conSEXP) {
@@ -1009,21 +1025,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// expATv
-ADrep expATv(Rcpp::RObject AT, ADrep v, ADrep N, Rcpp::List cfg, Rcpp::RObject cache);
-RcppExport SEXP _RTMB_expATv(SEXP ATSEXP, SEXP vSEXP, SEXP NSEXP, SEXP cfgSEXP, SEXP cacheSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::RObject >::type AT(ATSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type v(vSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type N(NSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List >::type cfg(cfgSEXP);
-    Rcpp::traits::input_parameter< Rcpp::RObject >::type cache(cacheSEXP);
-    rcpp_result_gen = Rcpp::wrap(expATv(AT, v, N, cfg, cache));
-    return rcpp_result_gen;
-END_RCPP
-}
 // SparseSolve
 ADrep SparseSolve(Rcpp::RObject s, ADrep x);
 RcppExport SEXP _RTMB_SparseSolve(SEXP sSEXP, SEXP xSEXP) {
@@ -1240,6 +1241,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_logspace_add", (DL_FUNC) &_RTMB_distr_logspace_add, 2},
     {"_RTMB_distr_logspace_sub", (DL_FUNC) &_RTMB_distr_logspace_sub, 2},
     {"_RTMB_distr_rcompois", (DL_FUNC) &_RTMB_distr_rcompois, 2},
+    {"_RTMB_expATv", (DL_FUNC) &_RTMB_expATv, 6},
     {"_RTMB_ip2D", (DL_FUNC) &_RTMB_ip2D, 4},
     {"_RTMB_ip2D_eval_num", (DL_FUNC) &_RTMB_ip2D_eval_num, 3},
     {"_RTMB_ip2D_eval_ad", (DL_FUNC) &_RTMB_ip2D_eval_ad, 3},
@@ -1259,7 +1261,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_math_expm", (DL_FUNC) &_RTMB_math_expm, 1},
     {"_RTMB_math_sqrtm", (DL_FUNC) &_RTMB_math_sqrtm, 1},
     {"_RTMB_math_absm", (DL_FUNC) &_RTMB_math_absm, 1},
-    {"_RTMB_expATv", (DL_FUNC) &_RTMB_expATv, 5},
     {"_RTMB_SparseSolve", (DL_FUNC) &_RTMB_SparseSolve, 2},
     {"_RTMB_fft_complex", (DL_FUNC) &_RTMB_fft_complex, 3},
     {"_RTMB_TapedEval", (DL_FUNC) &_RTMB_TapedEval, 2},

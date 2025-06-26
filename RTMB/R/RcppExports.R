@@ -249,6 +249,10 @@ distr_rcompois <- function(loglambda, nu) {
     .Call(`_RTMB_distr_rcompois`, loglambda, nu)
 }
 
+expATv <- function(AT, v, N, C, cfg, cache) {
+    .Call(`_RTMB_expATv`, AT, v, N, C, cfg, cache)
+}
+
 ip2D <- function(data, x_range, y_range, con) {
     .Call(`_RTMB_ip2D`, data, x_range, y_range, con)
 }
@@ -323,10 +327,6 @@ math_sqrtm <- function(x) {
 
 math_absm <- function(x) {
     .Call(`_RTMB_math_absm`, x)
-}
-
-expATv <- function(AT, v, N, cfg, cache) {
-    .Call(`_RTMB_expATv`, AT, v, N, cfg, cache)
 }
 
 SparseSolve <- function(s, x) {
