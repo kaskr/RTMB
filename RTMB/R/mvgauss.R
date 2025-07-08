@@ -39,6 +39,8 @@ dmvnorm <- function(x, mu=0, Sigma, log=FALSE, scale=1) {
     d <- nrow(Sigma)
     x0 <- as.vector(x) - as.vector(mu)
     dim(x0) <- c(d, length(x0) / d)
+    if (!is.null(keep))
+        dim(keep) <- dim(x0)
     anstype <- .anstype(x0, Sigma)
     anstype( dmvnorm0(advector(x0), advector(Sigma), log, keep) )
 }
