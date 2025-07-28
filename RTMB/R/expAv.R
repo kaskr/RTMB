@@ -20,9 +20,9 @@ eigenDisc <- function(A) {
 ##'
 ##' Additional supported arguments via `...` currently include:
 ##'
-##' - `Nmax` Integer (`100` by default). Use no more than this number of terms even if the specified accuracy cannot be met.
-##' - `warn` Logical (`FALSE` by default). Give warning if number of terms is truncated by `Nmax` (autodiff code only).
-##' - `trace` Logical (`TRUE` by default). Trace the number of terms when it adaptively changes (autodiff code only).
+##' - `Nmax` Integer (`2e9` by default). Use no more than this number of terms even if the specified accuracy cannot be met. When using `expAv` as part of likelihood optimization, you can set a lower value to avoid long unnecessary computation when the optimizer tries extreme parameters. For example, if the spectral radius of `A` cannot realistically exceed some known value `rhomax` one can set `Nmax=qpois(tol, rhomax, lower.tail = FALSE)`.
+##' - `warn` Logical (`TRUE` by default). Give warning if number of terms is truncated by `Nmax` (autodiff code only).
+##' - `trace` Logical (`FALSE` by default). Trace the number of terms when it adaptively changes (autodiff code only).
 ##' - `rescale_freq` Integer (`50` by default) controlling how often to rescale for numerical stability. Set to a lower value for more frequent rescaling at the cost of longer computation time. The default value should suffice for a generator matrix of spectral radius up to at least `1e6` (`.Machine$double.xmax^(1/50)`).
 ##' - `rescale` Logical; Set to `FALSE` to disable rescaling for higher speed. All other values are ignored.
 ##'
@@ -41,12 +41,12 @@ eigenDisc <- function(A) {
 ##' @examples
 ##' set.seed(1); A <- Matrix::rsparsematrix(5, 5, .5)
 ##' expAv(A, 1:5) ## Matrix::expm(A) %*% 1:5
-##' F <- MakeTape(function(x) expAv(A*x, 1:5), 1)
+##' F <- MakeTape(function(x) expAv(A*x, 1:5, trace=TRUE), 1)
 ##' F(1)
 ##' F(2) ## More terms needed => trigger retaping
 expAv <- function(A, v, transpose=FALSE, uniformization=TRUE, tol=1e-8, ..., cache=A) {
     force(cache)
-    cfg <- list(Nmax=100, warn=FALSE, trace=TRUE, rescale_freq=50)
+    cfg <- list(Nmax=2e9, warn=TRUE, trace=FALSE, rescale_freq=50)
     dotargs <- list(...)
     cfg[names(dotargs)] <- dotargs
     if (isFALSE(cfg[["rescale"]]))

@@ -41,9 +41,9 @@ However, note that series summation may be unstable depending on the spectral ra
 \details{
 Additional supported arguments via \code{...} currently include:
 \itemize{
-\item \code{Nmax} Integer (\code{100} by default). Use no more than this number of terms even if the specified accuracy cannot be met.
-\item \code{warn} Logical (\code{FALSE} by default). Give warning if number of terms is truncated by \code{Nmax} (autodiff code only).
-\item \code{trace} Logical (\code{TRUE} by default). Trace the number of terms when it adaptively changes (autodiff code only).
+\item \code{Nmax} Integer (\code{2e9} by default). Use no more than this number of terms even if the specified accuracy cannot be met. When using \code{expAv} as part of likelihood optimization, you can set a lower value to avoid long unnecessary computation when the optimizer tries extreme parameters. For example, if the spectral radius of \code{A} cannot realistically exceed some known value \code{rhomax} one can set \code{Nmax=qpois(tol, rhomax, lower.tail = FALSE)}.
+\item \code{warn} Logical (\code{TRUE} by default). Give warning if number of terms is truncated by \code{Nmax} (autodiff code only).
+\item \code{trace} Logical (\code{FALSE} by default). Trace the number of terms when it adaptively changes (autodiff code only).
 \item \code{rescale_freq} Integer (\code{50} by default) controlling how often to rescale for numerical stability. Set to a lower value for more frequent rescaling at the cost of longer computation time. The default value should suffice for a generator matrix of spectral radius up to at least \code{1e6} (\code{.Machine$double.xmax^(1/50)}).
 \item \code{rescale} Logical; Set to \code{FALSE} to disable rescaling for higher speed. All other values are ignored.
 }
@@ -51,7 +51,7 @@ Additional supported arguments via \code{...} currently include:
 \examples{
 set.seed(1); A <- Matrix::rsparsematrix(5, 5, .5)
 expAv(A, 1:5) ## Matrix::expm(A) \%*\% 1:5
-F <- MakeTape(function(x) expAv(A*x, 1:5), 1)
+F <- MakeTape(function(x) expAv(A*x, 1:5, trace=TRUE), 1)
 F(1)
 F(2) ## More terms needed => trigger retaping
 }
