@@ -583,6 +583,16 @@ setMethod("dcauchy", "simref", function(x, location, scale, log) {
 })
 
 ################################################################################
+
+## dgamma patch: Make it work with 'rate' argument
+##' @describeIn Distributions AD implementation of \link[stats]{dgamma}
+setMethod("dgamma",
+          signature(x = "ad", shape = "ad", rate = "ad", scale = "missing", log = "logical."),
+          function( x, shape, rate, log ) {
+            dgamma(x=x, shape=shape, scale=1/rate, log=log)
+          })
+
+################################################################################
 ## Discrete AD methods
 ################################################################################
 
