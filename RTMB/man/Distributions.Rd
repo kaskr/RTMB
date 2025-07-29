@@ -103,6 +103,7 @@
 \alias{dcauchy,num,num.,num.,logical.-method}
 \alias{dcauchy,osa,ANY,ANY,ANY-method}
 \alias{dcauchy,simref,ANY,ANY,ANY-method}
+\alias{dgamma,ad,ad,ad,missing,logical.-method}
 \title{Distributions and special functions for which AD is implemented}
 \usage{
 \S4method{dexp}{ad,ad.,logical.}(x, rate = 1, log = FALSE)
@@ -306,6 +307,8 @@ dcompois2(x, mean, nu, log = FALSE)
 \S4method{dcauchy}{osa,ANY,ANY,ANY}(x, location = 0, scale = 1, log = FALSE)
 
 \S4method{dcauchy}{simref,ANY,ANY,ANY}(x, location = 0, scale = 1, log = FALSE)
+
+\S4method{dgamma}{ad,ad,ad,missing,logical.}(x, shape, rate, log)
 }
 \arguments{
 \item{x}{observation vector}
@@ -691,6 +694,8 @@ which documentation should be looked up online.
 \item \code{dcauchy(x = osa, location = ANY, scale = ANY, log = ANY)}: OSA implementation
 
 \item \code{dcauchy(x = simref, location = ANY, scale = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
+
+\item \code{dgamma(x = ad, shape = ad, rate = ad, scale = missing, log = logical.)}: AD implementation of \link[stats]{dgamma}
 
 }}
 \examples{
