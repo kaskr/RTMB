@@ -7,6 +7,10 @@
 ##' @param scale Extra scale parameter - see section 'Scaling'.
 ##' @return Vector of densities.
 dmvnorm <- function(x, mu=0, Sigma, log=FALSE, scale=1) {
+    if (length(x) == 0 && length(Sigma) == 0 && (!is.matrix(x) || ncol(x) == 0)) {
+        nout <- if (is.matrix(x)) nrow(x) else 1
+        return (rep (if (log) 0 else 1, nout))
+    }
     if (!identical(mu, 0)) {
         p <- length(mu)
         if (!all(dim(Sigma) == c(p, p))) stop("incompatible arguments")
