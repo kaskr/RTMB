@@ -417,62 +417,6 @@ for (int i=0; i<n; i++) Y[i] = qbeta(X1[i % n1], X2[i % n2], X3[i % n3]);
 return ans;
 }
 // [[Rcpp::export]]
-ADrep distr_besselK ( ADrep x, ADrep nu )
-{
-int n1=x.size();
-int n2=nu.size();
-int nmax = std::max({n1, n2});
-int nmin = std::min({n1, n2});
-int n = (nmin == 0 ? 0 : nmax);
-ADrep ans(n);
-const ad* X1 = adptr(x); const ad* X2 = adptr(nu);
-ad* Y = adptr(ans);
-for (int i=0; i<n; i++) Y[i] = besselK(X1[i % n1], X2[i % n2]);
-return ans;
-}
-// [[Rcpp::export]]
-ADrep distr_besselI ( ADrep x, ADrep nu )
-{
-int n1=x.size();
-int n2=nu.size();
-int nmax = std::max({n1, n2});
-int nmin = std::min({n1, n2});
-int n = (nmin == 0 ? 0 : nmax);
-ADrep ans(n);
-const ad* X1 = adptr(x); const ad* X2 = adptr(nu);
-ad* Y = adptr(ans);
-for (int i=0; i<n; i++) Y[i] = besselI(X1[i % n1], X2[i % n2]);
-return ans;
-}
-// [[Rcpp::export]]
-ADrep distr_besselJ ( ADrep x, ADrep nu )
-{
-int n1=x.size();
-int n2=nu.size();
-int nmax = std::max({n1, n2});
-int nmin = std::min({n1, n2});
-int n = (nmin == 0 ? 0 : nmax);
-ADrep ans(n);
-const ad* X1 = adptr(x); const ad* X2 = adptr(nu);
-ad* Y = adptr(ans);
-for (int i=0; i<n; i++) Y[i] = besselJ(X1[i % n1], X2[i % n2]);
-return ans;
-}
-// [[Rcpp::export]]
-ADrep distr_besselY ( ADrep x, ADrep nu )
-{
-int n1=x.size();
-int n2=nu.size();
-int nmax = std::max({n1, n2});
-int nmin = std::min({n1, n2});
-int n = (nmin == 0 ? 0 : nmax);
-ADrep ans(n);
-const ad* X1 = adptr(x); const ad* X2 = adptr(nu);
-ad* Y = adptr(ans);
-for (int i=0; i<n; i++) Y[i] = besselY(X1[i % n1], X2[i % n2]);
-return ans;
-}
-// [[Rcpp::export]]
 ADrep distr_compois_calc_logZ ( ADrep loglambda, ADrep nu )
 {
 int n1=loglambda.size();
