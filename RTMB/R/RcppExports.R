@@ -101,6 +101,22 @@ ptr_gety <- function(adf) {
     .Call(`_RTMB_ptr_gety`, adf)
 }
 
+distr_besselK <- function(x, nu, expo = FALSE) {
+    .Call(`_RTMB_distr_besselK`, x, nu, expo)
+}
+
+distr_besselI <- function(x, nu, expo = FALSE) {
+    .Call(`_RTMB_distr_besselI`, x, nu, expo)
+}
+
+distr_besselJ <- function(x, nu) {
+    .Call(`_RTMB_distr_besselJ`, x, nu)
+}
+
+distr_besselY <- function(x, nu) {
+    .Call(`_RTMB_distr_besselY`, x, nu)
+}
+
 distr_dexp <- function(x, rate, give_log) {
     .Call(`_RTMB_distr_dexp`, x, rate, give_log)
 }
@@ -211,22 +227,6 @@ distr_qweibull <- function(p, shape, scale) {
 
 distr_qbeta <- function(p, shape1, shape2) {
     .Call(`_RTMB_distr_qbeta`, p, shape1, shape2)
-}
-
-distr_besselK <- function(x, nu) {
-    .Call(`_RTMB_distr_besselK`, x, nu)
-}
-
-distr_besselI <- function(x, nu) {
-    .Call(`_RTMB_distr_besselI`, x, nu)
-}
-
-distr_besselJ <- function(x, nu) {
-    .Call(`_RTMB_distr_besselJ`, x, nu)
-}
-
-distr_besselY <- function(x, nu) {
-    .Call(`_RTMB_distr_besselY`, x, nu)
 }
 
 distr_compois_calc_logZ <- function(loglambda, nu) {

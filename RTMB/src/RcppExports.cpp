@@ -291,6 +291,56 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// distr_besselK
+ADrep distr_besselK(ADrep x, ADrep nu, bool expo);
+RcppExport SEXP _RTMB_distr_besselK(SEXP xSEXP, SEXP nuSEXP, SEXP expoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< bool >::type expo(expoSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_besselK(x, nu, expo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_besselI
+ADrep distr_besselI(ADrep x, ADrep nu, bool expo);
+RcppExport SEXP _RTMB_distr_besselI(SEXP xSEXP, SEXP nuSEXP, SEXP expoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< bool >::type expo(expoSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_besselI(x, nu, expo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_besselJ
+ADrep distr_besselJ(ADrep x, ADrep nu);
+RcppExport SEXP _RTMB_distr_besselJ(SEXP xSEXP, SEXP nuSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_besselJ(x, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_besselY
+ADrep distr_besselY(ADrep x, ADrep nu);
+RcppExport SEXP _RTMB_distr_besselY(SEXP xSEXP, SEXP nuSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_besselY(x, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
 // distr_dexp
 ADrep distr_dexp(ADrep x, ADrep rate, bool give_log);
 RcppExport SEXP _RTMB_distr_dexp(SEXP xSEXP, SEXP rateSEXP, SEXP give_logSEXP) {
@@ -665,54 +715,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< ADrep >::type shape1(shape1SEXP);
     Rcpp::traits::input_parameter< ADrep >::type shape2(shape2SEXP);
     rcpp_result_gen = Rcpp::wrap(distr_qbeta(p, shape1, shape2));
-    return rcpp_result_gen;
-END_RCPP
-}
-// distr_besselK
-ADrep distr_besselK(ADrep x, ADrep nu);
-RcppExport SEXP _RTMB_distr_besselK(SEXP xSEXP, SEXP nuSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_besselK(x, nu));
-    return rcpp_result_gen;
-END_RCPP
-}
-// distr_besselI
-ADrep distr_besselI(ADrep x, ADrep nu);
-RcppExport SEXP _RTMB_distr_besselI(SEXP xSEXP, SEXP nuSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_besselI(x, nu));
-    return rcpp_result_gen;
-END_RCPP
-}
-// distr_besselJ
-ADrep distr_besselJ(ADrep x, ADrep nu);
-RcppExport SEXP _RTMB_distr_besselJ(SEXP xSEXP, SEXP nuSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_besselJ(x, nu));
-    return rcpp_result_gen;
-END_RCPP
-}
-// distr_besselY
-ADrep distr_besselY(ADrep x, ADrep nu);
-RcppExport SEXP _RTMB_distr_besselY(SEXP xSEXP, SEXP nuSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_besselY(x, nu));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1204,6 +1206,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_dbgprint", (DL_FUNC) &_RTMB_dbgprint, 1},
     {"_RTMB_ptr_getx", (DL_FUNC) &_RTMB_ptr_getx, 1},
     {"_RTMB_ptr_gety", (DL_FUNC) &_RTMB_ptr_gety, 1},
+    {"_RTMB_distr_besselK", (DL_FUNC) &_RTMB_distr_besselK, 3},
+    {"_RTMB_distr_besselI", (DL_FUNC) &_RTMB_distr_besselI, 3},
+    {"_RTMB_distr_besselJ", (DL_FUNC) &_RTMB_distr_besselJ, 2},
+    {"_RTMB_distr_besselY", (DL_FUNC) &_RTMB_distr_besselY, 2},
     {"_RTMB_distr_dexp", (DL_FUNC) &_RTMB_distr_dexp, 3},
     {"_RTMB_distr_dweibull", (DL_FUNC) &_RTMB_distr_dweibull, 4},
     {"_RTMB_distr_dbinom", (DL_FUNC) &_RTMB_distr_dbinom, 4},
@@ -1232,10 +1238,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_qexp", (DL_FUNC) &_RTMB_distr_qexp, 2},
     {"_RTMB_distr_qweibull", (DL_FUNC) &_RTMB_distr_qweibull, 3},
     {"_RTMB_distr_qbeta", (DL_FUNC) &_RTMB_distr_qbeta, 3},
-    {"_RTMB_distr_besselK", (DL_FUNC) &_RTMB_distr_besselK, 2},
-    {"_RTMB_distr_besselI", (DL_FUNC) &_RTMB_distr_besselI, 2},
-    {"_RTMB_distr_besselJ", (DL_FUNC) &_RTMB_distr_besselJ, 2},
-    {"_RTMB_distr_besselY", (DL_FUNC) &_RTMB_distr_besselY, 2},
     {"_RTMB_distr_compois_calc_logZ", (DL_FUNC) &_RTMB_distr_compois_calc_logZ, 2},
     {"_RTMB_distr_compois_calc_loglambda", (DL_FUNC) &_RTMB_distr_compois_calc_loglambda, 2},
     {"_RTMB_distr_logspace_add", (DL_FUNC) &_RTMB_distr_logspace_add, 2},
