@@ -593,6 +593,15 @@ setMethod("dgamma",
           })
 
 ################################################################################
+
+##' @describeIn Distributions AD implementation of \link[stats]{pnbinom}
+setMethod("pnbinom",
+          signature(q = "ad", size = "ad", prob = "ad", mu="missing", lower.tail="missing", log.p="missing"),
+          function(q, size, prob) {
+            pbeta(prob, size, q+1)
+          })
+
+################################################################################
 ## Discrete AD methods
 ################################################################################
 
