@@ -105,6 +105,7 @@
 \alias{dcauchy,osa,ANY,ANY,ANY-method}
 \alias{dcauchy,simref,ANY,ANY,ANY-method}
 \alias{dgamma,ad,ad,ad,missing,logical.-method}
+\alias{pnbinom,ad,ad,ad,missing,missing,missing-method}
 \title{Distributions and special functions for which AD is implemented}
 \usage{
 \S4method{besselK}{ad,ad}(x, nu, expon.scaled = FALSE)
@@ -310,6 +311,8 @@ dcompois2(x, mean, nu, log = FALSE)
 \S4method{dcauchy}{simref,ANY,ANY,ANY}(x, location = 0, scale = 1, log = FALSE)
 
 \S4method{dgamma}{ad,ad,ad,missing,logical.}(x, shape, rate, log)
+
+\S4method{pnbinom}{ad,ad,ad,missing,missing,missing}(q, size, prob)
 }
 \arguments{
 \item{x}{observation vector}
@@ -699,6 +702,15 @@ which documentation should be looked up online.
 \item \code{dcauchy(x = simref, location = ANY, scale = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 \item \code{dgamma(x = ad, shape = ad, rate = ad, scale = missing, log = logical.)}: AD implementation of \link[stats]{dgamma}
+
+\item \code{pnbinom(
+  q = ad,
+  size = ad,
+  prob = ad,
+  mu = missing,
+  lower.tail = missing,
+  log.p = missing
+)}: AD implementation of \link[stats]{pnbinom}
 
 }}
 \examples{
