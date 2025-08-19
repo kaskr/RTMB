@@ -63,6 +63,19 @@ as.matrix.adsparse <- function(x, ...) {
 ##' @describeIn ADmatrix AD sparse matrix diagonal extract. Re-directs to \link[Matrix]{diag,CsparseMatrix-method}.
 setMethod("diag", c("adsparse", "missing", "missing"), function(x) ApplyMatrixMethod("diag", x) )
 
+##' @describeIn ADmatrix AD sparse matrix band extract. Re-directs to \link[Matrix]{band,CsparseMatrix-method}.
+##' @param k See Matrix package
+##' @param k1 See Matrix package
+##' @param k2 See Matrix package
+setMethod("band", c("adsparse"),
+          function(x, k1, k2) ApplyMatrixMethod("band", x, k1=k1, k2=k2) )
+##' @describeIn ADmatrix AD sparse matrix lower triangle extract. Re-directs to \link[Matrix]{tril,CsparseMatrix-method}.
+setMethod("tril", c("adsparse"),
+          function(x, k) ApplyMatrixMethod("tril", x, k=k) )
+##' @describeIn ADmatrix AD sparse matrix upper triangle extract. Re-directs to \link[Matrix]{triu,CsparseMatrix-method}.
+setMethod("triu", c("adsparse"),
+          function(x, k) ApplyMatrixMethod("triu", x, k=k) )
+
 ##setClassUnion("advector_castable", c("advector", "numeric"))
 
 ##' @describeIn ADmatrix AD matrix exponential
