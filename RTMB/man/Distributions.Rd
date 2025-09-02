@@ -73,6 +73,8 @@
 \alias{qweibull,num,num,num.,missing,missing-method}
 \alias{qbeta,ad,ad,ad,missing,missing,missing-method}
 \alias{qbeta,num,num,num,missing,missing,missing-method}
+\alias{lbeta,ad,ad-method}
+\alias{lbeta,num,num-method}
 \alias{dbinom_robust}
 \alias{dsn}
 \alias{dSHASHo}
@@ -247,6 +249,10 @@
 \S4method{qbeta}{ad,ad,ad,missing,missing,missing}(p, shape1, shape2)
 
 \S4method{qbeta}{num,num,num,missing,missing,missing}(p, shape1, shape2)
+
+\S4method{lbeta}{ad,ad}(a, b)
+
+\S4method{lbeta}{num,num}(a, b)
 
 dbinom_robust(x, size, logit_p, log = FALSE)
 
@@ -626,6 +632,10 @@ which documentation should be looked up online.
   lower.tail = missing,
   log.p = missing
 )}: Default method
+
+\item \code{lbeta(a = ad, b = ad)}: AD implementation of \link[base]{lbeta}
+
+\item \code{lbeta(a = num, b = num)}: Default method
 
 \item \code{dbinom_robust()}: AD implementation
 

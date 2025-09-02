@@ -742,6 +742,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// distr_lbeta
+ADrep distr_lbeta(ADrep a, ADrep b);
+RcppExport SEXP _RTMB_distr_lbeta(SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type a(aSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_lbeta(a, b));
+    return rcpp_result_gen;
+END_RCPP
+}
 // distr_logspace_add
 ADrep distr_logspace_add(ADrep logx, ADrep logy);
 RcppExport SEXP _RTMB_distr_logspace_add(SEXP logxSEXP, SEXP logySEXP) {
@@ -1240,6 +1252,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_qbeta", (DL_FUNC) &_RTMB_distr_qbeta, 3},
     {"_RTMB_distr_compois_calc_logZ", (DL_FUNC) &_RTMB_distr_compois_calc_logZ, 2},
     {"_RTMB_distr_compois_calc_loglambda", (DL_FUNC) &_RTMB_distr_compois_calc_loglambda, 2},
+    {"_RTMB_distr_lbeta", (DL_FUNC) &_RTMB_distr_lbeta, 2},
     {"_RTMB_distr_logspace_add", (DL_FUNC) &_RTMB_distr_logspace_add, 2},
     {"_RTMB_distr_logspace_sub", (DL_FUNC) &_RTMB_distr_logspace_sub, 2},
     {"_RTMB_distr_rcompois", (DL_FUNC) &_RTMB_distr_rcompois, 2},

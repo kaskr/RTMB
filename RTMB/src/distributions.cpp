@@ -445,6 +445,20 @@ for (int i=0; i<n; i++) Y[i] = compois_calc_loglambda(X1[i % n1], X2[i % n2]);
 return ans;
 }
 // [[Rcpp::export]]
+ADrep distr_lbeta ( ADrep a, ADrep b )
+{
+int n1=a.size();
+int n2=b.size();
+int nmax = std::max({n1, n2});
+int nmin = std::min({n1, n2});
+int n = (nmin == 0 ? 0 : nmax);
+ADrep ans(n);
+const ad* X1 = adptr(a); const ad* X2 = adptr(b);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = lbeta(X1[i % n1], X2[i % n2]);
+return ans;
+}
+// [[Rcpp::export]]
 ADrep distr_logspace_add ( ADrep logx, ADrep logy )
 {
 int n1=logx.size();

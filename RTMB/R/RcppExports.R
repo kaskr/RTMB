@@ -237,6 +237,10 @@ distr_compois_calc_loglambda <- function(logmean, nu) {
     .Call(`_RTMB_distr_compois_calc_loglambda`, logmean, nu)
 }
 
+distr_lbeta <- function(a, b) {
+    .Call(`_RTMB_distr_lbeta`, a, b)
+}
+
 distr_logspace_add <- function(logx, logy) {
     .Call(`_RTMB_distr_logspace_add`, logx, logy)
 }
