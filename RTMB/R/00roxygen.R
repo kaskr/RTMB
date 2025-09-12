@@ -220,6 +220,8 @@ NULL
 ##' @param mode parameter
 ##' @param sd parameter
 ##' @param scale parameter
+##' @param a parameter
+##' @param b parameter
 ##' @param log Logical; Return log density/probability?
 ##' @param logx Log-space input
 ##' @param logy Log-space input

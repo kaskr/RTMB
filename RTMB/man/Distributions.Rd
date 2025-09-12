@@ -361,6 +361,10 @@ dcompois2(x, mean, nu, log = FALSE)
 
 \item{p}{parameter}
 
+\item{a}{parameter}
+
+\item{b}{parameter}
+
 \item{logit_p}{parameter}
 
 \item{alpha}{parameter}
