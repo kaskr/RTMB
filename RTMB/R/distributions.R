@@ -481,68 +481,20 @@ function( p, shape1, shape2 ) {
 stats:: qbeta ( p=p, shape1=shape1, shape2=shape2 )
 }
 )
-##' @describeIn Distributions AD implementation of \link[base]{besselK}
-setMethod("besselK",
-signature(x = "ad", nu = "ad", expon.scaled = "missing"),
-function( x, nu ) {
-x <-  advector ( x )
-nu <-  advector ( nu )
-distr_besselK ( x, nu )
+##' @describeIn Distributions AD implementation of \link[base]{lbeta}
+setMethod("lbeta",
+signature(a = "ad", b = "ad"),
+function( a, b ) {
+a <-  advector ( a )
+b <-  advector ( b )
+distr_lbeta ( a, b )
 }
 )
 ##' @describeIn Distributions Default method
-setMethod("besselK",
-signature(x = "num", nu = "num", expon.scaled = "missing"),
-function( x, nu ) {
-base:: besselK ( x=x, nu=nu )
-}
-)
-##' @describeIn Distributions AD implementation of \link[base]{besselI}
-setMethod("besselI",
-signature(x = "ad", nu = "ad", expon.scaled = "missing"),
-function( x, nu ) {
-x <-  advector ( x )
-nu <-  advector ( nu )
-distr_besselI ( x, nu )
-}
-)
-##' @describeIn Distributions Default method
-setMethod("besselI",
-signature(x = "num", nu = "num", expon.scaled = "missing"),
-function( x, nu ) {
-base:: besselI ( x=x, nu=nu )
-}
-)
-##' @describeIn Distributions AD implementation of \link[base]{besselJ}
-setMethod("besselJ",
-signature(x = "ad", nu = "ad"),
-function( x, nu ) {
-x <-  advector ( x )
-nu <-  advector ( nu )
-distr_besselJ ( x, nu )
-}
-)
-##' @describeIn Distributions Default method
-setMethod("besselJ",
-signature(x = "num", nu = "num"),
-function( x, nu ) {
-base:: besselJ ( x=x, nu=nu )
-}
-)
-##' @describeIn Distributions AD implementation of \link[base]{besselY}
-setMethod("besselY",
-signature(x = "ad", nu = "ad"),
-function( x, nu ) {
-x <-  advector ( x )
-nu <-  advector ( nu )
-distr_besselY ( x, nu )
-}
-)
-##' @describeIn Distributions Default method
-setMethod("besselY",
-signature(x = "num", nu = "num"),
-function( x, nu ) {
-base:: besselY ( x=x, nu=nu )
+setMethod("lbeta",
+signature(a = "num", b = "num"),
+function( a, b ) {
+base:: lbeta ( a=a, b=b )
 }
 )
 ##' @describeIn Distributions AD implementation

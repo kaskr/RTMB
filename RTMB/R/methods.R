@@ -63,6 +63,19 @@ as.matrix.adsparse <- function(x, ...) {
 ##' @describeIn ADmatrix AD sparse matrix diagonal extract. Re-directs to \link[Matrix]{diag,CsparseMatrix-method}.
 setMethod("diag", c("adsparse", "missing", "missing"), function(x) ApplyMatrixMethod("diag", x) )
 
+##' @describeIn ADmatrix AD sparse matrix band extract. Re-directs to \link[Matrix]{band,CsparseMatrix-method}.
+##' @param k See Matrix package
+##' @param k1 See Matrix package
+##' @param k2 See Matrix package
+setMethod("band", c("adsparse"),
+          function(x, k1, k2) ApplyMatrixMethod("band", x, k1=k1, k2=k2) )
+##' @describeIn ADmatrix AD sparse matrix lower triangle extract. Re-directs to \link[Matrix]{tril,CsparseMatrix-method}.
+setMethod("tril", c("adsparse"),
+          function(x, k) ApplyMatrixMethod("tril", x, k=k) )
+##' @describeIn ADmatrix AD sparse matrix upper triangle extract. Re-directs to \link[Matrix]{triu,CsparseMatrix-method}.
+setMethod("triu", c("adsparse"),
+          function(x, k) ApplyMatrixMethod("triu", x, k=k) )
+
 ##setClassUnion("advector_castable", c("advector", "numeric"))
 
 ##' @describeIn ADmatrix AD matrix exponential
@@ -581,6 +594,25 @@ setMethod("dcauchy", "simref", function(x, location, scale, log) {
     }
     dGenericSim("dcauchy", x=x, location=location, scale=scale, log=log)
 })
+
+################################################################################
+
+## dgamma patch: Make it work with 'rate' argument
+##' @describeIn Distributions AD implementation of \link[stats]{dgamma}
+setMethod("dgamma",
+          signature(x = "ad", shape = "ad", rate = "ad", scale = "missing", log = "logical."),
+          function( x, shape, rate, log ) {
+            dgamma(x=x, shape=shape, scale=1/rate, log=log)
+          })
+
+################################################################################
+
+##' @describeIn Distributions AD implementation of \link[stats]{pnbinom}
+setMethod("pnbinom",
+          signature(q = "ad", size = "ad", prob = "ad", mu="missing", lower.tail="missing", log.p="missing"),
+          function(q, size, prob) {
+            pbeta(prob, size, q+1)
+          })
 
 ################################################################################
 ## Discrete AD methods

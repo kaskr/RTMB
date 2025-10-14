@@ -13,6 +13,9 @@
 \alias{[<-.adsparse}
 \alias{as.matrix.adsparse}
 \alias{diag,adsparse,missing,missing-method}
+\alias{band,adsparse-method}
+\alias{tril,adsparse-method}
+\alias{triu,adsparse-method}
 \alias{expm,advector-method}
 \alias{expm,adsparse-method}
 \alias{dim,adsparse-method}
@@ -54,6 +57,12 @@
 \method{as.matrix}{adsparse}(x, ...)
 
 \S4method{diag}{adsparse,missing,missing}(x)
+
+\S4method{band}{adsparse}(x, k1, k2)
+
+\S4method{tril}{adsparse}(x, k)
+
+\S4method{triu}{adsparse}(x, k)
 
 \S4method{expm}{advector}(x)
 
@@ -116,6 +125,12 @@
 
 \item{value}{Replacement value}
 
+\item{k1}{See Matrix package}
+
+\item{k2}{See Matrix package}
+
+\item{k}{See Matrix package}
+
 \item{y}{matrix (sparse or dense)}
 
 \item{V}{Covariance matrix}
@@ -159,6 +174,12 @@ Matrices (\strong{base} package) and sparse matrices (\strong{Matrix} package) c
 \item \code{as.matrix(adsparse)}: Convert AD sparse to dense matrix.
 
 \item \code{diag(x = adsparse, nrow = missing, ncol = missing)}: AD sparse matrix diagonal extract. Re-directs to \link[Matrix]{diag,CsparseMatrix-method}.
+
+\item \code{band(adsparse)}: AD sparse matrix band extract. Re-directs to \link[Matrix]{band,CsparseMatrix-method}.
+
+\item \code{tril(adsparse)}: AD sparse matrix lower triangle extract. Re-directs to \link[Matrix]{tril,CsparseMatrix-method}.
+
+\item \code{triu(adsparse)}: AD sparse matrix upper triangle extract. Re-directs to \link[Matrix]{triu,CsparseMatrix-method}.
 
 \item \code{expm(advector)}: AD matrix exponential
 

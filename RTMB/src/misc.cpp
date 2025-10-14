@@ -113,6 +113,7 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
   }
   void reverse(ReverseArgs<double> &args) {
     if (with_derivs) {
+      BEGIN_RCPP
       Rcpp::NumericVector x(m);
       Rcpp::NumericVector y(n);
       Rcpp::NumericVector dy(n);
@@ -133,6 +134,7 @@ struct EvalOp : global::DynamicOperator< -1 , -1 > {
       if ( (size_t) wtJ.size() != m)
         Rcpp::stop("Wrong length of 'reverse(x,y,dy)' = t(dy) %*% jacobian(x)");
       for (size_t l=0; l<m; l++) args.dx(l) += wtJ[l];
+      VOID_END_RCPP
     }
     // otherwise void derivs
   }

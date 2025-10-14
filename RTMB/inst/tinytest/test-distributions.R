@@ -75,3 +75,26 @@ expect_equal(as.double(obj$fn()), 0,
              info="Separable density integrates to one")
 expect_equal(as.double(obj$gr()), c(0,0,0),
              info="Separable density integral independent of parameters")
+
+################################################################################
+## Test 4 (dgamma rate argument)
+################################################################################
+set.seed(1) ## For checkConsistency
+dat <- list(x=1:100)
+f <- function(parms) {
+    getAll(parms, dat, warn=FALSE)
+    x <- OBS(x)
+    -sum(dgamma(x, shape, rate, log=TRUE))
+}
+parms <- list(shape=3, rate=.5)
+obj <- MakeADFun(f, parms)
+expect_true(abs(obj$fn() - f(parms)) < tol)
+s <- obj$simulate()
+expect_true(length(s$x) == length(dat$x))
+chk.dgamma <- checkConsistency(obj)
+expect_true(abs(summary(chk.dgamma)$joint$p.value)>.05)
+expect_true(all(abs(summary(chk.dgamma)$joint$bias)<.05))
+dat <- s
+obj <- MakeADFun(f, parms)
+osa <- oneStepPredict(obj, method="cdf", trace=FALSE)
+expect_true(ks.test(osa$res, "pnorm")$p.value > .05)

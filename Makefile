@@ -1,3 +1,7 @@
+PACKAGE=RTMB
+VERSION := $(shell sed -n '/^Version: /s///p' RTMB/DESCRIPTION)
+DATE := $(shell sed -n '/^Date: /s///p' RTMB/DESCRIPTION)
+
 install:
 	R CMD INSTALL RTMB
 
@@ -91,3 +95,14 @@ rcpp-rtmbXtra:
 	echo 'Rcpp::compileAttributes("rtmbXtra", verbose=TRUE)' | R --slave
 	sed -i '/RcppExport void R_init/ s/^/void rtmb_set_shared_pointers();\n/' rtmbXtra/src/RcppExports.cpp
 	sed -i '/R_useDynamicSymbols/ s/$$/\n    rtmb_set_shared_pointers();/' rtmbXtra/src/RcppExports.cpp
+
+## Get a rough changelog since most recent github revision tag
+## (Use as starting point when updating NEWS file)
+## NOTE: Run *after* updating version and date in DESCRIPTION.
+changelog:
+	echo; \
+	echo "------------------------------------------------------------------------"; \
+	echo RTMB $(VERSION) \($(DATE)\); \
+	echo "------------------------------------------------------------------------"; \
+	echo; \
+	git --no-pager log --format="o %B" `git describe --abbrev=0 --tags`..HEAD | sed s/^-/\ \ -/g

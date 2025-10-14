@@ -291,6 +291,56 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// distr_besselK
+ADrep distr_besselK(ADrep x, ADrep nu, bool expo);
+RcppExport SEXP _RTMB_distr_besselK(SEXP xSEXP, SEXP nuSEXP, SEXP expoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< bool >::type expo(expoSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_besselK(x, nu, expo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_besselI
+ADrep distr_besselI(ADrep x, ADrep nu, bool expo);
+RcppExport SEXP _RTMB_distr_besselI(SEXP xSEXP, SEXP nuSEXP, SEXP expoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< bool >::type expo(expoSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_besselI(x, nu, expo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_besselJ
+ADrep distr_besselJ(ADrep x, ADrep nu);
+RcppExport SEXP _RTMB_distr_besselJ(SEXP xSEXP, SEXP nuSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_besselJ(x, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_besselY
+ADrep distr_besselY(ADrep x, ADrep nu);
+RcppExport SEXP _RTMB_distr_besselY(SEXP xSEXP, SEXP nuSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_besselY(x, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
 // distr_dexp
 ADrep distr_dexp(ADrep x, ADrep rate, bool give_log);
 RcppExport SEXP _RTMB_distr_dexp(SEXP xSEXP, SEXP rateSEXP, SEXP give_logSEXP) {
@@ -668,54 +718,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// distr_besselK
-ADrep distr_besselK(ADrep x, ADrep nu);
-RcppExport SEXP _RTMB_distr_besselK(SEXP xSEXP, SEXP nuSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_besselK(x, nu));
-    return rcpp_result_gen;
-END_RCPP
-}
-// distr_besselI
-ADrep distr_besselI(ADrep x, ADrep nu);
-RcppExport SEXP _RTMB_distr_besselI(SEXP xSEXP, SEXP nuSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_besselI(x, nu));
-    return rcpp_result_gen;
-END_RCPP
-}
-// distr_besselJ
-ADrep distr_besselJ(ADrep x, ADrep nu);
-RcppExport SEXP _RTMB_distr_besselJ(SEXP xSEXP, SEXP nuSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_besselJ(x, nu));
-    return rcpp_result_gen;
-END_RCPP
-}
-// distr_besselY
-ADrep distr_besselY(ADrep x, ADrep nu);
-RcppExport SEXP _RTMB_distr_besselY(SEXP xSEXP, SEXP nuSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_besselY(x, nu));
-    return rcpp_result_gen;
-END_RCPP
-}
 // distr_compois_calc_logZ
 ADrep distr_compois_calc_logZ(ADrep loglambda, ADrep nu);
 RcppExport SEXP _RTMB_distr_compois_calc_logZ(SEXP loglambdaSEXP, SEXP nuSEXP) {
@@ -737,6 +739,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< ADrep >::type logmean(logmeanSEXP);
     Rcpp::traits::input_parameter< ADrep >::type nu(nuSEXP);
     rcpp_result_gen = Rcpp::wrap(distr_compois_calc_loglambda(logmean, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_lbeta
+ADrep distr_lbeta(ADrep a, ADrep b);
+RcppExport SEXP _RTMB_distr_lbeta(SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type a(aSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_lbeta(a, b));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -773,6 +787,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type loglambda(loglambdaSEXP);
     Rcpp::traits::input_parameter< double >::type nu(nuSEXP);
     rcpp_result_gen = Rcpp::wrap(distr_rcompois(loglambda, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
+// expATv
+ADrep expATv(Rcpp::RObject AT, ADrep v, ADrep N, ADrep C, Rcpp::List cfg, Rcpp::RObject cache);
+RcppExport SEXP _RTMB_expATv(SEXP ATSEXP, SEXP vSEXP, SEXP NSEXP, SEXP CSEXP, SEXP cfgSEXP, SEXP cacheSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type AT(ATSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type v(vSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type N(NSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type C(CSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type cfg(cfgSEXP);
+    Rcpp::traits::input_parameter< Rcpp::RObject >::type cache(cacheSEXP);
+    rcpp_result_gen = Rcpp::wrap(expATv(AT, v, N, C, cfg, cache));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1009,21 +1039,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// expATv
-ADrep expATv(Rcpp::RObject AT, ADrep v, ADrep N, Rcpp::List cfg, Rcpp::RObject cache);
-RcppExport SEXP _RTMB_expATv(SEXP ATSEXP, SEXP vSEXP, SEXP NSEXP, SEXP cfgSEXP, SEXP cacheSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::RObject >::type AT(ATSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type v(vSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type N(NSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List >::type cfg(cfgSEXP);
-    Rcpp::traits::input_parameter< Rcpp::RObject >::type cache(cacheSEXP);
-    rcpp_result_gen = Rcpp::wrap(expATv(AT, v, N, cfg, cache));
-    return rcpp_result_gen;
-END_RCPP
-}
 // SparseSolve
 ADrep SparseSolve(Rcpp::RObject s, ADrep x);
 RcppExport SEXP _RTMB_SparseSolve(SEXP sSEXP, SEXP xSEXP) {
@@ -1203,6 +1218,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_dbgprint", (DL_FUNC) &_RTMB_dbgprint, 1},
     {"_RTMB_ptr_getx", (DL_FUNC) &_RTMB_ptr_getx, 1},
     {"_RTMB_ptr_gety", (DL_FUNC) &_RTMB_ptr_gety, 1},
+    {"_RTMB_distr_besselK", (DL_FUNC) &_RTMB_distr_besselK, 3},
+    {"_RTMB_distr_besselI", (DL_FUNC) &_RTMB_distr_besselI, 3},
+    {"_RTMB_distr_besselJ", (DL_FUNC) &_RTMB_distr_besselJ, 2},
+    {"_RTMB_distr_besselY", (DL_FUNC) &_RTMB_distr_besselY, 2},
     {"_RTMB_distr_dexp", (DL_FUNC) &_RTMB_distr_dexp, 3},
     {"_RTMB_distr_dweibull", (DL_FUNC) &_RTMB_distr_dweibull, 4},
     {"_RTMB_distr_dbinom", (DL_FUNC) &_RTMB_distr_dbinom, 4},
@@ -1231,15 +1250,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_qexp", (DL_FUNC) &_RTMB_distr_qexp, 2},
     {"_RTMB_distr_qweibull", (DL_FUNC) &_RTMB_distr_qweibull, 3},
     {"_RTMB_distr_qbeta", (DL_FUNC) &_RTMB_distr_qbeta, 3},
-    {"_RTMB_distr_besselK", (DL_FUNC) &_RTMB_distr_besselK, 2},
-    {"_RTMB_distr_besselI", (DL_FUNC) &_RTMB_distr_besselI, 2},
-    {"_RTMB_distr_besselJ", (DL_FUNC) &_RTMB_distr_besselJ, 2},
-    {"_RTMB_distr_besselY", (DL_FUNC) &_RTMB_distr_besselY, 2},
     {"_RTMB_distr_compois_calc_logZ", (DL_FUNC) &_RTMB_distr_compois_calc_logZ, 2},
     {"_RTMB_distr_compois_calc_loglambda", (DL_FUNC) &_RTMB_distr_compois_calc_loglambda, 2},
+    {"_RTMB_distr_lbeta", (DL_FUNC) &_RTMB_distr_lbeta, 2},
     {"_RTMB_distr_logspace_add", (DL_FUNC) &_RTMB_distr_logspace_add, 2},
     {"_RTMB_distr_logspace_sub", (DL_FUNC) &_RTMB_distr_logspace_sub, 2},
     {"_RTMB_distr_rcompois", (DL_FUNC) &_RTMB_distr_rcompois, 2},
+    {"_RTMB_expATv", (DL_FUNC) &_RTMB_expATv, 6},
     {"_RTMB_ip2D", (DL_FUNC) &_RTMB_ip2D, 4},
     {"_RTMB_ip2D_eval_num", (DL_FUNC) &_RTMB_ip2D_eval_num, 3},
     {"_RTMB_ip2D_eval_ad", (DL_FUNC) &_RTMB_ip2D_eval_ad, 3},
@@ -1259,7 +1276,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_math_expm", (DL_FUNC) &_RTMB_math_expm, 1},
     {"_RTMB_math_sqrtm", (DL_FUNC) &_RTMB_math_sqrtm, 1},
     {"_RTMB_math_absm", (DL_FUNC) &_RTMB_math_absm, 1},
-    {"_RTMB_expATv", (DL_FUNC) &_RTMB_expATv, 5},
     {"_RTMB_SparseSolve", (DL_FUNC) &_RTMB_SparseSolve, 2},
     {"_RTMB_fft_complex", (DL_FUNC) &_RTMB_fft_complex, 3},
     {"_RTMB_TapedEval", (DL_FUNC) &_RTMB_TapedEval, 2},

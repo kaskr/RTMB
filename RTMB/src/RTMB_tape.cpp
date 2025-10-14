@@ -200,7 +200,7 @@ Rcpp::NumericVector timer(Rcpp::XPtr<TMBad::ADFun<> > adf, int rep=1) {
   Rcpp::StringVector names(n);
   for (size_t i=0; i<n; i++) {
     TMBad::OperatorPure* op = (*adf).glob.opstack[i];
-    TMBad::ForwardArgs args((*adf).glob.inputs, (*adf).glob.values);
+    TMBad::ForwardArgs<double> args((*adf).glob.inputs, (*adf).glob.values);
     args.ptr = (*adf).glob.subgraph_ptr[i];
     // Start timer
     const auto start{std::chrono::steady_clock::now()};

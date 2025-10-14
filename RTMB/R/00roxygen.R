@@ -220,6 +220,8 @@ NULL
 ##' @param mode parameter
 ##' @param sd parameter
 ##' @param scale parameter
+##' @param a parameter
+##' @param b parameter
 ##' @param log Logical; Return log density/probability?
 ##' @param logx Log-space input
 ##' @param logy Log-space input
@@ -273,7 +275,8 @@ NULL
 
 ##' Simulation
 ##'
-##' An RTMB objective function can be run in 'simulation mode' where standard likelihood evaluation is replaced by corresponding random number generation. This facilitates automatic simulation under some restrictions. Simulations can be obtained directly from the model object by \code{obj$simulate()} or used indirectly via \link{checkConsistency}.
+##' An RTMB objective function can be run in 'simulation mode' where standard likelihood evaluation is replaced by corresponding random number generation. This facilitates automatic simulation under some restrictions, notably regarding the *order of likelihood accumulation* in the user template - see details. Simulations can be obtained directly from the model object by \code{obj$simulate()} or used indirectly via \link{checkConsistency}.
+##' In both cases a simulation is carried out from the *full* model i.e. both *random effects* and *observations* are simulated. The \link{OBS} function is used to mark which data items are observations - see examples.
 ##'
 ##' In simulation mode all log density evaluation, involving either random effects or observations, is interpreted as probability assignment.
 ##'
@@ -287,7 +290,8 @@ NULL
 ##'
 ##' Indirect assignment works for a limited set of easily invertible functions - see \code{methods(class="simref")}.
 ##'
-##' \bold{Simulation order} Note that probability assignments are sequential: All information required to draw a new variable must already be simulated.
+##' \bold{Simulation order} Note that probability assignments are sequential: All information required to draw a new variable must already be simulated. It follows that, for the simulation to work, one cannot assume likelihood accumulation is commutative!
+##'
 ##' Vectorized assignment implicitly occurs elementwise from left to right.
 ##' For example the assignment
 ##'
@@ -311,11 +315,19 @@ NULL
 ##' @rdname Simulation
 ##' @name Simulation
 ##' @examples
-##' s <- simref(4)
-##' s2 <- 2 * s[1:2] + 1
-##' s2[] <- 7
-##' s ## 3 3 NA NA
-##' ## Random walk
+##' ## Basic example simulating response marked by OBS()
+##' func <- function(par) {
+##'   getAll(par, tmbdata)
+##'   y <- OBS(y)
+##'   ans <- -sum(dbinom(y, prob = plogis(a+b*x), size = 1, log = TRUE))
+##' }
+##' set.seed(101)
+##' tmbdata <- list(x = seq(-3, 3, length = 25))
+##' tmbdata$y <- rbinom(25, size = 1, prob = plogis(2 - 0.1*tmbdata$x))
+##' obj <- MakeADFun(func, list(a = 0, b = 0), silent=TRUE)
+##' with(obj, nlminb(par, fn, gr))
+##' obj$simulate()
+##' ## Basic example simulating random effects
 ##' func <- function(p) {
 ##'   u <- p$u
 ##'   ans <- -dnorm(u[1], log=TRUE) ## u[1] ~ N(0,1)
@@ -323,6 +335,11 @@ NULL
 ##' }
 ##' obj <- MakeADFun(func, list(u=numeric(20)), random="u")
 ##' obj$simulate()
+##' ## Demonstrate how a 'simref' object works
+##' s <- simref(4)
+##' s2 <- 2 * s[1:2] + 1
+##' s2[] <- 7
+##' s ## 3 3 NA NA
 NULL
 
 ## FIXME: Tidy the class union names

@@ -101,6 +101,22 @@ ptr_gety <- function(adf) {
     .Call(`_RTMB_ptr_gety`, adf)
 }
 
+distr_besselK <- function(x, nu, expo = FALSE) {
+    .Call(`_RTMB_distr_besselK`, x, nu, expo)
+}
+
+distr_besselI <- function(x, nu, expo = FALSE) {
+    .Call(`_RTMB_distr_besselI`, x, nu, expo)
+}
+
+distr_besselJ <- function(x, nu) {
+    .Call(`_RTMB_distr_besselJ`, x, nu)
+}
+
+distr_besselY <- function(x, nu) {
+    .Call(`_RTMB_distr_besselY`, x, nu)
+}
+
 distr_dexp <- function(x, rate, give_log) {
     .Call(`_RTMB_distr_dexp`, x, rate, give_log)
 }
@@ -213,28 +229,16 @@ distr_qbeta <- function(p, shape1, shape2) {
     .Call(`_RTMB_distr_qbeta`, p, shape1, shape2)
 }
 
-distr_besselK <- function(x, nu) {
-    .Call(`_RTMB_distr_besselK`, x, nu)
-}
-
-distr_besselI <- function(x, nu) {
-    .Call(`_RTMB_distr_besselI`, x, nu)
-}
-
-distr_besselJ <- function(x, nu) {
-    .Call(`_RTMB_distr_besselJ`, x, nu)
-}
-
-distr_besselY <- function(x, nu) {
-    .Call(`_RTMB_distr_besselY`, x, nu)
-}
-
 distr_compois_calc_logZ <- function(loglambda, nu) {
     .Call(`_RTMB_distr_compois_calc_logZ`, loglambda, nu)
 }
 
 distr_compois_calc_loglambda <- function(logmean, nu) {
     .Call(`_RTMB_distr_compois_calc_loglambda`, logmean, nu)
+}
+
+distr_lbeta <- function(a, b) {
+    .Call(`_RTMB_distr_lbeta`, a, b)
 }
 
 distr_logspace_add <- function(logx, logy) {
@@ -247,6 +251,10 @@ distr_logspace_sub <- function(logx, logy) {
 
 distr_rcompois <- function(loglambda, nu) {
     .Call(`_RTMB_distr_rcompois`, loglambda, nu)
+}
+
+expATv <- function(AT, v, N, C, cfg, cache) {
+    .Call(`_RTMB_expATv`, AT, v, N, C, cfg, cache)
 }
 
 ip2D <- function(data, x_range, y_range, con) {
@@ -323,10 +331,6 @@ math_sqrtm <- function(x) {
 
 math_absm <- function(x) {
     .Call(`_RTMB_math_absm`, x)
-}
-
-expATv <- function(AT, v, N, cfg, cache) {
-    .Call(`_RTMB_expATv`, AT, v, N, cfg, cache)
 }
 
 SparseSolve <- function(s, x) {

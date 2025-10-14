@@ -6,7 +6,8 @@ p <- grep("^VECTORIZE.*\\(p", tmb, value=TRUE)
 q <- grep("^VECTORIZE.*\\(q", tmb, value=TRUE)
 b <- grep("^VECTORIZE.*\\(bessel", tmb, value=TRUE)
 cp <- grep("^VECTORIZE.*\\(compois", tmb, value=TRUE)
-dp <- c(d,p,q,b,cp)
+lb <- grep("^VECTORIZE.*\\(lbeta", tmb, value=TRUE)
+dp <- c(d,p,q,b,cp,lb)
 dp <- sub("VECTORIZE(.)_(.*)\\((.*)\\)", "\\3 \\1 \\2", dp)
 ## Manually add
 more <- c("logspace_add 2 tt", "logspace_sub 2 tt")
@@ -17,12 +18,14 @@ df <- subset(df,name!="pow") ## bogus
 df <- subset(df, !(name=="pnorm" & npar==1) ) ## bogus
 df <- subset(df, !(name=="qnorm" & npar==1) ) ## bogus
 skip <- c("pSHASHo", "qSHASHo", "dnorm", "pnorm_approx", "qnorm_approx", "dzipois") ## RTMB uses a dnorm implementation in R
+skip <- c(skip, c("besselK", "besselI", "besselJ", "besselY")) ## Frozen in RTMB
 df <- subset(df, !(name %in% skip))
 
 skip <- c("compois_calc_logZ", "compois_calc_loglambda")
 df$export <- !(df$name %in% skip)
 
 getsig <- function(name) {
+    if (name == "lbeta") return ("a, b")
     x <- sub(paste0(".*Type ",name,"\\((.*?)\\).*"),"\\1",tmb1)
     x <- gsub("[ ]*( )","\\1", x)
     x <- gsub("Type ", "", x)

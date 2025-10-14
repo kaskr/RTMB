@@ -274,3 +274,76 @@ obj <- MakeADFun(cmb(f3, ChickWeight), parameters, random=c("a", "b"))
 ChickWeightNew <- transform(ChickWeight, weight=log(weight))
 obj <- MakeADFun(cmb(f3, ChickWeightNew), parameters, random=c("a", "b"))
 ```
+
+# Model predictions
+
+We've already seen how `ADREPORT()` can be used to make predictions of derived quantities e.g. `predWeight` corresponding to each of our measurements.
+But what if we need predictions outside of where we have data? For example, some natural prediction tasks could be:
+
+1. Predict, with standard deviations, the weight of chick number `10` for times `20:24` using diet `3`.
+2. Same as (1) for an *unseen chick* number `51`.
+
+A general approach to make such predictions is to modify the objective function to handle rows with missing (`NA`) response, and then augment the original data with missing responses where predictions are needed.
+We'll take as starting point the `f3()` implementation and modify (changes are marked with a comment):
+
+```{r}
+f_pred <- function(parms, data) {
+    getAll(data, parms, warn=FALSE)
+    ## Optional (enables extra RTMB features)
+    weight <- OBS(weight)
+    ## Random slopes
+    a %~% dnorm(mean=mua, sd=sda)
+    ## Random intercepts
+    b %~% dnorm(mean=mub, sd=sdb)
+    ## Data
+    predWeight <- a[Chick] * Time + b[Chick]
+    mis <- is.na(weight)                                 ## <-- Get missing responses
+    weight[!mis] %~% dnorm(predWeight[!mis], sd=sdeps)   ## <-- Likelihood of non-missing
+    ## Get predicted weight uncertainties
+    ADREPORT(predWeight[mis])                            ## <-- Only report missing
+}
+```
+
+## Prediction task 1
+
+For the first prediction task we create a `newdata` object with missing response:
+
+```{r}
+newdata <- data.frame(Time=20:24, Diet="3", Chick="10", weight=NA)
+```
+
+We then refit the model using the original data *augmented with* `newdata` (Note: refitting can be avoided - see next section).
+
+```{r}
+augdata <- rbind(ChickWeight, newdata)
+obj <- MakeADFun(cmb(f_pred, augdata), parameters, random=c("a", "b"))
+opt <- nlminb(obj$par, obj$fn, obj$gr)
+sdr <- sdreport(obj)
+cbind(newdata, summary(sdr, select="report"))
+```
+
+## Prediction task 2
+
+The second prediction task is slightly more tricky as it involves an unseen chick number 51. That is, we need to add additional random effects `a` and `b` corresponding to this individual.
+
+```{r}
+newdata <- transform(newdata, Chick="51")
+augdata <- rbind(ChickWeight, newdata)
+parameters$a <- rep(0, nlevels(augdata$Chick))
+parameters$b <- rep(0, nlevels(augdata$Chick))
+```
+
+This is all we need and we could in principle proceed as before by refitting the model and running `sdreport()`. However, a shortcut is worth mentioning: The previous fit of *parameters* and *hessian* can be re-used as these can't possibly change by adding missing responses to the data:
+
+```{r}
+par.old <- opt$par
+hessian.old <- optimHess(par.old, obj$fn, obj$gr)
+```
+
+We can then pass this information to `sdreport` and skip the optimization step:
+
+```{r}
+obj <- MakeADFun(cmb(f_pred, augdata), parameters, random=c("a", "b"))
+sdr <- sdreport(obj, par.old, hessian.old)
+cbind(newdata, summary(sdr, select="report"))
+```

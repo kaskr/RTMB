@@ -1,0 +1,33 @@
+------------------------------------------------------------------------
+RTMB 1.8 (2025-10-13)
+------------------------------------------------------------------------
+
+o Special functions have been added:
+  pnbinom(), lbeta(), dcauchy()
+
+o Special functions have been improved:
+  Add 'expon.scaled' argument to Bessel functions. dmvnorm() now allows zero-dim covariance. Fixed dgamma() rate argument.
+
+o Some discrete methods now work with autodiff:
+  Modulus ('%%'), sort(), findInterval() and taped subsetting by an AD index using '['.
+  Math group: Added floor, ceiling, trunc.
+
+o Improved splinefun():
+  Spline derivatives have been generalized to work for *all* parts of the spline including evaluation pooints and knots.
+  In addition, the spline object now has a 'deriv' argument (like stats).
+
+o Methods that now work for 'adsparse' class:
+  band(), tril(), triu(), kronecker().
+
+o Sparse matrix exponential expAv() now applies internal rescaling to gain robustness.
+  In addition, caching can now improve memory efficiency when the same generator is used multiple times.
+
+o New methods for the 'Tape' class:
+  reorder(), timer(), force.update().
+
+o MakeADFun: Model object now has a force.update() method for better interoperability with the DataEval() function.
+  An example is given on the '?DataEval' help page.
+
+o RTMB can now be built with preprocessor flag 'EIGEN_USE_BLAS' enabled.
+
+o ADjoint() no longer crashes by errors thrown by user's forward or reverse mode code.
