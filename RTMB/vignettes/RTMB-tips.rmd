@@ -1,0 +1,94 @@
+---
+title: "RTMB tips"
+author: "Ben Bolker"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{RTMB tips}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE, message=FALSE}
+##library(knitr)
+library(RTMB)
+set.seed(1)
+formals(MakeADFun)$silent <- TRUE
+```
+
+## requirements for RTMB functions
+
+* the objective function **must be differentiable** with respect to parameters (no `if()`, `abs()`, `round()`, `min()`, `max()` depending on parameters)
+* have to implement exotic probability distributions yourself: anything that descends into C(++)/Fortran code will probably fail
+* aliases to base functions made before call to `library(RTMB)` [might not work](https://github.com/kaskr/RTMB/issues/69)
+* use of `<-[` (see [here](https://groups.google.com/g/tmb-users/c/HlPqkfcCa1g)) etc.
+   * specifically, if you use the `c()` function, or if you use the `diag<-` function (which sets the diagonal of a matrix) or the `[<-` function (which assigns values within a matrix), you need to add e.g. `ADoverload("[<-")` to the beginning of your function
+* You can only "grow" empty vectors if initialized with `numeric(0)`, not `c()` or `NULL` (i.e. `x <- c(); x[1] <- 2` throws an error, but `x <- numeric(0); x[1] <- 2` does work), see [here](https://groups.google.com/g/tmb-users/c/-MyEk1m0lBo). In any case it is better practice to preallocate instead of growing vectors, e.g. `x <- numeric(1); x[1] <- 2` (see chapter 2 of the [R Inferno](https://www.burns-stat.com/pages/Tutor/R_inferno.pdf)).
+* for matrix exponentials, you should use `Matrix::expm()` rather than `expm::expm()`
+* RTMB is pickier than R about matrix types. You may need to use some combination of `drop()` and `as.matrix()` to convert matrices with dimension 1 in some direction (or `Matrix` matrices) back to vectors
+* `[[`-indexing may be much faster than `[`-indexing: see [here](https://groups.google.com/g/tmb-users/c/rm2N5mH8U-8/m/l1sYZov3EAAJ) (and later messages in that thread)
+* if you use `cat()` or `print()` to print out numeric values, the results may not make sense (you'll see a printout of RTMB's internal representation of autodiff-augmented numbers ...)
+
+## if transitioning from TMB
+
+* RTMB uses `%*%` (as in base R), not `*` (as in C++) for matrix/matrix and matrix/vector multiplication
+
+## more general points
+
+* as in C++ code, you probably don't have to worry as much about non-vectorized code (e.g. `for` loops) being very slow relative to vectorized codes. Comparing natively vectorized code (fastest) to RTMB vectorized or for-loop code (both a bit slower, but not different from each other) to native R for-loops (much slower):
+
+```{r benchmark, echo=FALSE}
+library(microbenchmark)
+set.seed(101)
+x <- rnorm(1000)
+y <- rnorm(1000)
+f1_vect <- function(p) {
+  sum(x+y)
+}
+
+f1_forloop <- function(p) {
+  z <- 0
+  for (i in seq_along(x)) {
+    z = z + x[i] + y[i]
+  }
+  z
+}
+
+f1_vect_RTMB <- MakeADFun(f1_vect, list(p=1))
+f1_forloop_RTMB <- MakeADFun(f1_forloop, list(p=1))
+
+if (requireNamespace("microbenchmark")) {
+  mm <- microbenchmark(vect = f1_vect(0),
+                       vect_RTMB = f1_vect_RTMB$fn(0),
+                       forloop = f1_forloop(0),
+                       forloop_RTMB = f1_forloop_RTMB$fn(0),
+                       times = 10000L)
+}
+```                     
+
+```{r benchmark-plot, echo = FALSE, fig.width = 8, fig.height = 6, message=FALSE}
+if (exists("mm") && requireNamespace("tinyplot")) {
+  par(las=1)
+  mm2 <- transform(as.data.frame(mm), ntime = time/1000,
+                   expr = factor(expr,
+                                 levels = c("vect", "vect_RTMB",
+                                            "forloop_RTMB", "forloop"),
+                                 labels = c("vectorized\nnative R",
+                                            "vectorized\nRTMB",
+                                            "for loop\nRTMB",
+                                            "for loop\nnative R"))
+                   )
+  tinyplot::tinyplot(ntime ~ expr,
+                     data = mm2, type = "violin", log = "y",
+                     trim = TRUE, joint.bw = FALSE,
+                     xlab = "",
+                     ylab = "time (microseconds)")
+
+}
+```
+
+* data handling (see [here](https://groups.google.com/g/tmb-users/c/sq3y5aTwvjo), [here](https://groups.google.com/g/tmb-users/c/YzSjsHyFYJ8)) (and very similar arguments from 2004 about [MLE fitting machinery taking a `data` argument](https://hypatia.math.ethz.ch/pipermail/r-devel/2004-June/029837.html))
+* have to handle prediction, tests, diagnostics, etc. etc. yourself (although the `broom.mixed` package does have a [rudimentary `tidy` method for TMB objects](https://github.com/bbolker/broom.mixed/blob/main/R/TMB_tidiers.R) (e.g. `class(TMBobj) <- c("TMB", class(TMBobj)); broom.mixed::tidy(TMBobj)`)
+* if you do something clever where you define your objective function in a different environment from where you call `MakeADFun`, you can use `assign(..., environment(objective_function))` to make sure that the objective function can see any objects it needs to know about ...
