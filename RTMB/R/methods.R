@@ -615,6 +615,21 @@ setMethod("pnbinom",
           })
 
 ################################################################################
+
+##' @describeIn Distributions General implementation of \link[stats]{dchisq} that works for all RTMB evaluation modes (\link{advector}, \link{Simulation}, \link{OSA-residuals}).
+setMethod("dchisq",
+          signature(x = "ANY", df = "ANY", ncp = "missing", log = "ANY"),
+          function(x, df, log) {
+              dgamma(x=x, shape=df/2, scale=2, log=log)
+          })
+##' @describeIn Distributions Standard numeric evaluation falls back on the stats version.
+setMethod("dchisq",
+          signature(x = "num", df = "num", ncp = "num.", log = "ANY"),
+          function(x, df, ncp, log) {
+              stats::dchisq(x=x, df=df, ncp=ncp, log=log)
+          })
+
+################################################################################
 ## Discrete AD methods
 ################################################################################
 

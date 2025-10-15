@@ -206,6 +206,7 @@ NULL
 ##' @param location parameter
 ##' @param alpha parameter
 ##' @param df parameter
+##' @param ncp parameter
 ##' @param mu parameter
 ##' @param sigma parameter
 ##' @param nu parameter
