@@ -330,13 +330,13 @@ dcompois2(x, mean, nu, log = FALSE)
 
 \S4method{dchisq}{num,num,num.}(x, df, ncp = 0, log = FALSE)
 
-\S4method{pchisq}{ANY,ANY,missing,missing,missing}(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+\S4method{pchisq}{ANY,ANY,missing,missing,missing}(q, df)
 
-\S4method{pchisq}{num,num,num.,missing,missing}(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+\S4method{pchisq}{num,num,num.,missing,missing}(q, df, ncp)
 
-\S4method{qchisq}{ANY,ANY,missing,missing,missing}(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+\S4method{qchisq}{ANY,ANY,missing,missing,missing}(p, df)
 
-\S4method{qchisq}{num,num,num.,missing,missing}(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+\S4method{qchisq}{num,num,num.,missing,missing}(p, df, ncp)
 }
 \arguments{
 \item{x}{observation vector}
