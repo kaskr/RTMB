@@ -14,7 +14,7 @@ Imports: Rcpp (>= 1.0.9), Matrix, methods, TMB (>= 1.9.7), MASS
 LinkingTo: Rcpp, TMB, RcppEigen
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr, rmarkdown
-Suggests: knitr, rmarkdown, igraph, tinytest, numDeriv
+Suggests: knitr, rmarkdown, igraph, tinytest, numDeriv, tinyplot, microbenchmark
 URL: https://github.com/kaskr/RTMB
 BugReports: https://github.com/kaskr/RTMB/issues
 NeedsCompilation: yes
