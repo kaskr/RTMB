@@ -630,6 +630,36 @@ setMethod("dchisq",
           })
 
 ################################################################################
+
+##' @describeIn Distributions General implementation of \link[stats]{pchisq} that works for all RTMB evaluation modes (\link{advector}, \link{Simulation}, \link{OSA-residuals}).
+setMethod("pchisq",
+          signature(q = "ANY", df = "ANY", ncp = "missing", lower.tail = "missing", log.p = "missing"),
+          function(q, df, ncp, lower.tail, log.p) {
+              pgamma(q=q, shape=df/2, scale=2, lower.tail=lower.tail, log.p=log.p)
+          })
+##' @describeIn Distributions Standard numeric evaluation falls back on the stats version.
+setMethod("pchisq",
+          signature(q = "num", df = "num", ncp = "num.", lower.tail = "missing", log.p = "missing"),
+          function(q, df, ncp, lower.tail, log.p) {
+              stats::pchisq(q=q, df=df, ncp=ncp, lower.tail=lower.tail, log.p=log.p)
+          })
+
+################################################################################
+
+##' @describeIn Distributions General implementation of \link[stats]{qchisq} that works for all RTMB evaluation modes (\link{advector}, \link{Simulation}, \link{OSA-residuals}).
+setMethod("qchisq",
+          signature(p = "ANY", df = "ANY", ncp = "missing", lower.tail = "missing", log.p = "missing"),
+          function(p, df, ncp, lower.tail, log.p) {
+              qgamma(p=p, shape=df/2, scale=2, lower.tail=lower.tail, log.p=log.p)
+          })
+##' @describeIn Distributions Standard numeric evaluation falls back on the stats version.
+setMethod("qchisq",
+          signature(p = "num", df = "num", ncp = "num.", lower.tail = "missing", log.p = "missing"),
+          function(p, df, ncp, lower.tail, log.p) {
+              stats::qchisq(p=p, df=df, ncp=ncp, lower.tail=lower.tail, log.p=log.p)
+          })
+
+################################################################################
 ## Discrete AD methods
 ################################################################################
 
