@@ -108,6 +108,8 @@
 \alias{dcauchy,simref,ANY,ANY,ANY-method}
 \alias{dgamma,ad,ad,ad,missing,logical.-method}
 \alias{pnbinom,ad,ad,ad,missing,missing,missing-method}
+\alias{dchisq,ANY,ANY,missing-method}
+\alias{dchisq,num,num,num.-method}
 \title{Distributions and special functions for which AD is implemented}
 \usage{
 \S4method{besselK}{ad,ad}(x, nu, expon.scaled = FALSE)
@@ -319,6 +321,10 @@ dcompois2(x, mean, nu, log = FALSE)
 \S4method{dgamma}{ad,ad,ad,missing,logical.}(x, shape, rate, log)
 
 \S4method{pnbinom}{ad,ad,ad,missing,missing,missing}(q, size, prob)
+
+\S4method{dchisq}{ANY,ANY,missing}(x, df, log)
+
+\S4method{dchisq}{num,num,num.}(x, df, ncp = 0, log = FALSE)
 }
 \arguments{
 \item{x}{observation vector}
@@ -392,6 +398,8 @@ dcompois2(x, mean, nu, log = FALSE)
 \item{sdlog}{Parameter; SD on log scale.}
 
 \item{mode}{parameter}
+
+\item{ncp}{parameter}
 }
 \value{
 In autodiff contexts an object of class \code{"advector"} is returned; otherwise a standard numeric vector.
@@ -725,6 +733,10 @@ which documentation should be looked up online.
   lower.tail = missing,
   log.p = missing
 )}: AD implementation of \link[stats]{pnbinom}
+
+\item \code{dchisq(x = ANY, df = ANY, ncp = missing)}: General implementation of \link[stats]{dchisq} that works for all RTMB evaluation modes (\link{advector}, \link{Simulation}, \link{OSA-residuals}).
+
+\item \code{dchisq(x = num, df = num, ncp = num.)}: Standard numeric evaluation falls back on the stats version.
 
 }}
 \examples{
