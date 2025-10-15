@@ -98,3 +98,26 @@ dat <- s
 obj <- MakeADFun(f, parms)
 osa <- oneStepPredict(obj, method="cdf", trace=FALSE)
 expect_true(ks.test(osa$res, "pnorm")$p.value > .05)
+
+################################################################################
+## Test 5 (dchisq)
+################################################################################
+set.seed(1) ## For checkConsistency
+dat <- list(x=1:100)
+f <- function(parms) {
+    getAll(parms, dat, warn=FALSE)
+    x <- OBS(x)
+    -sum(dchisq(x, df, log=TRUE))
+}
+parms <- list(df=3)
+obj <- MakeADFun(f, parms)
+expect_true(abs(obj$fn() - f(parms)) < tol)
+s <- obj$simulate()
+expect_true(length(s$x) == length(dat$x))
+chk.dchisq <- checkConsistency(obj)
+expect_true(abs(summary(chk.dchisq)$joint$p.value)>.05)
+expect_true(all(abs(summary(chk.dchisq)$joint$bias)<.05))
+dat <- s
+obj <- MakeADFun(f, parms)
+osa <- oneStepPredict(obj, method="cdf", trace=FALSE)
+expect_true(ks.test(osa$res, "pnorm")$p.value > .05)
