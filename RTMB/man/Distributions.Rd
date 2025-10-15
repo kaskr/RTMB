@@ -110,6 +110,10 @@
 \alias{pnbinom,ad,ad,ad,missing,missing,missing-method}
 \alias{dchisq,ANY,ANY,missing-method}
 \alias{dchisq,num,num,num.-method}
+\alias{pchisq,ANY,ANY,missing,missing,missing-method}
+\alias{pchisq,num,num,num.,missing,missing-method}
+\alias{qchisq,ANY,ANY,missing,missing,missing-method}
+\alias{qchisq,num,num,num.,missing,missing-method}
 \title{Distributions and special functions for which AD is implemented}
 \usage{
 \S4method{besselK}{ad,ad}(x, nu, expon.scaled = FALSE)
@@ -325,6 +329,14 @@ dcompois2(x, mean, nu, log = FALSE)
 \S4method{dchisq}{ANY,ANY,missing}(x, df, log)
 
 \S4method{dchisq}{num,num,num.}(x, df, ncp = 0, log = FALSE)
+
+\S4method{pchisq}{ANY,ANY,missing,missing,missing}(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+
+\S4method{pchisq}{num,num,num.,missing,missing}(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+
+\S4method{qchisq}{ANY,ANY,missing,missing,missing}(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+
+\S4method{qchisq}{num,num,num.,missing,missing}(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)
 }
 \arguments{
 \item{x}{observation vector}
@@ -737,6 +749,14 @@ which documentation should be looked up online.
 \item \code{dchisq(x = ANY, df = ANY, ncp = missing)}: General implementation of \link[stats]{dchisq} that works for all RTMB evaluation modes (\link{advector}, \link{Simulation}, \link{OSA-residuals}).
 
 \item \code{dchisq(x = num, df = num, ncp = num.)}: Standard numeric evaluation falls back on the stats version.
+
+\item \code{pchisq(q = ANY, df = ANY, ncp = missing, lower.tail = missing, log.p = missing)}: General implementation of \link[stats]{pchisq} that works for all RTMB evaluation modes (\link{advector}, \link{Simulation}, \link{OSA-residuals}).
+
+\item \code{pchisq(q = num, df = num, ncp = num., lower.tail = missing, log.p = missing)}: Standard numeric evaluation falls back on the stats version.
+
+\item \code{qchisq(p = ANY, df = ANY, ncp = missing, lower.tail = missing, log.p = missing)}: General implementation of \link[stats]{qchisq} that works for all RTMB evaluation modes (\link{advector}, \link{Simulation}, \link{OSA-residuals}).
+
+\item \code{qchisq(p = num, df = num, ncp = num., lower.tail = missing, log.p = missing)}: Standard numeric evaluation falls back on the stats version.
 
 }}
 \examples{
