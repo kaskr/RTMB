@@ -77,6 +77,7 @@ codegen <- function(i) {
     paste0("const ad* ", Xk, " = adptr(", adargs ,");", collapse=" "),
     "ad* Y = adptr(ans);",
     paste0("for (int i=0; i<n; i++) Y[i] = ",fun, "(",  paste0(Xk, "[i % ", nk, "]", collapse=", "), ", give_log"[type=="d"] ,");"),
+    paste0("if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, ", adargs[1], ");"),
     "return ans;",
     "}")
 }

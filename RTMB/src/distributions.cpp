@@ -12,6 +12,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(rate);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dexp(X1[i % n1], X2[i % n2], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -27,6 +28,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(shape); const ad* X3 = adptr(scale);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dweibull(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -42,6 +44,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(size); const ad* X3 = adptr(prob);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dbinom(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -57,6 +60,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(size); const ad* X3 = adptr(logit_p);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dbinom_robust(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -72,6 +76,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(shape1); const ad* X3 = adptr(shape2);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dbeta(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -87,6 +92,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(df1); const ad* X3 = adptr(df2);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = df(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -102,6 +108,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(location); const ad* X3 = adptr(scale);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dlogis(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -116,6 +123,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(alpha);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dsn(X1[i % n1], X2[i % n2], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -130,6 +138,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(df);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dt(X1[i % n1], X2[i % n2], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -147,6 +156,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(mu); const ad* X3 = adptr(sigma); const ad* X4 = adptr(nu); const ad* X5 = adptr(tau);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dSHASHo(X1[i % n1], X2[i % n2], X3[i % n3], X4[i % n4], X5[i % n5], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -163,6 +173,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(mu); const ad* X3 = adptr(phi); const ad* X4 = adptr(p);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dtweedie(X1[i % n1], X2[i % n2], X3[i % n3], X4[i % n4], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -178,6 +189,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(size); const ad* X3 = adptr(prob);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dnbinom(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -193,6 +205,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(log_mu); const ad* X3 = adptr(log_var_minus_mu);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dnbinom_robust(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -208,6 +221,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(mu); const ad* X3 = adptr(var);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dnbinom2(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -222,6 +236,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(lambda);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dpois(X1[i % n1], X2[i % n2], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -237,6 +252,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(shape); const ad* X3 = adptr(scale);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dgamma(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -252,6 +268,7 @@ ADrep ans(n);
 const ad* X1 = adptr(x); const ad* X2 = adptr(shape); const ad* X3 = adptr(scale);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = dlgamma(X1[i % n1], X2[i % n2], X3[i % n3], give_log);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
@@ -267,6 +284,7 @@ ADrep ans(n);
 const ad* X1 = adptr(q); const ad* X2 = adptr(mean ); const ad* X3 = adptr(sd );
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = pnorm(X1[i % n1], X2[i % n2], X3[i % n3]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, q);
 return ans;
 }
 // [[Rcpp::export]]
@@ -282,6 +300,7 @@ ADrep ans(n);
 const ad* X1 = adptr(q); const ad* X2 = adptr(shape); const ad* X3 = adptr(scale );
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = pgamma(X1[i % n1], X2[i % n2], X3[i % n3]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, q);
 return ans;
 }
 // [[Rcpp::export]]
@@ -296,6 +315,7 @@ ADrep ans(n);
 const ad* X1 = adptr(q); const ad* X2 = adptr(lambda);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = ppois(X1[i % n1], X2[i % n2]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, q);
 return ans;
 }
 // [[Rcpp::export]]
@@ -310,6 +330,7 @@ ADrep ans(n);
 const ad* X1 = adptr(q); const ad* X2 = adptr(rate);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = pexp(X1[i % n1], X2[i % n2]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, q);
 return ans;
 }
 // [[Rcpp::export]]
@@ -325,6 +346,7 @@ ADrep ans(n);
 const ad* X1 = adptr(q); const ad* X2 = adptr(shape); const ad* X3 = adptr(scale);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = pweibull(X1[i % n1], X2[i % n2], X3[i % n3]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, q);
 return ans;
 }
 // [[Rcpp::export]]
@@ -340,6 +362,7 @@ ADrep ans(n);
 const ad* X1 = adptr(q); const ad* X2 = adptr(shape1); const ad* X3 = adptr(shape2);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = pbeta(X1[i % n1], X2[i % n2], X3[i % n3]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, q);
 return ans;
 }
 // [[Rcpp::export]]
@@ -355,6 +378,7 @@ ADrep ans(n);
 const ad* X1 = adptr(p); const ad* X2 = adptr(mean ); const ad* X3 = adptr(sd );
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = qnorm(X1[i % n1], X2[i % n2], X3[i % n3]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, p);
 return ans;
 }
 // [[Rcpp::export]]
@@ -370,6 +394,7 @@ ADrep ans(n);
 const ad* X1 = adptr(p); const ad* X2 = adptr(shape); const ad* X3 = adptr(scale );
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = qgamma(X1[i % n1], X2[i % n2], X3[i % n3]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, p);
 return ans;
 }
 // [[Rcpp::export]]
@@ -384,6 +409,7 @@ ADrep ans(n);
 const ad* X1 = adptr(p); const ad* X2 = adptr(rate);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = qexp(X1[i % n1], X2[i % n2]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, p);
 return ans;
 }
 // [[Rcpp::export]]
@@ -399,6 +425,7 @@ ADrep ans(n);
 const ad* X1 = adptr(p); const ad* X2 = adptr(shape); const ad* X3 = adptr(scale);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = qweibull(X1[i % n1], X2[i % n2], X3[i % n3]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, p);
 return ans;
 }
 // [[Rcpp::export]]
@@ -414,6 +441,7 @@ ADrep ans(n);
 const ad* X1 = adptr(p); const ad* X2 = adptr(shape1); const ad* X3 = adptr(shape2);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = qbeta(X1[i % n1], X2[i % n2], X3[i % n3]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, p);
 return ans;
 }
 // [[Rcpp::export]]
@@ -428,6 +456,7 @@ ADrep ans(n);
 const ad* X1 = adptr(loglambda); const ad* X2 = adptr(nu);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = compois_calc_logZ(X1[i % n1], X2[i % n2]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, loglambda);
 return ans;
 }
 // [[Rcpp::export]]
@@ -442,6 +471,7 @@ ADrep ans(n);
 const ad* X1 = adptr(logmean); const ad* X2 = adptr(nu);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = compois_calc_loglambda(X1[i % n1], X2[i % n2]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, logmean);
 return ans;
 }
 // [[Rcpp::export]]
@@ -456,6 +486,7 @@ ADrep ans(n);
 const ad* X1 = adptr(a); const ad* X2 = adptr(b);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = lbeta(X1[i % n1], X2[i % n2]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, a);
 return ans;
 }
 // [[Rcpp::export]]
@@ -470,6 +501,7 @@ ADrep ans(n);
 const ad* X1 = adptr(logx); const ad* X2 = adptr(logy);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = logspace_add(X1[i % n1], X2[i % n2]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, logx);
 return ans;
 }
 // [[Rcpp::export]]
@@ -484,6 +516,7 @@ ADrep ans(n);
 const ad* X1 = adptr(logx); const ad* X2 = adptr(logy);
 ad* Y = adptr(ans);
 for (int i=0; i<n; i++) Y[i] = logspace_sub(X1[i % n1], X2[i % n2]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, logx);
 return ans;
 }
 // [[Rcpp::export]]
