@@ -278,6 +278,5 @@ S3method("as.matrix", adcomplex)
 
 ## Discrete
 export("sort")
-## Masks
-## export("order")
+export("order")
 export("findInterval")

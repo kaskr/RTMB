@@ -666,8 +666,28 @@ setMethod("qchisq",
 ##' @describeIn ADvector Taped sorting of an AD vector
 ##' @examples MakeTape(sort, numeric(3))
 setMethod("sort", "advector", function(x) sort_ad(x))
-## setGeneric("order", signature = "...")
-## setMethod("order", c("advector"), function(...) order_ad(...) + 1)
+##' @describeIn ADvector Taped ordering of an AD vector
+##' @examples MakeTape(order, numeric(3))
+##' @param na.last missing
+##' @param decreasing missing
+##' @param method missing
+setMethod("order",
+          c(na.last="missing", decreasing="missing", method="missing"),
+          function(...) {
+            z <- list(...)
+            ad.case <- any(unlist(lapply(z, inherits, "advector")))
+            if (ad.case) {
+              z <- lapply(z, advector)
+              o <- order_ad(z[[length(z)]]) ## zero-based
+              while(length(z <- z[-length(z)])) {
+                x <- z[[length(z)]]
+                o <- subset_ad(o, order_ad(subset_ad(x, o))) ## zero-based
+              }
+              o + 1
+            } else {
+              base::order(...)
+            }
+          })
 ##' @describeIn ADvector Taped subsetting of an AD vector
 ##' @examples MakeTape(function(x) AD(rivers)[x], 1:3)
 ##' @param i Variable indices for taped subset
