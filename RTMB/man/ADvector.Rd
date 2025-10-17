@@ -31,6 +31,7 @@
 \alias{ifelse,num,ad,ad-method}
 \alias{ifelse,num,num,num-method}
 \alias{sort,advector-method}
+\alias{order,missing,missing,missing-method}
 \alias{[,advector,advector,ANY,ANY-method}
 \alias{findInterval,advector,advector-method}
 \title{The AD vector and its methods}
@@ -93,6 +94,13 @@ advector(x)
 
 \S4method{sort}{advector}(x)
 
+\S4method{order}{missing,missing,missing}(
+  ...,
+  na.last = TRUE,
+  decreasing = FALSE,
+  method = c("auto", "shell", "radix")
+)
+
 \S4method{[}{advector,advector,ANY,ANY}(x, i)
 
 \S4method{findInterval}{advector,advector}(x, vec)
@@ -127,6 +135,12 @@ advector(x)
 \item{yes}{\code{advector}}
 
 \item{no}{\code{advector}}
+
+\item{na.last}{missing}
+
+\item{decreasing}{missing}
+
+\item{method}{missing}
 
 \item{i}{Variable indices for taped subset}
 
@@ -207,6 +221,8 @@ re-used for AD vectors.
 
 \item \code{sort(advector)}: Taped sorting of an AD vector
 
+\item \code{order(na.last = missing, decreasing = missing, method = missing)}: Taped ordering of an AD vector
+
 \item \code{x[i}: Taped subsetting of an AD vector
 
 \item \code{findInterval(x = advector, vec = advector)}: Taped interval finding of an AD vector
@@ -219,5 +235,6 @@ a <- array(x, c(3,3))  ## as an array
 outer(x, x, "+") ## Implicit via 'rep'
 rev(x)           ## Implicit via '['
 MakeTape(sort, numeric(3))
+MakeTape(order, numeric(3))
 MakeTape(function(x) AD(rivers)[x], 1:3)
 }
