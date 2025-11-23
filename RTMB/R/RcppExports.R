@@ -81,6 +81,14 @@ independent <- function(x) {
     .Call(`_RTMB_independent`, x)
 }
 
+resolve_refs <- function(adf) {
+    .Call(`_RTMB_resolve_refs`, adf)
+}
+
+decompose_refs <- function(adf) {
+    invisible(.Call(`_RTMB_decompose_refs`, adf))
+}
+
 getValues <- function(x) {
     .Call(`_RTMB_getValues`, x)
 }
@@ -255,6 +263,10 @@ distr_rcompois <- function(loglambda, nu) {
 
 expATv <- function(AT, v, N, C, cfg, cache) {
     .Call(`_RTMB_expATv`, AT, v, N, C, cfg, cache)
+}
+
+bisect_atom <- function(adf, x_, cfg) {
+    .Call(`_RTMB_bisect_atom`, adf, x_, cfg)
 }
 
 ip2D <- function(data, x_range, y_range, con) {

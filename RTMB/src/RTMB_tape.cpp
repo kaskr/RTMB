@@ -388,6 +388,17 @@ ADrep independent(ADrep x) {
 }
 
 // [[Rcpp::export]]
+ADrep resolve_refs(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  std::vector<ad> vars = adf->resolve_refs();
+  return ADrep(vars.data(), vars.data() + vars.size());
+}
+
+// [[Rcpp::export]]
+void decompose_refs(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  adf->decompose_refs();
+}
+
+// [[Rcpp::export]]
 Rcpp::NumericVector getValues(ADrep x) {
   Rcpp::NumericVector ans(x.size());
   ad* X = adptr(x);

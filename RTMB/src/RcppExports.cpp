@@ -237,6 +237,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// resolve_refs
+ADrep resolve_refs(Rcpp::XPtr<TMBad::ADFun<> > adf);
+RcppExport SEXP _RTMB_resolve_refs(SEXP adfSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    rcpp_result_gen = Rcpp::wrap(resolve_refs(adf));
+    return rcpp_result_gen;
+END_RCPP
+}
+// decompose_refs
+void decompose_refs(Rcpp::XPtr<TMBad::ADFun<> > adf);
+RcppExport SEXP _RTMB_decompose_refs(SEXP adfSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    decompose_refs(adf);
+    return R_NilValue;
+END_RCPP
+}
 // getValues
 Rcpp::NumericVector getValues(ADrep x);
 RcppExport SEXP _RTMB_getValues(SEXP xSEXP) {
@@ -806,6 +827,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bisect_atom
+ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg);
+RcppExport SEXP _RTMB_bisect_atom(SEXP adfSEXP, SEXP x_SEXP, SEXP cfgSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type x_(x_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type cfg(cfgSEXP);
+    rcpp_result_gen = Rcpp::wrap(bisect_atom(adf, x_, cfg));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ip2D
 Rcpp::XPtr<tmbutils::interpol2D<double> > ip2D(Rcpp::NumericMatrix data, Rcpp::NumericVector x_range, Rcpp::NumericVector y_range, Rcpp::List con);
 RcppExport SEXP _RTMB_ip2D(SEXP dataSEXP, SEXP x_rangeSEXP, SEXP y_rangeSEXP, SEXP conSEXP) {
@@ -1213,6 +1247,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_advec", (DL_FUNC) &_RTMB_advec, 1},
     {"_RTMB_dependent", (DL_FUNC) &_RTMB_dependent, 1},
     {"_RTMB_independent", (DL_FUNC) &_RTMB_independent, 1},
+    {"_RTMB_resolve_refs", (DL_FUNC) &_RTMB_resolve_refs, 1},
+    {"_RTMB_decompose_refs", (DL_FUNC) &_RTMB_decompose_refs, 1},
     {"_RTMB_getValues", (DL_FUNC) &_RTMB_getValues, 1},
     {"_RTMB_getVariables", (DL_FUNC) &_RTMB_getVariables, 1},
     {"_RTMB_dbgprint", (DL_FUNC) &_RTMB_dbgprint, 1},
@@ -1257,6 +1293,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_logspace_sub", (DL_FUNC) &_RTMB_distr_logspace_sub, 2},
     {"_RTMB_distr_rcompois", (DL_FUNC) &_RTMB_distr_rcompois, 2},
     {"_RTMB_expATv", (DL_FUNC) &_RTMB_expATv, 6},
+    {"_RTMB_bisect_atom", (DL_FUNC) &_RTMB_bisect_atom, 3},
     {"_RTMB_ip2D", (DL_FUNC) &_RTMB_ip2D, 4},
     {"_RTMB_ip2D_eval_num", (DL_FUNC) &_RTMB_ip2D_eval_num, 3},
     {"_RTMB_ip2D_eval_ad", (DL_FUNC) &_RTMB_ip2D_eval_ad, 3},
