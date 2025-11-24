@@ -124,15 +124,22 @@ adintegrate <- function(f, a, b, cfg) {
   bisect_atom(ptr, c(a, b, vars), cfg)
 }
 
-##' AD adaptive integration.
+##' AD adaptive numerical integration.
 ##'
-##' Univariate adaptive integration closely following \link[stats]{integrate}.
-##' The R (stats) version is used in standard (non AD) evaluation mode,
-##' while the AD version uses a simplified re-implementation.
+##' Univariate adaptive integration extending R's native \link[stats]{integrate} function to work in both *standard* and *AD* evaluation modes.
 ##'
-##' @param f Integrand.
-##' @param lower Lower integration limit.
-##' @param upper Upper integration limit.
+##' Standard evaluation mode simply calls `stats::integrate` while
+##' AD evaluation mode re-directs to a specialized RTMB implementation.
+##' The latter imitates the R (QUADPACK) implementation by using:
+##' - Adaptive Gauss-Kronrod (K21/G10) quadrature with fast retaping.
+##' - Wynn convergence acceleration to handle boundary singularites.
+##'
+##' @rdname ADintegrate
+##' @name ADintegrate
+##' @aliases integrate,ANY-method
+##' @param f Vectorized integrand.
+##' @param lower Lower integration limit. May be infinite.
+##' @param upper Upper integration limit. May be infinite.
 ##' @param ... Passed to `f`.
 ##' @param subdivisions Max number of subdivisions.
 ##' @param rel.tol Relative tolerance (not used by the AD version)
@@ -140,6 +147,7 @@ adintegrate <- function(f, a, b, cfg) {
 ##' @param stop.on.error Stop on error?
 ##' @param keep.xy Not used.
 ##' @param aux Not used.
+##' @return List with components `"value"`, `"abs.error"` and `"subdivisions"`.
 ##' @examples
 ##' ## Example with many sub-divisions
 ##' f <- function(x) sin(exp(x))
