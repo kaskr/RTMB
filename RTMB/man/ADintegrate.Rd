@@ -29,7 +29,7 @@
 
 \item{subdivisions}{Max number of subdivisions.}
 
-\item{rel.tol}{Relative tolerance (not used by the AD version)}
+\item{rel.tol}{Relative tolerance.}
 
 \item{abs.tol}{Absolute tolerance.}
 
@@ -53,6 +53,13 @@ The latter imitates the R (QUADPACK) implementation by using:
 \item Adaptive Gauss-Kronrod (K21/G10) quadrature with fast retaping.
 \item Wynn convergence acceleration to handle boundary singularites.
 }
+
+Accuracy requirements are specified via relative (\code{rel.tol}) and absolute (\code{abs.tol}) tolerances.
+The AD implementation tries to follow the same stopping criterion as that used by QUADPACK, which is to stop if \emph{either} (not both!) of these tolerances are satisfied:
+
+\verb{|error| < max ( |result| * rel.tol , abs.tol )}.
+
+It follows that a tolerance can be disabled by setting it to zero. This is especially useful when integrating probability densities, where the relative tolerance is the relevant measure, i.e. pass \code{abs.tol=0} in this case.
 }
 \examples{
 ## Example with many sub-divisions

@@ -5,7 +5,9 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
   struct bisect {
     TMBad::ADFun<> f;
     // Configurable absolute error tolerance
-    double tol;
+    double abstol;
+    // Configurable relative error tolerance
+    double reltol;
     // Test if a term is known to machine tolerance, but relaxed a bit just in case.
     double machine_tolerance;
     // Test if Wynn series has converged
@@ -17,7 +19,8 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
     // CTOR
     bisect(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::List cfg) {
       f = *adf;
-      tol = Rcpp::NumericVector(cfg["abs.tol"])[0];
+      abstol = Rcpp::NumericVector(cfg["abs.tol"])[0];
+      reltol = Rcpp::NumericVector(cfg["rel.tol"])[0];
       machine_tolerance = 1e-14;
       wynn_convergence_tolerance = 1e-10;
       subdivisions = Rcpp::IntegerVector(cfg["subdivisions"])[0];
@@ -29,11 +32,12 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
     // Output: y = { integrate(f, a, b) , absolute error, subdivisions }
     std::vector<ad> operator()(const std::vector<ad> &x) {
       this->n = 1;
-      double tol = this->tol;
       // Initialize 1st eval
       std::vector<ad> y = f(x);
       ad result = y[0];
       ad abserr = asDouble(y[1]);
+      // Required absolute tolerance based on first estimate
+      double tol = std::max(abstol, std::abs(asDouble(result)) * reltol);
       if (abserr > tol) {
         subdiv(x, y, tol, true, true);
       }

@@ -134,6 +134,13 @@ adintegrate <- function(f, a, b, cfg) {
 ##' - Adaptive Gauss-Kronrod (K21/G10) quadrature with fast retaping.
 ##' - Wynn convergence acceleration to handle boundary singularites.
 ##'
+##' Accuracy requirements are specified via relative (`rel.tol`) and absolute (`abs.tol`) tolerances.
+##' The AD implementation tries to follow the same stopping criterion as that used by QUADPACK, which is to stop if *either* (not both!) of these tolerances are satisfied:
+##'
+##' `|error| < max ( |result| * rel.tol , abs.tol )`.
+##'
+##' It follows that a tolerance can be disabled by setting it to zero. This is especially useful when integrating probability densities, where the relative tolerance is the relevant measure, i.e. pass `abs.tol=0` in this case.
+##'
 ##' @rdname ADintegrate
 ##' @name ADintegrate
 ##' @aliases integrate,ANY-method
@@ -142,7 +149,7 @@ adintegrate <- function(f, a, b, cfg) {
 ##' @param upper Upper integration limit. May be infinite.
 ##' @param ... Passed to `f`.
 ##' @param subdivisions Max number of subdivisions.
-##' @param rel.tol Relative tolerance (not used by the AD version)
+##' @param rel.tol Relative tolerance.
 ##' @param abs.tol Absolute tolerance.
 ##' @param stop.on.error Stop on error?
 ##' @param keep.xy Not used.
