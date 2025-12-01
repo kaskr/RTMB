@@ -140,9 +140,11 @@ setMethod("fft", "adcomplex",
               if (!ad_context()) {
                   stop("No active AD context")
               }
+              if (length(z) <= 1) return(z)
               d <- dim(z)
               if (is.null(d)) d0 <- length(z) else d0 <- d
               z <- unsplit(z)
+              d0 <- d0[d0 != 1L] ## Remove redundant dimensions
               ans <- fft_complex(z, d0, inverse)
               ans <- resplit(ans)
               dim(ans) <- d
