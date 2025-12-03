@@ -51,6 +51,7 @@ struct FFTOp : global::DynamicOperator< -1 , -1 > {
   typedef std::complex<double> cplx;
   static const bool have_input_size_output_size = true;
   static const bool add_forward_replay_copy = true;
+  static const bool add_static_identifier = true;
   size_t n;
   std::vector<size_t> dim;
   Index input_size()  const { return n; }
