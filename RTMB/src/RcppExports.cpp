@@ -204,6 +204,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ad_mapply
+ADrep ad_mapply(Rcpp::XPtr<TMBad::ADFun<> > tp, Rcpp::List args);
+RcppExport SEXP _RTMB_ad_mapply(SEXP tpSEXP, SEXP argsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type tp(tpSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type args(argsSEXP);
+    rcpp_result_gen = Rcpp::wrap(ad_mapply(tp, args));
+    return rcpp_result_gen;
+END_RCPP
+}
 // advec
 Rcpp::RObject advec(const Rcpp::NumericVector& x);
 RcppExport SEXP _RTMB_advec(SEXP xSEXP) {
@@ -1244,6 +1256,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_get_node", (DL_FUNC) &_RTMB_get_node, 2},
     {"_RTMB_set_tape_config", (DL_FUNC) &_RTMB_set_tape_config, 6},
     {"_RTMB_compare_allow", (DL_FUNC) &_RTMB_compare_allow, 0},
+    {"_RTMB_ad_mapply", (DL_FUNC) &_RTMB_ad_mapply, 2},
     {"_RTMB_advec", (DL_FUNC) &_RTMB_advec, 1},
     {"_RTMB_dependent", (DL_FUNC) &_RTMB_dependent, 1},
     {"_RTMB_independent", (DL_FUNC) &_RTMB_independent, 1},

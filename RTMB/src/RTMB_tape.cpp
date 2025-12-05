@@ -357,6 +357,39 @@ ADrep EvalAD(TMBad::ADFun<>* tp, ADrep x) {
 }
 
 // [[Rcpp::export]]
+ADrep ad_mapply(Rcpp::XPtr<TMBad::ADFun<> > tp, Rcpp::List args) {
+  if (args.size() != tp->Domain())
+    Rcpp::stop("'args' list length (%i) must match tape input dimension (%i)", args.size(), tp->Domain());
+  std::vector<ad*> ptr(args.size());
+  std::vector<size_t> lgt(args.size());
+  size_t m = args.size();
+  for (size_t i=0; i<m; i++) {
+    ptr[i] = ADrep(args[i]).adptr();
+    lgt[i] = ADrep(args[i]).size();
+  }
+  size_t n =
+    *std::min_element(lgt.begin(), lgt.end()) == 0 ?
+    0 : *std::max_element(lgt.begin(), lgt.end()) ;
+  size_t nr = tp->Range();
+  std::vector<ad> x(m);
+  std::vector<ad> z;
+  for (size_t i=0; i<n; i++) {
+    for (size_t j=0; j<m; j++) {
+      x[j] = ptr[j][i % lgt[j]];
+    }
+    std::vector<ad> y = (*tp)(x);
+    z.insert(z.end(), y.begin(), y.end());
+  }
+  ADrep ans(z.data(), z.data() + z.size());
+  if (nr > 1) {
+    Rcpp::IntegerVector d(2);
+    d[0] = nr; d[1] = n;
+    ans.attr("dim") = d;
+  }
+  return ans;
+}
+
+// [[Rcpp::export]]
 Rcpp::RObject advec(const Rcpp::NumericVector &x) {
   ADrep ans(x.size());
   ad* pans = ans.adptr();

@@ -69,6 +69,10 @@ compare_allow <- function() {
     .Call(`_RTMB_compare_allow`)
 }
 
+ad_mapply <- function(tp, args) {
+    .Call(`_RTMB_ad_mapply`, tp, args)
+}
+
 advec <- function(x) {
     .Call(`_RTMB_advec`, x)
 }
