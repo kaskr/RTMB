@@ -9,7 +9,7 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
     // Configurable relative error tolerance
     double reltol;
     // Test if a term is known to machine tolerance, but relaxed a bit just in case.
-    double machine_tolerance;
+    double sqrt_machine_tolerance;
     // Test if Wynn series has converged
     double wynn_convergence_tolerance;
     // Configurable max number of subdivisions
@@ -21,7 +21,7 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
       f = *adf;
       abstol = Rcpp::NumericVector(cfg["abs.tol"])[0];
       reltol = Rcpp::NumericVector(cfg["rel.tol"])[0];
-      machine_tolerance = 1e-14;
+      sqrt_machine_tolerance = 1.490116e-08; // sqrt(.Machine$double.eps)
       wynn_convergence_tolerance = 1e-10;
       subdivisions = Rcpp::IntegerVector(cfg["subdivisions"])[0];
       stop_on_error = Rcpp::LogicalVector(cfg["stop.on.error"])[0];
@@ -84,14 +84,14 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
       double er = asDouble(yr[1]);
       // Handle left bound singularity
       if (left_bound && !right_bound) { // Approaching left limit
-        if (er < machine_tolerance && el > tol) {   // Is error of right half negligible?
+        if (er/(er+el) < sqrt_machine_tolerance && el > tol) {   // Is error of right half negligible?
           y = wynn_extrapolate(xl, yr, tol, left_bound, right_bound);
           return;
         }
       }
       // Handle right bound singularity
       if (!left_bound && right_bound) { // Approaching right limit
-        if (el < machine_tolerance && er > tol) {   // Is error of left half negligible?
+        if (el/(el+er) < sqrt_machine_tolerance && er > tol) {   // Is error of left half negligible?
           y = wynn_extrapolate(xr, yl, tol, left_bound, right_bound);
           return;
         }
@@ -138,30 +138,26 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
         // Eval
         if (left_bound)  y = f(xr);
         if (right_bound) y = f(xl);
-        // Must know term to machine tolerance
-        if (asDouble(y[1]) > machine_tolerance) { // Fail => Reject extraplation
-          // Could now be that:
-          // 1. This term really is imprecise due to a difficult integrand. Then we must drop the extrapolation.
-          // 2. OR, the term is good enough, but the reported abs error y[1] is inaccurate. Then we should carry on extrapolating.
-          if (false) { // This would seem like the right thing to do if in case 1:
+        // Must know term 'without error'
+        bool fail = false;
+        fail = fail || !std::isfinite(asDouble(y[0]));
+        fail = fail || !std::isfinite(asDouble(y[1]));
+        fail = fail || !std::isfinite(asDouble(eps.back()));
+        fail = fail || asDouble(y[1]) > std::abs(asDouble(y[0])) * sqrt_machine_tolerance;
+        if (fail) { // Fail => Reject extraplation
             // Skip this term and fall back on normal sub division for remaining terms
             subdiv(x, y, tol, left_bound, right_bound);
             // First element of eps table holds the plain sum of terms known without error
             y[0] += eps[0];
             // Done
             return y;
-          }
-          // Hard to tell if (1) or (2), so we report NaN
-          if (stop_on_error) {
-            TMBad::get_glob()->ad_stop();
-            Rcpp::stop("Extrapolation failed");
-          }
-          y[0] = R_NaN;
-          y[1] = R_NaN;
-          return y;
         }
         eps = wynn_update(eps, y[0]);
-        if (wynn_converged(eps))
+        // FIXME: Our convergence test is simply on the last two
+        // convergents, although we actually want a tolerance on the
+        // limit. We therefore tighten this tolerance a factor 10 and
+        // hope that's enough :)
+        if (wynn_converged(eps, tol * .1))
           break;
         // Set next interval
         if (left_bound)  x = xl;
@@ -187,11 +183,12 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
       return y;
     }
     // Check Wynn series for convergence
-    bool wynn_converged(const std::vector<ad> &eps) {
+    bool wynn_converged(const std::vector<ad> &eps, double tol) {
       size_t n = eps.size();
       if (n % 2 == 0) return false;
       if (n < 3) return false;
-      return (std::abs(asDouble(eps[n-1]) - asDouble(eps[n-3])) < wynn_convergence_tolerance);
+      double d = std::abs(asDouble(eps[n-1]) - asDouble(eps[n-3]));
+      return (d < tol);
     }
   } integrate(adf, cfg);
   std::vector<ad> x(x_.adptr(), x_.adptr() + x_.size());
