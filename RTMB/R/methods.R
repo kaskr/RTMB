@@ -399,6 +399,27 @@ setMethod("sapply", signature(X="ANY"),
               ans
           })
 
+## Internal for now
+mapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE) {
+  if (!ad_context()) {
+    base::mapply(FUN = FUN, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES)
+  } else {
+    args <- list(...)
+    args1 <- lapply(args, function(x) x[1])
+    args1 <- lapply(args1, function(x) if (inherits(x, "advector")) getValues(x) else x)
+    F <- MakeTape(function(args) do.call("FUN", c(args, MoreArgs)) , args1)
+    ptr <- .pointer(environment(F)$mod)
+    ad_mapply(ptr, lapply(args, advector))
+  }
+}
+## Internal for now
+Vectorize <- function (FUN, ...) {
+  VFUN <- base::Vectorize(FUN, ...)
+  ## Overload mapply
+  environment(VFUN)$mapply <- mapply
+  VFUN
+}
+
 ##' @describeIn ADvector Equivalent of \link[base]{ifelse}
 ##' @param test \code{logical} vector
 ##' @param yes \code{advector}
