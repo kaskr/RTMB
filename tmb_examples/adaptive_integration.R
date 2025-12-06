@@ -28,37 +28,14 @@ GaussBinomial <- function(x, n, mu, sd) {
   }
   integrate(integrand, -Inf, Inf)$value
 }
-## Helper to avoid taping the same function many times.
-## TODO: Move to ?RTMB::Tape
-TapeOnFirstEval <- function(f) {
-  if (!RTMB:::ad_context()) return(f)
-  f <- match.fun(f)
-  firstEval <- TRUE
-  firstArgs <- NULL
-  firstTape <- NULL
-  function(...) {
-    if (firstEval) {
-      firstArgs <<- as.relistable(list(...))
-      x0 <- RTMB:::getValues(do.call("c", firstArgs))
-      vf <- function(x) do.call("f", relist(x, firstArgs))
-      firstTape <<- MakeTape(vf, x0)
-      firstEval <<- FALSE
-    }
-    firstTape(c(...))
-  }
-}
+## Use 'Vectorize' to speedup MakeADFun:
+GaussBinomial <- Vectorize(GaussBinomial)
 
 func <- function(p) {
   getAll(p, data)
   mu <- A %*% b
   sd <- exp(logsd)
-  ans <- 0
-  ## This line is to speedup MakeADFun:
-  GaussBinomial <- TapeOnFirstEval(GaussBinomial)
-  for(i in 1:length(x)) {
-    ans <- ans - log( GaussBinomial(x[i], n[i], mu[i], sd) );
-  }
-  ans
+  -sum(log(GaussBinomial(x, n, mu, sd)))
 }
 
 ## Fit model
