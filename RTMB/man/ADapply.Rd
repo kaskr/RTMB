@@ -4,11 +4,14 @@
 \alias{ADapply}
 \alias{apply,advector-method}
 \alias{sapply,ANY-method}
+\alias{Vectorize,ANY-method}
 \title{AD apply functions}
 \usage{
 \S4method{apply}{advector}(X, MARGIN, FUN, ..., simplify = TRUE)
 
 \S4method{sapply}{ANY}(X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)
+
+\S4method{Vectorize}{ANY}(FUN, vectorize.args = arg.names, SIMPLIFY = TRUE, USE.NAMES = TRUE)
 }
 \arguments{
 \item{X}{As \link[base]{apply}}
@@ -21,7 +24,11 @@
 
 \item{simplify}{As \link[base]{sapply}}
 
-\item{USE.NAMES}{As \link[base]{sapply}}
+\item{USE.NAMES}{As \link[base]{Vectorize}. Ignored by AD version.}
+
+\item{vectorize.args}{As \link[base]{Vectorize}}
+
+\item{SIMPLIFY}{As \link[base]{Vectorize}. Ignored by AD version.}
 }
 \value{
 Object of class \code{"advector"} with a dimension attribute.
@@ -34,6 +41,8 @@ These \strong{base} apply methods have been modified to keep the AD class attrib
 \item \code{apply(advector)}: As \link[base]{apply}
 
 \item \code{sapply(ANY)}: As \link[base]{sapply}
+
+\item \code{Vectorize(ANY)}: As \link[base]{Vectorize}
 
 }}
 \examples{
