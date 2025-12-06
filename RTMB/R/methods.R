@@ -412,13 +412,26 @@ mapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE)
     ad_mapply(ptr, lapply(args, advector))
   }
 }
-## Internal for now
-Vectorize <- function (FUN, ...) {
-  VFUN <- base::Vectorize(FUN, ...)
-  ## Overload mapply
-  environment(VFUN)$mapply <- mapply
-  VFUN
-}
+##' @describeIn ADapply As \link[base]{Vectorize}
+##' @param vectorize.args As \link[base]{Vectorize}
+##' @param SIMPLIFY As \link[base]{Vectorize}. Ignored by AD version.
+##' @param USE.NAMES As \link[base]{Vectorize}. Ignored by AD version.
+setMethod("Vectorize", signature(FUN="ANY"),
+          function (FUN, vectorize.args, SIMPLIFY, USE.NAMES) {
+            if (missing(vectorize.args)) {
+              ## Copied from base::Vectorize
+              arg.names <- as.list(formals(FUN))
+              arg.names[["..."]] <- NULL
+              vectorize.args <- names(arg.names)
+            }
+            VFUN <- base::Vectorize(FUN, vectorize.args, SIMPLIFY, USE.NAMES)
+            ## Overload mapply
+            env <- environment(VFUN)
+            env$mapply <- mapply
+            VFUN
+          })
+## Fix: no visible binding for global variable ‘arg.names’
+utils::globalVariables("arg.names")
 
 ##' @describeIn ADvector Equivalent of \link[base]{ifelse}
 ##' @param test \code{logical} vector

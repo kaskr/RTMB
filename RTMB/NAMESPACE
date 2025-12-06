@@ -249,6 +249,7 @@ exportMethods("tcrossprod")
 export("unstructured")
 ## export("usingAtomics")
 ## export("valid")
+export("Vectorize")
 export("%~%")
 
 ########## adcomplex
