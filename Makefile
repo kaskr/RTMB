@@ -37,6 +37,9 @@ rtmb-stubs:
 test:
 	R -s -e "tinytest::test_package('RTMB')"
 
+test-at-home:
+	R -s -e "tinytest::test_package('RTMB',at_home=TRUE)"
+
 test-all: linreg spatial mvrw spde sdv_multi test-sparse
 
 test-sparse:
