@@ -401,20 +401,27 @@ setMethod("sapply", signature(X="ANY"),
 
 ## Internal for now
 mapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE) {
-  if (!ad_context()) {
+  if (!ad_context() || !SIMPLIFY) {
     base::mapply(FUN = FUN, ..., MoreArgs = MoreArgs, SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES)
   } else {
     args <- list(...)
-    args1 <- lapply(args, function(x) x[1])
+    args1 <- lapply(args, function(x) x[[1]])
     args1 <- lapply(args1, function(x) if (inherits(x, "advector")) getValues(x) else x)
     F <- MakeTape(function(args) do.call("FUN", c(args, MoreArgs)) , args1)
     ptr <- .pointer(environment(F)$mod)
+    list_reshape <- function(li) {
+      if (!is.list(li)) return(list(li))
+      x <- do.call("cbind", li)
+      split(x, row(x))
+    }
+    args <- lapply(args, list_reshape)
+    args <- unlist(args, FALSE, FALSE)
     ad_mapply(ptr, lapply(args, advector))
   }
 }
 ##' @describeIn ADapply As \link[base]{Vectorize}
 ##' @param vectorize.args As \link[base]{Vectorize}
-##' @param SIMPLIFY As \link[base]{Vectorize}. Ignored by AD version.
+##' @param SIMPLIFY As \link[base]{Vectorize}.
 ##' @param USE.NAMES As \link[base]{Vectorize}. Ignored by AD version.
 setMethod("Vectorize", signature(FUN="ANY"),
           function (FUN, vectorize.args, SIMPLIFY, USE.NAMES) {

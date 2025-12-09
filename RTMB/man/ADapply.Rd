@@ -28,7 +28,7 @@
 
 \item{vectorize.args}{As \link[base]{Vectorize}}
 
-\item{SIMPLIFY}{As \link[base]{Vectorize}. Ignored by AD version.}
+\item{SIMPLIFY}{As \link[base]{Vectorize}.}
 }
 \value{
 Object of class \code{"advector"} with a dimension attribute.
