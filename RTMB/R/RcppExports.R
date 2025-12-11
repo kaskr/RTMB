@@ -129,6 +129,10 @@ distr_besselY <- function(x, nu) {
     .Call(`_RTMB_distr_besselY`, x, nu)
 }
 
+remap_values <- function(adf) {
+    .Call(`_RTMB_remap_values`, adf)
+}
+
 distr_dexp <- function(x, rate, give_log) {
     .Call(`_RTMB_distr_dexp`, x, rate, give_log)
 }

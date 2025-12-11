@@ -110,3 +110,19 @@ Rcpp::IntegerVector remap_values(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   std::vector<TMBad::Index> rv = TMBad::remap_values(adf->glob);
   return Rcpp::IntegerVector(rv.data(), rv.data() + rv.size());
 }
+
+// [[Rcpp::export]]
+void src_transform(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  TMBad::code_config cfg;
+  cfg.gpu = false;
+  cfg.asm_comments = false;
+  cfg.cout = &Rcout;
+  *cfg.cout << "#include <cmath>" << std::endl;
+  *cfg.cout
+    << "template<class T>T sign(const T &x) { return (x > 0) - (x < 0); }"
+    << std::endl;
+  TMBad::global glob = adf->glob; // Invoke deep copy
+  TMBad::compress(glob);
+  write_forward(glob, cfg);
+  write_reverse(glob, cfg);
+}

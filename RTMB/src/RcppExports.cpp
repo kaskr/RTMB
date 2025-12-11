@@ -374,6 +374,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// remap_values
+Rcpp::IntegerVector remap_values(Rcpp::XPtr<TMBad::ADFun<> > adf);
+RcppExport SEXP _RTMB_remap_values(SEXP adfSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    rcpp_result_gen = Rcpp::wrap(remap_values(adf));
+    return rcpp_result_gen;
+END_RCPP
+}
 // distr_dexp
 ADrep distr_dexp(ADrep x, ADrep rate, bool give_log);
 RcppExport SEXP _RTMB_distr_dexp(SEXP xSEXP, SEXP rateSEXP, SEXP give_logSEXP) {
@@ -1271,6 +1282,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_besselI", (DL_FUNC) &_RTMB_distr_besselI, 3},
     {"_RTMB_distr_besselJ", (DL_FUNC) &_RTMB_distr_besselJ, 2},
     {"_RTMB_distr_besselY", (DL_FUNC) &_RTMB_distr_besselY, 2},
+    {"_RTMB_remap_values", (DL_FUNC) &_RTMB_remap_values, 1},
     {"_RTMB_distr_dexp", (DL_FUNC) &_RTMB_distr_dexp, 3},
     {"_RTMB_distr_dweibull", (DL_FUNC) &_RTMB_distr_dweibull, 4},
     {"_RTMB_distr_dbinom", (DL_FUNC) &_RTMB_distr_dbinom, 4},
