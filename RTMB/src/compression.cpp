@@ -126,3 +126,8 @@ void src_transform(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   write_forward(glob, cfg);
   write_reverse(glob, cfg);
 }
+
+// [[Rcpp::export]]
+void reorder_depth_first(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  TMBad::reorder_depth_first(adf->glob);
+}
