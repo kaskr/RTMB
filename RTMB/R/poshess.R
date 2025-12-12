@@ -96,7 +96,7 @@ getPositiveHessian <- function(obj, p = .5) {
         one <- rep(1, ncol(jac))
         ans2 <- jac %*% one
         ## ---------------- Add the two
-        ans1+ans2
+        ans1@x + ans2
     }
     MakeTape(newHess, H$par())
 }
