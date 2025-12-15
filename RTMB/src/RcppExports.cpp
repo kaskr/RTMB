@@ -385,6 +385,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// src_transform
+void src_transform(Rcpp::XPtr<TMBad::ADFun<> > adf);
+RcppExport SEXP _RTMB_src_transform(SEXP adfSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    src_transform(adf);
+    return R_NilValue;
+END_RCPP
+}
+// reorder_depth_first
+void reorder_depth_first(Rcpp::XPtr<TMBad::ADFun<> > adf);
+RcppExport SEXP _RTMB_reorder_depth_first(SEXP adfSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    reorder_depth_first(adf);
+    return R_NilValue;
+END_RCPP
+}
 // distr_dexp
 ADrep distr_dexp(ADrep x, ADrep rate, bool give_log);
 RcppExport SEXP _RTMB_distr_dexp(SEXP xSEXP, SEXP rateSEXP, SEXP give_logSEXP) {
@@ -1283,6 +1303,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_besselJ", (DL_FUNC) &_RTMB_distr_besselJ, 2},
     {"_RTMB_distr_besselY", (DL_FUNC) &_RTMB_distr_besselY, 2},
     {"_RTMB_remap_values", (DL_FUNC) &_RTMB_remap_values, 1},
+    {"_RTMB_src_transform", (DL_FUNC) &_RTMB_src_transform, 1},
+    {"_RTMB_reorder_depth_first", (DL_FUNC) &_RTMB_reorder_depth_first, 1},
     {"_RTMB_distr_dexp", (DL_FUNC) &_RTMB_distr_dexp, 3},
     {"_RTMB_distr_dweibull", (DL_FUNC) &_RTMB_distr_dweibull, 4},
     {"_RTMB_distr_dbinom", (DL_FUNC) &_RTMB_distr_dbinom, 4},
