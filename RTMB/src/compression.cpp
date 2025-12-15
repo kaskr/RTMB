@@ -111,6 +111,45 @@ Rcpp::IntegerVector remap_values(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   return Rcpp::IntegerVector(rv.data(), rv.data() + rv.size());
 }
 
+
+// Patched souce code writers
+// - We need a bit more control with it
+namespace TMBad {
+void rtmb_write_forward(global &glob, code_config cfg = code_config()) {
+  using std::setw; using std::left; using std::endl;
+  std::ostream& cout = *cfg.cout;
+  cfg.write_header_comment();
+  cout << cfg.void_str() << " forward(" << cfg.float_ptr() << " v) {" << endl;
+  cfg.init_code();
+  ForwardArgs<Writer> args(glob.inputs, glob.values);
+  for (size_t i=0; i<glob.opstack.size(); i++) {
+    std::ostringstream buffer;
+    Writer::cout = &buffer;
+    glob.opstack[i]->forward(args); // FIXME: pass args copy
+    write_common(buffer, cfg, i);
+    glob.opstack[i]->increment(args.ptr);
+  }
+  cout << "}" << endl;
+}
+void rtmb_write_reverse(global &glob, code_config cfg = code_config()) {
+  using std::setw; using std::left; using std::endl;
+  std::ostream& cout = *cfg.cout;
+  cfg.write_header_comment();
+  cout << cfg.void_str() << " reverse(" << cfg.float_ptr() << " v, " << cfg.float_ptr() << " d) {" << endl;
+  cfg.init_code();
+  ReverseArgs<Writer> args(glob.inputs, glob.values);
+  for (size_t i=glob.opstack.size(); i>0; ) {
+    i--;
+    glob.opstack[i]->decrement(args.ptr);
+    std::ostringstream buffer;
+    Writer::cout = &buffer;
+    glob.opstack[i]->reverse(args); // FIXME: pass args copy
+    write_common(buffer, cfg, i);
+  }
+  cout << "}" << endl;
+}
+}
+
 // [[Rcpp::export]]
 void src_transform(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   TMBad::code_config cfg;
