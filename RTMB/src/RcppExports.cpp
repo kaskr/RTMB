@@ -386,12 +386,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // src_transform
-void src_transform(Rcpp::XPtr<TMBad::ADFun<> > adf);
-RcppExport SEXP _RTMB_src_transform(SEXP adfSEXP) {
+void src_transform(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::List config);
+RcppExport SEXP _RTMB_src_transform(SEXP adfSEXP, SEXP configSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
-    src_transform(adf);
+    Rcpp::traits::input_parameter< Rcpp::List >::type config(configSEXP);
+    src_transform(adf, config);
     return R_NilValue;
 END_RCPP
 }
@@ -1303,7 +1304,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_besselJ", (DL_FUNC) &_RTMB_distr_besselJ, 2},
     {"_RTMB_distr_besselY", (DL_FUNC) &_RTMB_distr_besselY, 2},
     {"_RTMB_remap_values", (DL_FUNC) &_RTMB_remap_values, 1},
-    {"_RTMB_src_transform", (DL_FUNC) &_RTMB_src_transform, 1},
+    {"_RTMB_src_transform", (DL_FUNC) &_RTMB_src_transform, 2},
     {"_RTMB_reorder_depth_first", (DL_FUNC) &_RTMB_reorder_depth_first, 1},
     {"_RTMB_distr_dexp", (DL_FUNC) &_RTMB_distr_dexp, 3},
     {"_RTMB_distr_dweibull", (DL_FUNC) &_RTMB_distr_dweibull, 4},

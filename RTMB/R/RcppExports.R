@@ -133,8 +133,8 @@ remap_values <- function(adf) {
     .Call(`_RTMB_remap_values`, adf)
 }
 
-src_transform <- function(adf) {
-    invisible(.Call(`_RTMB_src_transform`, adf))
+src_transform <- function(adf, config) {
+    invisible(.Call(`_RTMB_src_transform`, adf, config))
 }
 
 reorder_depth_first <- function(adf) {
