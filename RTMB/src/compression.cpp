@@ -121,20 +121,22 @@ void rtmb_write_forward(global &glob, code_config cfg = code_config()) {
   cfg.write_header_comment();
   if (cfg.gpu) {
     cout <<
-    "struct access { \
-      double* x; \
-      int offset, stride; \
-      __device__ double& operator[](int i) { \
-        return x[offset + i * stride]; \
-      } \
-      __device__ access(double *x) : x(x) { \
-        stride = gridDim.x * blockDim.x; \
-        offset = threadIdx.x + blockIdx.x * blockDim.x; \
-      } \
-    };";
+    "struct access {\n\
+      double* x;\n\
+      int offset, stride;\n\
+      __device__ double& operator[](int i) {\n\
+        return x[offset + i * stride];\n\
+      }\n\
+      __device__ access(double *x) : x(x){\n\
+        stride = gridDim.x * blockDim.x;\n\
+        offset = threadIdx.x + blockIdx.x * blockDim.x;\n\
+      }\n\
+    };\n";
   }
   std::string type = (cfg.gpu ? "access" : "double*");
-  cout << cfg.void_str() << " forward(" << type << " v) {" << endl;
+  std::string void_str = cfg.void_str();
+  cfg.gpu=false;
+  cout << void_str << " forward(" << type << " v) {" << endl;
   cfg.init_code();
   ForwardArgs<Writer> args(glob.inputs, glob.values);
   for (size_t i=0; i<glob.opstack.size(); i++) {
@@ -151,7 +153,9 @@ void rtmb_write_reverse(global &glob, code_config cfg = code_config()) {
   std::ostream& cout = *cfg.cout;
   cfg.write_header_comment();
   std::string type = (cfg.gpu ? "access" : "double*");
-  cout << cfg.void_str() << " reverse(" << type << " v, " << type << " d) {" << endl;
+  std::string void_str = cfg.void_str();
+  cfg.gpu=false;
+  cout << void_str << " reverse(" << type << " v, " << type << " d) {" << endl;
   cfg.init_code();
   ReverseArgs<Writer> args(glob.inputs, glob.values);
   for (size_t i=glob.opstack.size(); i>0; ) {
