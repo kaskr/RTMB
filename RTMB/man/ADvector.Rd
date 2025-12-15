@@ -103,7 +103,15 @@ advector(x)
 
 \S4method{[}{advector,advector,ANY,ANY}(x, i)
 
-\S4method{findInterval}{advector,advector}(x, vec)
+\S4method{findInterval}{advector,advector}(
+  x,
+  vec,
+  rightmost.closed = FALSE,
+  all.inside = FALSE,
+  left.open = FALSE,
+  checkSorted = TRUE,
+  checkNA = TRUE
+)
 }
 \arguments{
 \item{x}{numeric or advector}
@@ -145,6 +153,8 @@ advector(x)
 \item{i}{Variable indices for taped subset}
 
 \item{vec}{Sorted vector defining the intervals to lookup}
+
+\item{rightmost.closed, all.inside, left.open, checkSorted, checkNA}{See \link[base]{findInterval}.}
 }
 \value{
 Object of class \code{"advector"}.

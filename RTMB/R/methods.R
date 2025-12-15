@@ -736,4 +736,19 @@ setMethod("[", c("advector", "advector"), function(x, i) subset_ad(x, i-1))
 ##' @describeIn ADvector Taped interval finding of an AD vector
 ##' MakeTape(function(x) findInterval(x, AD(0:10)), 1:3)
 ##' @param vec Sorted vector defining the intervals to lookup
-setMethod("findInterval", c("advector", "advector"), function(x, vec) findInterval_ad(x, vec) + 1)
+##' @param rightmost.closed,all.inside,left.open,checkSorted,checkNA See \link[base]{findInterval}.
+setMethod("findInterval",
+          c("advector", "advector"),
+          function(x, vec, rightmost.closed, all.inside, left.open, checkSorted, checkNA) {
+            find_interval_ad(x, vec, rightmost.closed, all.inside, left.open, checkSorted, checkNA)
+          })
+find_interval_ad <- function(x, vec, ...) {
+  ix <- seq.int(from = 1L, length.out=length(x))
+  iv <- seq.int(from = length(x) + 1L, length.out=length(vec))
+  f <- function(xvec) {
+    x <- xvec[ix]
+    vec <- xvec[iv]
+    base::findInterval(x, vec, ...)
+  }
+  DataEval(f, c(x, vec))
+}
