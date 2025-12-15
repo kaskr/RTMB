@@ -119,7 +119,22 @@ void rtmb_write_forward(global &glob, code_config cfg = code_config()) {
   using std::setw; using std::left; using std::endl;
   std::ostream& cout = *cfg.cout;
   cfg.write_header_comment();
-  cout << cfg.void_str() << " forward(" << cfg.float_ptr() << " v) {" << endl;
+  if (cfg.gpu) {
+    cout <<
+    "struct access { \
+      double* x; \
+      int offset, stride; \
+      __device__ double& operator[](int i) { \
+        return x[offset + i * stride]; \
+      } \
+      __device__ access(double *x) : x(x) { \
+        stride = gridDim.x * blockDim.x; \
+        offset = threadIdx.x + blockIdx.x * blockDim.x; \
+      } \
+    };";
+  }
+  std::string type = (cfg.gpu ? "access" : "double*");
+  cout << cfg.void_str() << " forward(" << type << " v) {" << endl;
   cfg.init_code();
   ForwardArgs<Writer> args(glob.inputs, glob.values);
   for (size_t i=0; i<glob.opstack.size(); i++) {
@@ -135,7 +150,8 @@ void rtmb_write_reverse(global &glob, code_config cfg = code_config()) {
   using std::setw; using std::left; using std::endl;
   std::ostream& cout = *cfg.cout;
   cfg.write_header_comment();
-  cout << cfg.void_str() << " reverse(" << cfg.float_ptr() << " v, " << cfg.float_ptr() << " d) {" << endl;
+  std::string type = (cfg.gpu ? "access" : "double*");
+  cout << cfg.void_str() << " reverse(" << type << " v, " << type << " d) {" << endl;
   cfg.init_code();
   ReverseArgs<Writer> args(glob.inputs, glob.values);
   for (size_t i=glob.opstack.size(); i>0; ) {
@@ -151,9 +167,9 @@ void rtmb_write_reverse(global &glob, code_config cfg = code_config()) {
 }
 
 // [[Rcpp::export]]
-void src_transform(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+void src_transform(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::List config) {
   TMBad::code_config cfg;
-  cfg.gpu = false;
+  cfg.gpu = config["gpu"];
   cfg.asm_comments = false;
   cfg.cout = &Rcout;
   *cfg.cout << "#include <cmath>" << std::endl;
@@ -162,8 +178,8 @@ void src_transform(Rcpp::XPtr<TMBad::ADFun<> > adf) {
     << std::endl;
   TMBad::global glob = adf->glob; // Invoke deep copy
   TMBad::compress(glob);
-  write_forward(glob, cfg);
-  write_reverse(glob, cfg);
+  rtmb_write_forward(glob, cfg);
+  rtmb_write_reverse(glob, cfg);
 }
 
 // [[Rcpp::export]]
