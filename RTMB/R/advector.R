@@ -672,13 +672,7 @@ data <- NULL
 ##' The main difference in \pkg{RTMB} is that the objective function **and** the data is now given via a single argument \code{func}. Because \code{func} can be a *closure*, there is no need for an explicit data argument to \link{MakeADFun} (see examples).
 ##' @param func Function taking a parameter list (or parameter vector) as input.
 ##' @param parameters Parameter list (or parameter vector) used by \code{func}.
-##' @param random As \link[TMB]{MakeADFun}.
-##' @param profile As \link[TMB]{MakeADFun}.
-##' @param integrate As \link[TMB]{MakeADFun}.
-##' @param intern As \link[TMB]{MakeADFun}.
-##' @param map As \link[TMB]{MakeADFun}.
-##' @param ADreport As \link[TMB]{MakeADFun}.
-##' @param silent As \link[TMB]{MakeADFun}.
+##' @param random,profile,integrate,intern,map,ADreport,silent See \link[TMB]{MakeADFun}.
 ##' @param ridge.correct Experimental
 ##' @param ... Passed to TMB
 ##' @return TMB model object.

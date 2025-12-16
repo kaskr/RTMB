@@ -338,7 +338,7 @@ setMethod("qlogis", c("advector", "missing", "missing", "missing", "missing"),
 ## - However, matrix construction has issues
 
 ##' @describeIn ADconstruct Equivalent of \link[base]{diag}
-##' @param x As \link[base]{diag}
+##' @param x See \link[base]{diag}.
 ##' @return Object of class \code{"advector"} with a dimension attribute.
 setMethod("diag", signature(x="advector", nrow="ANY", ncol="ANY"),
           function(x, nrow, ncol) {
@@ -352,11 +352,7 @@ setMethod("diag", signature(x="advector", nrow="ANY", ncol="ANY"),
           })
 
 ##' @describeIn ADconstruct Equivalent of \link[base]{matrix}
-##' @param data As \link[base]{matrix}
-##' @param nrow As \link[base]{matrix}
-##' @param ncol As \link[base]{matrix}
-##' @param byrow As \link[base]{matrix}
-##' @param dimnames As \link[base]{matrix}
+##' @param data,nrow,ncol,byrow,dimnames See \link[base]{matrix}.
 setMethod("matrix", signature(data="advector"),
           function(data, nrow, ncol, byrow, dimnames) {
               ans <- callNextMethod()
@@ -371,10 +367,7 @@ setMethod("matrix", signature(data="num."),
               ans
           })
 ##' @describeIn ADapply As \link[base]{apply}
-##' @param X As \link[base]{apply}
-##' @param MARGIN As \link[base]{apply}
-##' @param FUN As \link[base]{apply}
-##' @param ... As \link[base]{apply}
+##' @param X,MARGIN,FUN,... See \link[base]{apply}
 ##' @return Object of class \code{"advector"} with a dimension attribute.
 setMethod("apply", signature(X="advector"),
           function (X, MARGIN, FUN, ...)  {
@@ -384,8 +377,7 @@ setMethod("apply", signature(X="advector"),
               ans
           })
 ##' @describeIn ADapply As \link[base]{sapply}
-##' @param simplify As \link[base]{sapply}
-##' @param USE.NAMES As \link[base]{sapply}
+##' @param simplify,USE.NAMES See \link[base]{sapply}
 setMethod("sapply", signature(X="ANY"),
           function (X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE) {
               ans <- base::sapply(X, FUN, ..., simplify = FALSE, USE.NAMES = TRUE)
@@ -420,9 +412,7 @@ mapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE)
   }
 }
 ##' @describeIn ADapply As \link[base]{Vectorize}
-##' @param vectorize.args As \link[base]{Vectorize}
-##' @param SIMPLIFY As \link[base]{Vectorize}.
-##' @param USE.NAMES As \link[base]{Vectorize}. Ignored by AD version.
+##' @param vectorize.args,SIMPLIFY See \link[base]{Vectorize}. `USE.NAMES` is currently ignored by AD version.
 setMethod("Vectorize", signature(FUN="ANY"),
           function (FUN, vectorize.args, SIMPLIFY, USE.NAMES) {
             if (missing(vectorize.args)) {
