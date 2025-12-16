@@ -358,7 +358,7 @@ ADrep EvalAD(TMBad::ADFun<>* tp, ADrep x) {
 
 // [[Rcpp::export]]
 ADrep ad_mapply(Rcpp::XPtr<TMBad::ADFun<> > tp, Rcpp::List args) {
-  if (args.size() != tp->Domain())
+  if ((size_t)args.size() != (size_t)tp->Domain())
     Rcpp::stop("'args' list length (%i) must match tape input dimension (%i)", args.size(), tp->Domain());
   std::vector<ad*> ptr(args.size());
   std::vector<size_t> lgt(args.size());
