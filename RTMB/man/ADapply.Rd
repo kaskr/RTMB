@@ -14,21 +14,11 @@
 \S4method{Vectorize}{ANY}(FUN, vectorize.args = arg.names, SIMPLIFY = TRUE, USE.NAMES = TRUE)
 }
 \arguments{
-\item{X}{As \link[base]{apply}}
+\item{X, MARGIN, FUN, ...}{See \link[base]{apply}}
 
-\item{MARGIN}{As \link[base]{apply}}
+\item{simplify, USE.NAMES}{See \link[base]{sapply}}
 
-\item{FUN}{As \link[base]{apply}}
-
-\item{...}{As \link[base]{apply}}
-
-\item{simplify}{As \link[base]{sapply}}
-
-\item{USE.NAMES}{As \link[base]{Vectorize}. Ignored by AD version.}
-
-\item{vectorize.args}{As \link[base]{Vectorize}}
-
-\item{SIMPLIFY}{As \link[base]{Vectorize}.}
+\item{vectorize.args, SIMPLIFY}{See \link[base]{Vectorize}. \code{USE.NAMES} is currently ignored by AD version.}
 }
 \value{
 Object of class \code{"advector"} with a dimension attribute.

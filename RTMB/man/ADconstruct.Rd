@@ -14,17 +14,9 @@
 \S4method{matrix}{num.}(data = NA, nrow = 1, ncol = 1, byrow = FALSE, dimnames = NULL)
 }
 \arguments{
-\item{x}{As \link[base]{diag}}
+\item{x}{See \link[base]{diag}.}
 
-\item{nrow}{As \link[base]{matrix}}
-
-\item{ncol}{As \link[base]{matrix}}
-
-\item{data}{As \link[base]{matrix}}
-
-\item{byrow}{As \link[base]{matrix}}
-
-\item{dimnames}{As \link[base]{matrix}}
+\item{data, nrow, ncol, byrow, dimnames}{See \link[base]{matrix}.}
 }
 \value{
 Object of class \code{"advector"} with a dimension attribute.

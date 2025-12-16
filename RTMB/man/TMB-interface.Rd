@@ -42,19 +42,7 @@ checkConsistency(obj, fast = TRUE, ...)
 
 \item{parameters}{Parameter list (or parameter vector) used by \code{func}.}
 
-\item{random}{As \link[TMB]{MakeADFun}.}
-
-\item{profile}{As \link[TMB]{MakeADFun}.}
-
-\item{integrate}{As \link[TMB]{MakeADFun}.}
-
-\item{intern}{As \link[TMB]{MakeADFun}.}
-
-\item{map}{As \link[TMB]{MakeADFun}.}
-
-\item{ADreport}{As \link[TMB]{MakeADFun}.}
-
-\item{silent}{As \link[TMB]{MakeADFun}.}
+\item{random, profile, integrate, intern, map, ADreport, silent}{See \link[TMB]{MakeADFun}.}
 
 \item{ridge.correct}{Experimental}
 
