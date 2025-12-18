@@ -401,3 +401,7 @@ sort_ad <- function(x) {
     .Call(`_RTMB_sort_ad`, x)
 }
 
+ad_uniroot <- function(adf, a, b, parms, cfg) {
+    .Call(`_RTMB_ad_uniroot`, adf, a, b, parms, cfg)
+}
+

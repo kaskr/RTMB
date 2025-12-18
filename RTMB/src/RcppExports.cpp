@@ -1234,6 +1234,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ad_uniroot
+ADrep ad_uniroot(Rcpp::XPtr<TMBad::ADFun<> > adf, double a, double b, ADrep parms, Rcpp::List cfg);
+RcppExport SEXP _RTMB_ad_uniroot(SEXP adfSEXP, SEXP aSEXP, SEXP bSEXP, SEXP parmsSEXP, SEXP cfgSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
+    Rcpp::traits::input_parameter< double >::type b(bSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type parms(parmsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type cfg(cfgSEXP);
+    rcpp_result_gen = Rcpp::wrap(ad_uniroot(adf, a, b, parms, cfg));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP _rcpp_module_boot_mod_adfun();
 
@@ -1339,6 +1354,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_findInterval_ad", (DL_FUNC) &_RTMB_findInterval_ad, 2},
     {"_RTMB_order_ad", (DL_FUNC) &_RTMB_order_ad, 1},
     {"_RTMB_sort_ad", (DL_FUNC) &_RTMB_sort_ad, 1},
+    {"_RTMB_ad_uniroot", (DL_FUNC) &_RTMB_ad_uniroot, 5},
     {"_rcpp_module_boot_mod_adfun", (DL_FUNC) &_rcpp_module_boot_mod_adfun, 0},
     {NULL, NULL, 0}
 };
