@@ -435,7 +435,13 @@ MakeTape <- function(f, x) {
                 get_node(.pointer(mod), i)
                 .expose(mod)
             },
-            timer = function(rep=100L, table=TRUE, inner=FALSE) {
+            timer = function(rep=100L, table=TRUE, inner=FALSE, total=FALSE) {
+                if (total) {
+                    ans <- timer_total(.pointer(mod), rep) / rep
+                    ans <- as.matrix(ans)
+                    dimnames(ans) <- list("Total", "elapsed")
+                    return (ans)
+                }
                 ans <- .timer(.pointer(mod), rep) / rep
                 if (table) {
                     tab1 <- as.matrix(xtabs(ans ~ names(ans)))

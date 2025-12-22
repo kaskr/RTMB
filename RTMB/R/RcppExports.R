@@ -57,6 +57,10 @@ timer <- function(adf, rep = 1L) {
     .Call(`_RTMB_timer`, adf, rep)
 }
 
+timer_total <- function(adf, rep = 1L) {
+    .Call(`_RTMB_timer_total`, adf, rep)
+}
+
 get_node <- function(adf, node) {
     invisible(.Call(`_RTMB_get_node`, adf, node))
 }

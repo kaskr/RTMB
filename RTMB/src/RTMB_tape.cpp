@@ -217,6 +217,20 @@ Rcpp::NumericVector timer(Rcpp::XPtr<TMBad::ADFun<> > adf, int rep=1) {
   return ans;
 }
 // [[Rcpp::export]]
+Rcpp::NumericVector timer_total(Rcpp::XPtr<TMBad::ADFun<> > adf, int rep=1) {
+  Rcpp::NumericVector ans(1);
+  // Start timer
+  const auto start{std::chrono::steady_clock::now()};
+  for (int j = 0; j<rep; j++) {
+    adf->forward();
+  }
+  // Stop timer
+  const auto finish{std::chrono::steady_clock::now()};
+  const std::chrono::duration<double> elapsed_seconds{finish - start};
+  ans[0] = elapsed_seconds.count();
+  return ans;
+}
+// [[Rcpp::export]]
 void get_node(Rcpp::XPtr<TMBad::ADFun<> > adf, int node) {
   if ( (node < 0) || ( (*adf).glob.opstack.size() <= (size_t) node) )
        Rcpp::stop("'node' out of bounds");
