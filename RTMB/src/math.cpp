@@ -54,7 +54,7 @@ ADrep Arith2(ADrep x,
   else if (!op.compare("<=")) COMPARISON(CondExpLe)
   else if (!op.compare(">"))  COMPARISON(CondExpGt)
   else if (!op.compare("<"))  COMPARISON(CondExpLt)
-  else Rf_error("'%s' not implemented", op.c_str());
+  else Rcpp::stop("'%s' not implemented", op.c_str());
 #undef CALL
   // Object determining attrib of result.
   // FIXME: Not quite accurate - check what R src does
@@ -132,7 +132,7 @@ ADrep Math1(ADrep x, std::string op) {
   else if (!op.compare("cumprod")) {
     if (n > 0) { Y[0] = X[0]; CUMC(*); }
   }
-  else Rf_error("'%s' not implemented", op.c_str());
+  else Rcpp::stop("'%s' not implemented", op.c_str());
 #undef CALL
 #undef CUMC
   SHALLOW_DUPLICATE_ATTRIB(y, x);
@@ -177,7 +177,7 @@ ADrep Reduce1(ADrep x, std::string op) {
     if (n == 0) Rcpp::stop("Length must be positive");
     ans = X[0]; REDUCE2(TMBad::max);
   }
-  else Rf_error("'%s' not implemented", op.c_str());
+  else Rcpp::stop("'%s' not implemented", op.c_str());
 #undef REDUCE
 #undef REDUCE2
   return y;
@@ -297,14 +297,14 @@ Rcpp::RObject SparseArith2(Rcpp::RObject x,
     else if (!op.compare("-")) z = SparseOutput(X - Y);
     else if (!op.compare("%*%")) z = SparseOutput(X * Y);
     else if (!op.compare("%x%")) z = SparseOutput(tmbutils::kronecker(X, Y));
-    else Rf_error("'%s' not implemented", op.c_str());
+    else Rcpp::stop("'%s' not implemented", op.c_str());
   }
   // scalar OP Sparse
   else if (is_adscalar(x) && is_adsparse(y)) {
     ad X = ScalarInput(x);
     Eigen::SparseMatrix<ad> Y = SparseInput(y);
     if (!op.compare("*"))      z = SparseOutput(X * Y);
-    else Rf_error("'%s' not implemented", op.c_str());
+    else Rcpp::stop("'%s' not implemented", op.c_str());
   }
   // Sparse OP scalar
   else if (is_adsparse(x) && is_adscalar(y)) {
@@ -312,7 +312,7 @@ Rcpp::RObject SparseArith2(Rcpp::RObject x,
     ad Y = ScalarInput(y);
     if (!op.compare("*"))      z = SparseOutput(X * Y);
     else if (!op.compare("/"))      z = SparseOutput(X / Y);
-    else Rf_error("'%s' not implemented", op.c_str());
+    else Rcpp::stop("'%s' not implemented", op.c_str());
   }
   // Sparse OP Dense
   else if (is_adsparse(x) && is_admatrix(y)) {
@@ -322,7 +322,7 @@ Rcpp::RObject SparseArith2(Rcpp::RObject x,
     else if (!op.compare("+")) z = MatrixOutput(X + Y);
     else if (!op.compare("-")) z = MatrixOutput(X - Y);
     else if (!op.compare("*")) z = SparseOutput(X.cwiseProduct(Y));
-    else Rf_error("'%s' not implemented", op.c_str());
+    else Rcpp::stop("'%s' not implemented", op.c_str());
   }
   // Dense OP Sparse
   else if (is_admatrix(x) && is_adsparse(y)) {
@@ -332,9 +332,9 @@ Rcpp::RObject SparseArith2(Rcpp::RObject x,
     else if (!op.compare("+")) z = MatrixOutput(X + Y);
     else if (!op.compare("-")) z = MatrixOutput(X - Y);
     else if (!op.compare("*")) z = SparseOutput(Y.cwiseProduct(X));
-    else Rf_error("'%s' not implemented", op.c_str());
+    else Rcpp::stop("'%s' not implemented", op.c_str());
   }
-  else Rf_error("Wrong use of 'SparseArith2'");
+  else Rcpp::stop("Wrong use of 'SparseArith2'");
   return z;
 }
 
