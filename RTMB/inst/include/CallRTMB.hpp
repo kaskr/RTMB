@@ -21,16 +21,16 @@
 // FIXME: Allow user to replace this include by "RTMB.h" and move definitions to other compile unit
 #include "RTMB_stubs.cpp"
 
-// Enable/disable RTMB replay to this DLL
-void RTMB_pointerSwap() {
+// Permanently change the global pointer of this DLL to that of RTMB.
+void RTMB_pointerSet() {
   typedef SEXP(*FUN_PTR)(SEXP);
-  static FUN_PTR RTMB_getSetGlobalPtr =
+  FUN_PTR RTMB_getSetGlobalPtr =
     (FUN_PTR) R_FindSymbol("getSetGlobalPtr", "RTMB", NULL);
-  SEXP      ptr = PROTECT(     getSetGlobalPtr(R_NilValue));
+  if (RTMB_getSetGlobalPtr == NULL)
+    Rcpp::stop("RTMB namespace must be loaded");
   SEXP rtmb_ptr = PROTECT(RTMB_getSetGlobalPtr(R_NilValue));
   getSetGlobalPtr(rtmb_ptr);
-  RTMB_getSetGlobalPtr(ptr);
-  UNPROTECT(2);
+  UNPROTECT(1);
 }
 // In case of an R exception
 void RTMB_exception_cleanup() {
@@ -79,22 +79,17 @@ struct CallRTMB : CallRTMB_<Type> {
   typedef CallRTMB_<Type> Base;
   typedef vector<Type> Vec;
   Rcpp::Function F;
-  bool balance;
-  CallRTMB(Rcpp::Function F) : F(F), balance(true) { }
+  CallRTMB(Rcpp::Function F) : F(F) { }
 #define EVALUATOR(...)                                          \
   Vec ans;                                                      \
   BEGIN_RCPP                                                    \
   try {                                                         \
     RTMB_check_valid_parallelization();                         \
-    RTMB_pointerSwap();                                         \
-    balance = !balance;                                         \
+    RTMB_pointerSet();                                          \
     Rcpp::RObject tmp = F(__VA_ARGS__);                         \
-    RTMB_pointerSwap();                                         \
-    balance = !balance;                                         \
     ans = Base::rtmb_res(tmp);                                  \
   }                                                             \
   catch (...) {                                                 \
-    if (!balance) RTMB_pointerSwap();                           \
     RTMB_exception_cleanup();                                   \
     throw;                                                      \
   }                                                             \
