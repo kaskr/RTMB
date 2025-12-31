@@ -1,6 +1,7 @@
 // RTMB configuration to include by TMB.h
 
 // Prevent Rcpp from masking valid uses of Rf_error
+#undef  RCPP_NO_MASK_RF_ERROR
 #define RCPP_NO_MASK_RF_ERROR
 #include <Rcpp.h>
 // Any failed internal assertion sends Rcpp::exception
