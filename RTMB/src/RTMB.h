@@ -80,7 +80,7 @@ struct tape_config_t {
   /* int comparison; // Safe=0 / Taped=1 / Unsafe=2 */
   /* int atomic;     // No atomic=0 / Use atomic=1 */
   /* int vectorize;  // No vectorize =0 / Use vectorize=1 */
-  method_flag matmul  = { {"plain", "atomic", "compact"}, 1 /* default */};
+  method_flag matmul  = { {"plain", "atomic", "compact"}, 0 /* default */};
   method_flag ops     = { {"plain", "vectorize"}, 0 /* default */};
   method_flag math    = { {"plain", "vectorize"}, 0 /* default */};
   method_flag sum     = { {"plain", "vectorize"}, 0 /* default */};
