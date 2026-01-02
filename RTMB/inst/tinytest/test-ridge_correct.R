@@ -44,10 +44,6 @@ parameters <- list(g=g,
                    logW=log(W)*0
                    )
 
-## Important for Hessian sparsity in this case
-(TapeConfig(atomic="disable"))
-compiler::enableJIT(0) ## disable R byte compiler!
-
 ## Mark data terms (not yet exported)
 ## Note: 'Term' does *nothing* in normal evaluation mode
 Term <- RTMB:::Term
@@ -67,7 +63,7 @@ func <- function(parms) {
     nhaul <- ncol(N)
     res <- 0
     res <- res - sum(dnorm(logW, meanw, sdw, TRUE))
-    P <- matrix(0, nsize, nage)
+    P <- AD(matrix(0, nsize, nage))
     for (i in 1:nage) {
         P[,i] <- pla(sizegrid, agegrid[i], g, z, sdrate)
     }
