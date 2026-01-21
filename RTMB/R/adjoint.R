@@ -77,7 +77,13 @@ ADjoint <- function(f, df, name=NULL, complex=FALSE) {
         ans <-
             if (ad_context())
                 TapedEval(F, x)
-            else f(x)
+            else {
+              x_is_ad <- inherits(x, "advector")
+              if (x_is_ad) x <- getValues(x)
+              y <- f(x)
+              if (x_is_ad) y <- advector(y)
+              y
+            }
         if (complex)
             ans <- resplit(ans)
         ans
