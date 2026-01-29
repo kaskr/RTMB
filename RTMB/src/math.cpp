@@ -284,6 +284,28 @@ ADrep dgmrf0 (ADrep x,
   return colApply(x, nldens, give_log);
 }
 
+ADrep SPAX(Rcpp::RObject A,
+           ADrep x) {
+  using sparse_matrix_exponential::SpAxOp;
+  typedef TMBad::global::Complete<SpAxOp<ad> > SPATX_t;
+  SPATX_t* multiply;
+  // Cache operator with pattern
+  if (!A.hasAttribute("SPATX")) {
+    Eigen::SparseMatrix<ad> S = SparseInput(A);
+    multiply = new SPATX_t(S);
+    SEXP ptr = Rcpp::XPtr<SPATX_t>(multiply);
+    A.attr("SPATX") = ptr;
+  } else {
+    SEXP ptr = A.attr("SPATX");
+    multiply = Rcpp::XPtr<SPATX_t> (ptr);
+  }
+  // Get ad segments
+  TMBad::ad_segment Ax = ad_segment(Rcpp::RObject(A.slot("x")));
+  TMBad::ad_segment xx = ad_segment(x);
+  // Call
+  return (*multiply)(Ax, xx);
+}
+
 // [[Rcpp::export]]
 Rcpp::RObject SparseArith2(Rcpp::RObject x,
                            Rcpp::RObject y,
