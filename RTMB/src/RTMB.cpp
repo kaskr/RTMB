@@ -44,6 +44,13 @@ ADrep::operator vector<ad>() {
   return Eigen::Map<Eigen::Array<ad, -1, 1> > ((*this).adptr(), (*this).size());
 }
 ADrep::ADrep (const vector<ad> &x) : ADrep(x.data(), x.data() + x.size()) { }
+ADrep::ADrep (const TMBad::ad_segment &x) : ADrep(x.size()) {
+  size_t n = size();
+  ad* xp = adptr();
+  for (size_t i=0; i<n; i++) {
+    xp[i] = x[i];
+  }
+}
 
 
 Rcomplex ad2cplx(const ad &x) {

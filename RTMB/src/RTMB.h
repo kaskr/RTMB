@@ -35,6 +35,8 @@ struct ADrep : Rcpp::RObject {
   // TMB vector compatibility
   operator vector<ad>();
   ADrep (const vector<ad> &x);
+  // TMB ad_segment
+  ADrep (const TMBad::ad_segment &x);
 };
 
 // AD scalar conversions ( Rcomplex <-> ad )
