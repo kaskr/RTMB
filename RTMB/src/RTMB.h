@@ -50,6 +50,8 @@ ADrep          MatrixOutput (const matrix<ad> &X);
 // Sparse matrix input/output
 Eigen::SparseMatrix<ad> SparseInput  (Rcpp::RObject x);
 Rcpp::RObject           SparseOutput (const Eigen::SparseMatrix<ad> &S);
+// ad_segment input
+TMBad::ad_segment ad_segment(ADrep x);
 
 // Tests
 bool is_advector (SEXP x);

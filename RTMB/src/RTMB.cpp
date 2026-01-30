@@ -148,3 +148,24 @@ ad ScalarInput(SEXP x_) {
   return adptr(x)[0];
 }
 
+TMBad::ad_segment ad_segment(ADrep x) {
+  if (!ad_context())
+    Rcpp::stop("'ad_segment' requires an active ad context");
+  TMBad::global* cur_glob = TMBad::get_glob();
+  size_t before = cur_glob->opstack.size();
+  TMBad::ad_segment ans(x.adptr(), x.size());
+  size_t after = cur_glob->opstack.size();
+  if (before != after) {
+    // Check safe mutation rules
+    // - Variables can safely mutate to a different index within same context.
+    // - Constants can safely mutate to the root context.
+    bool root = cur_glob->parent_glob == NULL; // Active context = root ?
+    bool safe = root || ans.all_on_active_tape(x.adptr(), x.size());
+    if (safe) { // mutate
+      size_t n = x.size();
+      ad* xp = x.adptr();
+      for (size_t i=0; i<n; i++) xp[i] = ans[i];
+    }
+  }
+  return ans;
+}
