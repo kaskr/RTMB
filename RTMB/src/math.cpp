@@ -349,6 +349,13 @@ Rcpp::RObject SparseArith2(Rcpp::RObject x,
   // Dense OP Sparse
   else if (is_admatrix(x) && is_adsparse(y)) {
     ConstMapMatrix          X = MatrixInput(x);
+    if (tape_config.sparse_vectorize()) { // Handle vectorized special cases
+      if (!op.compare("%*%") && X.rows() == 1) {
+        ADrep ans = SPAX(y, x);
+        ans.attr("dim") = x.attr("dim");
+        return ans;
+      }
+    }
     Eigen::SparseMatrix<ad> Y = SparseInput(y);
     if (!op.compare("%*%")) z = MatrixOutput(X * Y);
     else if (!op.compare("+")) z = MatrixOutput(X + Y);

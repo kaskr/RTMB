@@ -191,18 +191,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // set_tape_config
-Rcpp::List set_tape_config(std::string matmul, std::string ops, std::string math, std::string sum, std::string mvnorm, std::string compare);
-RcppExport SEXP _RTMB_set_tape_config(SEXP matmulSEXP, SEXP opsSEXP, SEXP mathSEXP, SEXP sumSEXP, SEXP mvnormSEXP, SEXP compareSEXP) {
+Rcpp::List set_tape_config(std::string matmul, std::string ops, std::string math, std::string sparse, std::string sum, std::string mvnorm, std::string compare);
+RcppExport SEXP _RTMB_set_tape_config(SEXP matmulSEXP, SEXP opsSEXP, SEXP mathSEXP, SEXP sparseSEXP, SEXP sumSEXP, SEXP mvnormSEXP, SEXP compareSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type matmul(matmulSEXP);
     Rcpp::traits::input_parameter< std::string >::type ops(opsSEXP);
     Rcpp::traits::input_parameter< std::string >::type math(mathSEXP);
+    Rcpp::traits::input_parameter< std::string >::type sparse(sparseSEXP);
     Rcpp::traits::input_parameter< std::string >::type sum(sumSEXP);
     Rcpp::traits::input_parameter< std::string >::type mvnorm(mvnormSEXP);
     Rcpp::traits::input_parameter< std::string >::type compare(compareSEXP);
-    rcpp_result_gen = Rcpp::wrap(set_tape_config(matmul, ops, math, sum, mvnorm, compare));
+    rcpp_result_gen = Rcpp::wrap(set_tape_config(matmul, ops, math, sparse, sum, mvnorm, compare));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1282,7 +1283,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_timer", (DL_FUNC) &_RTMB_timer, 2},
     {"_RTMB_timer_total", (DL_FUNC) &_RTMB_timer_total, 2},
     {"_RTMB_get_node", (DL_FUNC) &_RTMB_get_node, 2},
-    {"_RTMB_set_tape_config", (DL_FUNC) &_RTMB_set_tape_config, 6},
+    {"_RTMB_set_tape_config", (DL_FUNC) &_RTMB_set_tape_config, 7},
     {"_RTMB_compare_allow", (DL_FUNC) &_RTMB_compare_allow, 0},
     {"_RTMB_ad_mapply", (DL_FUNC) &_RTMB_ad_mapply, 2},
     {"_RTMB_advec", (DL_FUNC) &_RTMB_advec, 1},

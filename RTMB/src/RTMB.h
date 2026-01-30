@@ -87,6 +87,7 @@ struct tape_config_t {
   method_flag matmul  = { {"plain", "atomic", "compact"}, 0 /* default */};
   method_flag ops     = { {"plain", "vectorize"}, 0 /* default */};
   method_flag math    = { {"plain", "vectorize"}, 0 /* default */};
+  method_flag sparse  = { {"plain", "vectorize"}, 0 /* default */};
   method_flag sum     = { {"plain", "vectorize"}, 0 /* default */};
   method_flag mvnorm  = { {"plain", "atomic"}, 1 /* default */};
   method_flag compare = { {"forbid", "taped", "allow"}, 0 /* default */};
@@ -96,6 +97,7 @@ struct tape_config_t {
   bool matmul_TMBad    ();
   bool ops_vectorize   ();
   bool math_vectorize  ();
+  bool sparse_vectorize();
   bool sum_vectorize   ();
   bool compare_forbid  ();
   bool compare_taped   ();

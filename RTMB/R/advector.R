@@ -570,6 +570,7 @@ TapeConfig <- function(...,
     vectorize <- c("NA"="NA", "disable"="plain", "enable"="vectorize")[vectorize]
     args$ops <- vectorize
     args$math <- vectorize
+    args$sparse <- vectorize
     args$sum <- vectorize
     ## Set other flags
     args[names(dotargs)] <- dotargs

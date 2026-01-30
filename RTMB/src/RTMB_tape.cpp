@@ -328,6 +328,7 @@ bool tape_config_t::matmul_atomic   () { return matmul.test("atomic"); }
 bool tape_config_t::matmul_TMBad    () { return matmul.test("compact"); }
 bool tape_config_t::ops_vectorize   () { return ops.test ("vectorize"); }
 bool tape_config_t::math_vectorize  () { return math.test("vectorize"); }
+bool tape_config_t::sparse_vectorize() { return sparse.test("vectorize"); }
 bool tape_config_t::sum_vectorize   () { return sum.test ("vectorize"); }
 bool tape_config_t::compare_forbid  () { return compare.test("forbid"); }
 bool tape_config_t::compare_taped   () { return compare.test("taped"); }
@@ -339,6 +340,7 @@ tape_config_t tape_config;
 Rcpp::List set_tape_config(std::string matmul = "NA",
                            std::string ops = "NA",
                            std::string math = "NA",
+                           std::string sparse = "NA",
                            std::string sum = "NA",
                            std::string mvnorm = "NA",
                            std::string compare = "NA") {
@@ -346,6 +348,7 @@ Rcpp::List set_tape_config(std::string matmul = "NA",
   SET(matmul);
   SET(ops);
   SET(math);
+  SET(sparse);
   SET(sum);
   SET(mvnorm);
   SET(compare)
@@ -356,6 +359,7 @@ Rcpp::List set_tape_config(std::string matmul = "NA",
                             GET(matmul),
                             GET(ops),
                             GET(math),
+                            GET(sparse),
                             GET(sum),
                             GET(mvnorm),
                             GET(compare));
