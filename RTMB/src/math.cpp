@@ -22,7 +22,7 @@ ADrep Arith2(ADrep x,
       for (size_t i=0; i<n; i++) Z[i] = X[i % nx] OP Y[i % ny]; \
     } else {                                                    \
       TMBad::ad_segment S =                                     \
-        TMBad::ad_segment(X, nx) OP TMBad::ad_segment(Y, ny);   \
+        ad_segment(x) OP ad_segment(y);                         \
       for (size_t i=0; i<n; i++) Z[i] = S[i];                   \
     }                                                           \
   }
@@ -96,7 +96,7 @@ ADrep Math1(ADrep x, std::string op) {
   {                                                             \
     if (!do_vectorize) { CALL(OP); }                            \
     else {                                                      \
-      TMBad::ad_segment S = OP( TMBad::ad_segment(X, n) );      \
+      TMBad::ad_segment S = OP( ad_segment(x) );                \
       for (size_t i=0; i<n; i++) Y[i] = S[i];                   \
     }                                                           \
   }
@@ -166,7 +166,7 @@ ADrep Reduce1(ADrep x, std::string op) {
     if ( !tape_config.sum_vectorize() ) {
       ans = 0.; REDUCE(+);
     } else {
-      ans = TMBad::sum(TMBad::ad_segment(X, n));
+      ans = TMBad::sum(ad_segment(x));
     }
   } else if (!op.compare("*")) {
     ans = 1.; REDUCE(*);
