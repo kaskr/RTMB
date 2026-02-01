@@ -34,7 +34,7 @@ struct LogSpaceSumOp : TMBad::global::DynamicOperator< -1 , 1 > {
   Type SPDERIV(Type x) { return ( sparse ? Type(TMBad::sparseDeriv(x)) : x ); }
   template <class Type> void reverse(TMBad::ReverseArgs<Type> &args) {
     for (size_t i=0; i<n; i++) {
-      args.dx(i) += SPDERIV ( exp( args.x(i) - args.y(0) ) * args.dy(0) );
+      args.dx(i) += SPDERIV ( exp( args.x(i) - args.y(0) ) ) * args.dy(0);
     }
   }
   void reverse(TMBad::ReverseArgs<TMBad::Writer> &args) {
@@ -56,6 +56,14 @@ struct LogSpaceSumOp : TMBad::global::DynamicOperator< -1 , 1 > {
 ADrep LSE0(ADrep x) {
   std::vector<ad> x_(x.adptr(), x.adptr() + x.size());
   TMBad::global::Complete<LogSpaceSumOp<true> > op(x.size());
+  std::vector<ad> y_ = op(x_);
+  return ADrep(y_.data(), y_.data() + y_.size());
+}
+
+// [[Rcpp::export]]
+ADrep LSE(ADrep x) {
+  std::vector<ad> x_(x.adptr(), x.adptr() + x.size());
+  TMBad::global::Complete<LogSpaceSumOp<false> > op(x.size());
   std::vector<ad> y_ = op(x_);
   return ADrep(y_.data(), y_.data() + y_.size());
 }
