@@ -34,7 +34,7 @@ struct LogSpaceSumOp : TMBad::global::DynamicOperator< -1 , 1 > {
   Type SPDERIV(Type x) { return ( sparse ? Type(TMBad::sparseDeriv(x)) : x ); }
   template <class Type> void reverse(TMBad::ReverseArgs<Type> &args) {
     for (size_t i=0; i<n; i++) {
-      args.dx(i) += SPDERIV ( exp( args.x(i) - args.y(0) ) ) * args.dy(0);
+      args.dx(i) += ( exp( args.x(i) - SPDERIV(args.y(0)) ) ) * args.dy(0);
     }
   }
   void reverse(TMBad::ReverseArgs<TMBad::Writer> &args) {
