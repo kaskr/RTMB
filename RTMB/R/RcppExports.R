@@ -201,10 +201,6 @@ distr_dlgamma <- function(x, shape, scale, give_log) {
     .Call(`_RTMB_distr_dlgamma`, x, shape, scale, give_log)
 }
 
-distr_pnorm <- function(q, mean, sd) {
-    .Call(`_RTMB_distr_pnorm`, q, mean, sd)
-}
-
 distr_pgamma <- function(q, shape, scale) {
     .Call(`_RTMB_distr_pgamma`, q, shape, scale)
 }
@@ -375,6 +371,14 @@ set_tail_transform <- function(adf, last) {
 
 LowRankTag <- function(x) {
     .Call(`_RTMB_LowRankTag`, x)
+}
+
+distr_log_pnorm <- function(q, lower_tail = TRUE) {
+    .Call(`_RTMB_distr_log_pnorm`, q, lower_tail)
+}
+
+distr_pnorm <- function(q, mean, sd) {
+    .Call(`_RTMB_distr_pnorm`, q, mean, sd)
 }
 
 Term <- function(x_) {

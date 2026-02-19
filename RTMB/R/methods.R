@@ -691,6 +691,31 @@ setMethod("qchisq",
           })
 
 ################################################################################
+
+##' @describeIn Distributions AD implementation of \link[stats]{pnorm}
+setMethod("pnorm",
+          signature(q = "ad", mean = "ad.", sd = "ad.", lower.tail = "ANY", log.p = "ANY"),
+          function(q, mean, sd, lower.tail, log.p) {
+            q <- advector ( q )
+            mean <- advector ( mean )
+            sd <- advector ( sd )
+            if (!log.p) {
+              ans <- distr_pnorm (q, mean, sd)
+              if (!lower.tail) ans <- 1 - ans
+            } else {
+              q <- (q - mean) / sd
+              ans <- distr_log_pnorm (q, lower.tail)
+            }
+            ans
+          })
+##' @describeIn Distributions Default method
+setMethod("pnorm",
+          signature(q = "num", mean = "num.", sd = "num.", lower.tail = "ANY", log.p = "ANY"),
+          function(q, mean, sd, lower.tail, log.p) {
+            stats::pnorm( q=q, mean=mean, sd=sd, lower.tail, log.p )
+          })
+
+################################################################################
 ## Discrete AD methods
 ################################################################################
 

@@ -297,23 +297,6 @@ function( x, shape, scale, log ) {
   dGenericSim( "dgamma" , x=x, shape=shape, scale=scale, log=log )
 }
 )
-##' @describeIn Distributions AD implementation of \link[stats]{pnorm}
-setMethod("pnorm",
-signature(q = "ad", mean = "ad.", sd = "ad.", lower.tail = "missing", log.p = "missing"),
-function( q, mean , sd  ) {
-q <-  advector ( q )
-mean <-  advector ( mean )
-sd <-  advector ( sd )
-distr_pnorm ( q, mean , sd  )
-}
-)
-##' @describeIn Distributions Default method
-setMethod("pnorm",
-signature(q = "num", mean = "num.", sd = "num.", lower.tail = "missing", log.p = "missing"),
-function( q, mean , sd  ) {
-stats:: pnorm ( q=q, mean=mean, sd=sd )
-}
-)
 ##' @describeIn Distributions AD implementation of \link[stats]{pgamma}
 setMethod("pgamma",
 signature(q = "ad", shape = "ad", rate = "missing", scale = "ad.", lower.tail = "missing", log.p = "missing"),

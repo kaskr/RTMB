@@ -272,22 +272,6 @@ if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, x);
 return ans;
 }
 // [[Rcpp::export]]
-ADrep distr_pnorm ( ADrep q, ADrep mean , ADrep sd  )
-{
-int n1=q.size();
-int n2=mean .size();
-int n3=sd .size();
-int nmax = std::max({n1, n2, n3});
-int nmin = std::min({n1, n2, n3});
-int n = (nmin == 0 ? 0 : nmax);
-ADrep ans(n);
-const ad* X1 = adptr(q); const ad* X2 = adptr(mean ); const ad* X3 = adptr(sd );
-ad* Y = adptr(ans);
-for (int i=0; i<n; i++) Y[i] = pnorm(X1[i % n1], X2[i % n2], X3[i % n3]);
-if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, q);
-return ans;
-}
-// [[Rcpp::export]]
 ADrep distr_pgamma ( ADrep q, ADrep shape, ADrep scale  )
 {
 int n1=q.size();

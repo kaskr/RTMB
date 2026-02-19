@@ -19,6 +19,7 @@ df <- subset(df, !(name=="pnorm" & npar==1) ) ## bogus
 df <- subset(df, !(name=="qnorm" & npar==1) ) ## bogus
 skip <- c("pSHASHo", "qSHASHo", "dnorm", "pnorm_approx", "qnorm_approx", "dzipois") ## RTMB uses a dnorm implementation in R
 skip <- c(skip, c("besselK", "besselI", "besselJ", "besselY")) ## Frozen in RTMB
+skip <- c(skip, c("pnorm")) ## Frozen in RTMB
 df <- subset(df, !(name %in% skip))
 
 skip <- c("compois_calc_logZ", "compois_calc_loglambda")

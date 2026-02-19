@@ -51,8 +51,6 @@
 \alias{dgamma,num,num,missing,num.,logical.-method}
 \alias{dgamma,osa,ANY,ANY,ANY,ANY-method}
 \alias{dgamma,simref,ANY,ANY,ANY,ANY-method}
-\alias{pnorm,ad,ad.,ad.,missing,missing-method}
-\alias{pnorm,num,num.,num.,missing,missing-method}
 \alias{pgamma,ad,ad,missing,ad.,missing,missing-method}
 \alias{pgamma,num,num,missing,num.,missing,missing-method}
 \alias{ppois,ad,ad,missing,missing-method}
@@ -114,6 +112,8 @@
 \alias{pchisq,num,num,num.,missing,missing-method}
 \alias{qchisq,ANY,ANY,missing,missing,missing-method}
 \alias{qchisq,num,num,num.,missing,missing-method}
+\alias{pnorm,ad,ad.,ad.-method}
+\alias{pnorm,num,num.,num.-method}
 \title{Distributions and special functions for which AD is implemented}
 \usage{
 \S4method{besselK}{ad,ad}(x, nu, expon.scaled = FALSE)
@@ -211,10 +211,6 @@
 \S4method{dgamma}{osa,ANY,ANY,ANY,ANY}(x, shape, scale, log)
 
 \S4method{dgamma}{simref,ANY,ANY,ANY,ANY}(x, shape, scale, log)
-
-\S4method{pnorm}{ad,ad.,ad.,missing,missing}(q, mean, sd)
-
-\S4method{pnorm}{num,num.,num.,missing,missing}(q, mean, sd)
 
 \S4method{pgamma}{ad,ad,missing,ad.,missing,missing}(q, shape, scale)
 
@@ -337,6 +333,10 @@ dcompois2(x, mean, nu, log = FALSE)
 \S4method{qchisq}{ANY,ANY,missing,missing,missing}(p, df)
 
 \S4method{qchisq}{num,num,num.,missing,missing}(p, df, ncp)
+
+\S4method{pnorm}{ad,ad.,ad.}(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
+
+\S4method{pnorm}{num,num.,num.}(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
 }
 \arguments{
 \item{x}{observation vector}
@@ -373,11 +373,11 @@ dcompois2(x, mean, nu, log = FALSE)
 
 \item{q}{vector of quantiles}
 
+\item{p}{parameter}
+
 \item{mean}{parameter}
 
 \item{sd}{parameter}
-
-\item{p}{parameter}
 
 \item{a}{parameter}
 
@@ -412,6 +412,10 @@ dcompois2(x, mean, nu, log = FALSE)
 \item{mode}{parameter}
 
 \item{ncp}{parameter}
+
+\item{lower.tail}{logical; if TRUE (default), probabilities are \eqn{P[X \le x]} otherwise, \eqn{P[X > x]}.}
+
+\item{log.p}{logical; if TRUE, probabilities p are given as log(p).}
 }
 \value{
 In autodiff contexts an object of class \code{"advector"} is returned; otherwise a standard numeric vector.
@@ -532,10 +536,6 @@ which documentation should be looked up online.
 \item \code{dgamma(x = osa, shape = ANY, rate = ANY, scale = ANY, log = ANY)}: OSA implementation
 
 \item \code{dgamma(x = simref, shape = ANY, rate = ANY, scale = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
-
-\item \code{pnorm(q = ad, mean = ad., sd = ad., lower.tail = missing, log.p = missing)}: AD implementation of \link[stats]{pnorm}
-
-\item \code{pnorm(q = num, mean = num., sd = num., lower.tail = missing, log.p = missing)}: Default method
 
 \item \code{pgamma(
   q = ad,
@@ -757,6 +757,10 @@ which documentation should be looked up online.
 \item \code{qchisq(p = ANY, df = ANY, ncp = missing, lower.tail = missing, log.p = missing)}: General implementation of \link[stats]{qchisq} that works for all RTMB evaluation modes (\link{advector}, \link{Simulation}, \link{OSA-residuals}).
 
 \item \code{qchisq(p = num, df = num, ncp = num., lower.tail = missing, log.p = missing)}: Standard numeric evaluation falls back on the stats version.
+
+\item \code{pnorm(q = ad, mean = ad., sd = ad.)}: AD implementation of \link[stats]{pnorm}
+
+\item \code{pnorm(q = num, mean = num., sd = num.)}: Default method
 
 }}
 \examples{

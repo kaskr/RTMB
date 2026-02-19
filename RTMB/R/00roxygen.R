@@ -193,6 +193,8 @@ NULL
 ##'
 ##' @param x observation vector
 ##' @param q vector of quantiles
+##' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[X \le x]} otherwise, \eqn{P[X > x]}.
+##' @param log.p logical; if TRUE, probabilities p are given as log(p).
 ##' @param rate parameter
 ##' @param shape parameter
 ##' @param scale parameter

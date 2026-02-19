@@ -624,19 +624,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// distr_pnorm
-ADrep distr_pnorm(ADrep q, ADrep mean, ADrep sd);
-RcppExport SEXP _RTMB_distr_pnorm(SEXP qSEXP, SEXP meanSEXP, SEXP sdSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< ADrep >::type q(qSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< ADrep >::type sd(sdSEXP);
-    rcpp_result_gen = Rcpp::wrap(distr_pnorm(q, mean, sd));
-    return rcpp_result_gen;
-END_RCPP
-}
 // distr_pgamma
 ADrep distr_pgamma(ADrep q, ADrep shape, ADrep scale);
 RcppExport SEXP _RTMB_distr_pgamma(SEXP qSEXP, SEXP shapeSEXP, SEXP scaleSEXP) {
@@ -1168,6 +1155,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// distr_log_pnorm
+ADrep distr_log_pnorm(ADrep q, bool lower_tail);
+RcppExport SEXP _RTMB_distr_log_pnorm(SEXP qSEXP, SEXP lower_tailSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type q(qSEXP);
+    Rcpp::traits::input_parameter< bool >::type lower_tail(lower_tailSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_log_pnorm(q, lower_tail));
+    return rcpp_result_gen;
+END_RCPP
+}
+// distr_pnorm
+ADrep distr_pnorm(ADrep q, ADrep mean, ADrep sd);
+RcppExport SEXP _RTMB_distr_pnorm(SEXP qSEXP, SEXP meanSEXP, SEXP sdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type q(qSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< ADrep >::type sd(sdSEXP);
+    rcpp_result_gen = Rcpp::wrap(distr_pnorm(q, mean, sd));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Term
 SEXP Term(const SEXP x_);
 RcppExport SEXP _RTMB_Term(SEXP x_SEXP) {
@@ -1317,7 +1329,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_dpois", (DL_FUNC) &_RTMB_distr_dpois, 3},
     {"_RTMB_distr_dgamma", (DL_FUNC) &_RTMB_distr_dgamma, 4},
     {"_RTMB_distr_dlgamma", (DL_FUNC) &_RTMB_distr_dlgamma, 4},
-    {"_RTMB_distr_pnorm", (DL_FUNC) &_RTMB_distr_pnorm, 3},
     {"_RTMB_distr_pgamma", (DL_FUNC) &_RTMB_distr_pgamma, 3},
     {"_RTMB_distr_ppois", (DL_FUNC) &_RTMB_distr_ppois, 2},
     {"_RTMB_distr_pexp", (DL_FUNC) &_RTMB_distr_pexp, 2},
@@ -1361,6 +1372,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_reorder_transform", (DL_FUNC) &_RTMB_reorder_transform, 2},
     {"_RTMB_set_tail_transform", (DL_FUNC) &_RTMB_set_tail_transform, 2},
     {"_RTMB_LowRankTag", (DL_FUNC) &_RTMB_LowRankTag, 1},
+    {"_RTMB_distr_log_pnorm", (DL_FUNC) &_RTMB_distr_log_pnorm, 2},
+    {"_RTMB_distr_pnorm", (DL_FUNC) &_RTMB_distr_pnorm, 3},
     {"_RTMB_Term", (DL_FUNC) &_RTMB_Term, 1},
     {"_RTMB_TermsZero", (DL_FUNC) &_RTMB_TermsZero, 2},
     {"_RTMB_InvPersistent", (DL_FUNC) &_RTMB_InvPersistent, 2},
