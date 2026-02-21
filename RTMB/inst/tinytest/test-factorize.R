@@ -1,6 +1,8 @@
 ## Test matrix factorizations
 
 library(RTMB)
+old <- TapeConfig()
+TapeConfig(matmul="atomic")
 
 ################################################################################
 ## General eigen decomposition
@@ -78,3 +80,6 @@ J <- F$jacobian(x)
 expect_equal(J, ndchol, info="chol derivatives", tol=1e-6)
 Jfun <- F$jacfun()
 expect_equal(J, Jfun(x), info="chol derivative replay")
+
+## Restore
+TapeConfig(old)
