@@ -748,15 +748,19 @@ setMethod("order",
 ##' @examples MakeTape(function(x) AD(rivers)[x], 1:3)
 ##' @param i Variable indices for taped subset
 setMethod("[", c("advector", "advector"), function(x, i) subset_ad(x, i-1))
+
+callFindIntervalAD <- eval({
+  args <- paste(names(formals(findInterval)), collapse=", ")
+  parse(text=paste("function(", args, ") find_interval_ad(" , args , ")"))[[1]]
+})
 ##' @describeIn ADvector Taped interval finding of an AD vector
 ##' MakeTape(function(x) findInterval(x, AD(0:10)), 1:3)
 ##' @param vec Sorted vector defining the intervals to lookup
 ##' @param rightmost.closed,all.inside,left.open,checkSorted,checkNA See \link[base]{findInterval}.
 setMethod("findInterval",
           c("advector", "advector"),
-          function(x, vec, rightmost.closed, all.inside, left.open, checkSorted, checkNA) {
-            find_interval_ad(x, vec, rightmost.closed, all.inside, left.open, checkSorted, checkNA)
-          })
+          callFindIntervalAD
+          )
 find_interval_ad <- function(x, vec, ...) {
   ix <- seq.int(from = 1L, length.out=length(x))
   iv <- seq.int(from = length(x) + 1L, length.out=length(vec))
