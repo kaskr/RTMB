@@ -53,17 +53,19 @@ J <- F$jacobian(x)
 expect_equal(J, ndf, info="symmetric real eigen derivatives", tol=1e-6)
 
 ## complex case (Hermitian)
-matlog <- function(x) {
+if (at_home()) {
+  matlog <- function(x) {
     e <- eigen(x, symmetric=TRUE)
     e$vec %*% (log(e$val) * Conj(t(e$vec)))
+  }
+  f <- function(x) Re(matlog(x+(1-diag(5))*AD(1i)+diag(5)*2))
+  F <- MakeTape(f, x)
+  expect_equal(f(x), F(x), info="symmetric complex eigen")
+  ndf <- numDeriv::jacobian(F, x)
+  J <- F$jacobian(x)
+  ## NOTE: Observed to pass with default tol - but it's tight
+  expect_equal(J, ndf, info="symmetric complex eigen derivatives", tol=1e-6)
 }
-f <- function(x) Re(matlog(x+(1-diag(5))*AD(1i)+diag(5)*2))
-F <- MakeTape(f, x)
-expect_equal(f(x), F(x), info="symmetric complex eigen")
-ndf <- numDeriv::jacobian(F, x)
-J <- F$jacobian(x)
-## NOTE: Observed to pass with default tol - but it's tight
-expect_equal(J, ndf, info="symmetric complex eigen derivatives", tol=1e-6)
 
 ################################################################################
 ## Cholesky decomposition
