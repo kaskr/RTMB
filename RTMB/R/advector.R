@@ -195,6 +195,10 @@ detachADoverloads <- function(enable=TRUE, ...) {
 "[[.advector" <- function(x, ...) {
     as_advector(NextMethod())
 }
+##' @describeIn ADvector Equivalent of \link[base]{length<-}. Used by `base::diff`.
+"length<-.advector" <- function(x, value) {
+  as_advector(NextMethod())
+}
 ##' @describeIn ADvector Equivalent of \link[base]{rep}. Makes \code{outer(x,x,...)} work.
 rep.advector <- function (x, ...) {
     as_advector(NextMethod())

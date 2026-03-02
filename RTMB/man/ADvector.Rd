@@ -12,6 +12,7 @@
 \alias{[.advector}
 \alias{[<-.advector}
 \alias{[[.advector}
+\alias{length<-.advector}
 \alias{rep.advector}
 \alias{is.nan.advector}
 \alias{is.finite.advector}
@@ -55,6 +56,8 @@ advector(x)
 \method{[}{advector}(x, ...) <- value
 
 \method{[[}{advector}(x, ...)
+
+\method{length}{advector}(x) <- value
 
 \method{rep}{advector}(x, ...)
 
@@ -192,6 +195,8 @@ re-used for AD vectors.
 \item \code{`[`(advector) <- value}: Equivalent of \link[base]{[<-}
 
 \item \code{[[}: Equivalent of \link[base]{[[}
+
+\item \code{length(advector) <- value}: Equivalent of \link[base]{length<-}. Used by \code{base::diff}.
 
 \item \code{rep(advector)}: Equivalent of \link[base]{rep}. Makes \code{outer(x,x,...)} work.
 
