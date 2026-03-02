@@ -4,7 +4,7 @@
 \alias{ADoverload}
 \title{Enable extra RTMB convenience methods}
 \usage{
-ADoverload(x = c("[<-", "c", "diag<-"))
+ADoverload(x = c("[<-", "c", "diag<-", "if"))
 }
 \arguments{
 \item{x}{Name of primitive to overload}
@@ -21,10 +21,11 @@ Work around limitations in R's method dispatch system by overloading some select
 \item Inplace replacement, so you can do \code{x[i] <- y} when \code{x} is numeric and \code{y} is AD.
 \item Mixed combine, so you can do e.g. \code{c(x, y)} when \code{x} numeric and \code{y} is AD.
 \item Diagonal assignment, so you can do \code{diag(x) <- y} when \code{x} is a numeric matrix and \code{y} is AD.
+\item Simple if-else branching where the condition is parameter dependent, so you can tape the result of e.g. \code{if (x<0) x else x*x}.
 }
 
 In all cases, the result should be AD.
-The methods are automatically \strong{temporarily} attached to the search path (\code{search()}) when entering \link{MakeTape} or \link{MakeADFun}.
+The methods (except \code{if}) are automatically \strong{temporarily} attached to the search path (\code{search()}) when entering \link{MakeTape} or \link{MakeADFun}.
 Alternatively, methods can be overloaded locally inside functions using e.g. \code{"[<-" <- ADoverload("[<-")}. This is only needed when using RTMB from a package.
 }
 \examples{
@@ -32,4 +33,5 @@ MakeTape(function(x) {print(search()); x}, numeric(0))
 MakeTape(function(x) c(1,x), 1:3)
 MakeTape(function(x) {y <- 1:3; y[2] <- x; y}, 1)
 MakeTape(function(x) {y <- matrix(0,3,3); diag(y) <- x; y}, 1:3)
+MakeTape(function(x) {"if" <- ADoverload("if"); if (x<0) x else x*x}, 1)
 }

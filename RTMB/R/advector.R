@@ -153,9 +153,10 @@ xtra <- local({
 ##' - Inplace replacement, so you can do `x[i] <- y` when `x` is numeric and `y` is AD.
 ##' - Mixed combine, so you can do e.g. `c(x, y)` when `x` numeric and `y` is AD.
 ##' - Diagonal assignment, so you can do `diag(x) <- y` when `x` is a numeric matrix and `y` is AD.
+##' - Simple if-else branching where the condition is parameter dependent, so you can tape the result of e.g. `if (x<0) x else x*x`.
 ##'
 ##' In all cases, the result should be AD.
-##' The methods are automatically **temporarily** attached to the search path (`search()`) when entering \link{MakeTape} or \link{MakeADFun}.
+##' The methods (except `if`) are automatically **temporarily** attached to the search path (`search()`) when entering \link{MakeTape} or \link{MakeADFun}.
 ##' Alternatively, methods can be overloaded locally inside functions using e.g. `"[<-" <- ADoverload("[<-")`. This is only needed when using RTMB from a package.
 ##'
 ##' @examples
@@ -163,14 +164,19 @@ xtra <- local({
 ##' MakeTape(function(x) c(1,x), 1:3)
 ##' MakeTape(function(x) {y <- 1:3; y[2] <- x; y}, 1)
 ##' MakeTape(function(x) {y <- matrix(0,3,3); diag(y) <- x; y}, 1:3)
+##' MakeTape(function(x) {"if" <- ADoverload("if"); if (x<0) x else x*x}, 1)
 ##' @param x Name of primitive to overload
 ##' @return Function representing the overload.
-ADoverload <- function(x = c("[<-", "c", "diag<-")) {
+ADoverload <- function(x = c("[<-", "c", "diag<-", "if")) {
     x <- match.arg(x)
     if (!ad_context())
         get(x, envir=baseenv())
-    else
-        get(x, envir=xtra, inherits=FALSE)
+    else {
+        if (x == "if")
+          branch
+        else
+          get(x, envir=xtra, inherits=FALSE)
+    }
 }
 ## For internal use
 attachADoverloads <- function() {

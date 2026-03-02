@@ -133,6 +133,10 @@ distr_besselY <- function(x, nu) {
     .Call(`_RTMB_distr_besselY`, x, nu)
 }
 
+Branch <- function(f, g, x) {
+    .Call(`_RTMB_Branch`, f, g, x)
+}
+
 distr_dexp <- function(x, rate, give_log) {
     .Call(`_RTMB_distr_dexp`, x, rate, give_log)
 }
