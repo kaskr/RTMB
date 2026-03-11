@@ -61,6 +61,9 @@ The AD implementation tries to follow the same stopping criterion as that used b
 
 It follows that a tolerance can be disabled by setting it to zero. This is especially useful when integrating probability densities, where the relative tolerance is the relevant measure, i.e. pass \code{abs.tol=0} in this case.
 }
+\note{
+It is often advantageous to use \code{integrate} with \link{Vectorize}.
+}
 \examples{
 ## Example with many sub-divisions
 f <- function(x) sin(exp(x))
@@ -72,4 +75,8 @@ f <- function(x) dbeta(x, shape1=.1, shape2=.1)
 F <- MakeTape(function(x) integrate(f, 0, x)$value, 0)
 F(.1)
 integrate(f, 0, .1)
+## Example using Vectorize (note the speed of G versus g)
+f <- Vectorize(function(x) integrate(dnorm, -Inf, x)$value)
+g <- Vectorize(function(x) integrate(f, -Inf, x)$value)
+G <- MakeTape(g, numeric(1e3))
 }

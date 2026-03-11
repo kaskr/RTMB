@@ -26,6 +26,9 @@ Object of class \code{"advector"} with a dimension attribute.
 \description{
 These \strong{base} apply methods have been modified to keep the AD class attribute (which would otherwise be lost).
 }
+\details{
+The \code{Vectorize} function is especially fast in RTMB, and recommended to be used to speed up long computations where tape construction is a bottleneck.
+}
 \section{Functions}{
 \itemize{
 \item \code{apply(advector)}: As \link[base]{apply}
@@ -38,4 +41,6 @@ These \strong{base} apply methods have been modified to keep the AD class attrib
 \examples{
 F <- MakeTape(function(x) apply(matrix(x,2,2), 2, sum), numeric(4))
 F$jacobian(1:4)
+f <- Vectorize(function(x) integrate(dnorm, -Inf, x)$value)
+F <- MakeTape(f, numeric(1e3))
 }

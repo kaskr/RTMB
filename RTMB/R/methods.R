@@ -413,6 +413,10 @@ mapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE)
 }
 ##' @describeIn ADapply As \link[base]{Vectorize}
 ##' @param vectorize.args,SIMPLIFY See \link[base]{Vectorize}. `USE.NAMES` is currently ignored by AD version.
+##' @details The `Vectorize` function is especially fast in RTMB, and recommended to be used to speed up long computations where tape construction is a bottleneck.
+##' @examples
+##' f <- Vectorize(function(x) integrate(dnorm, -Inf, x)$value)
+##' F <- MakeTape(f, numeric(1e3))
 setMethod("Vectorize", signature(FUN="ANY"),
           function (FUN, vectorize.args, SIMPLIFY, USE.NAMES) {
             if (missing(vectorize.args)) {

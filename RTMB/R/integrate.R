@@ -155,6 +155,7 @@ adintegrate <- function(f, a, b, cfg) {
 ##' @param keep.xy Not used.
 ##' @param aux Not used.
 ##' @return List with components `"value"`, `"abs.error"` and `"subdivisions"`.
+##' @note It is often advantageous to use `integrate` with \link{Vectorize}.
 ##' @examples
 ##' ## Example with many sub-divisions
 ##' f <- function(x) sin(exp(x))
@@ -166,6 +167,10 @@ adintegrate <- function(f, a, b, cfg) {
 ##' F <- MakeTape(function(x) integrate(f, 0, x)$value, 0)
 ##' F(.1)
 ##' integrate(f, 0, .1)
+##' ## Example using Vectorize (note the speed of G versus g)
+##' f <- Vectorize(function(x) integrate(dnorm, -Inf, x)$value)
+##' g <- Vectorize(function(x) integrate(f, -Inf, x)$value)
+##' G <- MakeTape(g, numeric(1e3))
 setMethod("integrate",
           c(f="ANY"),
           function(f, lower, upper, ..., subdivisions, rel.tol, abs.tol, stop.on.error) {

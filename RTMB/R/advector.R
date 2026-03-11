@@ -165,6 +165,12 @@ xtra <- local({
 ##' MakeTape(function(x) {y <- 1:3; y[2] <- x; y}, 1)
 ##' MakeTape(function(x) {y <- matrix(0,3,3); diag(y) <- x; y}, 1:3)
 ##' MakeTape(function(x) {"if" <- ADoverload("if"); if (x<0) x else x*x}, 1)
+##' ## Robust logspace_gamma(x) := lgamma(exp(x))
+##' logspace_gamma <- Vectorize(function(x) {
+##'   "if" <- ADoverload("if")
+##'   if (x < -150) -x else lgamma(exp(x))
+##' })
+##' MakeTape(logspace_gamma, numeric(10))
 ##' @param x Name of primitive to overload
 ##' @return Function representing the overload.
 ADoverload <- function(x = c("[<-", "c", "diag<-", "if")) {
