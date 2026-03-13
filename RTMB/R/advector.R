@@ -590,7 +590,7 @@ TapeConfig <- function(...,
             stop("List argument must be the *only* argument")
         if (!(missing(comparison) && missing(atomic) && missing(vectorize)))
             stop("List argument must be the *only* argument")
-        return (do.call(set_tape_config, dotargs[[1]]))
+        return (invisible(do.call(set_tape_config, dotargs[[1]])))
     }
     args <- set_tape_config() ## Current settings
     ## Set comparison

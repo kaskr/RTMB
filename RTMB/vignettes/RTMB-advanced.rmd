@@ -269,54 +269,77 @@ Js(1:5)
 Note that both `J` and `Js` can be applied to construct new tapes.
 
 ## Tape configuration
-- Understand plain vs atomic matrix multiply
 
-Consider the following test function that multiplies a matrix by it self:
+You can use `TapeConfig()` to control how certain operations are represented on the tape, and how R is linked to these operations.
+Because the parameters are global to RTMB, before changing them it's a good idea to store the current settings in order to restore when done.
+The settings hold function names, or function groups, with an associated flag:
 
-$$
-f(x)=
-\begin{pmatrix}
-  x_{1} & x_{3} \\
-  x_{2} & x_{4} \\
-\end{pmatrix}
-^2
-=
-\begin{pmatrix}
-  x_{1}x_{1} + x_{3}x_{2} & x_{1}x_{3} + x_{3}x_{4} \\
-  x_{2}x_{1} + x_{4}x_{2} & x_{2}x_{3} + x_{4}x_{4} \\
-\end{pmatrix}
-$$
+```{r, echo=TRUE}
+old_cfg <- TapeConfig()
+unlist(old_cfg)
+```
 
-The corresponding function coded in R is
+### Atomic matrix multiply
+
+Let's consider different types of matrix multiply (matmul) using the following test function that multiplies a matrix by it self:
 
 ```{r}
 f <- function(X) X %*% X
 ```
 
-and we will examine how it is represented as a tape. First, we disable atomic matrix multiply. This gives a representation corresponding exactly to the above formula:
-
+and we will examine how it is represented as a tape. First, the 'plain' representation where all individual operations are included:
 
 ```{r, fig.cap="Plain matrix multiply: Expands all operations"}
-TapeConfig(atomic="disable")
+TapeConfig(matmul="plain")
 F <- MakeTape(f, matrix(0, 2, 2))
+TapeConfig(old_cfg) ## Restore
 showGraph(F)
 ```
 
-This is only possible to show for very small matrices. The representation grows very fast (cubic) in the dimension of the input.
-By default the 'atomic' flag is set to true.
+Then, with the 'atomic' flag is set, to represent the matrix multiply as a single operation:
 
 ```{r, fig.cap="Atomic matrix multiply: Collapses to a single operation. The constants are the matrix dimensions which are represented as additional inputs."}
-TapeConfig(atomic="enable")
+TapeConfig(matmul="atomic")
 F <- MakeTape(f, matrix(0, 2, 2))
+TapeConfig(old_cfg) ## Restore
 showGraph(F)
 ```
 
-PROS/CONS: Atomic matrix multiply is faster and takes up much less space. However, sparsity of the jacobian is lost for the atomic version (all outputs depend and all inputs). There are elements of the jacobian that will always be zero. This can only be seen from the plain representation.
+PROS/CONS:
 
-TODO:
+- Atomic matrix multiply is *much* faster and takes up *much* less space than the plain (default) version.
+- However, atomic operations may prevent other optimizations that are often more important for overall speed. For example, sparsity of the jacobian is lost for the atomic version (all outputs depend and all inputs). There are elements of the jacobian that will always be zero. This can only be seen from the plain representation.
 
-- Understand AD comparision
-- Understand vectorized ops
+### Vectorized operations
+
+Vectorized operations can also be represented as atomics. Consider e.g.
+
+```{r}
+f <- function(x) sum(exp(x*x))
+```
+
+and compare
+
+```{r, fig.cap="Expand all operations"}
+TapeConfig(vectorize="disable")
+F <- MakeTape(f, 1:4)
+TapeConfig(old_cfg) ## Restore
+showGraph(F)
+```
+
+versus
+
+```{r, fig.cap="Use vectorized operations"}
+TapeConfig(vectorize="enable")
+F <- MakeTape(f, 1:4)
+TapeConfig(old_cfg) ## Restore
+showGraph(F)
+```
+
+PROS/CONS:
+
+- Vectorized operations are often 2-3 times faster and takes up *much* less space than the plain (default) versions.
+- However, vectorized operations may prevent other optimizations that are often more important for overall speed.
 
 ## Nested tapes
 
