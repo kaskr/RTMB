@@ -37,34 +37,45 @@ formals(MakeADFun)$silent <- TRUE
 
 ## more general points
 
-* as in C++ code, you probably don't have to worry as much about non-vectorized code (e.g. `for` loops) being very slow relative to vectorized codes. Comparing natively vectorized code (fastest) to RTMB vectorized or for-loop code (both a bit slower, but not different from each other) to native R for-loops (much slower):
+* as in C++ code, you probably don't have to worry as much about non-vectorized code (e.g. `for` loops) being very slow relative to vectorized codes. However, vectorized code builds the model object (i.e. runs `MakeADFun`) much faster. In addition, you can control vectorized RTMB code to use more efficient internal operations e.g. by setting `TapeConfig(vectorize="enable")`.
+Comparing natively vectorized code (fastest) to RTMB vectorized or for-loop code (both a bit slower, but not different from each other) to native R for-loops (much slower):
 
 ```{r benchmark, echo=FALSE}
 library(microbenchmark)
 set.seed(101)
-x <- rnorm(1000)
-y <- rnorm(1000)
-f1_vect <- function(p) {
-  sum(x+y)
-}
 
+## Loops *must* be fairly long for the caller overhead to vanish
+x <- rnorm(1e5)
+y <- rnorm(1e5)
+
+## Benchmark functions *must* return something, or RTMB will optimize it all away!
+f1_vect <- function(p) {
+  sum(p*x+y)
+}
 f1_forloop <- function(p) {
   z <- 0
   for (i in seq_along(x)) {
-    z = z + x[i] + y[i]
+    z = z + p*x[i] + y[i]
   }
   z
 }
 
-f1_vect_RTMB <- MakeADFun(f1_vect, list(p=1))
-f1_forloop_RTMB <- MakeADFun(f1_forloop, list(p=1))
+f1_vect_RTMB <- MakeADFun(f1_vect, c(p=1))
+f1_forloop_RTMB <- MakeADFun(f1_forloop, c(p=1))
 
+old <- TapeConfig()
+TapeConfig(vectorize="enable")
+f1_vect_RTMB2 <- MakeADFun(f1_vect, c(p=1))
+invisible(TapeConfig(old))
+
+## RTMB *must* be given a new argument for each eval, or it will just return the previous value!
 if (requireNamespace("microbenchmark")) {
-  mm <- microbenchmark(vect = f1_vect(0),
-                       vect_RTMB = f1_vect_RTMB$fn(0),
-                       forloop = f1_forloop(0),
-                       forloop_RTMB = f1_forloop_RTMB$fn(0),
-                       times = 10000L)
+  mm <- microbenchmark(vect = f1_vect(rnorm(1)),
+                       vect_RTMB = f1_vect_RTMB$fn(rnorm(1)),
+                       vect_RTMB2 = f1_vect_RTMB2$fn(rnorm(1)),
+                       forloop = f1_forloop(rnorm(1)),
+                       forloop_RTMB = f1_forloop_RTMB$fn(rnorm(1)),
+                       times = 100L)
 }
 ```                     
 
@@ -73,9 +84,10 @@ if (exists("mm") && requireNamespace("tinyplot")) {
   par(las=1)
   mm2 <- transform(as.data.frame(mm), ntime = time/1000,
                    expr = factor(expr,
-                                 levels = c("vect", "vect_RTMB",
+                                 levels = c("vect", "vect_RTMB2", "vect_RTMB",
                                             "forloop_RTMB", "forloop"),
                                  labels = c("vectorized\nnative R",
+                                            "TapeConfig\nRTMB",
                                             "vectorized\nRTMB",
                                             "for loop\nRTMB",
                                             "for loop\nnative R"))
