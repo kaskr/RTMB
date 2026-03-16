@@ -640,6 +640,22 @@ setMethod("dgamma",
             dgamma(x=x, shape=shape, scale=1/rate, log=log)
           })
 
+## pgamma patch: Make it work with 'rate' argument
+##' @describeIn Distributions AD implementation of \link[stats]{pgamma}
+setMethod("pgamma",
+          signature(q = "ad", shape = "ad", rate = "ad", scale = "missing", lower.tail = "missing", log.p = "missing"),
+          function( q, shape, rate ) {
+            pgamma(q=q, shape=shape, scale=1/rate)
+          })
+
+## qgamma patch: Make it work with 'rate' argument
+##' @describeIn Distributions AD implementation of \link[stats]{qgamma}
+setMethod("qgamma",
+          signature(p = "ad", shape = "ad", rate = "ad", scale = "missing", lower.tail = "missing", log.p = "missing"),
+          function( p, shape, rate ) {
+            qgamma(p=p, shape=shape, scale=1/rate)
+          })
+
 ################################################################################
 
 ##' @describeIn Distributions AD implementation of \link[stats]{pnbinom}

@@ -105,6 +105,8 @@
 \alias{dcauchy,osa,ANY,ANY,ANY-method}
 \alias{dcauchy,simref,ANY,ANY,ANY-method}
 \alias{dgamma,ad,ad,ad,missing,logical.-method}
+\alias{pgamma,ad,ad,ad,missing,missing,missing-method}
+\alias{qgamma,ad,ad,ad,missing,missing,missing-method}
 \alias{pnbinom,ad,ad,ad,missing,missing,missing-method}
 \alias{dchisq,ANY,ANY,missing-method}
 \alias{dchisq,num,num,num.-method}
@@ -319,6 +321,10 @@ dcompois2(x, mean, nu, log = FALSE)
 \S4method{dcauchy}{simref,ANY,ANY,ANY}(x, location = 0, scale = 1, log = FALSE)
 
 \S4method{dgamma}{ad,ad,ad,missing,logical.}(x, shape, rate, log)
+
+\S4method{pgamma}{ad,ad,ad,missing,missing,missing}(q, shape, rate)
+
+\S4method{qgamma}{ad,ad,ad,missing,missing,missing}(p, shape, rate)
 
 \S4method{pnbinom}{ad,ad,ad,missing,missing,missing}(q, size, prob)
 
@@ -736,6 +742,24 @@ which documentation should be looked up online.
 \item \code{dcauchy(x = simref, location = ANY, scale = ANY, log = ANY)}: Simulation implementation. Modifies \code{x} and returns zero.
 
 \item \code{dgamma(x = ad, shape = ad, rate = ad, scale = missing, log = logical.)}: AD implementation of \link[stats]{dgamma}
+
+\item \code{pgamma(
+  q = ad,
+  shape = ad,
+  rate = ad,
+  scale = missing,
+  lower.tail = missing,
+  log.p = missing
+)}: AD implementation of \link[stats]{pgamma}
+
+\item \code{qgamma(
+  p = ad,
+  shape = ad,
+  rate = ad,
+  scale = missing,
+  lower.tail = missing,
+  log.p = missing
+)}: AD implementation of \link[stats]{qgamma}
 
 \item \code{pnbinom(
   q = ad,

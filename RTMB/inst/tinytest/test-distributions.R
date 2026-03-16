@@ -99,6 +99,25 @@ obj <- MakeADFun(f, parms)
 osa <- oneStepPredict(obj, method="cdf", trace=FALSE)
 expect_true(ks.test(osa$res, "pnorm")$p.value > .05)
 
+## pgamma rate argument (GH #76)
+Val <- RTMB:::getValues
+expect_equal(
+  Val(pgamma(1, advector(0.5), advector(0.5))),
+  stats::pgamma(1, 0.5, 0.5)
+)
+expect_equal(
+  Val(qgamma(.1, advector(0.5), advector(0.5))),
+  stats::qgamma(.1, 0.5, 0.5)
+)
+expect_equal(
+  Val(pgamma(1, advector(0.5), scale=advector(0.5))),
+  stats::pgamma(1, 0.5, scale=0.5)
+)
+expect_equal(
+  Val(qgamma(.1, advector(0.5), scale=advector(0.5))),
+  stats::qgamma(.1, 0.5, scale=0.5)
+)
+
 ################################################################################
 ## Test 5 (dchisq)
 ################################################################################
