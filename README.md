@@ -17,7 +17,7 @@ PROS:
 - Most common TMB features are supported. See [current list of working examples](./tmb_examples).
 - Simplified interface can automatically simulate from the model and calculate OSA residuals.
 
-More information, including vignettes ([introduction](https://kaskr.r-universe.dev/articles/RTMB/RTMB-introduction.html) / [advanced](https://kaskr.r-universe.dev/articles/RTMB/RTMB-advanced.html)) and [documentation](https://kaskr.r-universe.dev/RTMB#reference), can be found on the [RTMB universe page](https://kaskr.r-universe.dev/RTMB).
+More information, including vignettes ([introduction](https://kaskr.r-universe.dev/RTMB/doc/RTMB-introduction.html) / [advanced](https://kaskr.r-universe.dev/RTMB/doc/RTMB-advanced.html)) and [documentation](https://kaskr.r-universe.dev/RTMB#manual), can be found on the [RTMB universe page](https://kaskr.r-universe.dev/RTMB).
 
 ## Install
 
