@@ -1,4 +1,27 @@
 ------------------------------------------------------------------------
+RTMB 1.9 (2026-03-20)
+------------------------------------------------------------------------
+
+o Special functions have been added:
+  dchisq(), pchisq(), qchisq(),
+  pnorm() now supports all arguments (i.e. 'log.p' and 'lower.tail').
+
+o Special functions now pass argument attributes on to the result.
+
+o New autodiff features:
+  - AD adaptive integration via integrate().
+  - AD root finding via uniroot().
+  - Fast AD version of Vectorize().
+  - Atomic sparse matrix times vector available via TapeConfig().
+  - Experimental atomic branching via ADoverload('if').
+  - AD order() now works.
+
+o Change default to TapeConfig(matmul='plain') because 'atomic' could
+  slow down too many examples.
+
+o New 'tips' vignette.
+
+------------------------------------------------------------------------
 RTMB 1.8 (2025-10-13)
 ------------------------------------------------------------------------
 
