@@ -116,6 +116,9 @@
 \alias{qchisq,num,num,num.,missing,missing-method}
 \alias{pnorm,ad,ad.,ad.-method}
 \alias{pnorm,num,num.,num.-method}
+\alias{atan2,advector,advector-method}
+\alias{atan2,advector,num-method}
+\alias{atan2,num,advector-method}
 \title{Distributions and special functions for which AD is implemented}
 \usage{
 \S4method{besselK}{ad,ad}(x, nu, expon.scaled = FALSE)
@@ -343,6 +346,12 @@ dcompois2(x, mean, nu, log = FALSE)
 \S4method{pnorm}{ad,ad.,ad.}(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
 
 \S4method{pnorm}{num,num.,num.}(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
+
+\S4method{atan2}{advector,advector}(y, x)
+
+\S4method{atan2}{advector,num}(y, x)
+
+\S4method{atan2}{num,advector}(y, x)
 }
 \arguments{
 \item{x}{observation vector}
@@ -422,6 +431,8 @@ dcompois2(x, mean, nu, log = FALSE)
 \item{lower.tail}{logical; if TRUE (default), probabilities are \eqn{P[X \le x]} otherwise, \eqn{P[X > x]}.}
 
 \item{log.p}{logical; if TRUE, probabilities p are given as log(p).}
+
+\item{y}{See \link[base]{atan2}}
 }
 \value{
 In autodiff contexts an object of class \code{"advector"} is returned; otherwise a standard numeric vector.
@@ -785,6 +796,12 @@ which documentation should be looked up online.
 \item \code{pnorm(q = ad, mean = ad., sd = ad.)}: AD implementation of \link[stats]{pnorm}
 
 \item \code{pnorm(q = num, mean = num., sd = num.)}: Default method
+
+\item \code{atan2(y = advector, x = advector)}: AD implementation of \link[base]{atan2}
+
+\item \code{atan2(y = advector, x = num)}: AD implementation of \link[base]{atan2}
+
+\item \code{atan2(y = num, x = advector)}: AD implementation of \link[base]{atan2}
 
 }}
 \examples{

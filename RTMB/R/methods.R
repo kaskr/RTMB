@@ -791,3 +791,13 @@ find_interval_ad <- function(x, vec, ...) {
   }
   DataEval(f, c(x, vec))
 }
+
+################################################################################
+
+##' @describeIn Distributions AD implementation of \link[base]{atan2}
+##' @param y See \link[base]{atan2}
+setMethod("atan2", signature("advector", "advector"), math_atan2)
+##' @describeIn Distributions AD implementation of \link[base]{atan2}
+setMethod("atan2", signature("advector", "num"), function(y, x)math_atan2(y, advector(x)))
+##' @describeIn Distributions AD implementation of \link[base]{atan2}
+setMethod("atan2", signature("num", "advector"), function(y, x)math_atan2(advector(y), x))

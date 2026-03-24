@@ -75,6 +75,7 @@ S3method("as.matrix", adsparse)
 ##     cat(paste0('export("',x,'")\n'))
 ## ===============================================
 
+export("atan2")
 export("rbind.advector")
 export("cbind.advector")
 export("colSums")
