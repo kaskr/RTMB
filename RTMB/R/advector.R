@@ -946,6 +946,9 @@ MakeADFun <- function(func, parameters, random=NULL, profile=NULL, integrate=NUL
 ## apply the patches from inside the '.onLoad' function.
 TMB_patch <- function(fun, ...) {
     environment(fun) <- new.env( parent = environment(fun) )
+    if (!("..." %in% names(formals(fun)))) { ## Add '...' arg
+      formals(fun) <- c(formals(fun), alist(... = ))
+    }
     environment(fun)$MakeADFun <- MakeADFun ## RTMB::MakeADFun
     dotargs <- list(...)
     formals(environment(fun)$MakeADFun)[names(dotargs)] <- dotargs
@@ -968,7 +971,31 @@ sdreport_patch <- bodysub(sdreport_patch,
 ##' @describeIn TMB-interface Interface to \link[TMB]{sdreport}.
 ##' @param obj TMB model object (output from \link{MakeADFun})
 sdreport <- function(obj, ...) {
-    sdreport_patch(obj, ...)
+  ## Call TMB version
+  sdr <- sdreport_patch(obj, ...)
+  ## Extra RTMB only. Handle 'integrate' / 'intern' cases
+  if (obj$env$intern || length(obj$env$integrate)) {
+    ## Random effects
+    xtra1 <- sdreport_xtra(obj,
+                           sdr,
+                           ...,
+                           what = "raneffvector")
+    sdr$par.random <- xtra1$value
+    sdr$diag.cov.random <- xtra1$sd^2
+    ## Something to report?
+    if (length(sdr$env$ADreportDims)) {
+      xtra2 <- sdreport_xtra(obj,
+                             sdr,
+                             ...,
+                             what = "reportvector")
+      ##names(tmp$value) <- names(obj2$fn()) ## FIXME: hack
+      sdr[names(xtra2)] <- xtra2
+    }
+    sdr$env$random <-
+      which(rep(names(sdr$env$parameters),
+                lengths(sdr$env$parameters)) %in% obj$env$.random)
+  }
+  sdr
 }
 
 reporter <- function() {
