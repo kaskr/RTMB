@@ -25,8 +25,7 @@ sdreport_xtra <- function(obj,
   par.fixed <- sdr$par.fixed
   cov.fixed <- sdr$cov.fixed
   ## Get parameter list
-  pl <- obj$env$parList(par=par.fixed) ## Has NAs in .random
-  pl[obj$env$.random] <- obj$env$parameters[obj$env$.random]
+  pl <- lapply(sdr$env$parameters, function(x) attr(x, "shape") %||% x)
   data <- obj$env$data
   func <- attr(data, "func")
   ## Get number vars to adreport
