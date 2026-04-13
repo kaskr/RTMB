@@ -16,6 +16,8 @@ PROS:
 - Debugging can be performed using the normal R debugger rather than gdb.
 - Most common TMB features are supported. See [current list of working examples](./tmb_examples).
 - Simplified interface can automatically simulate from the model and calculate OSA residuals.
+- Easy to provide multiple models in one package.
+- Easy to construct a model using functions from external packages and scripts.
 
 More information, including vignettes ([introduction](https://kaskr.r-universe.dev/RTMB/doc/RTMB-introduction.html) / [advanced](https://kaskr.r-universe.dev/RTMB/doc/RTMB-advanced.html)) and [documentation](https://kaskr.r-universe.dev/RTMB#manual), can be found on the [RTMB universe page](https://kaskr.r-universe.dev/RTMB).
 
