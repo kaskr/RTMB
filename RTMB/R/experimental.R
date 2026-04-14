@@ -27,3 +27,33 @@ vectorize <- function(obj, verbose=FALSE) {
     }
     invisible(obj)
 }
+
+## Decompose F(x)=L(T(x)) where L is *linear* and *maximal*
+## Or apply an 'inner' scale transformation S(F(x)) using linearity of L.
+term_split <- function(F, scale=NULL) {
+  ptr <- .pointer(environment(F)$mod)
+  nodes <- get_term_nodes(ptr)
+  L <- .copy(environment(F)$mod)
+  T <- .copy(environment(F)$mod)
+  vars <- op2var(ptr, nodes)
+  setinvIndex(.pointer(L), vars)
+  inactivate(.pointer(L), nodes)
+  L <- .expose(L)
+  L$simplify("eliminate")
+  setdepIndex(.pointer(T), vars)
+  T <- .expose(T)
+  T$simplify("eliminate")
+  ## Linearize:
+  ## L(x) = L(x0) + L'(x0) * (x - x0)
+  zero <- rep(0, length(L$par()))
+  L0 <- L(zero)
+  J <- L$jacfun(sparse=TRUE)(zero)
+  if (!is.null(scale)) {
+    J <- AD(J)
+    J@x[] <- scale[J@i+1L] * J@x
+    ans <- MakeTape(function(x) scale * L0 + AD(J) %*% T(x), T$par())
+    return(ans)
+  }
+  L <- MakeTape(function(x) L0 + AD(J) %*% x, L$par())
+  list(T=T, L=L)
+}

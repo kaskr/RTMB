@@ -45,6 +45,22 @@ getinvIndex <- function(adf) {
     .Call(`_RTMB_getinvIndex`, adf)
 }
 
+setdepIndex <- function(adf, index) {
+    invisible(.Call(`_RTMB_setdepIndex`, adf, index))
+}
+
+getdepIndex <- function(adf) {
+    .Call(`_RTMB_getdepIndex`, adf)
+}
+
+get_term_nodes <- function(adf) {
+    .Call(`_RTMB_get_term_nodes`, adf)
+}
+
+inactivate <- function(adf, nodes) {
+    invisible(.Call(`_RTMB_inactivate`, adf, nodes))
+}
+
 get_graph <- function(adf) {
     .Call(`_RTMB_get_graph`, adf)
 }

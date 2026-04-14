@@ -154,6 +154,24 @@ Rcpp::IntegerVector getinvIndex(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   return Rcpp::IntegerVector(adf->glob.inv_index.begin(), adf->glob.inv_index.end());
 }
 // [[Rcpp::export]]
+void setdepIndex(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::IntegerVector index) {
+  adf->glob.dep_index = std::vector<TMBad::Index>(index.begin(), index.end());
+}
+// [[Rcpp::export]]
+Rcpp::IntegerVector getdepIndex(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  return Rcpp::IntegerVector(adf->glob.dep_index.begin(), adf->glob.dep_index.end());
+}
+// [[Rcpp::export]]
+Rcpp::IntegerVector get_term_nodes(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  std::vector<TMBad::Index> boundary = TMBad::get_accumulation_tree(adf->glob, true);
+  return Rcpp::IntegerVector(boundary.begin(), boundary.end());
+}
+// [[Rcpp::export]]
+void inactivate(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::IntegerVector nodes) {
+  adf->inactivate(std::vector<TMBad::Index>(nodes.begin(), nodes.end()));
+  adf->glob.opstack.any |= TMBad::op_info(TMBad::op_info::dynamic); // TMBad bug: 'inactivate()' should set flag!
+}
+// [[Rcpp::export]]
 Rcpp::S4 get_graph(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   // reverse row-major == forward col-major
   TMBad::graph G = (*adf).glob.reverse_graph();

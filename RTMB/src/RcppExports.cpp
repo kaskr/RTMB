@@ -133,6 +133,50 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// setdepIndex
+void setdepIndex(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::IntegerVector index);
+RcppExport SEXP _RTMB_setdepIndex(SEXP adfSEXP, SEXP indexSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type index(indexSEXP);
+    setdepIndex(adf, index);
+    return R_NilValue;
+END_RCPP
+}
+// getdepIndex
+Rcpp::IntegerVector getdepIndex(Rcpp::XPtr<TMBad::ADFun<> > adf);
+RcppExport SEXP _RTMB_getdepIndex(SEXP adfSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    rcpp_result_gen = Rcpp::wrap(getdepIndex(adf));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_term_nodes
+Rcpp::IntegerVector get_term_nodes(Rcpp::XPtr<TMBad::ADFun<> > adf);
+RcppExport SEXP _RTMB_get_term_nodes(SEXP adfSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_term_nodes(adf));
+    return rcpp_result_gen;
+END_RCPP
+}
+// inactivate
+void inactivate(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::IntegerVector nodes);
+RcppExport SEXP _RTMB_inactivate(SEXP adfSEXP, SEXP nodesSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type nodes(nodesSEXP);
+    inactivate(adf, nodes);
+    return R_NilValue;
+END_RCPP
+}
 // get_graph
 Rcpp::S4 get_graph(Rcpp::XPtr<TMBad::ADFun<> > adf);
 RcppExport SEXP _RTMB_get_graph(SEXP adfSEXP) {
@@ -1303,6 +1347,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_findIndex", (DL_FUNC) &_RTMB_findIndex, 2},
     {"_RTMB_setinvIndex", (DL_FUNC) &_RTMB_setinvIndex, 2},
     {"_RTMB_getinvIndex", (DL_FUNC) &_RTMB_getinvIndex, 1},
+    {"_RTMB_setdepIndex", (DL_FUNC) &_RTMB_setdepIndex, 2},
+    {"_RTMB_getdepIndex", (DL_FUNC) &_RTMB_getdepIndex, 1},
+    {"_RTMB_get_term_nodes", (DL_FUNC) &_RTMB_get_term_nodes, 1},
+    {"_RTMB_inactivate", (DL_FUNC) &_RTMB_inactivate, 2},
     {"_RTMB_get_graph", (DL_FUNC) &_RTMB_get_graph, 1},
     {"_RTMB_get_df", (DL_FUNC) &_RTMB_get_df, 1},
     {"_RTMB_timer", (DL_FUNC) &_RTMB_timer, 2},
