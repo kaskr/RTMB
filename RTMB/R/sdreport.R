@@ -5,6 +5,7 @@ sdreport_xtra <- function(obj,
                           getReportCovariance = TRUE,
                           type = c("mean", "mode"),
                           what = c("reportvector", "raneffvector"),
+                          inner.epsilon.scale = TRUE,
                           ...) {
   applicable <- obj$env$intern || length(obj$env$integrate)
   if (!applicable) {
@@ -50,7 +51,13 @@ sdreport_xtra <- function(obj,
       eps <- par[[1]]
       par <- par[-1]
       parvec <- do.call("c", par)
-      func(par) * scale + sum(eps * statistic(parvec)^moment)
+      if (inner.epsilon.scale && what == "reportvector" && moment == 1) {
+        ## Apply epsilon scaling at lowest possible level
+        func(par) * scale + sum( term_split(statistic, scale=eps)(parvec) )
+      } else {
+        ## Plain version
+        func(par) * scale + sum(eps * statistic(parvec)^moment)
+      }
     }
     MakeADFun(g,
               c(list(eps), pl),
@@ -90,9 +97,13 @@ sdreport_xtra <- function(obj,
     JT <- matrix(0, length(lpar), length(leps))
   }
   ## Second moment object
-  ## (FIXME: Could be avoided if we could calculate hessian diagonals wrt epsilon)
-  obj2 <- getObj(moment=2, scale=1)
-  b <- head(as.vector(obj2$gr(p)), n)
+  if (getReportCovariance) {
+    ## Have it available already
+    b <- diag(B) + a_mean^2
+  } else {
+    obj2 <- getObj(moment=2, scale=1)
+    b <- head(as.vector(obj2$gr(p)), n)
+  }
   ## NOTE: zero matrix if isTRUE(ignore.theta.uncertainty)
   Vtheta <- cov.fixed
   ## Full covariance
