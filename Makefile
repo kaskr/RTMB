@@ -73,6 +73,7 @@ parallel-version:
 	sed -i 's/"RTMB"/"RTMBp"/g' RTMBp/R/*.R
 	sed -i 's/library(RTMB)/library(RTMBp);TMB::openmp(1,DLL="RTMBp")/g' RTMBp/vignettes/*.rmd
 	sed -i 's/RTMB/RTMBp/g' RTMBp/inst/tinytest/*.R
+	sed -i 's/RTMB/RTMBp/g' RTMBp/tests/tinytest.R
 	sed -i 's/RTMB/RTMBp/g' RTMBp/DESCRIPTION
 	sed -i 's/RTMB/RTMBp/g' RTMBp/NAMESPACE
 	sed -i 's/"RTMB"/"RTMBp"/g' RTMBp/src/RTMB.h
@@ -86,7 +87,11 @@ parallel-version:
 	git branch -D RTMBp
 	git checkout -b RTMBp
 	git add `git ls-files RTMB | sed 's/^RTMB/RTMBp/g'`
+	git reset RTMBp/inst/tinytest/test-integration_methods.R
+	git reset RTMBp/inst/tinytest/test-ridge_correct.R
+	git reset RTMBp/vignettes
 	git commit -m "autogenerate"
+	cd RTMBp; git clean -xdf
 	git checkout master
 
 ## vignettes
