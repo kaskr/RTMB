@@ -93,35 +93,30 @@ dautoreg <- function(x, mu=0, phi, log=FALSE, scale=1) {
         return (dscale("dautoreg", x, 0, phi,
                        log=log, center=mu, scale=scale))
     }
+    ## M matrix
     k <- length(phi)
-    M <- matrix(0, k, k)
-    for (i in 1:k) {
-        for (j in 1:k) {
-            d <- abs(i-j)
-            if (i != j) {
-                M[i, d] <- M[i, d] + phi[j]
-            }
-        }
-    }
+    A <- AD(array(0, c(k, k, 2)))
+    index <- expand.grid(i = 1:k, j = 1:k)
+    index <- subset(index, i != j)
+    index <- transform(index, d = abs(i-j), s = (i>j) + 1)
+    l <- cbind(index$i, index$d, index$s)
+    A[l] <- phi[index$j]
+    M <- as.matrix(A[,,1] + A[,,2])
+    ## I matrix
     I <- diag(k)
     gamma <- solve(I-M, phi)
     sigma <- sqrt(1-sum(phi*gamma))
-    V0 <- diag(k)
-    for (i in 1:k) {
-        for (j in 1:k) {
-            d <- abs(i-j)
-            if (i != j){
-                V0[i, j] <- gamma[d]
-            }
-        }
-    }
+    ## V0 matrix (stationary variance)
+    V0 <- AD(diag(k))
+    l <- cbind(index$i, index$j)
+    V0[l] <- gamma[index$d]
     k <- min(length(x), k)
     V0 <- V0[1:k, 1:k]
     ## Speedup (code would work the same without)
     if (inherits(x, "simref")) {
         xref <- x
         x <- x$value
-        x[1:k] <- MASS::mvrnorm(1, 0, V0)
+        x[1:k] <- MASS::mvrnorm(1, rep(0, k), V0)
         for (i in (tail(seq_along(x), -k))) {
             x[i] <- rnorm(1, sum(phi * x[i - (1:k)]), sigma)
         }
