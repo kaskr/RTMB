@@ -8,6 +8,7 @@ install:
 doc-update:
 	echo "library(roxygen2);suppressWarnings(roxygenize(\"RTMB\",roclets = c(\"collate\", \"rd\"), load_code=load_installed))" | R --slave
 	sed -i '/RoxygenNote/d' RTMB/DESCRIPTION
+	sed -i '/Config.roxygen2.*/d' RTMB/DESCRIPTION
 
 unexport TEXINPUTS
 pdf:

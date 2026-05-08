@@ -310,6 +310,15 @@ checkConsistency <- function(obj, fast=TRUE, ...) {
     do.call("checkConsistency_patch", args)
 }
 
+##' @describeIn Distributions Assign an uninformative distribution to a random effect during *estimation* while fixing its value during *simulation*.
+dflat <- function(x, log=FALSE) {
+  if (isFALSE(log)) stop("'dflat' must have log=TRUE")
+  if (inherits(x, "simref")) {
+    x[] <- x$getOrig()
+  }
+  0
+}
+
 ## Internal: Not export
 rtweedie <- function (n, mu, phi, p) {
     ok <- all( (p > 1) & (p < 2) )
