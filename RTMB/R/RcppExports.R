@@ -113,6 +113,10 @@ decompose_refs <- function(adf) {
     invisible(.Call(`_RTMB_decompose_refs`, adf))
 }
 
+clear_inv_pos <- function(adf) {
+    invisible(.Call(`_RTMB_clear_inv_pos`, adf))
+}
+
 getValues <- function(x) {
     .Call(`_RTMB_getValues`, x)
 }

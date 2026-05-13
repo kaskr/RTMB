@@ -468,6 +468,12 @@ void decompose_refs(Rcpp::XPtr<TMBad::ADFun<> > adf) {
 }
 
 // [[Rcpp::export]]
+void clear_inv_pos(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  adf->inv_pos.resize(0);
+  adf->unset_tail();
+}
+
+// [[Rcpp::export]]
 Rcpp::NumericVector getValues(ADrep x) {
   Rcpp::NumericVector ans(x.size());
   ad* X = adptr(x);

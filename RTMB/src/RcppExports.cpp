@@ -327,6 +327,16 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// clear_inv_pos
+void clear_inv_pos(Rcpp::XPtr<TMBad::ADFun<> > adf);
+RcppExport SEXP _RTMB_clear_inv_pos(SEXP adfSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    clear_inv_pos(adf);
+    return R_NilValue;
+END_RCPP
+}
 // getValues
 Rcpp::NumericVector getValues(ADrep x);
 RcppExport SEXP _RTMB_getValues(SEXP xSEXP) {
@@ -1364,6 +1374,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_independent", (DL_FUNC) &_RTMB_independent, 1},
     {"_RTMB_resolve_refs", (DL_FUNC) &_RTMB_resolve_refs, 1},
     {"_RTMB_decompose_refs", (DL_FUNC) &_RTMB_decompose_refs, 1},
+    {"_RTMB_clear_inv_pos", (DL_FUNC) &_RTMB_clear_inv_pos, 1},
     {"_RTMB_getValues", (DL_FUNC) &_RTMB_getValues, 1},
     {"_RTMB_getVariables", (DL_FUNC) &_RTMB_getVariables, 1},
     {"_RTMB_dbgprint", (DL_FUNC) &_RTMB_dbgprint, 1},

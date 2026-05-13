@@ -920,6 +920,20 @@ MakeADFun <- function(func, parameters, random=NULL, profile=NULL, integrate=NUL
         func(p)
         REPORT_ENV$result()
     }
+    ## vectorize
+    obj$vectorize <- function(method=c("post_vectorize",
+                                       "pre_vectorize")) {
+      method <- match.arg(method)
+      if (method == "post_vectorize")
+        post_vectorize(obj$env$ADFun)
+      if (method == "pre_vectorize") {
+        old <- TapeConfig()
+        TapeConfig(vectorize="enable")
+        obj$env$retape()
+        TapeConfig(old)
+      }
+      invisible(NULL)
+    }
     ## FIXME: Skip for now
     obj$env$MakeDoubleFunObject <- function(...)NULL
     obj$env$EvalDoubleFunObject <- function(...)NULL

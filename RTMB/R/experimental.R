@@ -11,21 +11,24 @@ Tag <- function(x) {
         x
 }
 
+TMB_TransformADFunObject <- get("TransformADFunObject", envir = asNamespace("TMB"), inherits = FALSE)
+TMB_info <- get("info", envir = asNamespace("TMB"), inherits = FALSE)
 ## Post vectorization heuristic (Move to TMB if useful)
-vectorize <- function(obj, verbose=FALSE) {
-    if (verbose) info1 <- TMB:::info(obj$env$ADFun)
-    TMB:::TransformADFunObject(obj$env$ADFun, method = "accumulation_tree_split") 
-    TMB:::TransformADFunObject(obj$env$ADFun, method = "reorder_sub_expressions")
-    TMB:::TransformADFunObject(obj$env$ADFun, method = "optimize")
-    TMB:::TransformADFunObject(obj$env$ADFun, method = "fuse_and_replay")
-    if (verbose) info2 <- TMB:::info(obj$env$ADFun)
+post_vectorize <- function(ADFun, verbose=FALSE) {
+    if (verbose) info1 <- TMB_info(ADFun)
+    clear_inv_pos(ADFun$ptr)
+    TMB_TransformADFunObject(ADFun, method = "accumulation_tree_split")
+    TMB_TransformADFunObject(ADFun, method = "reorder_sub_expressions")
+    TMB_TransformADFunObject(ADFun, method = "optimize")
+    TMB_TransformADFunObject(ADFun, method = "fuse_and_replay")
+    if (verbose) info2 <- TMB_info(ADFun)
     if (verbose) {
         cat("Before:\n")
         print(unlist(info1[-1]))
         cat("After:\n")
         print(unlist(info2[-1]))        
     }
-    invisible(obj)
+    invisible(ADFun)
 }
 
 ## Decompose F(x)=L(T(x)) where L is *linear* and *maximal*
