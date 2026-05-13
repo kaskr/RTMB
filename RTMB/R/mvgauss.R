@@ -97,6 +97,8 @@ dautoreg <- function(x, mu=0, phi, log=FALSE, scale=1) {
     k <- length(phi)
     A <- AD(array(0, c(k, k, 2)))
     index <- expand.grid(i = 1:k, j = 1:k)
+    ## invisible bindings
+    i <- j <- NULL
     index <- subset(index, i != j)
     index <- transform(index, d = abs(i-j), s = (i>j) + 1)
     l <- cbind(index$i, index$d, index$s)
