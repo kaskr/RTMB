@@ -157,6 +157,18 @@ Branch <- function(f, g, x) {
     .Call(`_RTMB_Branch`, f, g, x)
 }
 
+remap_values <- function(adf) {
+    .Call(`_RTMB_remap_values`, adf)
+}
+
+src_transform <- function(adf, config) {
+    invisible(.Call(`_RTMB_src_transform`, adf, config))
+}
+
+reorder_depth_first <- function(adf) {
+    invisible(.Call(`_RTMB_reorder_depth_first`, adf))
+}
+
 distr_dexp <- function(x, rate, give_log) {
     .Call(`_RTMB_distr_dexp`, x, rate, give_log)
 }
