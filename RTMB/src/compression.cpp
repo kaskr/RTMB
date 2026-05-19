@@ -119,20 +119,6 @@ void rtmb_write_forward(global &glob, code_config cfg = code_config()) {
   using std::setw; using std::left; using std::endl;
   std::ostream& cout = *cfg.cout;
   cfg.write_header_comment();
-  if (cfg.gpu) {
-    cout <<
-    "struct access {\n\
-      double* x;\n\
-      int offset, stride;\n\
-      __device__ double& operator[](int i) {\n\
-        return x[offset + i * stride];\n\
-      }\n\
-      __device__ access(double *x) : x(x){\n\
-        stride = gridDim.x * blockDim.x;\n\
-        offset = threadIdx.x + blockIdx.x * blockDim.x;\n\
-      }\n\
-    };\n";
-  }
   std::string type = (cfg.gpu ? "access" : "double*");
   std::string void_str = cfg.void_str();
   cfg.gpu=false;
@@ -176,10 +162,6 @@ void src_transform(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::List config) {
   cfg.gpu = config["gpu"];
   cfg.asm_comments = false;
   cfg.cout = &Rcout;
-  *cfg.cout << "#include <cmath>" << std::endl;
-  *cfg.cout
-    << "template<class T>T sign(const T &x) { return (x > 0) - (x < 0); }"
-    << std::endl;
   TMBad::global glob = adf->glob; // Invoke deep copy
   TMBad::compress(glob);
   rtmb_write_forward(glob, cfg);

@@ -60,3 +60,107 @@ term_split <- function(F, scale=NULL) {
   L <- MakeTape(function(x) L0 + AD(J) %*% x, L$par())
   list(T=T, L=L)
 }
+
+################################################################################
+## GPU codegen
+cuda <- new.env() ## Hackable
+cuda$include <-
+  "#include <cmath>
+   template<class T>T sign(const T &x) { return (x > 0) - (x < 0); }
+"
+cuda$access <-
+  "struct access {
+      double* x;
+      int offset, stride;
+      __device__ double& operator[](int i) {
+        return x[offset + i * stride];
+      }
+      __device__ access(double *x) : x(x) {
+        stride = gridDim.x * blockDim.x;
+        offset = threadIdx.x + blockIdx.x * blockDim.x;
+      }
+    };
+"
+cuda$control <-
+  '__global__ void forward_global(double* v) {
+  forward(v);
+}
+__global__
+void reverse_global(double* v, double* d) {
+  reverse(v, d);
+}
+// Memory alloc
+struct device_alloc_t {
+  double* value;
+  double* deriv;
+  int n;
+} dev = {0, 0, 0};
+// Allocate (n>0) or free (n==0) memory on device
+extern "C"
+void dev_alloc(int *n) {
+  if (dev.value != NULL) cudaFree(dev.value);
+  if (dev.deriv != NULL) cudaFree(dev.deriv);
+  dev = {0, 0, 0};
+  if (n[0] > 0) {
+    cudaError_t result = cudaMalloc(&dev.value, n[0] * sizeof(double));
+    if (result == cudaSuccess) {
+      dev.n = n[0];
+    }
+  }
+}
+extern "C"
+void clear_deriv() {
+  if (dev.deriv == NULL) {
+    cudaError_t result = cudaMalloc(&dev.deriv, dev.n * sizeof(double));
+  }
+  cudaMemset(dev.deriv, 0., dev.n * sizeof(double));
+}
+// Get / Set entire value array
+extern "C"
+void get_array(double *x) {
+  cudaMemcpy(x, dev.value, dev.n * sizeof(double), cudaMemcpyDeviceToHost);
+}
+extern "C"
+void set_array(double *x) {
+  cudaMemcpy(dev.value, x, dev.n * sizeof(double), cudaMemcpyHostToDevice);
+}
+// Get / Set subsets
+extern "C"
+void get_value(double *x, int *i, int *n) {
+  for (int j=0; j<n[0]; j++) x[j] = dev.value[i[j]];
+}
+extern "C"
+void set_value(double *x, int *i, int *n) {
+  for (int j=0; j<n[0]; j++) dev.value[i[j]] = x[j];
+}
+extern "C"
+void get_deriv(double *x, int *i, int *n) {
+  for (int j=0; j<n[0]; j++) x[j] = dev.deriv[i[j]];
+}
+extern "C"
+void set_deriv(double *x, int *i, int *n) {
+  for (int j=0; j<n[0]; j++) dev.deriv[i[j]] = x[j];
+}
+extern "C"
+void forward_kernel(int* n) {
+  forward_global<<<n[0],n[1]>>>(dev.value);
+}
+extern "C"
+void reverse_kernel(int* n) {
+  reverse_global<<<n[0],n[1]>>>(dev.value, dev.deriv);
+}
+'
+
+codegen <- function(F, file=tempfile(), gpu=TRUE, ...) {
+  if (gpu) {
+    file <- paste0(file, ".cu")
+    sink(file)
+    on.exit(sink(NULL))
+    cat(cuda$include)
+    cat(cuda$access)
+    src_transform(.pointer(environment(F)$mod),
+                  config=list(gpu=gpu, ...))
+    cat(cuda$control)
+  }
+  file
+}
