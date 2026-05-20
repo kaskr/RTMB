@@ -143,8 +143,9 @@ void reverse_kernel(int* n) {
 '
 
 codegen <- function(F, file=tempfile(), gpu=TRUE, ...) {
+  names(file) <- basename(file)
   if (gpu) {
-    file <- paste0(file, ".cu")
+    file[] <- paste0(file, ".cu")
     sink(file)
     on.exit(sink(NULL))
     cat(cuda$include)
@@ -154,4 +155,44 @@ codegen <- function(F, file=tempfile(), gpu=TRUE, ...) {
     cat(cuda$control)
   }
   file
+}
+
+## Tape -> GPU
+gpu_atomic <- function(F, verbose=TRUE) {
+  inv <- getinvIndex(.pointer(environment(F)$mod))
+  dep <- getdepIndex(.pointer(environment(F)$mod))
+  if (!all(diff(inv)==1))
+    stop("All tape inputs must be consecutive on tape")
+  if (!all(diff(dep)==1))
+    stop("All tape outputs must be consecutive on tape")
+  src <- codegen(F)
+  DLL <- names(src)
+  dll <- sub(".cu$", ".so", src)
+  cmd <- paste("nvcc",
+               "--ptxas-options=-v"[verbose],
+               "--compiler-options '-fPIC'",
+               "-o",
+               dll,
+               " --shared",
+               src)
+  system(cmd)
+  dyn.load(dll)
+  nrep_prev <- 0
+  isInt <- function(x) round(x) == x
+  f <- function(x, blksize=32L) {
+    nrep <- length(x) / length(inv)
+    if (!isInt(nrep)) stop("Invalid length")
+    if (nrep != nrep_prev) {
+      value <- rep(F$data.frame()$Value, each=nrep)
+      .C("dev_alloc", length(value), PACKAGE=DLL)
+      .C("set_value", value, 0L, length(value), PACKAGE=DLL)
+      nrep_prev <<- nrep
+    }
+    if ( !isInt (nrep / blksize) ) blksize <- 1
+    parms <- as.integer(c(blksize, nrep/blksize))
+    .C("forward_kernel", parms, PACKAGE=DLL)
+    y <- numeric(length(dep)*nrep)
+    ans <- .C("get_value", y, dep[1] * nrep, length(dep) * nrep, PACKAGE=DLL)
+    ans[[1]]
+  }
 }
