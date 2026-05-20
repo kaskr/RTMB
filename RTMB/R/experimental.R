@@ -115,31 +115,22 @@ void clear_deriv() {
   }
   cudaMemset(dev.deriv, 0., dev.n * sizeof(double));
 }
-// Get / Set entire value array
+// Get / Set array subsets
 extern "C"
-void get_array(double *x) {
-  cudaMemcpy(x, dev.value, dev.n * sizeof(double), cudaMemcpyDeviceToHost);
+void get_value(double *x, int *offset, int *n) {
+  cudaMemcpy(x, dev.value + offset[0], n[0] * sizeof(double), cudaMemcpyDeviceToHost);
 }
 extern "C"
-void set_array(double *x) {
-  cudaMemcpy(dev.value, x, dev.n * sizeof(double), cudaMemcpyHostToDevice);
-}
-// Get / Set subsets
-extern "C"
-void get_value(double *x, int *i, int *n) {
-  for (int j=0; j<n[0]; j++) x[j] = dev.value[i[j]];
+void set_value(double *x, int *offset, int *n) {
+  cudaMemcpy(dev.value + offset[0], x, n[0] * sizeof(double), cudaMemcpyHostToDevice);
 }
 extern "C"
-void set_value(double *x, int *i, int *n) {
-  for (int j=0; j<n[0]; j++) dev.value[i[j]] = x[j];
+void get_deriv(double *x, int *offset, int *n) {
+  cudaMemcpy(x, dev.deriv + offset[0], n[0] * sizeof(double), cudaMemcpyDeviceToHost);
 }
 extern "C"
-void get_deriv(double *x, int *i, int *n) {
-  for (int j=0; j<n[0]; j++) x[j] = dev.deriv[i[j]];
-}
-extern "C"
-void set_deriv(double *x, int *i, int *n) {
-  for (int j=0; j<n[0]; j++) dev.deriv[i[j]] = x[j];
+void set_deriv(double *x, int *offset, int *n) {
+  cudaMemcpy(dev.deriv + offset[0], x, n[0] * sizeof(double), cudaMemcpyHostToDevice);
 }
 extern "C"
 void forward_kernel(int* n) {
