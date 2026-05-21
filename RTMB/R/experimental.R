@@ -185,16 +185,16 @@ gpu_atomic <- function(F, verbose=TRUE) {
     nrep <- as.integer(nrep)
     if (nrep != nrep_prev) {
       value <- rep(F$data.frame()$Value, each=nrep)
-      .C("dev_alloc", length(value), PACKAGE=DLL)
-      .C("set_value", value, 0L, length(value), PACKAGE=DLL)
+      (.C)("dev_alloc", length(value), PACKAGE=DLL)
+      (.C)("set_value", value, 0L, length(value), PACKAGE=DLL)
       nrep_prev <<- nrep
     }
-    .C("set_value", x, inv[1] * nrep, length(inv) * nrep, PACKAGE=DLL)
+    (.C)("set_value", x, inv[1] * nrep, length(inv) * nrep, PACKAGE=DLL)
     if ( !isInt (nrep / blksize) ) blksize <- 1
     parms <- as.integer(c(blksize, nrep/blksize))
-    .C("forward_kernel", parms, PACKAGE=DLL)
+    (.C)("forward_kernel", parms, PACKAGE=DLL)
     y <- numeric(length(dep)*nrep)
-    ans <- .C("get_value", y, dep[1] * nrep, length(dep) * nrep, PACKAGE=DLL)
+    ans <- (.C)("get_value", y, dep[1] * nrep, length(dep) * nrep, PACKAGE=DLL)
     ans[[1]]
   }
 }
