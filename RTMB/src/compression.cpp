@@ -111,6 +111,21 @@ Rcpp::IntegerVector remap_values(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   return Rcpp::IntegerVector(rv.data(), rv.data() + rv.size());
 }
 
+// [[Rcpp::export]]
+void destructive_remap_apply(Rcpp::XPtr<TMBad::ADFun<> > adf) {
+  std::vector<TMBad::Index> rv = TMBad::remap_values(adf->glob);
+  adf->glob.inputs = TMBad::subset(rv, adf->glob.inputs);
+  adf->glob.inv_index = TMBad::subset(rv, adf->glob.inv_index);
+  adf->glob.dep_index = TMBad::subset(rv, adf->glob.dep_index);
+  TMBad::Index m = *std::max_element(rv.begin(), rv.end());
+  std::vector<TMBad::Scalar> short_values(m);
+  for (size_t i = rv.size(); i > 0; ) {
+    i--;
+    short_values[rv[i]] = adf->glob.values[i];
+  }
+  adf->glob.values = short_values;
+  adf->glob.derivs.resize(0);
+}
 
 // Patched souce code writers
 // - We need a bit more control with it
