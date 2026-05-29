@@ -159,12 +159,16 @@ codegen <- function(F, file=tempfile(), gpu=TRUE, remap=FALSE, ...) {
     src_transform(.pointer(environment(F)$mod),
                   config=list(gpu=gpu, ...))
     cat(cuda$control)
+    if (remap) {
+      destructive_remap_apply(.pointer(environment(F)$mod))
+    }
   }
   file
 }
 
 ## Tape -> GPU
 gpu_atomic <- function(F, verbose=TRUE, remap=FALSE) {
+  ## FIXME: Copy F when isTRUE(remap)
   inv <- getinvIndex(.pointer(environment(F)$mod))
   dep <- getdepIndex(.pointer(environment(F)$mod))
   if (!all(diff(inv)==1))
