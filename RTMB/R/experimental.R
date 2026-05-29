@@ -142,14 +142,20 @@ void reverse_kernel(int* n) {
 }
 '
 
-codegen <- function(F, file=tempfile(), gpu=TRUE, ...) {
+codegen <- function(F, file=tempfile(), gpu=TRUE, remap=FALSE, ...) {
   names(file) <- basename(file)
   if (gpu) {
     file[] <- paste0(file, ".cu")
     sink(file)
     on.exit(sink(NULL))
     cat(cuda$include)
-    cat(cuda$access)
+    if (!remap) {
+      cat(cuda$access)
+    } else {
+      v <- remap_values(.pointer(environment(F)$mod))
+      cat(paste("__device__ static int remap[",length(v),"] = {",paste(v, collapse=","),"};\n"))
+      cat(sub(" i ", " remap[i] ", cuda$access))
+    }
     src_transform(.pointer(environment(F)$mod),
                   config=list(gpu=gpu, ...))
     cat(cuda$control)
@@ -158,14 +164,14 @@ codegen <- function(F, file=tempfile(), gpu=TRUE, ...) {
 }
 
 ## Tape -> GPU
-gpu_atomic <- function(F, verbose=TRUE) {
+gpu_atomic <- function(F, verbose=TRUE, remap=FALSE) {
   inv <- getinvIndex(.pointer(environment(F)$mod))
   dep <- getdepIndex(.pointer(environment(F)$mod))
   if (!all(diff(inv)==1))
     stop("All tape inputs must be consecutive on tape")
   if (!all(diff(dep)==1))
     stop("All tape outputs must be consecutive on tape")
-  src <- codegen(F)
+  src <- codegen(F, remap=remap)
   DLL <- names(src)
   dll <- sub(".cu$", ".so", src)
   cmd <- paste("nvcc",
