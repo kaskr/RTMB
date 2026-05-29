@@ -1,6 +1,6 @@
 ##' Log space gamma function
 ##'
-##' Calculates `log(gamma(exp(x)))` with impoved stability for small x.
+##' Calculates `log(gamma(exp(x)))` with improved stability for small x.
 ##' @title Log space gamma function
 ##' @param x AD vector
 ##' @return AD vector
@@ -15,7 +15,7 @@ NULL
 
 ##' Logit transformed inverse cloglog
 ##'
-##' Calculates `log(gamma(exp(x)))` with impoved stability for small x.
+##' Calculates `log(gamma(exp(x)))` with improved stability for small x.
 ##' @title Logit transformed inverse cloglog
 ##' @param x AD vector
 ##' @return AD vector
@@ -26,7 +26,7 @@ NULL
 
 ##' Logit transformed pnorm
 ##'
-##' Calculates `qlogis(pnorm(x)))` with impoved accuracy for small and large x.
+##' Calculates `qlogis(pnorm(x)))` with improved accuracy for small and large x.
 ##' @title Logit transformed pnorm
 ##' @param x AD vector
 ##' @return AD vector

@@ -447,7 +447,7 @@ Method dispatching follows a simple rule:
 implementation is selected. In all other cases a default
 implementation is used} (typically that of the \bold{stats}
 package).
-Argument recycling follows the R standard (although wihout any warnings).
+Argument recycling follows the R standard (although without any warnings).
 }
 \details{
 Specific documentation of the functions and arguments should be looked up elsewhere:
@@ -455,7 +455,7 @@ Specific documentation of the functions and arguments should be looked up elsewh
 \item All S4 methods behave as the corresponding functions in the
 \bold{stats} package. However, some arguments may not be
 implemented in the AD case (e.g. \code{lower-tail}).
-\item Other funtions behave as the corresponding TMB versions for
+\item Other functions behave as the corresponding TMB versions for
 which documentation should be looked up online.
 }
 }

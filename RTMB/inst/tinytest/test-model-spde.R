@@ -63,7 +63,7 @@ f <- function(parms) {
 obj <- MakeADFun(f, parameters, silent=TRUE)
 expect_equal(f(parameters), obj$fn())
 
-## Fit model (NaNs during minimization expected - supress warnings)
+## Fit model (NaNs during minimization expected - suppress warnings)
 obj <- MakeADFun(f, parameters, random="x", silent=TRUE)
 opt <- suppressWarnings(nlminb(obj$par, obj$fn, obj$gr))
 

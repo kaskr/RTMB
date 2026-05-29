@@ -52,7 +52,7 @@ sde <- function(lambda, gamma, sigmaX) {
     list(advection  = function (x) lambda * x - gamma * x^3,
          dispersion = function (x) x*0 + sigmaX )
 }
-## Finite volume discritize advection diffusion equation. Assuming
+## Finite volume discretize advection diffusion equation. Assuming
 ## equidistant grid and using central difference scheme for advection.
 fvade <- function(sde, grid) {
     h <- diff(grid)[1]
@@ -116,7 +116,7 @@ func <- function(parameters) {
     sigmaY <- exp(logsY)
     ## Construct the SDE
     sde_object <- sde(lambda, gamma, sigmaX)
-    ## Finite volume disretize and report generator
+    ## Finite volume discretize and report generator
     fvol <- fvade(sde_object, grid)
     REPORT(fvol$A)
     ## Construct likelihood function

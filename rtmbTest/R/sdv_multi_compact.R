@@ -1,4 +1,4 @@
-## Multivatiate SV model from Table 5 of Skaug and Yu "A flexible and automated likelihood based 
+## Multivariate SV model from Table 5 of Skaug and Yu "A flexible and automated likelihood based 
 ## framework for inference in stochastic volatility models." Computational Statistics & Data Analysis 76 (2014): 642-654.
 ## Negative joint likelihood (nll) of data and parameters
 f <- function(parms) {
@@ -16,7 +16,7 @@ f <- function(parms) {
     for (j in 1:p) {
         nll <- nll - dautoreg(h[,j], phi=phi[j], scale=sigma_init[j], log=TRUE)
     }
-    ## Parameterizes correlation matrix of X in terms of Cholesky factor
+    ## Parametrizes correlation matrix of X in terms of Cholesky factor
     L <- diag(p)
     L[lower.tri(L)] <- parms$off_diag_x   
     R <- cov2cor(L%*%t(L))  # Correlation matrix of X (guarantied positive definite)

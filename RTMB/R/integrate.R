@@ -132,7 +132,7 @@ adintegrate <- function(f, a, b, cfg) {
 ##' AD evaluation mode re-directs to a specialized RTMB implementation.
 ##' The latter imitates the R (QUADPACK) implementation by using:
 ##' - Adaptive Gauss-Kronrod (K21/G10) quadrature with fast retaping.
-##' - Wynn convergence acceleration to handle boundary singularites.
+##' - Wynn convergence acceleration to handle boundary singularities.
 ##'
 ##' Accuracy requirements are specified via relative (`rel.tol`) and absolute (`abs.tol`) tolerances.
 ##' The AD implementation tries to follow the same stopping criterion as that used by QUADPACK, which is to stop if *either* (not both!) of these tolerances are satisfied:

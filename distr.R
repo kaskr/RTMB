@@ -137,7 +137,7 @@ getRmethod <- function(i) {
     ans <- ifelse(is.na(match(a2,a1)),"missing",a2.type)
     sig <- paste0("signature(",(paste(a2,"=",string(ans),collapse=", ")),")")
     cast <- ifelse(ans[match(a1,a2)] %in% c("ad","ad."),"advector","as.logical")
-    ## Simple case: Not stats - create new simpel function
+    ## Simple case: Not stats - create new simple function
     if (!stats) {
         def <- c(
             paste(name,"<- function(", sub("log$","log=FALSE", df$signature[i]),") {"),

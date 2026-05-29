@@ -24,7 +24,7 @@ mesh <- fmesher::fm_mesh_2d(
 
 plot(mesh)
 
-spde <- fmesher::fm_fem(mesh) # Calculate the sparse matrices c0,g1, g2 need for precission matrix
+spde <- fmesher::fm_fem(mesh) # Calculate the sparse matrices c0,g1, g2 need for precision matrix
 
 ## Fixed effects part of model
 X <- model.matrix( ~ 1 + sex + age + wbc + tpi, data = LeukSurv)

@@ -801,7 +801,7 @@ MakeADFun <- function(func, parameters, random=NULL, profile=NULL, integrate=NUL
             }
             pl <- parList(parameters, par)
             ## TMB is allowed to move data items to parameter list. We
-            ## move such parmeters to the exchange environment OBS_ENV
+            ## move such parameters to the exchange environment OBS_ENV
             ## so can be obtained by 'OBS()' rather than 'parameters':
             if (length(obj$env$data) == 0) {
                 setnm <- attr(obj$env$data, "setdata")

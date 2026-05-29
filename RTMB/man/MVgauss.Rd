@@ -77,7 +77,7 @@ In addition, \code{dmvnorm} and \code{dgmrf} can be scaled by a vector of length
 
 \section{Unstructured correlation}{
 
-Replacement of \code{UNSTRUCTURED_CORR} functionality of TMB. Constuct object using \code{us <- unstructured(k)}.
+Replacement of \code{UNSTRUCTURED_CORR} functionality of TMB. Construct object using \code{us <- unstructured(k)}.
 Now \code{us} has two methods: \code{x <- us$parms()} gives the parameter vector used as input to the objective function, and \code{us$corr(x)} turns the parameter vector into an unstructured correlation matrix.
 }
 

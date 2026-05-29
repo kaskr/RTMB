@@ -8,7 +8,7 @@ setTape <- function(F, parms) {
     .Call(set_parms, parms)
 }
 
-## State augmentation (inital state and parameter derivatives)
+## State augmentation (initial state and parameter derivatives)
 ## DEFINITION:
 ## - The tape represents the generator, i.e. the mapping (t,y,parms) -> f(t,y)
 ## - The augmented tape must also represent the generator!
