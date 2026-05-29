@@ -465,6 +465,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// destructive_remap_apply
+void destructive_remap_apply(Rcpp::XPtr<TMBad::ADFun<> > adf);
+RcppExport SEXP _RTMB_destructive_remap_apply(SEXP adfSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    destructive_remap_apply(adf);
+    return R_NilValue;
+END_RCPP
+}
 // src_transform
 void src_transform(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::List config);
 RcppExport SEXP _RTMB_src_transform(SEXP adfSEXP, SEXP configSEXP) {
@@ -1418,6 +1428,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_distr_besselY", (DL_FUNC) &_RTMB_distr_besselY, 2},
     {"_RTMB_Branch", (DL_FUNC) &_RTMB_Branch, 3},
     {"_RTMB_remap_values", (DL_FUNC) &_RTMB_remap_values, 1},
+    {"_RTMB_destructive_remap_apply", (DL_FUNC) &_RTMB_destructive_remap_apply, 1},
     {"_RTMB_src_transform", (DL_FUNC) &_RTMB_src_transform, 2},
     {"_RTMB_reorder_depth_first", (DL_FUNC) &_RTMB_reorder_depth_first, 1},
     {"_RTMB_distr_dexp", (DL_FUNC) &_RTMB_distr_dexp, 3},
