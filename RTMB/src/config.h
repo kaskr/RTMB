@@ -18,7 +18,7 @@
 #define TMBAD_INDEX_TYPE uint64_t
 // Enable out-of-bounds checking
 #define TMB_SAFEBOUNDS
-// TMB FIXME: Some occurances of ASSERT and ASSERT2
+// TMB FIXME: Some occurrences of ASSERT and ASSERT2
 #undef  ASSERT
 #define ASSERT(x) TMBAD_ASSERT(x)
 #undef  ASSERT2

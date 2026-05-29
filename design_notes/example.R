@@ -117,7 +117,7 @@ MakeTape <- function(f, x, optimize=TRUE) {
 
 ## =============== Distributions
 ## Are generally not generic - must overload
-## FIXME: Dispatch must be based on all aguments x, mean, sd
+## FIXME: Dispatch must be based on all arguments x, mean, sd
 dnorm <- function(x, mean = 0, sd = 1, log = FALSE) UseMethod("dnorm", mean)
 dnorm.default <- stats::dnorm
 dnorm.advector <- function(x, mean = 0, sd = 1, log = FALSE) {

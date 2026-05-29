@@ -182,13 +182,13 @@ NULL
 ##' implementation is selected. In all other cases a default
 ##' implementation is used} (typically that of the \bold{stats}
 ##' package).
-##' Argument recycling follows the R standard (although wihout any warnings).
+##' Argument recycling follows the R standard (although without any warnings).
 ##'
 ##' Specific documentation of the functions and arguments should be looked up elsewhere:
 ##' - All S4 methods behave as the corresponding functions in the
 ##'   \bold{stats} package. However, some arguments may not be
 ##'   implemented in the AD case (e.g. \code{lower-tail}).
-##' - Other funtions behave as the corresponding TMB versions for
+##' - Other functions behave as the corresponding TMB versions for
 ##'   which documentation should be looked up online.
 ##'
 ##' @param x observation vector
@@ -347,8 +347,8 @@ NULL
 
 ## FIXME: Tidy the class union names
 ## - Given a class 'A', what's a good name for a union that can be converted to 'A' ?
-## * For example, we currently use 'ad' to denote an argument type that is convertable to 'advector'.
-## * And we use 'anysparse' to denote an argument type that is convertable to 'adsparse'.
+## * For example, we currently use 'ad' to denote an argument type that is convertible to 'advector'.
+## * And we use 'anysparse' to denote an argument type that is convertible to 'adsparse'.
 ## * We add a dot '.' to the class union to signify that it might be missing.
 ## Obviously, a bit of a mess.
 setClass("advector") ## Virtual class

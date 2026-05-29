@@ -51,7 +51,7 @@ AD evaluation mode re-directs to a specialized RTMB implementation.
 The latter imitates the R (QUADPACK) implementation by using:
 \itemize{
 \item Adaptive Gauss-Kronrod (K21/G10) quadrature with fast retaping.
-\item Wynn convergence acceleration to handle boundary singularites.
+\item Wynn convergence acceleration to handle boundary singularities.
 }
 
 Accuracy requirements are specified via relative (\code{rel.tol}) and absolute (\code{abs.tol}) tolerances.

@@ -43,7 +43,7 @@ void RTMB_exception_cleanup() {
 // Throw exception on illegal parallelization
 void RTMB_check_valid_parallelization() {
     if (config.nthreads > 1 && config.autopar == 0)
-      Rcpp::stop("Calling R from TMB with parallization requires 'autopar=TRUE'");
+      Rcpp::stop("Calling R from TMB with parallelization requires 'autopar=TRUE'");
 }
 
 template <class Type>

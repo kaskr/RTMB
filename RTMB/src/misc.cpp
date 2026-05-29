@@ -31,7 +31,7 @@ namespace TMBad {
   Memory management:
 
   - 'Rcpp::Function' automatically PROTECTs/UNPROTECTs. This is in
-    general useful for temporary liftime objects, but we have to be
+    general useful for temporary lifetime objects, but we have to be
     careful when placing a 'Rcpp::Function' as a member of an object
     with 'unlimited lifetime' (e.g. an AD operator). If the object is
     copied (from R), it'll invoke PROTECTs that are not followed by

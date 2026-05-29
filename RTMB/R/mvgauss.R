@@ -287,7 +287,7 @@ unit <- function(x) identical(x, 1)
 
 ##' @describeIn MVgauss Helper to generate an unstructured correlation matrix to use with `dmvnorm`
 ##' @section Unstructured correlation:
-##' Replacement of `UNSTRUCTURED_CORR` functionality of TMB. Constuct object using `us <- unstructured(k)`.
+##' Replacement of `UNSTRUCTURED_CORR` functionality of TMB. Construct object using `us <- unstructured(k)`.
 ##' Now `us` has two methods: `x <- us$parms()` gives the parameter vector used as input to the objective function, and `us$corr(x)` turns the parameter vector into an unstructured correlation matrix.
 ##' @param k Dimension
 unstructured <- function(k) {

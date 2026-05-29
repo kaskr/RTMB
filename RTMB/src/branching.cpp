@@ -78,7 +78,7 @@ struct BranchOp : global::DynamicOperator< -1, -1> {
   void forward(ForwardArgs<T> &args) { ASSERT(false); }
   void reverse(ReverseArgs<Writer> &args) { ASSERT(false); }
 
-  // Any of the two 'dtab' can be used to uniqely identify this operator.
+  // Any of the two 'dtab' can be used to uniquely identify this operator.
   // However, unlike AtomOp, we must assume that identifier is order
   // dependent (because input/output dimension doesn't necessarily
   // change for higher order JacFun() unlike WgtJacFun() ).

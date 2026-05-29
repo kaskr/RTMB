@@ -1,4 +1,4 @@
-# Multivatiate SV model from Table 5 of Skaug and Yu "A flexible and automated likelihood based 
+# Multivariate SV model from Table 5 of Skaug and Yu "A flexible and automated likelihood based 
 # framework for inference in stochastic volatility models." Computational Statistics & Data Analysis 76 (2014): 642-654.
 
 library(RTMB)
@@ -35,7 +35,7 @@ f <- function(parms) {
   for(j in 1:p) 
     nll <- nll - sum(dnorm(h[-1,j],phi[j]*h[-n,j],sigma[j],log=TRUE))  # AR(1) process
 
-  # Parameterizes correlation matrix of X in terms of Cholesky factor
+  # Parametrizes correlation matrix of X in terms of Cholesky factor
   L <- diag(p)
   L[lower.tri(L)] <- parms$off_diag_x   
   row_norms <- apply(L, 1, function(row) sqrt(sum(row^2)))

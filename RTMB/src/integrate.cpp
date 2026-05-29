@@ -96,7 +96,7 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
           return;
         }
       }
-      // Continure subdividing?
+      // Continue subdividing?
       if (el + er > tol) {
         // Subdivide largest error first
         if (el > er) {
@@ -144,7 +144,7 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
         fail = fail || !std::isfinite(asDouble(y[1]));
         fail = fail || !std::isfinite(asDouble(eps.back()));
         fail = fail || asDouble(y[1]) > std::abs(asDouble(y[0])) * sqrt_machine_tolerance;
-        if (fail) { // Fail => Reject extraplation
+        if (fail) { // Fail => Reject extrapolation
             // Skip this term and fall back on normal sub division for remaining terms
             subdiv(x, y, tol, left_bound, right_bound);
             // First element of eps table holds the plain sum of terms known without error
