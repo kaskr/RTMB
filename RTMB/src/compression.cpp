@@ -21,6 +21,10 @@ namespace TMBad {
      count[op.dependencies()] -= 1;
      elim = which(count[op.dependencies()]==0);
      free_index(vr[elim]); // Free these registers
+
+     FIXME: Many ignored details, such as
+     - contiguous variable requirements (pointer ops, updating ops, output_size()>1)
+     - ConstOp protection
 */
 std::vector<Index> remap_values(global glob) {
   std::vector<Index> vr(glob.values.size()); // ans
@@ -37,7 +41,7 @@ std::vector<Index> remap_values(global glob) {
     std::vector<bool> b;
     std::vector<Index> avail; // Previously used - now free
     stack_t ( size_t max_capacity ) : n(0) { b.resize(max_capacity, false); }
-    Index get_new_index() {
+    Index get_new_index(bool use_avail = true) {
       if (false) {
         std::cout << "get_new_index() ";
         std::cout << "b=" << b << " ";
@@ -47,7 +51,7 @@ std::vector<Index> remap_values(global glob) {
       }
       n++;
       Index ans;
-      if (avail.size() > 0) {
+      if (use_avail && avail.size() > 0) {
         ans = avail.back();
         avail.pop_back();
       } else {
@@ -77,6 +81,9 @@ std::vector<Index> remap_values(global glob) {
   // Forward pass 1
   Args<> args(glob.inputs);
   Dependencies dep;
+  // Example: how to mark infinite lifetime for InvOp
+  // dep.Base::operator=(glob.inv_index);
+  // dep.apply(inc_counter);
   for (size_t i=0; i<glob.opstack.size(); i++) {
     // Add up inputs to this node
     dep.resize(0);
@@ -89,13 +96,21 @@ std::vector<Index> remap_values(global glob) {
   // Forward pass 2
   args = Args<>(glob.inputs);
   for (size_t i=0; i<glob.opstack.size(); i++) {
-    // Get inputs to this node
-    dep.resize(0);
-    glob.opstack[i]->dependencies(args, dep);
-    // remove inputs
-    dep.apply(dec_counter);
+    if (glob.opstack[i]->output_size() != 1)
+      Rcpp::stop("FIXME: This loop assumes 'output_size()==1' for all opstack[i]");
     // Get new index
-    vr[i] = stack.get_new_index();
+    // If DepOp get a brand new index. Otherwise reuse available indices.
+    bool isDepOp = glob.opstack[i] -> info().test(TMBad::op_info::dependent_variable);
+    if (isDepOp) {
+      vr[i] = stack.get_new_index(false); // Get brand new index, and don't free inputs
+    } else {
+      // Get inputs to this node
+      dep.resize(0);
+      glob.opstack[i]->dependencies(args, dep);
+      // remove inputs
+      dep.apply(dec_counter);
+      vr[i] = stack.get_new_index(true); // Re-use available
+    }
     // Increment pointers
     glob.opstack[i]->increment(args.ptr);
   }
@@ -118,7 +133,7 @@ void destructive_remap_apply(Rcpp::XPtr<TMBad::ADFun<> > adf) {
   adf->glob.inv_index = TMBad::subset(rv, adf->glob.inv_index);
   adf->glob.dep_index = TMBad::subset(rv, adf->glob.dep_index);
   TMBad::Index m = *std::max_element(rv.begin(), rv.end());
-  std::vector<TMBad::Scalar> short_values(m);
+  std::vector<TMBad::Scalar> short_values(m+1);
   for (size_t i = rv.size(); i > 0; ) {
     i--;
     short_values[rv[i]] = adf->glob.values[i];
