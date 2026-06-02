@@ -176,6 +176,10 @@ gpu_atomic <- function(F, verbose=TRUE, remap=FALSE) {
   if (!all(diff(dep)==1))
     stop("All tape outputs must be consecutive on tape")
   src <- codegen(F, remap=remap)
+  if (remap) { ## Update inv dep
+    inv <- getinvIndex(.pointer(environment(F)$mod))
+    dep <- getdepIndex(.pointer(environment(F)$mod))
+  }
   DLL <- names(src)
   dll <- sub(".cu$", ".so", src)
   cmd <- paste("nvcc",
