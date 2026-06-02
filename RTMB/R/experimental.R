@@ -132,6 +132,9 @@ extern "C"
 void set_deriv(double *x, int *offset, int *n) {
   cudaMemcpy(dev.deriv + offset[0], x, n[0] * sizeof(double), cudaMemcpyHostToDevice);
 }
+'
+cuda$kernel <-
+'
 extern "C"
 void forward_kernel(int* n) {
   forward_global<<<n[0],n[1]>>>(dev.value);
@@ -142,13 +145,55 @@ void reverse_kernel(int* n) {
 }
 '
 
-codegen <- function(F, file=tempfile(), gpu=TRUE, remap=FALSE, ...) {
+cuda$control_emulate <-
+'
+#include <cstring>
+#define __device__
+#define __global__
+struct { int x; } gridDim = {1};
+struct { int x; } blockDim = {1};
+struct { int x; } threadIdx = {0};
+struct { int x; } blockIdx = {0};
+#define cudaFree free
+#define cudaError_t int
+cudaError_t cudaMalloc(double** x, size_t n) { *x = (double*) malloc(n); return 0; }
+#define cudaSuccess 0
+#define cudaMemset std::memset
+#define cudaMemcpyDeviceToHost 1
+#define cudaMemcpyHostToDevice 2
+void cudaMemcpy( void* dest, void* src, std::size_t count, int Dir ) {
+    std::memcpy( dest, src, count );
+}
+'
+cuda$kernel_emulate <-
+'
+extern "C"
+void forward_kernel(int* n) {
+  blockDim.x = n[0];
+  gridDim.x = n[1];
+  for (blockIdx.x = 0; blockIdx.x < gridDim.x; blockIdx.x++)
+    for (threadIdx.x = 0; threadIdx.x < blockDim.x; threadIdx.x++)
+      forward_global(dev.value);
+}
+extern "C"
+void reverse_kernel(int* n) {
+  blockDim.x = n[0];
+  gridDim.x = n[1];
+  for (blockIdx.x = 0; blockIdx.x < gridDim.x; blockIdx.x++)
+    for (threadIdx.x = 0; threadIdx.x < blockDim.x; threadIdx.x++)
+      reverse_global(dev.value, dev.deriv);
+}
+'
+
+codegen <- function(F, file=tempfile(), gpu=TRUE, remap=FALSE, emulate=FALSE, ...) {
   names(file) <- basename(file)
   if (gpu) {
-    file[] <- paste0(file, ".cu")
+    file[] <- paste0(file, ".cu"[!emulate], ".cpp"[emulate])
     sink(file)
     on.exit(sink(NULL))
     cat(cuda$include)
+    if (emulate)
+      cat(cuda$control_emulate)
     if (!remap) {
       cat(cuda$access)
     } else {
@@ -158,7 +203,13 @@ codegen <- function(F, file=tempfile(), gpu=TRUE, remap=FALSE, ...) {
     }
     src_transform(.pointer(environment(F)$mod),
                   config=list(gpu=gpu, ...))
-    cat(cuda$control)
+    if (!emulate) {
+      cat(cuda$control)
+      cat(cuda$kernel)
+    } else {
+      cat(cuda$control)
+      cat(cuda$kernel_emulate)
+    }
     if (remap) {
       destructive_remap_apply(.pointer(environment(F)$mod))
     }
@@ -167,7 +218,7 @@ codegen <- function(F, file=tempfile(), gpu=TRUE, remap=FALSE, ...) {
 }
 
 ## Tape -> GPU
-gpu_atomic <- function(F, verbose=TRUE, remap=FALSE) {
+gpu_atomic <- function(F, verbose=TRUE, remap=FALSE, emulate=FALSE) {
   ## FIXME: Copy F when isTRUE(remap)
   inv <- getinvIndex(.pointer(environment(F)$mod))
   dep <- getdepIndex(.pointer(environment(F)$mod))
@@ -175,13 +226,13 @@ gpu_atomic <- function(F, verbose=TRUE, remap=FALSE) {
     stop("All tape inputs must be consecutive on tape")
   if (!all(diff(dep)==1))
     stop("All tape outputs must be consecutive on tape")
-  src <- codegen(F, remap=remap)
+  src <- codegen(F, remap=remap, emulate=emulate)
   if (remap) { ## Update inv dep
     inv <- getinvIndex(.pointer(environment(F)$mod))
     dep <- getdepIndex(.pointer(environment(F)$mod))
   }
   DLL <- names(src)
-  dll <- sub(".cu$", ".so", src)
+  dll <- sub(if (emulate) ".cpp$" else ".cu$", ".so", src)
   cmd <- paste("nvcc",
                "--ptxas-options=-v"[verbose],
                "--compiler-options '-fPIC'",
@@ -189,6 +240,7 @@ gpu_atomic <- function(F, verbose=TRUE, remap=FALSE) {
                dll,
                " --shared",
                src)
+  if (emulate) cmd <- paste("R CMD SHLIB", src)
   system(cmd)
   dyn.load(dll)
   nrep_prev <- 0L
