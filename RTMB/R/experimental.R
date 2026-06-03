@@ -210,9 +210,6 @@ codegen <- function(F, file=tempfile(), gpu=TRUE, remap=FALSE, emulate=FALSE, ..
       cat(cuda$control)
       cat(cuda$kernel_emulate)
     }
-    if (remap) {
-      destructive_remap_apply(.pointer(environment(F)$mod))
-    }
   }
   file
 }
@@ -227,9 +224,12 @@ gpu_atomic <- function(F, verbose=TRUE, remap=FALSE, emulate=FALSE) {
   if (!all(diff(dep)==1))
     stop("All tape outputs must be consecutive on tape")
   src <- codegen(F, remap=remap, emulate=emulate)
+  Value <- rep(F$data.frame()$Value) ## Get Value vector from tape
   if (remap) { ## Update inv dep
-    inv <- getinvIndex(.pointer(environment(F)$mod))
-    dep <- getdepIndex(.pointer(environment(F)$mod))
+    rv <- remap_values(.pointer(environment(F)$mod)) ## FIXME: Called twice
+    inv <- rv[inv + 1L]
+    dep <- rv[dep + 1L]
+    Value <- Value[!duplicated(rv)]
   }
   DLL <- names(src)
   dll <- sub(if (emulate) ".cpp$" else ".cu$", ".so", src)
@@ -250,7 +250,7 @@ gpu_atomic <- function(F, verbose=TRUE, remap=FALSE, emulate=FALSE) {
     if (!isInt(nrep)) stop("Invalid length")
     nrep <- as.integer(nrep)
     if (nrep != nrep_prev) {
-      value <- rep(F$data.frame()$Value, each=nrep)
+      value <- rep(Value, each=nrep)
       (.C)("dev_alloc", length(value), PACKAGE=DLL)
       (.C)("set_value", value, 0L, length(value), PACKAGE=DLL)
       nrep_prev <<- nrep
