@@ -143,6 +143,10 @@ extern "C"
 void reverse_kernel(int* n) {
   reverse_global<<<n[0],n[1]>>>(dev.value, dev.deriv);
 }
+extern "C"
+void setDevice(int* n) {
+  cudaSetDevice(n[0]);
+}
 '
 
 cuda$control_emulate <-
