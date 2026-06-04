@@ -161,10 +161,6 @@ remap_values <- function(adf) {
     .Call(`_RTMB_remap_values`, adf)
 }
 
-destructive_remap_apply <- function(adf) {
-    invisible(.Call(`_RTMB_destructive_remap_apply`, adf))
-}
-
 src_transform <- function(adf, config) {
     invisible(.Call(`_RTMB_src_transform`, adf, config))
 }
