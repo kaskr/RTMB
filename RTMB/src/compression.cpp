@@ -28,7 +28,28 @@ namespace TMBad {
 */
 std::vector<Index> remap_values(global glob) {
   std::vector<Index> vr(glob.values.size()); // ans
-  std::vector<Index> count(glob.values.size());
+  std::vector<Index> count(glob.values.size(), 0);
+  struct stack_t {
+    // Fictive container of n consecutive elements {0,...,n-1}.
+    size_t n;
+    // Previously used elements that are now free.
+    std::vector<Index> avail;
+    stack_t () : n(0) { }
+    // Get new unoccupied index
+    Index get_new_index(bool use_avail = true) {
+      Index ans;
+      if (use_avail && avail.size() > 0) {
+        ans = avail.back();
+        avail.pop_back();
+      } else {
+        ans = n++;
+      }
+      return ans;
+    }
+    void free_index(Index i) {
+      avail.push_back(i);
+    }
+  } stack;
   struct increment_counter {
     std::vector<Index>& count;
     increment_counter(std::vector<Index>& count) : count(count) {}
@@ -36,42 +57,13 @@ std::vector<Index> remap_values(global glob) {
       count[var]++;
     }
   } inc_counter(count);
-  struct stack_t {
-    size_t n;
-    std::vector<bool> b;
-    std::vector<Index> avail; // Previously used - now free
-    stack_t ( size_t max_capacity ) : n(0) { b.resize(max_capacity, false); }
-    Index get_new_index(bool use_avail = true) {
-      if (false) {
-        std::cout << "get_new_index() ";
-        std::cout << "b=" << b << " ";
-        std::cout << "avail=" << avail << " ";
-        std::cout << "n=" << n;
-        std::cout << "\n";
-      }
-      n++;
-      Index ans;
-      if (use_avail && avail.size() > 0) {
-        ans = avail.back();
-        avail.pop_back();
-      } else {
-        // avail is empty
-        ans = n-1;
-      }
-      b[ans] = true;
-      return ans;
-    }
-    void free_index(Index i) {
-      n--;
-      b[i] = false;
-      avail.push_back(i);
-    }
-  } stack(glob.values.size());
   struct decrement_counter {
     std::vector<Index>& count;
     stack_t &stack;
     std::vector<Index>& vr;
-    decrement_counter(std::vector<Index>& count, stack_t &stack, std::vector<Index>& vr) : count(count), stack(stack), vr(vr) {}
+    decrement_counter(std::vector<Index>& count,
+                      stack_t &stack,
+                      std::vector<Index>& vr) : count(count), stack(stack), vr(vr) {}
     void operator()(Index var) {
       count[var]--;
       if (count[var] == 0)
