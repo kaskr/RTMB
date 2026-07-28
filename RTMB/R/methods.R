@@ -278,7 +278,7 @@ setMethod("Math", c(x = "adsparse"),
 setMethod("dnorm", signature("ad", "ad.", "ad.", "logical."),
           function(x, mean, sd, log) {
               r <- (x - mean) / sd
-              ans <- - .5 * r * r - log(sqrt(2*pi)) - log(sd)
+              ans <- -log(sqrt(2 * pi)) - log(sd) - 0.5 * r * r
               if (log) ans else exp(ans)
           })
 ## This matches 'too much', so we fix by adding a specialization:
