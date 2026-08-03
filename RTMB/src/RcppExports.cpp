@@ -996,6 +996,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// LSE0
+ADrep LSE0(ADrep x);
+RcppExport SEXP _RTMB_LSE0(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(LSE0(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// LSE
+ADrep LSE(ADrep x);
+RcppExport SEXP _RTMB_LSE(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ADrep >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(LSE(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Arith2
 ADrep Arith2(ADrep x, ADrep y, std::string op);
 RcppExport SEXP _RTMB_Arith2(SEXP xSEXP, SEXP ySEXP, SEXP opSEXP) {
@@ -1426,6 +1448,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RTMB_splineptr", (DL_FUNC) &_RTMB_splineptr, 3},
     {"_RTMB_splineptr_eval", (DL_FUNC) &_RTMB_splineptr_eval, 2},
     {"_RTMB_sytrisol", (DL_FUNC) &_RTMB_sytrisol, 2},
+    {"_RTMB_LSE0", (DL_FUNC) &_RTMB_LSE0, 1},
+    {"_RTMB_LSE", (DL_FUNC) &_RTMB_LSE, 1},
     {"_RTMB_Arith2", (DL_FUNC) &_RTMB_Arith2, 3},
     {"_RTMB_Math1", (DL_FUNC) &_RTMB_Math1, 2},
     {"_RTMB_math_atan2", (DL_FUNC) &_RTMB_math_atan2, 2},
