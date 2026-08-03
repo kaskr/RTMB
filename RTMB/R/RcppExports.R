@@ -321,6 +321,14 @@ sytrisol <- function(L, W) {
     .Call(`_RTMB_sytrisol`, L, W)
 }
 
+LSE0 <- function(x) {
+    .Call(`_RTMB_LSE0`, x)
+}
+
+LSE <- function(x) {
+    .Call(`_RTMB_LSE`, x)
+}
+
 Arith2 <- function(x, y, op) {
     .Call(`_RTMB_Arith2`, x, y, op)
 }
