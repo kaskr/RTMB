@@ -113,6 +113,7 @@ sdreport_xtra <- function(obj,
   ## Put pieces together
   diag.term1 <- colSums( JT * (Vtheta %*% JT) )
   diag.term2 <- b-a_mean^2
+  diag.term2 <- pmax(diag.term2, 0)
   ans$value <- if (type == "mean") a_mean else a_mode
   names(ans$value) <- nam
   ans$sd <- sqrt(diag.term1 + diag.term2)
