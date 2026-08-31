@@ -801,3 +801,18 @@ setMethod("atan2", signature("advector", "advector"), math_atan2)
 setMethod("atan2", signature("advector", "num"), function(y, x)math_atan2(y, advector(x)))
 ##' @describeIn Distributions AD implementation of \link[base]{atan2}
 setMethod("atan2", signature("num", "advector"), function(y, x)math_atan2(advector(y), x))
+
+################################################################################
+
+## TODO: export
+logspace_sum <- function(x, sparse=FALSE) {
+  if (inherits(x, "advector")) {
+    if (sparse)
+      LSE0(x)
+    else
+      LSE(x)
+  } else {
+    M <- max(x)
+    log(sum(exp(x - M))) + M
+  }
+}
