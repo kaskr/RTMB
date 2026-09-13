@@ -349,6 +349,7 @@ print.advector <- function (x, ...)  {
 
 ## Low level version: Everything available
 .MakeTape <- function(f, x) {
+    x <- force(x) ## Make sure x is evaluated before starting new AD context!
     F <- new(adfun)
     ## Start and attach overloads
     F$start()
