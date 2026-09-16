@@ -401,6 +401,7 @@ MakeTape <- function(f, x) {
 .expose <- function(mod) {
     Dim <- attr(mod, "Dim")
     Pattern <- attr(mod, "Pattern")
+    nested_tape <- as.logical(ad_context())
     output <- function(x) {
         if (!is.null(Dim))
             dim(x) <- Dim
@@ -418,11 +419,15 @@ MakeTape <- function(f, x) {
         function(x) {
             if (is.list(x))
                 x <- do.call("c", x)
-            if (ad_context()) {
-                ## Note: Tape might contain references to an outer
-                ## context (and we have no way to know), so we must
-                ## choose AD evaluation regardless of class(x).
-                x <- advector(x)
+            ## Note: A nested tape might contain references to an
+            ## outer context (and we have no way to know), so we must
+            ## choose AD evaluation regardless of class(x) in this
+            ## case.
+            if (nested_tape)
+              x <- advector(x)
+            if (inherits(x, "advector")) {
+                if (!ad_context())
+                    stop("'advector' evaluation requires an active AD context")
                 output(evalAD(x))
             } else {
                 output(eval(x))
