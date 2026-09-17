@@ -1,4 +1,28 @@
 ------------------------------------------------------------------------
+RTMB 2.0 (2026-09-17)
+------------------------------------------------------------------------
+
+o Print and store TMB version on install.
+
+o Interface to combinom special functions.
+
+o Fix ADjoint() when user function calls oher tape (#91).
+
+o Fix subtle bug caused by lazy evaluation inside MakeTape() (#90).
+
+o Change dnorm order as in TMB (github.com/glmmTMB/glmmRTMB/issues/4).
+
+o Add experimental obj$vectorize().
+
+o Add dflat().
+
+o dautoreg() fixes:
+  - Speedup construction of stationary variance.
+  - Fix simulation code (only worked for length(phi)==1).
+
+o Add atan2() (#82).
+
+------------------------------------------------------------------------
 RTMB 1.9 (2026-03-20)
 ------------------------------------------------------------------------
 
