@@ -423,3 +423,37 @@ ADrep SparseSolve(Rcpp::RObject s, ADrep x) {
   matrix<ad> ans = (*solver).solve(X);
   return MatrixOutput(ans);
 }
+
+// [[Rcpp::export]]
+ADrep distr_combinom_calc_logZ(ADrep logitp, ADrep nu, ADrep N)
+{
+int n1=logitp.size();
+int n2=nu.size();
+int n3=N.size();
+int nmax = std::max({n1, n2, n3});
+int nmin = std::min({n1, n2, n3});
+int n = (nmin == 0 ? 0 : nmax);
+ADrep ans(n);
+const ad* X1 = adptr(logitp); const ad* X2 = adptr(nu); const ad* X3 = adptr(N);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = combinom_calc_logZ(X1[i % n1], X2[i % n2], X3[i % n3]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, logitp);
+return ans;
+}
+
+// [[Rcpp::export]]
+ADrep distr_combinom_calc_logitp(ADrep mean, ADrep nu, ADrep N)
+{
+int n1=mean.size();
+int n2=nu.size();
+int n3=N.size();
+int nmax = std::max({n1, n2, n3});
+int nmin = std::min({n1, n2, n3});
+int n = (nmin == 0 ? 0 : nmax);
+ADrep ans(n);
+const ad* X1 = adptr(mean); const ad* X2 = adptr(nu); const ad* X3 = adptr(N);
+ad* Y = adptr(ans);
+for (int i=0; i<n; i++) Y[i] = combinom_calc_logitp(X1[i % n1], X2[i % n2], X3[i % n3]);
+if (n == n1) SHALLOW_DUPLICATE_ATTRIB(ans, mean);
+return ans;
+}

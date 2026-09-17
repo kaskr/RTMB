@@ -385,6 +385,14 @@ SparseSolve <- function(s, x) {
     .Call(`_RTMB_SparseSolve`, s, x)
 }
 
+distr_combinom_calc_logZ <- function(logitp, nu, N) {
+    .Call(`_RTMB_distr_combinom_calc_logZ`, logitp, nu, N)
+}
+
+distr_combinom_calc_logitp <- function(mean, nu, N) {
+    .Call(`_RTMB_distr_combinom_calc_logitp`, mean, nu, N)
+}
+
 fft_complex <- function(x, dim, inverse = FALSE) {
     .Call(`_RTMB_fft_complex`, x, dim, inverse)
 }
