@@ -1,2 +1,7 @@
 PKG_CPPFLAGS=-DTMB_EIGEN_DISABLE_WARNINGS
 PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+
+all: print_tmb_version $(SHLIB)
+
+print_tmb_version:
+	@Rscript -e "cat('using TMB Version:', as.character(packageVersion('TMB')), '\n')"
