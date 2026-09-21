@@ -86,7 +86,7 @@
 
 \S4method{solve}{ad,ad.}(a, b)
 
-\S4method{solve}{num,num.}(a, b)
+\S4method{solve}{num,num.}(a, b, ...)
 
 \S4method{solve}{anysparse,ad.}(a, b)
 
@@ -167,9 +167,9 @@ Matrices (\strong{base} package) and sparse matrices (\strong{Matrix} package) c
 
 \item \code{t(adsparse)}: AD sparse matrix transpose. Re-directs to \link[Matrix]{t,CsparseMatrix-method}.
 
-\item \code{[}: AD sparse matrix subsetting. Re-directs to \link[Matrix]{[-methods}.
+\item \code{adsparse[]}: AD sparse matrix subsetting. Re-directs to \link[Matrix]{[-methods}.
 
-\item \code{`[`(adsparse) <- value}: AD sparse matrix subset assignment. Re-directs to \link[Matrix]{[<--methods}.
+\item \code{adsparse[] <- value}: AD sparse matrix subset assignment. Re-directs to \link[Matrix]{[<--methods}.
 
 \item \code{as.matrix(adsparse)}: Convert AD sparse to dense matrix.
 

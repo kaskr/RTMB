@@ -53,7 +53,7 @@ function. Thereafter, residual calculation is as simple as
 \itemize{
 \item \code{oneStepPredict()}: Calculate the residuals. See documentation of \code{TMB::}\link[TMB]{oneStepPredict}.
 
-\item \code{[}: Subset observations marked for OSA calculation.
+\item \code{osa[]}: Subset observations marked for OSA calculation.
 This function makes sure that when you subset an observation of class \code{"osa"} such as
 \code{obs <- new("osa", x=advector(matrix(1:10,2)), keep = cbind(rep(TRUE,10),FALSE,FALSE))}
 the 'keep' attribute will be adjusted accordingly

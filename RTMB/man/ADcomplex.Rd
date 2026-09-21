@@ -154,9 +154,9 @@ A limited set of complex number operations can be used when constructing AD tape
 
 \item \code{dim(adcomplex) <- value}: As \link[base]{dim}
 
-\item \code{[}: As \link[base]{[}
+\item \code{adcomplex[]}: As \link[base]{[}
 
-\item \code{`[`(adcomplex) <- value}: As \link[base]{[<-}
+\item \code{adcomplex[] <- value}: As \link[base]{[<-}
 
 \item \code{t(adcomplex)}: As \link[base]{t}
 

@@ -190,11 +190,11 @@ re-used for AD vectors.
 
 \item \code{c(advector)}: Equivalent of \link[base]{c}. However note the limitation for mixed types: If \code{x} is an AD type, \code{c(x,1)} works while \code{c(1,x)} does not!
 
-\item \code{[}: Equivalent of \link[base]{[}
+\item \code{advector[]}: Equivalent of \link[base]{[}
 
-\item \code{`[`(advector) <- value}: Equivalent of \link[base]{[<-}
+\item \code{advector[] <- value}: Equivalent of \link[base]{[<-}
 
-\item \code{[[}: Equivalent of \link[base]{[[}
+\item \code{advector[[]]}: Equivalent of \link[base]{[[}
 
 \item \code{length(advector) <- value}: Equivalent of \link[base]{length<-}. Used by \code{base::diff}.
 
@@ -238,7 +238,7 @@ re-used for AD vectors.
 
 \item \code{order(na.last = missing, decreasing = missing, method = missing)}: Taped ordering of an AD vector
 
-\item \code{x[i}: Taped subsetting of an AD vector
+\item \code{x = advector[i = advector, j = ANY, drop = ANY]}: Taped subsetting of an AD vector
 
 \item \code{findInterval(x = advector, vec = advector)}: Taped interval finding of an AD vector
 MakeTape(function(x) findInterval(x, AD(0:10)), 1:3)

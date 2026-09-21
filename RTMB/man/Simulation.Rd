@@ -129,9 +129,9 @@ The latter will have no effect in simulation mode (the simulation will be \code{
 
 \item \code{is.na(simref)}: Equivalent of \link[base]{is.na}
 
-\item \code{[}: Equivalent of \link[base]{[}
+\item \code{simref[]}: Equivalent of \link[base]{[}
 
-\item \code{`[`(simref) <- value}: Equivalent of \link[base]{[<-}
+\item \code{simref[] <- value}: Equivalent of \link[base]{[<-}
 
 \item \code{Ops(simref)}: Equivalent of \link[base]{Ops}
 
