@@ -200,8 +200,8 @@ setMethod("solve",
           })
 ##' @describeIn ADmatrix AD matrix inversion and solve
 setMethod("solve", signature("num", "num."),
-          function(a, b) {
-              base::solve(a, b)
+          function(a, b, ...) {
+              base::solve(a, b, ...)
           })
 ##' @describeIn ADmatrix Sparse AD matrix solve
 ##' @param a matrix
