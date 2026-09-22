@@ -98,7 +98,7 @@ parallel-version:
 ## vignettes
 %.html: %.rmd
 	cd RTMB/vignettes; echo "rmarkdown::render(basename(\"$<\"))" | R --slave
-vignettes-build: RTMB/vignettes/RTMB-introduction.html RTMB/vignettes/RTMB-advanced.html
+vignettes-build: RTMB/vignettes/RTMB-introduction.html RTMB/vignettes/RTMB-advanced.html RTMB/vignettes/RTMB-tips.html
 
 rcpp-rtmbXtra:
 	echo 'Rcpp::compileAttributes("rtmbXtra", verbose=TRUE)' | R --slave

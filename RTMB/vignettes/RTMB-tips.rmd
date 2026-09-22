@@ -101,6 +101,6 @@ if (exists("mm") && requireNamespace("tinyplot")) {
 }
 ```
 
-* data handling (see [here](https://groups.google.com/g/tmb-users/c/sq3y5aTwvjo), [here](https://groups.google.com/g/tmb-users/c/YzSjsHyFYJ8)) (and very similar arguments from 2004 about [MLE fitting machinery taking a `data` argument](https://hypatia.math.ethz.ch/pipermail/r-devel/2004-June/029837.html))
-* have to handle prediction, tests, diagnostics, etc. etc. yourself (although the `broom.mixed` package does have a [rudimentary `tidy` method for TMB objects](https://github.com/bbolker/broom.mixed/blob/main/R/TMB_tidiers.R) (e.g. `class(TMBobj) <- c("TMB", class(TMBobj)); broom.mixed::tidy(TMBobj)`)
+* data handling (see [here](RTMB-introduction.html#using-an-explicit-data-argument))
+* have to handle prediction (see [here](RTMB-introduction.html#model-predictions)), tests, diagnostics, etc. etc. yourself (although the `broom.mixed` package does have a [rudimentary `tidy` method for TMB objects](https://github.com/bbolker/broom.mixed/blob/main/R/TMB_tidiers.R) (e.g. `class(TMBobj) <- c("TMB", class(TMBobj)); broom.mixed::tidy(TMBobj)`)
 * if you do something clever where you define your objective function in a different environment from where you call `MakeADFun`, you can use `assign(..., environment(objective_function))` to make sure that the objective function can see any objects it needs to know about ...
