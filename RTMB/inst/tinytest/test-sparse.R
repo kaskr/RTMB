@@ -51,3 +51,14 @@ F <- RTMB::MakeTape(f,x)
 expect_true(abs(F(x)-f(x)) < tol)
 expect_true(abs(F(x+1)-f(x+1)) < tol)
 expect_true(abs(F(x-1)-f(x-1)) < tol)
+
+################################################################################
+## Test 4 (Matrix methods)
+################################################################################
+M <- rsparsematrix(n, n, nnz = 10*n)
+F <- RTMB::MakeTape(function(x) tril(x * M) , 1)
+expect_true( all( (F(1) - tril(M))@x == 0 ) )
+F <- RTMB::MakeTape(function(x) triu(x * M) , 1)
+expect_true( all( (F(1) - triu(M))@x == 0 ) )
+F <- RTMB::MakeTape(function(x) band(x * M, -3, 4) , 1)
+expect_true( all( (F(1) - band(M, -3, 4))@x == 0 ) )
