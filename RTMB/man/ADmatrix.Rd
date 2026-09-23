@@ -58,11 +58,11 @@
 
 \S4method{diag}{adsparse,missing,missing}(x)
 
-\S4method{band}{adsparse}(x, k1, k2)
+\S4method{band}{adsparse}(x, k1, k2, ...)
 
-\S4method{tril}{adsparse}(x, k)
+\S4method{tril}{adsparse}(x, k = 0L, ...)
 
-\S4method{triu}{adsparse}(x, k)
+\S4method{triu}{adsparse}(x, k = 0L, ...)
 
 \S4method{expm}{advector}(x)
 
