@@ -104,3 +104,63 @@ if (exists("mm") && requireNamespace("tinyplot")) {
 * data handling (see [here](RTMB-introduction.html#using-an-explicit-data-argument))
 * have to handle prediction (see [here](RTMB-introduction.html#model-predictions)), tests, diagnostics, etc. etc. yourself (although the `broom.mixed` package does have a [rudimentary `tidy` method for TMB objects](https://github.com/bbolker/broom.mixed/blob/main/R/TMB_tidiers.R) (e.g. `class(TMBobj) <- c("TMB", class(TMBobj)); broom.mixed::tidy(TMBobj)`)
 * if you do something clever where you define your objective function in a different environment from where you call `MakeADFun`, you can use `assign(..., environment(objective_function))` to make sure that the objective function can see any objects it needs to know about ...
+
+## Which standard operations are available in RTMB?
+
+```{r avail, echo=FALSE, results='asis'}
+allMethods <- function() {
+  x <- format(methods(class="advector"))
+  x <- setdiff(x, c("Math","Ops","Summary","Complex"))
+  x <- structure(rep(TRUE, length(x)), names=x)
+  avail1 <- function(name) { inherits(try(MakeTape( match.fun(name) , 1 ), silent=TRUE), "Tape") }
+  avail2 <- function(name) { inherits(try(MakeTape( function(x)match.fun(name)(x[1],x[2]) , 1:2 ), silent=TRUE), "Tape") }
+  x1 <- sapply(getGroupMembers("Math"), avail1)
+  x2 <- sapply(getGroupMembers("Arith"), avail2)
+  x3 <- sapply(getGroupMembers("Summary"), avail1)
+  y <- c(x,x1,x2,x3)
+  sort(unique(names(y)[y]))
+}
+extract_help_title <- function(func_name, pkg = NULL) {
+  # Find the path to the help file
+  help_info <- help(func_name, package = if (is.null(pkg)) NULL else pkg)
+  if (length(help_info) == 0) {
+    stop("Help page not found for '", func_name, "'.")
+  }
+  # Load the raw .Rd object
+  rd_file <- utils:::.getHelpFile(as.character(help_info))
+  # Prepare the Rd object and extract tags
+  prepared_rd <- tools:::prepare_Rd(rd_file)
+  tags <- sapply(prepared_rd, attr, "Rd_tag")
+  # Extract the text matching the \title tag
+  title_block <- prepared_rd[tags == "\\title"][[1]]
+  # Clean up and combine text fragments into a single string
+  title_text <- paste(as.character(title_block), collapse = "")
+  title_text <- trimws(gsub("\\s+", " ", title_text))
+  title_text <- gsub("c\\(.*\\)","",title_text)
+  title_text <- gsub("list\\((.*)\\)","\\1",title_text)
+  return(title_text)
+}
+x <- allMethods()
+## Manually add what's missing
+x <- c(x, "Vectorize", "integrate", "uniroot")
+y <- sapply(x,function(x)extract_help_title(x, c("base","stats","methods")))
+## Could be the basis of a nice table with header: Functions  Description
+y <- sapply(split(x,y), paste, collapse=", ")
+df <- data.frame(Description=names(y), Function=y)
+## reorder
+i <- c(grep("Distribution", df$Description),
+       grep("Arithmetic", df$Description),
+       grep("Logarithm", df$Description),
+       grep("Trigonom", df$Description),
+       grep("Hyperbol", df$Description),
+       grep("Math", df$Description),
+       grep("Function", df$Description),
+       grep("Vector", df$Description),
+       grep("Matrix", df$Description),
+       grep("Decomposition", df$Description)
+       )
+i <- unique(i)
+df <- rbind(df[i,], df[-i,])
+rownames(df) <- NULL
+knitr::kable(df)
+```
