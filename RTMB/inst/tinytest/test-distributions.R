@@ -140,3 +140,26 @@ dat <- s
 obj <- MakeADFun(f, parms)
 osa <- oneStepPredict(obj, method="cdf", trace=FALSE)
 expect_true(ks.test(osa$res, "pnorm")$p.value > .05)
+
+################################################################################
+## (GH issue 95)
+################################################################################
+
+if (at_home()) {
+  F <- MakeTape(function(x) pgamma(x, shape = 2, rate = 1), 1)
+  ans <- F$jacfun()$jacobian(1)
+  expect_true(is.finite(ans) && ans==0, info="pgamma derivative") # Was NaN
+}
+
+################################################################################
+## (GH issue 93)
+################################################################################
+
+if (at_home()) {
+  q <- 0.3
+  ab <- c(2, 3) # shape1, shape2
+  F <- MakeTape(function(p) pbeta(q, p[1], p[2]), ab)
+  AD <- apply(expand.grid(1:10,1:10), 1, F$jacobian)
+  FD <- apply(expand.grid(1:10,1:10), 1, numDeriv::jacobian, func=F)
+  expect_true(max(abs(AD - FD)) < 1e-8, info = "pbeta derivatives for integer shape parameters")
+}
