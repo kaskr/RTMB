@@ -1,9 +1,10 @@
 #include "RTMB.h"
 
 // [[Rcpp::export]]
-ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
+ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > F_, ADrep x_, Rcpp::List cfg) {
   struct bisect {
-    TMBad::ADFun<> f;
+    // Taped quadrature function: Returns approx integrate(f, a, b) with error estimate
+    TMBad::ADFun<> F;
     // Configurable absolute error tolerance
     double abstol;
     // Configurable relative error tolerance
@@ -18,7 +19,7 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
     bool stop_on_error;
     // CTOR
     bisect(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::List cfg) {
-      f = *adf;
+      F = *adf;
       abstol = Rcpp::NumericVector(cfg["abs.tol"])[0];
       reltol = Rcpp::NumericVector(cfg["rel.tol"])[0];
       sqrt_machine_tolerance = 1.490116e-08; // sqrt(.Machine$double.eps)
@@ -33,7 +34,7 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
     std::vector<ad> operator()(const std::vector<ad> &x) {
       this->n = 1;
       // Initialize 1st eval
-      std::vector<ad> y = f(x);
+      std::vector<ad> y = F(x);
       ad result = y[0];
       ad abserr = asDouble(y[1]);
       // Required absolute tolerance based on first estimate
@@ -77,8 +78,8 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
       std::vector<ad> xr(x);
       xr[0] = mid;
       // Eval
-      std::vector<ad> yl = f(xl);
-      std::vector<ad> yr = f(xr);
+      std::vector<ad> yl = F(xl);
+      std::vector<ad> yr = F(xr);
       // Abs errors
       double el = asDouble(yl[1]);
       double er = asDouble(yr[1]);
@@ -136,8 +137,8 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
         std::vector<ad> xr(x);
         xr[0] = mid;
         // Eval
-        if (left_bound)  y = f(xr);
-        if (right_bound) y = f(xl);
+        if (left_bound)  y = F(xr);
+        if (right_bound) y = F(xl);
         // Must know term 'without error'
         bool fail = false;
         fail = fail || !std::isfinite(asDouble(y[0]));
@@ -190,7 +191,7 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg) {
       double d = std::abs(asDouble(eps[n-1]) - asDouble(eps[n-3]));
       return (d < tol);
     }
-  } integrate(adf, cfg);
+  } integrate(F_, cfg);
   std::vector<ad> x(x_.adptr(), x_.adptr() + x_.size());
   TMBad::ADFun<> A = TMBad::ADFun_retaping(integrate, x);
   std::vector<ad> y = A(x);
