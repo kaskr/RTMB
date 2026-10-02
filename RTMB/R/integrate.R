@@ -121,6 +121,8 @@ adintegrate <- function(f, a, b, cfg) {
   vars <- resolve_refs(.pointer(environment(F)$mod))
   F <- F$atomic()
   ptr <- .pointer(environment(F)$mod)
+  cfg[["fa_maybe_singular"]] <- isConstant(a)
+  cfg[["fb_maybe_singular"]] <- isConstant(b)
   bisect_atom(ptr, c(a, b, vars), cfg)
 }
 

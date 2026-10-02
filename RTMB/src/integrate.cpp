@@ -17,6 +17,9 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > F_, ADrep x_, Rcpp::List cfg) {
     int subdivisions;
     // Configurable flag
     bool stop_on_error;
+    // To bypass convergence acceleration
+    bool fa_maybe_singular;
+    bool fb_maybe_singular;
     // CTOR
     bisect(Rcpp::XPtr<TMBad::ADFun<> > adf, Rcpp::List cfg) {
       F = *adf;
@@ -26,6 +29,8 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > F_, ADrep x_, Rcpp::List cfg) {
       wynn_convergence_tolerance = 1e-10;
       subdivisions = Rcpp::IntegerVector(cfg["subdivisions"])[0];
       stop_on_error = Rcpp::LogicalVector(cfg["stop.on.error"])[0];
+      fa_maybe_singular = Rcpp::LogicalVector(cfg["fa_maybe_singular"])[0];
+      fb_maybe_singular = Rcpp::LogicalVector(cfg["fb_maybe_singular"])[0];
     }
     // Current number of subdivisions
     int n;
@@ -84,14 +89,14 @@ ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > F_, ADrep x_, Rcpp::List cfg) {
       double el = asDouble(yl[1]);
       double er = asDouble(yr[1]);
       // Handle left bound singularity
-      if (left_bound && !right_bound) { // Approaching left limit
+      if (fa_maybe_singular && left_bound && !right_bound) { // Approaching left limit
         if (er/(er+el) < sqrt_machine_tolerance && el > tol) {   // Is error of right half negligible?
           y = wynn_extrapolate(xl, yr, tol, left_bound, right_bound);
           return;
         }
       }
       // Handle right bound singularity
-      if (!left_bound && right_bound) { // Approaching right limit
+      if (fb_maybe_singular && !left_bound && right_bound) { // Approaching right limit
         if (el/(el+er) < sqrt_machine_tolerance && er > tol) {   // Is error of left half negligible?
           y = wynn_extrapolate(xr, yl, tol, left_bound, right_bound);
           return;
