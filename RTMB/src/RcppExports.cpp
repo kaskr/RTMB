@@ -907,15 +907,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // bisect_atom
-ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > adf, ADrep x_, Rcpp::List cfg);
-RcppExport SEXP _RTMB_bisect_atom(SEXP adfSEXP, SEXP x_SEXP, SEXP cfgSEXP) {
+ADrep bisect_atom(Rcpp::XPtr<TMBad::ADFun<> > F_, ADrep x_, Rcpp::List cfg);
+RcppExport SEXP _RTMB_bisect_atom(SEXP F_SEXP, SEXP x_SEXP, SEXP cfgSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type adf(adfSEXP);
+    Rcpp::traits::input_parameter< Rcpp::XPtr<TMBad::ADFun<> > >::type F_(F_SEXP);
     Rcpp::traits::input_parameter< ADrep >::type x_(x_SEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type cfg(cfgSEXP);
-    rcpp_result_gen = Rcpp::wrap(bisect_atom(adf, x_, cfg));
+    rcpp_result_gen = Rcpp::wrap(bisect_atom(F_, x_, cfg));
     return rcpp_result_gen;
 END_RCPP
 }

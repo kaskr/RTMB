@@ -293,8 +293,8 @@ expATv <- function(AT, v, N, C, cfg, cache) {
     .Call(`_RTMB_expATv`, AT, v, N, C, cfg, cache)
 }
 
-bisect_atom <- function(adf, x_, cfg) {
-    .Call(`_RTMB_bisect_atom`, adf, x_, cfg)
+bisect_atom <- function(F_, x_, cfg) {
+    .Call(`_RTMB_bisect_atom`, F_, x_, cfg)
 }
 
 ip2D <- function(data, x_range, y_range, con) {
