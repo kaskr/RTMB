@@ -35,6 +35,46 @@ F <- MakeTape(f, m)
 expect_equal(f(m), F(m), info="general complex eigen")
 expect_equal(F$jacobian(m), diag(25), info="general complex eigen derivatives")
 
+## Defective and repeated-eigenvalue matrices: NaN rather than an R error
+## or a silently wrong derivative.
+## 3-state chain generator; defective (Jordan block) when the rates are equal
+Qchain <- function(x) {
+    "[<-" <- ADoverload("[<-")
+    r <- exp(x)
+    Q <- matrix(0, 3, 3)
+    Q[1, 2] <- r[1]; Q[2, 3] <- r[2]
+    Q[1, 1] <- -r[1]; Q[2, 2] <- -r[2]
+    Q
+}
+f <- function(x) Re(matexp(Qchain(x))[1, 3])
+F <- MakeTape(f, c(0, 1))
+expect_equal(F(c(0, 1)), f(c(0, 1)), info="defective eigen: value away from tie")
+expect_true(is.nan(F(c(0, 0))), info="defective eigen: NaN value, no error")
+expect_true(all(is.nan(F$jacobian(c(0, 0)))), info="defective eigen: NaN derivatives")
+## 3-state generator with all rates equal: eigenvalues (0, -3, -3) with a
+## full set of eigenvectors
+Q3 <- function(x) {
+    "[<-" <- ADoverload("[<-")
+    Q <- matrix(0, 3, 3)
+    off <- which(row(Q) != col(Q))
+    Q[off] <- exp(x)
+    for (i in 1:3) Q[i, i] <- -sum(Q[i, ])
+    Q
+}
+f <- function(x) Re(matexp(Q3(x))[1, 2])
+F <- MakeTape(f, rep(0, 6))
+expect_equal(F(rep(0, 6)), f(rep(0, 6)), info="repeated eigenvalues: value")
+expect_true(all(is.nan(F$jacobian(rep(0, 6)))),
+            info="repeated eigenvalues: NaN derivatives")
+x <- c(0, 0.3, -0.2, 0.1, 0.4, -0.3)
+h <- 1e-6
+nd <- sapply(1:6, function(i) {
+    e <- replace(rep(0, 6), i, h)
+    (f(x + e) - f(x - e)) / (2 * h)
+})
+expect_equal(as.vector(F$jacobian(x)), nd, tol=1e-6,
+             info="distinct eigenvalues: derivatives")
+
 ################################################################################
 ## Symmetric eigen decomposition (lower triangle access)
 ################################################################################
