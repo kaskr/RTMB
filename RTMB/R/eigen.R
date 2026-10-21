@@ -1,5 +1,16 @@
+## Complex NaN matrix. The atomics below return this when the underlying
+## solve() or eigen() fails (singular or non-finite input), so that tape
+## evaluation gives NaN rather than an R error; an error raised during tape
+## evaluation can't be handled by the caller (e.g. it aborts a tmbstan chain,
+## where a non-finite log density would just reject the proposal).
+nan_complex <- function(nr, nc = nr) {
+    matrix(complex(real = NaN, imaginary = NaN), nr, nc)
+}
+
 ## Needed by eigen
-solve_complex <- function(x) solve(x+0i)
+solve_complex <- function(x) {
+    tryCatch(solve(x+0i), error = function(e) nan_complex(nrow(x), ncol(x)))
+}
 solve_complex_adj <- function(x, y, dy) -t(y) %*% dy %*% t(y)
 solve_complex_atomic <- ADjoint(solve_complex,
                                 solve_complex_adj,
@@ -8,7 +19,8 @@ solve_complex_atomic <- ADjoint(solve_complex,
 ## Eigen function - general case
 eigen_rescaled <- function(X) {
     X[] <- as.complex(X)
-    e <- eigen(X, symmetric=FALSE)
+    e <- tryCatch(eigen(X, symmetric=FALSE), error = function(e) NULL)
+    if (is.null(e)) return(nan_complex(nrow(X), ncol(X) + 1))
     D <- e[["values"]]
     V <- e[["vectors"]]
     ## Select locally unique version by scaling with a complex sign
@@ -28,8 +40,17 @@ eigen_rescaled_adj <- function(X, Y, dY) {
     V <- Y[,-1, drop=FALSE]
     dD <- dY[,1]
     dV <- dY[,-1, drop=FALSE]
-    Vinv <- solve(V)
+    Vinv <- tryCatch(solve(V), error = function(e) NULL)
+    if (is.null(Vinv)) return(nan_complex(nrow(X), ncol(X)))
     Diff <- t(outer(D, D, "-"))
+    ## The derivative involves 1 / (D[i] - D[j]). At repeated eigenvalues the
+    ## eigenvector derivatives are undefined, and dropping those terms (as
+    ## the Delta below does at exact ties) gives finite but wrong derivatives
+    ## of derived quantities (e.g. matrix functions). Near ties the result is
+    ## swamped by roundoff. Return NaN in both cases.
+    tie <- Mod(Diff) <= sqrt(.Machine$double.eps) * max(Mod(D))
+    diag(tie) <- FALSE
+    if (any(tie)) return(nan_complex(nrow(X), ncol(X)))
     Delta <- Conj(Diff) / (Diff * Conj(Diff) + 1e-300)
     diag(Delta) <- 0
     a <- colSums(dV * V)
