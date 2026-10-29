@@ -1,0 +1,23 @@
+bibentry(bibtype = "Article",
+         author = c(
+           person(given  = "Kasper",
+                  family = "Kristensen"),
+           person(given  = "Anders",
+                  family = "Nielsen"),
+           person(given  = c("Christoffer", "M."),
+                  family = "Albertsen"),
+           person(given  = c("Casper", "W."),
+                  family = "Berg"),
+           person(given  = "Vanessa",
+                  family = "Trijoulet")
+           ),
+         title = "{RTMB}: An R Package for Fitting Latent Variable Models With Template Model Builder",
+         year = "2026",
+         journal = "Ecology and Evolution",
+         volume = "16",
+         number = "11",
+         pages = "e74572",
+         doi = "https://doi.org/10.1002/ece3.74572",
+         header = "To cite RTMB in publications use:",
+         textVersion = "Kristensen, K., A. Nielsen, C. M. Albertsen, C. W. Berg, and V. Trijoulet. 2026. RTMB: An R Package for Fitting Latent Variable Models With Template Model Builder. Ecology and Evolution 16, no. 11: e74572. https://doi.org/10.1002/ece3.74572."
+)
