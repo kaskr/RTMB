@@ -453,7 +453,7 @@ nldens <- function(obs, muX, muN) {
 }
 ```
 
-Note how the inner tape refers to parameters in an outer context as demonstated in a previous section.
+Note how the inner tape refers to parameters in an outer context as demonstrated in a previous section.
 We can now use this density to estimate the parameters:
 
 ```{r}
@@ -466,7 +466,7 @@ We note that this approach only works for non-zero observations. However, it sho
 
 ## Complex numbers and AD
 
-RTMB tapes cannot be directly evaluated or constructed using complex numbers. However, it is possible to use intermediate calculations with complex numbers. The convertion function `as.complex` is used for that. The supported complex number operations are documented under `?ADcomplex`.
+RTMB tapes cannot be directly evaluated or constructed using complex numbers. However, it is possible to use intermediate calculations with complex numbers. The conversion function `as.complex` is used for that. The supported complex number operations are documented under `?ADcomplex`.
 
 An example could be an R function using the complex exponential. For it to be applicable with RTMB it must take normal real input and output:
 
