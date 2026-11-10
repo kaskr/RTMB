@@ -228,8 +228,8 @@ In contrast to `MakeTape`, we note that `MakeADFun` automatically calls `F$simpl
 
 ## Sparse Jacobians
 
-We've seen how the `jacobian()` method evaluates the jacobian of a tape.
-An alternative `jacfun()` exists to return the jacobian as a new tape.
+We've seen how the `jacobian()` method evaluates the Jacobian of a tape.
+An alternative `jacfun()` exists to return the Jacobian as a new tape.
 
 For example, consider a tape of the `diff` operator:
 
@@ -238,7 +238,7 @@ D <- MakeTape(diff, numeric(5))
 D
 ```
 
-The jacobian tape is obtained by
+The Jacobian tape is obtained by
 
 ```{r}
 J <- D$jacfun()
@@ -252,7 +252,7 @@ And can be evaluated as
 J(1:5)
 ```
 
-To get the sparse jacobian do instead:
+To get the sparse Jacobian do instead:
 
 ```{r}
 Js <- D$jacfun(sparse=TRUE)
@@ -308,7 +308,7 @@ showGraph(F)
 PROS/CONS:
 
 - Atomic matrix multiply is *much* faster and takes up *much* less space than the plain (default) version.
-- However, atomic operations may prevent other optimizations that are often more important for overall speed. For example, sparsity of the jacobian is lost for the atomic version (all outputs depend and all inputs). There are elements of the jacobian that will always be zero. This can only be seen from the plain representation.
+- However, atomic operations may prevent other optimizations that are often more important for overall speed. For example, sparsity of the Jacobian is lost for the atomic version (all outputs depend and all inputs). There are elements of the Jacobian that will always be zero. This can only be seen from the plain representation.
 
 ### Vectorized operations
 
